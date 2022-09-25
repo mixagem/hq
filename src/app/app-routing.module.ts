@@ -1,21 +1,22 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AgendaComponent } from './content/agenda/agenda.component';
 import { DashboardComponent } from './content/dashboard/dashboard.component';
-import { ExpenseTypesComponent } from './content/settings/expense-types/expense-types.component';
-import { SettingsComponent } from './content/settings/settings.component';
+import { CategoriesComponent } from './content/financial/categories/categories.component';
+import { FinancialComponent } from './content/financial/financial.component';
 
-
-// const routes: Routes = [];
 const routes: Routes = [{
   path: '', redirectTo: 'dashboard', pathMatch: 'full'
 }, {
   path: 'dashboard', component: DashboardComponent, pathMatch: 'full'
 }, {
-  path: 'settings', component: SettingsComponent, children: [
-        {
-          path: 'mitypes', component: ExpenseTypesComponent
-        }
-      ]
+  path: 'agenda', component: AgendaComponent, pathMatch: 'full'
+}, {
+  path: 'fi', component: FinancialComponent, children: [
+    {
+      path: 'cats', component: CategoriesComponent
+    }
+  ]
 }
 ];
 

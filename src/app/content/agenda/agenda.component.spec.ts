@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ExpenseTypesComponent } from './expense-types.component';
+import { AgendaComponent } from './agenda.component';
 
-describe('ExpenseTypesComponent', () => {
-  let component: ExpenseTypesComponent;
-  let fixture: ComponentFixture<ExpenseTypesComponent>;
+describe('AgendaComponent', () => {
+  let component: AgendaComponent;
+  let fixture: ComponentFixture<AgendaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ExpenseTypesComponent ]
+      declarations: [ AgendaComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ExpenseTypesComponent);
+    fixture = TestBed.createComponent(AgendaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -22,30 +22,66 @@ export class NavmenuService {
       icon: 'space_dashboard'
     },{
       isMainTitle: true,
-      haveChild: true,
+      haveChild: false,
       name: 'Agenda',
       route: '/agenda',
       parentEntry: 'agenda',
       icon: 'calendar_month'
     },{
-      isMainTitle: false,
-      haveChild: false,
-      name: 'Agenda',
-      route: '/agenda/derp',
-      parentEntry: 'agenda'
-    },{
       isMainTitle: true,
       haveChild: true,
-      name: 'Settings',
-      route: '/settings',
-      parentEntry: 'settings',
-      icon: 'settings'
+      name: 'Tesouraria',
+      route: '/fi',
+      parentEntry: 'fi',
+      icon: 'account_balance'
     },{
       isMainTitle: false,
       haveChild: false,
-      name: 'Expense types',
-      route: '/settings/mitypes',
-      parentEntry: 'settings'
+      name: 'Vista geral',
+      route: '/fi/overview',
+      parentEntry: 'fi'
+    },{
+      isMainTitle: false,
+      haveChild: false,
+      name: 'Categorias movimentos',
+      route: '/fi/cats',
+      parentEntry: 'fi'
+    },{
+      isMainTitle: false,
+      haveChild: false,
+      name: 'Movimentos tesouraria',
+      route: '/fi/movtes',
+      parentEntry: 'fi'
+    },{
+      isMainTitle: false,
+      haveChild: false,
+      name: 'Orçamentos',
+      route: '/fi/budgeting',
+      parentEntry: 'fi'
+    },{
+      isMainTitle: false,
+      haveChild: false,
+      name: 'E-Fatura check',
+      route: '/fi/efatcheck',
+      parentEntry: 'fi'
+    },{
+      isMainTitle: false,
+      haveChild: false,
+      name: 'Análise salarial',
+      route: '/fi/salaryrev',
+      parentEntry: 'fi'
+    },{
+      isMainTitle: false,
+      haveChild: false,
+      name: 'Análise orçamental',
+      route: '/fi/budgetrev',
+      parentEntry: 'fi'
+    },{
+      isMainTitle: false,
+      haveChild: false,
+      name: 'Poupanças',
+      route: '/fi/savings',
+      parentEntry: 'fi'
     }
   ]
 }
