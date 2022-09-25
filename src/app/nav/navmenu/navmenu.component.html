@@ -1,0 +1,19 @@
+<div [ngClass]="isMenuOpen ? 'mhq-menu-container-open' : 'mhq-menu-container-closed'">
+  <div (click)="displayMenuChevrons()" class="mhq-menu-entry toggle-menu-entry">
+    <a>
+      <mat-icon>menu</mat-icon>
+      <span *ngIf="!isMenuOpen" class="tooltiptext">Open menu</span>
+      <span *ngIf="isMenuOpen">Close menu</span>
+    </a>
+  </div>
+  <div *ngFor="let menuEntry of navmenuService.menuEntries" class="mhq-menu-entry toggle-route-entry">
+    <a [ngClass]="menuEntry.isMainTitle? 'mhq-main-title-'+menuEntry.parentEntry : 'mhq-sub-title-'+menuEntry.parentEntry+' hidden'"
+      [routerLink]="!menuEntry.haveChild ? menuEntry.route : []" (click)="menuEntryClick($event)">
+      <mat-icon>{{menuEntry.icon}}</mat-icon>
+      <span *ngIf="!isMenuOpen" class="tooltiptext">{{menuEntry.name}}</span>
+      <span *ngIf="isMenuOpen" class="mhq-menu-entry-title">{{menuEntry.name}}</span>
+      <mat-icon *ngIf="menuEntry.haveChild" class="material-icons expand-more-{{menuEntry.parentEntry}} hidden">
+        expand_more</mat-icon>
+    </a>
+  </div>
+</div>

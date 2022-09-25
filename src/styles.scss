@@ -1,1 +1,211 @@
-/* You can add global styles to this file, and also import other style files */
+html,
+body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  margin: 0;
+  font-family: HK Grotesk, Helvetica Neue, sans-serif;
+  background: var(--mhq-light-bg);
+  color: var(--mhq-dark-text);
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 24px;
+  margin: 0;
+  font-family: HK Grotesk, Helvetica Neue, sans-serif;
+  overflow: hidden;
+  z-index: -1;
+  position: relative;
+}
+
+
+:root {
+  --navbar-height: 56px;
+  --mhq-dark-text: #000;
+  --mhq-dark-bg: #000;
+  --mhq-light-text: #fff;
+  --mhq-light-bg: #fff;
+  --mhq-waikiki-danger: #dd454d;
+  --mhq-waikiki-sucess: #6fd976;
+  --mhq-waikiki-color-1: #6194f3;
+  --mhq-waikiki-color-2: #8caff0;
+  --mhq-waikiki-color-3: #ff8f00;
+  --mhq-waikiki-color-4: #ffc266;
+}
+
+@font-face {
+  font-family: "HK Grotesk";
+  src: url("assets/fonts/HKGrotesk-SemiBold.woff2") format("woff2"),
+    url("assets/fonts/HKGrotesk-SemiBold.woff") format("woff");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "HK Grotesk";
+  src: url("assets/fonts/HKGrotesk-Medium.woff2") format("woff2"),
+    url("assets/fonts/HKGrotesk-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "HK Grotesk";
+  src: url("assets/fonts/HKGrotesk-Italic.woff2") format("woff2"),
+    url("assets/fonts/HKGrotesk-Italic.woff") format("woff");
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "HK Grotesk";
+  src: url("assets/fonts/HKGrotesk-SemiBoldItalic.woff2") format("woff2"),
+    url("assets/fonts/HKGrotesk-SemiBoldItalic.woff") format("woff");
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "HK Grotesk";
+  src: url("assets/fonts/HKGrotesk-MediumItalic.woff2") format("woff2"),
+    url("assets/fonts/HKGrotesk-MediumItalic.woff") format("woff");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "HK Grotesk";
+  src: url("assets/fonts/HKGrotesk-Regular.woff2") format("woff2"),
+    url("assets/fonts/HKGrotesk-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ########## End   - global styles ##########*/
+/* ########## Start - Material modal styles override ##########*/
+// .modal-wrappper {
+//   .mat-dialog-container {
+//     padding: 0;
+//     overflow: unset;
+//   }
+// }
+
+// .modal-wrappper {
+//   .mat-dialog-content {
+//     padding: 0px 60px;
+//   }
+// }
+
+// .modal-wrappper {
+//   .mat-dialog-actions {
+//     margin-bottom: 0;
+//   }
+// }
+
+/* ########## End   - Material modal styles override ##########*/
+/* ########## Start - mhq mainforms ##########*/
+.mhq-container {
+  height: calc(100vh - var(--navbar-height));
+  padding: 3vh 2vw;
+  margin: 0;
+}
+
+// .mhq-header-loading {
+//   height: var(--progress-bar-height);
+// }
+
+// .mhq-mainform-header {
+//   height: 60px;
+// }
+// .mhq-theme-wadidox {
+//   .mhq-mainform-header {
+//     h1 {
+//       color: var(--mhq-wadidox-color-4);
+//     }
+//   }
+// }
+// .mhq-theme-waikiki {
+//   .mhq-mainform-header {
+//     h1 {
+//       color: var(--mhq-waikiki-color-1);
+//     }
+//   }
+// }
+
+// .mhq-mainform-header {
+//   mat-icon {
+//     vertical-align: text-bottom;
+//     width: auto;
+//     height: auto;
+//     padding-right: 10px;
+//     font-size: 36px;
+//   }
+// }
+
+/* ########## End   - mhq mainforms ##########*/
+/* ########## Start - mhq grids ##########*/
+.mhq-row {
+  width: 100%;
+  display: flex;
+}
+
+.mhq-row.full-height {
+  height: 100%;
+}
+
+.mhq-col-1 {
+  width: calc(1 / 12 * 100%);
+}
+
+.mhq-col-2 {
+  width: calc(2 / 12 * 100%);
+}
+
+.mhq-col-3 {
+  width: calc(3 / 12 * 100%);
+}
+
+.mhq-col-4 {
+  width: calc(4 / 12 * 100%);
+}
+
+.mhq-col-5 {
+  width: calc(5 / 12 * 100%);
+}
+
+.mhq-col-6 {
+  width: calc(6 / 12 * 100%);
+}
+
+.mhq-col-7 {
+  width: calc(7 / 12 * 100%);
+}
+
+.mhq-col-8 {
+  width: calc(8 / 12 * 100%);
+}
+
+.mhq-col-9 {
+  width: calc(9 / 12 * 100%);
+}
+
+.mhq-col-10 {
+  width: calc(10 / 12 * 100%);
+}
+
+.mhq-col-11 {
+  width: calc(11 / 12 * 100%);
+}
+/* ########## End   - mhq grids ##########*/
