@@ -6,20 +6,16 @@ body {
 }
 
 body {
-  margin: 0;
   font-family: HK Grotesk, Helvetica Neue, sans-serif;
   background: var(--mhq-light-bg);
   color: var(--mhq-dark-text);
   font-weight: normal;
   font-size: 14px;
   line-height: 24px;
-  margin: 0;
-  font-family: HK Grotesk, Helvetica Neue, sans-serif;
-  overflow: hidden;
+  // overflow: hidden;
   z-index: -1;
   position: relative;
 }
-
 
 :root {
   --navbar-height: 56px;
@@ -33,6 +29,10 @@ body {
   --mhq-waikiki-color-2: #8caff0;
   --mhq-waikiki-color-3: #ff8f00;
   --mhq-waikiki-color-4: #ffc266;
+}
+
+.hidden {
+  display: none !important;
 }
 
 @font-face {
@@ -89,70 +89,28 @@ body {
   font-display: swap;
 }
 
-.hidden {
-  display: none !important;
-}
-
-/* ########## End   - global styles ##########*/
-/* ########## Start - Material modal styles override ##########*/
-// .modal-wrappper {
-//   .mat-dialog-container {
-//     padding: 0;
-//     overflow: unset;
-//   }
-// }
-
-// .modal-wrappper {
-//   .mat-dialog-content {
-//     padding: 0px 60px;
-//   }
-// }
-
-// .modal-wrappper {
-//   .mat-dialog-actions {
-//     margin-bottom: 0;
-//   }
-// }
-
 /* ########## End   - Material modal styles override ##########*/
 /* ########## Start - mhq mainforms ##########*/
-.mhq-container {
+.mhq-mainform-container {
+  box-sizing: border-box;
   height: calc(100vh - var(--navbar-height));
   padding: 3vh 2vw;
   margin: 0;
 }
 
-// .mhq-header-loading {
-//   height: var(--progress-bar-height);
-// }
-
-// .mhq-mainform-header {
-//   height: 60px;
-// }
-// .mhq-theme-wadidox {
-//   .mhq-mainform-header {
-//     h1 {
-//       color: var(--mhq-wadidox-color-4);
-//     }
-//   }
-// }
-// .mhq-theme-waikiki {
-//   .mhq-mainform-header {
-//     h1 {
-//       color: var(--mhq-waikiki-color-1);
-//     }
-//   }
-// }
-
-// .mhq-mainform-header {
-//   mat-icon {
-//     vertical-align: text-bottom;
-//     width: auto;
-//     height: auto;
-//     padding-right: 10px;
-//     font-size: 36px;
-//   }
-// }
+.mhq-mainform-header {
+  height: 60px;
+  mat-icon {
+    vertical-align: text-bottom;
+    width: auto;
+    height: auto;
+    padding-right: 15px;
+    font-size: 36px;
+  }
+  h1 {
+    color: var(--mhq-waikiki-color-1);
+  }
+}
 
 /* ########## End   - mhq mainforms ##########*/
 /* ########## Start - mhq grids ##########*/

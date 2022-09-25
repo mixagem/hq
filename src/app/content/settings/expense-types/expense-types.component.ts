@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { AddNewTypeModalComponent } from './add-new-type-modal/add-new-type-modal.component';
 
 @Component({
   selector: 'mhq-expense-types',
@@ -7,7 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ExpenseTypesComponent implements OnInit {
 
-  constructor() { }
+  constructor(public dialog: MatDialog) { }
+
+  openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this.dialog.open(AddNewTypeModalComponent, {
+      width: '60vw',
+      enterAnimationDuration,
+      exitAnimationDuration,
+      panelClass: 'mhq-modal-wrappper',
+      height: '60vh'
+    });
+  }
 
   ngOnInit(): void {
   }
