@@ -1,0 +1,8 @@
+#mhq-category-details {
+  position: absolute;
+  top: var(--navbar-height);
+  right:0;
+  height: calc(100vh - var(--navbar-height));
+  background:rgba(0, 0, 0, 0.144);
+  width:70vw;
+}
