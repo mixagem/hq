@@ -6,6 +6,6 @@ export interface IFinancialCategory {
   title: string,
   icon: string,
   color: string,
-  subcats: IFinancialSubCategory,
+  subcats: IFinancialSubCategory[],
   inactive: boolean
 }

@@ -5,4 +5,14 @@
   height: calc(100vh - var(--navbar-height));
   background:rgba(0, 0, 0, 0.144);
   width:70vw;
+
+
 }
+::ng-deep mhq-category-details {
+  width: 70vw;
+}
+
+// ::ng-deep #mhq-category-details > * {
+//   width: 70vw;
+// }
+

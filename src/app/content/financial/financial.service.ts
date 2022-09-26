@@ -11,34 +11,34 @@ export class FinancialService {
 
   zeka: IFinancialCategory = {
     id: 'aaa',
-    type: 'expanse',
+    type: 'expense',
     title: 'Primeira',
     icon: 'dns',
     color: 'blue',
     inactive: false,
-    subcats: {
+    subcats: [{
       id: 'bbb',
       maincat: 'aaa',
       title: 'Primeira Sub',
       budget: 0,
       inactive: false
-    }
+    }]
   };
 
   zeka2: IFinancialCategory = {
     id: 'ccc',
-    type: 'expanse',
+    type: 'expense',
     title: 'Segunda',
     icon: 'dns',
     color: 'red',
     inactive: false,
-    subcats: {
+    subcats: [{
       id: 'ddd',
       maincat: 'ccc',
       title: 'Segunda Sub',
       budget: 0,
       inactive: false
-    }
+    }]
   };
 
   zeka3: IFinancialCategory = {
@@ -48,13 +48,13 @@ export class FinancialService {
     icon: 'dns',
     color: 'green',
     inactive: false,
-    subcats: {
+    subcats: [{
       id: 'fff',
       maincat: 'eee',
       title: 'Terceira Sub',
       budget: 0,
       inactive: false
-    }
+    }]
   };
 
   constructor() {
