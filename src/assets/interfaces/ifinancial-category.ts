@@ -5,7 +5,8 @@ export interface IFinancialCategory {
   type: string,
   title: string,
   icon: string,
-  color: string,
+  bgcolor: string,
+  textcolor:string,
   subcats: IFinancialSubCategory[],
-  inactive: boolean
+  active: boolean
 }

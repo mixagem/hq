@@ -11,20 +11,30 @@ app.use(express.urlencoded({ extended: true }));
 
 
 
-app.post('/updateapplanguage', function (req, res) { return updateAppLanguage(req, res); });
-function updateAppLanguage(req, res) {
+app.get('/getcats', function (req, res) { return getCats(req, res); });
+function getCats(req, res) {
   const sqlite3 = require('sqlite3').verbose();
 
-  let db = new sqlite3.Database('./mihq.db', sqlite3.OPEN_READWRITE, (err) => {
+  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
     if (err) { console.error(err.message); }
-    console.log('Connection to PHC GO UNDERGROUND database is now open.');
+    console.log('Connection to MI HQ database is now open.');
   });
 
-  let rows = [];
-  db.serialize(() => { db.each(`UPDATE appsettings SET language='${req.body.language}'`, (err, row) => { err ? console.error(err.message) : rows.push(row); }); });
+  let categories = [];
+  db.serialize(() => { db.each(`SELECT * FROM categories`, (err, cat) => { if (err) { console.error(err.message) } else { cat.subcats = []; categories.push(cat); } }); });
+  db.serialize(() => { db.each(`SELECT * FROM subcategories`, (err, subcat) => { err ? console.error(err.message) : pushToCategory(subcat); }); });
+
+  function pushToCategory(subcat) {
+    console.log('gere');
+    categories.forEach((category, i) => {
+      if (category.id === subcat.maincatid) { catIndex = i };
+      return
+    });
+    categories[catIndex].subcats.push(subcat)
+  }
 
   db.close((err) => {
-    err ? console.error(err.message) : res.send(rows);
-    console.log('Connection to PHC GO UNDERGROUND database has been closed.');
+    err ? console.error(err.message) : res.send(categories);
+    console.log('Connection to MI HQ database has been closed.');
   });
 }

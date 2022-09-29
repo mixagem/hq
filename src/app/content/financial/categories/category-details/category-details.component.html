@@ -1,7 +1,7 @@
 <div class="mhq-row full-height mhq-category-details-wrapper">
 
   <div class="mhq-wrapper-row">
-    <h1>detalhes categoria</h1>
+    <h1>Detalhes</h1>
     <div class="mhq-row">
       <div class="mhq-col-3">
         <mat-form-field appearance="fill">
@@ -11,7 +11,7 @@
       </div>
       <div class="mhq-col-8">
         <mat-form-field appearance="fill">
-          <mat-label>Title</mat-label>
+          <mat-label>Título</mat-label>
           <input matInput [value]="fiCategory.title">
         </mat-form-field>
       </div>
@@ -23,55 +23,120 @@
       </div>
     </div>
     <div class="mhq-row">
-      <div class="mhq-col-5 radio-group">
-        <p>Tipo despesa</p>
-        <mat-radio-group color="primary">
-          <mat-radio-button value="expense">Expense</mat-radio-button>
-          <mat-radio-button value="income">Income</mat-radio-button>
+      <div class="mhq-col-4 radio-group">
+        <p>Tipo:</p>
+        <mat-radio-group color="primary" [value]="fiCategory.type">
+          <mat-radio-button value="expense">Despesa</mat-radio-button>
+          <mat-radio-button value="income">Rendimento</mat-radio-button>
         </mat-radio-group>
       </div>
-      <div class="mhq-col-5">
+      <div class="mhq-col-3">
         <mat-form-field appearance="fill">
           <mat-label>Cor etiqueta</mat-label>
-          <input matInput [value]="fiCategory.color">
+          <input matInput [value]="fiCategory.bgcolor">
+        </mat-form-field>
+      </div>
+      <div class="mhq-col-3">
+        <mat-form-field appearance="fill">
+          <mat-label>Cor texto</mat-label>
+          <input matInput [value]="fiCategory.textcolor">
         </mat-form-field>
       </div>
       <div class="mhq-col-2">
-        <mat-checkbox color="warn" [(ngModel)]="fiCategory.inactive">Inativo</mat-checkbox>
+        <mat-checkbox color="primary" [(ngModel)]="fiCategory.active">Inativo</mat-checkbox>
       </div>
     </div>
   </div>
 
 
-
   <div class="mhq-wrapper-row">
-    <h1>sub-caterogiras</h1>
+    <h1>Sub-categorias</h1>
+
+    <div class="mhq-row">
+      <button *ngIf="!editingSubCategories && !orderingSubCategories" mat-flat-button color="primary">Re-order</button>
+      <button *ngIf="!editingSubCategories && !orderingSubCategories" mat-flat-button color="primary" (click)="toggleEditing('start')">Editar sub-categorias</button>
+
+      <button *ngIf="editingSubCategories" mat-flat-button color="primary" (click)="toggleEditing('save')">Guardar alterações</button>
+      <button *ngIf="editingSubCategories" mat-flat-button color="primary" (click)="toggleEditing('end')">Discartar alterações</button>
 
 
-    <div *ngIf="fiCategory.subcats.length===0">no rows. <span (click)="addSubCategory(fiCategory.id)">click to add</span></div>
+      <button *ngIf="orderingSubCategories" mat-flat-button color="primary">Guardar alterações</button>
+      <button *ngIf="orderingSubCategories" mat-flat-button color="primary">Discartar alterações</button>
+    </div>
 
-    <table *ngIf="fiCategory.subcats.length>0">
+
+    <div *ngIf="fiCategory.subcats.length===0">no rows. <span (click)="addSubCategory(fiCategory.id)">click to
+        add</span></div>
+
+    <table *ngIf="fiCategory.subcats.length>0 && !editingSubCategories">
       <thead>
         <tr>
-          <th>id</th>
-          <th>maincat</th>
-          <th>title</th>
-          <th>budget</th>
-          <th>inactive</th>
+          <th>ID</th>
+          <th>Título</th>
+          <th>Orçamento</th>
+          <th>Inativo</th>
           <th></th>
         </tr>
       </thead>
-      <tr *ngFor="let subcat of fiCategory.subcats">
-        <td>{{subcat.id}}</td>
-        <td>{{subcat.maincat}}</td>
-        <td>{{subcat.title}}</td>
-        <td>{{subcat.budget}}</td>
-        <td>{{subcat.inactive}}</td>
-        <td (click)="removeSubCategory(subcat.id,subcat.maincat)"><mat-icon>delete</mat-icon></td>
-      </tr>
-      <tr>
-        <td colspan="6" (click)="addSubCategory(fiCategory.id)">add-shiet bro</td>
-      </tr>
+      <tbody>
+        <tr *ngFor="let subcat of fiCategory.subcats">
+          <td>{{subcat.id}}</td>
+          <td>{{subcat.title}}</td>
+          <td>{{subcat.budget}}</td>
+          <td>{{subcat.active}}</td>
+          <td (click)="removeSubCategory(subcat.id,subcat.maincat)">
+            <mat-icon>delete</mat-icon>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="6" (click)="addSubCategory(fiCategory.id)">add-shiet bro</td>
+        </tr>
+      </tbody>
     </table>
+    <table *ngIf="tempFiCategory.subcats.length>0 && editingSubCategories">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Título</th>
+          <th>Orçamento</th>
+          <th>Inativo</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tempsubcat of tempFiCategory.subcats">
+          <td>
+            <mat-form-field appearance="fill">
+              <mat-label>ID</mat-label>
+              <input matInput [(ngModel)]="tempsubcat.id">
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field appearance="fill">
+              <mat-label>Título</mat-label>
+              <input matInput [(ngModel)]="tempsubcat.title">
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field appearance="fill">
+              <mat-label>Orçamento</mat-label>
+              <input matInput [(ngModel)]="tempsubcat.budget">
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-checkbox color="primary" [(ngModel)]="tempsubcat.active"></mat-checkbox>
+          </td>
+          <td (click)="removeSubCategory(tempsubcat.id,tempsubcat.maincat)">
+            <mat-icon>delete</mat-icon>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="6" (click)="addSubCategory(fiCategory.id)">add-shiet bro</td>
+        </tr>
+      </tbody>
+    </table>
+
   </div>
+
+
 </div>

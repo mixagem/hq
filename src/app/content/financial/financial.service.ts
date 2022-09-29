@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
+// import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+// import { Observable, throwError } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
@@ -14,14 +17,15 @@ export class FinancialService {
     type: 'expense',
     title: 'Primeira',
     icon: 'dns',
-    color: 'blue',
-    inactive: false,
+    bgcolor: 'blue',
+    textcolor: 'black',
+    active: false,
     subcats: [{
       id: 'bbb',
       maincat: 'aaa',
       title: 'Primeira Sub',
       budget: 0,
-      inactive: false
+      active: false
     }]
   };
 
@@ -30,14 +34,15 @@ export class FinancialService {
     type: 'expense',
     title: 'Segunda',
     icon: 'dns',
-    color: 'red',
-    inactive: false,
+    bgcolor: 'red',
+    textcolor: 'black',
+    active: false,
     subcats: [{
       id: 'ddd',
       maincat: 'ccc',
       title: 'Segunda Sub',
       budget: 0,
-      inactive: false
+      active: false
     }]
   };
 
@@ -46,19 +51,48 @@ export class FinancialService {
     type: 'income',
     title: 'Terceira',
     icon: 'dns',
-    color: 'green',
-    inactive: false,
+    bgcolor: 'green',
+    textcolor: 'black',
+    active: false,
     subcats: [{
       id: 'fff',
       maincat: 'eee',
       title: 'Terceira Sub',
       budget: 0,
-      inactive: false
+      active: false
     }]
   };
 
   constructor() {
     this.expanseCategories = [this.zeka, this.zeka2]
     this.incomeCategories = [this.zeka3]
+
+    // this.getCategories();
+
+
+
   }
+
+  // getCategories(): void {
+
+  //   const call = this._http.get('http://localhost:6190/getcats')
+
+  //   call.subscribe({
+  //     next: (codeReceived) => {
+  //       console.log(codeReceived)
+  //       const resp = codeReceived as IFinancialCategory[];
+  //       this.expanseCategories = resp.filter(cat => cat.type === 'expanse');
+  //       this.incomeCategories = resp.filter(cat => cat.type === 'income');
+  //     }, error: err => this.handleError(err)
+  //   })
+  // }
+
+  // private handleError(err: HttpErrorResponse): Observable<never> {
+  //   let errorMessage = '';
+  //   if (err.error instanceof ErrorEvent) { errorMessage = `An error has ocurred: ${err.error.message}`; }
+  //   else { errorMessage = `Server returned code: ${err.status}, error message is: ${err.message}`; }
+  //   console.log(errorMessage);
+  //   return throwError(() => errorMessage);
+
+  // }
 }

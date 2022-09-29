@@ -24,10 +24,72 @@ mat-radio-button {
     display: flex;
     flex-direction: column;
     &:nth-child(1) {
-      height: 40%;
+      height: 35%;
     }
     &:nth-child(2) {
-      height: 60%;
+      height: 65%;
+    }
+  }
+}
+
+h1 {
+  color: var(--mhq-waikiki-color-3);
+  padding-bottom: 15px;
+}
+
+table {
+  border-collapse: collapse;
+  thead {
+    tr {
+      th {
+        background-color: #8caff0;
+        height: 40px;
+        &:first-child {
+          border-top-left-radius: 10px;
+        }
+        &:last-child {
+          border-top-right-radius: 10px;
+        }
+      }
+    }
+  }
+  tbody {
+    tr {
+      height: 65px;
+      td {
+        padding-top: 10px;
+        text-align: center;
+        mat-icon {
+          vertical-align: text-bottom;
+        }
+        mat-form-field {
+          font-size: 10px;
+        }
+        mat-checkbox{
+          vertical-align: text-bottom;
+        }
+        &:nth-child(1) {
+          width: 25%;
+        }
+        &:nth-child(2) {
+          width: 45%;
+        }
+        &:nth-child(3) {
+          width: 10%;
+        }
+        &:nth-child(4) {
+          width: 10%;
+        }
+        &:nth-child(5) {
+          width: 10%;
+        }
+      }
+      &:nth-child(even) {
+        background-color: #eee;
+      }
+      &:nth-child(odd) {
+        background-color: #dfdfdf;
+      }
     }
   }
 }

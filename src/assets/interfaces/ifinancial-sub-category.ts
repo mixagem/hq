@@ -3,6 +3,6 @@ export interface IFinancialSubCategory {
   maincat: string,
   title: string,
   budget: number,
-  inactive: boolean
+  active: boolean
 }
 

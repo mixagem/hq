@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
 import { FinancialService } from '../../financial.service';
@@ -12,19 +12,61 @@ import { FinancialService } from '../../financial.service';
 export class CategoryDetailsComponent implements OnInit {
   id: string;
   fiCategory: IFinancialCategory;
+  editingSubCategories: boolean;
+  orderingSubCategories: boolean;
+  tempFiCategory: IFinancialCategory;
 
-  constructor(private _route: ActivatedRoute, private _financialService: FinancialService) { }
+  constructor(private _route: ActivatedRoute, private _financialService: FinancialService, public _router: Router) {
+    this.editingSubCategories = false;
+    this.orderingSubCategories = false;
+
+
+  }
 
   ngOnInit(): void {
-
     this.id = this._route.snapshot.paramMap.get('id')!;
     this.fiCategory = [...this._financialService.expanseCategories, ...this._financialService.incomeCategories].filter(obj => {
       return obj.id === this.id
     })[0];
-
+    this.tempFiCategory = JSON.parse(JSON.stringify(this.fiCategory));
   }
 
-  addSubCategory(mainCatID: string){
+  toggleEditing(action: string): void {
+    switch (action) {
+      case 'start':
+        this.tempFiCategory = JSON.parse(JSON.stringify(this.fiCategory));
+        this.editingSubCategories = true;
+        break;
+
+      case 'save':
+        const categoriesArray = this.fiCategory.type === 'expense' ? [...this._financialService.expanseCategories] : [...this._financialService.incomeCategories];
+        let catIndex = 0;
+        categoriesArray.forEach((cat, i) => {
+          if (cat.id === this.fiCategory.id) {
+            catIndex = i; return;
+          }
+        });
+        this.fiCategory.type === 'expense' ? this._financialService.expanseCategories[catIndex] = this.tempFiCategory : this._financialService.incomeCategories[catIndex] = { ...this.tempFiCategory };
+        this.editingSubCategories = false;
+        this.ngOnInit();
+        break;
+
+      case 'end': default:
+        this.editingSubCategories = false;
+    }
+  }
+
+  closeDetails(): void {
+    document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight')
+    const timer = setTimeout(navi.bind(null, this._router), 800) // tempo da animação antes de redirecionar
+    function navi(router: Router): void {
+      router.navigate(['/fi/cats'])
+    }
+  }
+
+
+
+  addSubCategory(mainCatID: string) {
     // obter objeto da categoria principal
     const mainCategory = [...this._financialService.expanseCategories, ...this._financialService.incomeCategories].filter(obj => {
       return obj.id === mainCatID;
@@ -40,15 +82,15 @@ export class CategoryDetailsComponent implements OnInit {
         catIndex = i; return;
       }
     });
-    
+
     const newSubcat: IFinancialSubCategory = {
-      id: 'temp-id-'+Date.now(),
+      id: 'temp-id-' + Date.now(),
       maincat: mainCategory.id,
       title: 'Nova sub-categoria',
       budget: 0,
-      inactive: false
+      active: false
     }
-    mainCategory.type === 'expense' ? this._financialService.expanseCategories[catIndex].subcats.push(newSubcat): this._financialService.incomeCategories[catIndex].subcats.push(newSubcat);
+    mainCategory.type === 'expense' ? this._financialService.expanseCategories[catIndex].subcats.push(newSubcat) : this._financialService.incomeCategories[catIndex].subcats.push(newSubcat);
     this.ngOnInit();
   }
 
