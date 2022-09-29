@@ -1,33 +1,43 @@
-<div class="mhq-row">
-  <div class="mhq-col-2">
+<div class="mhq-row mhq-mainform-container">
 
-    <div [ngStyle]="{'background-color':'transparent','height':'35px','border':'1px solid transparent'}">
-
-    </div>
-
+  <div style="color:rgb(153, 224, 144);"></div>
+  <!-- secção categorias -->
+  <div class="mhq-col-2" style="padding-right:10px;">
 
     <div *ngFor="let cat of financialService.incomeCategories">
-      <div *ngIf="cat.active"
-        [ngStyle]="{'background-color':'#'+cat.bgcolor,'color':'#'+cat.textcolor,'height':'35px','border':'1px solid transparent'}">
+      <div class="mhq-overview-income-cat" *ngIf="cat.active"
+        [ngStyle]="{'background-color':'rgb('+cat.bgcolor+')','color':'rgb('+cat.textcolor+')'}">
         <mat-icon>{{cat.icon}}</mat-icon>{{cat.title}}
       </div>
-    </div>
-
-
-
-
-    <div *ngFor="let cat of financialService.expenseCategories">
-      <div *ngIf="cat.active"
-        [ngStyle]="{'background-color':'#'+cat.bgcolor,'color':'#'+cat.textcolor,'height':'35px','border':'1px solid transparent'}">
-        <mat-icon>{{cat.icon}}</mat-icon>{{cat.title}}
-      </div>
+      <!-- subcategorias -->
       <div *ngFor="let subcat of cat.subcats">
-        <div *ngIf="cat.active"
-          [ngStyle]="{'background-color':'#'+cat.bgcolor,'color':'#'+cat.textcolor,'height':'35px','border':'1px solid transparent','opacity':'0.8'}">
+        <div class="mhq-overview-sub-cat" *ngIf="cat.active"
+          [ngStyle]="{'background-color':'rgba('+cat.bgcolor+',0.8)','color':'rgb('+cat.textcolor+')'}">
           {{subcat.title}}
         </div>
       </div>
     </div>
+
+
+    <!-- categorias expense -->
+    <div *ngFor="let cat of financialService.expenseCategories">
+      <div class="mhq-overview-expense-cat" *ngIf="cat.active"
+        [ngStyle]="{'background-color':'rgb('+cat.bgcolor+')','color':'rgb('+cat.textcolor+')'}">
+        <mat-icon>{{cat.icon}}</mat-icon>{{cat.title}}
+      </div>
+      <!-- subcategorias -->
+      <div *ngFor="let subcat of cat.subcats">
+        <div class="mhq-overview-sub-cat" *ngIf="cat.active"
+          [ngStyle]="{'background-color':'rgba('+cat.bgcolor+',0.8)','color':'rgb('+cat.textcolor+')'}">
+          {{subcat.title}}
+        </div>
+      </div>
+    </div>
+
+
+    <div style="height:40px;background-color: red;margin-top:20px;">Total</div>
+
+
   </div>
 
 
@@ -37,49 +47,68 @@
 
     <!-- dias -->
     <div style="display: flex;">
-      <div *ngFor="let null of tempArray let i = index"
-        style="width:45px;height:35px;border-radius:5px;border:1px solid black">Dia {{i+1}}</div>
+      <div *ngFor="let null of tempArray let i = index" class="mhq-overview-calendar-days">{{i+1}}</div>
     </div>
 
 
     <!-- income -->
-    <div *ngFor="let cat of financialService.incomeCategories" style="display: flex;">
-      <div *ngIf="cat.active" style="display: flex;">
-        <div *ngIf="cat.subcats.length === 0" style="display:flex">
-          <div *ngFor="let null of tempArray let i = index"
-            style="width:45px;height:35px;border-radius:5px;border:1px solid black">{{getEmptymambo()}}</div>
+    <div *ngFor="let cat of financialService.incomeCategories">
+      <div *ngIf="cat.active">
+        <div *ngIf="cat.subcats.length === 0" style="display:flex;">
+          <div *ngFor="let null of tempArray let i = index" class="mhq-overview-cat-cell"
+            [ngStyle]="{'background-color':'rgba('+cat.bgcolor+',.3)','color':'rgb('+cat.textcolor+')'}">
+            {{emptyCell()}}</div>
         </div>
-        <div *ngFor="let subcat of cat.subcats" style="display:flex">
-          <div *ngFor="let null of tempArray let i = index"
-            style="width:45px;height:35px;border-radius:5px;border:1px solid black">{{getmambo(i+1,cat.id)}}</div>
+        <div *ngIf="cat.subcats.length !== 0">
+
+          <div style="display:flex">
+            <div *ngFor="let null of tempArray let i = index" class="mhq-overview-cat-cell"
+              [ngStyle]="{'background-color':'rgba('+cat.bgcolor+',.3)','color':'rgb('+cat.textcolor+')'}">
+              {{getCatValue(i+1,cat.id)}}</div>
+          </div>
+
+          <div *ngFor="let subcat of cat.subcats" style="display:flex">
+            <div *ngFor="let null of tempArray let i = index" class="mhq-overview-subcat-cell"
+              [ngStyle]="{'background-color':'rgba('+cat.bgcolor+',.3)','color':'rgb('+cat.textcolor+')'}">
+              {{getSubcatValue(i+1,cat.id,subcat.id)}}</div>
+          </div>
+
         </div>
       </div>
     </div>
 
     <!-- expense -->
-    <div *ngFor="let cat of financialService.expenseCategories" style="display: flex;">
-      <div *ngIf="cat.active" style="display: flex;">
+    <div *ngFor="let cat of financialService.expenseCategories">
+      <div *ngIf="cat.active">
 
         <div *ngIf="cat.subcats.length === 0" style="display:flex">
-          <div *ngFor="let null of tempArray let i = index"
-            style="width:45px;height:35px;border-radius:5px;border:1px solid black">{{getEmptymambo()}}</div>
+          <div *ngFor="let null of tempArray let i = index" class="mhq-overview-cat-cell"
+            [ngStyle]="{'background-color':'rgba('+cat.bgcolor+',.3)','color':'rgb('+cat.textcolor+')'}">
+            {{emptyCell()}}</div>
         </div>
-
         <div *ngIf="cat.subcats.length !== 0">
 
           <div style="display:flex">
-            <div *ngFor="let null of tempArray let i = index"
-              style="width:45px;height:35px;border-radius:5px;border:1px solid black">{{getmambo(i+1,cat.id)}}</div>
+            <div *ngFor="let null of tempArray let i = index" class="mhq-overview-cat-cell"
+              [ngStyle]="{'background-color':'rgba('+cat.bgcolor+',.3)','color':'rgb('+cat.textcolor+')'}">
+              {{getCatValue(i+1,cat.id)}}</div>
           </div>
 
           <div *ngFor="let subcat of cat.subcats" style="display:flex">
-            <div *ngFor="let null of tempArray let i = index"
-              style="width:45px;height:35px;border-radius:5px;border:1px solid red">{{getSubmambo(i+1,subcat.id)}}</div>
+            <div *ngFor="let null of tempArray let i = index" class="mhq-overview-subcat-cell"
+              [ngStyle]="{'background-color':'rgba('+cat.bgcolor+',.3)','color':'rgb('+cat.textcolor+')'}">
+              {{getSubcatValue(i+1,cat.id,subcat.id)}}</div>
           </div>
 
         </div>
 
       </div>
+    </div>
+
+    <div style="height: 45px;margin-top:20px;display: flex;">
+      <div *ngFor="let null of tempArray let i = index" class="mhq-overview-cat-cell"
+        [ngStyle]="{'background-color':'rgba(0,0,0,.3)','color':'rgb(255,255,255)'}">
+        {{getDailySum(i+1)}}</div>
     </div>
 
 
