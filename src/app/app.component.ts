@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FinancialService } from './content/financial/financial.service';
 
 @Component({
   selector: 'mhq-root',
@@ -7,4 +8,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'hq';
+  constructor (private _financialService:FinancialService){};
 }

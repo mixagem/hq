@@ -16,7 +16,7 @@ export class CategoriesComponent implements AfterViewInit {
   displayedColumns: string[];
 
   constructor(private _financialService: FinancialService, public router: Router) {
-    this.dataSource = new MatTableDataSource<IFinancialCategory>([...this._financialService.expanseCategories, ...this._financialService.incomeCategories]);
+    this.dataSource = new MatTableDataSource<IFinancialCategory>([...this._financialService.expenseCategories, ...this._financialService.incomeCategories]);
     this.displayedColumns = ['id', 'title', 'type', 'color', 'inactive'];
   }
 

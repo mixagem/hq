@@ -1,0 +1,88 @@
+<div class="mhq-row">
+  <div class="mhq-col-2">
+
+    <div [ngStyle]="{'background-color':'transparent','height':'35px','border':'1px solid transparent'}">
+
+    </div>
+
+
+    <div *ngFor="let cat of financialService.incomeCategories">
+      <div *ngIf="cat.active"
+        [ngStyle]="{'background-color':'#'+cat.bgcolor,'color':'#'+cat.textcolor,'height':'35px','border':'1px solid transparent'}">
+        <mat-icon>{{cat.icon}}</mat-icon>{{cat.title}}
+      </div>
+    </div>
+
+
+
+
+    <div *ngFor="let cat of financialService.expenseCategories">
+      <div *ngIf="cat.active"
+        [ngStyle]="{'background-color':'#'+cat.bgcolor,'color':'#'+cat.textcolor,'height':'35px','border':'1px solid transparent'}">
+        <mat-icon>{{cat.icon}}</mat-icon>{{cat.title}}
+      </div>
+      <div *ngFor="let subcat of cat.subcats">
+        <div *ngIf="cat.active"
+          [ngStyle]="{'background-color':'#'+cat.bgcolor,'color':'#'+cat.textcolor,'height':'35px','border':'1px solid transparent','opacity':'0.8'}">
+          {{subcat.title}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="mhq-col-10">
+
+
+
+    <!-- dias -->
+    <div style="display: flex;">
+      <div *ngFor="let null of tempArray let i = index"
+        style="width:45px;height:35px;border-radius:5px;border:1px solid black">Dia {{i+1}}</div>
+    </div>
+
+
+    <!-- income -->
+    <div *ngFor="let cat of financialService.incomeCategories" style="display: flex;">
+      <div *ngIf="cat.active" style="display: flex;">
+        <div *ngIf="cat.subcats.length === 0" style="display:flex">
+          <div *ngFor="let null of tempArray let i = index"
+            style="width:45px;height:35px;border-radius:5px;border:1px solid black">{{getEmptymambo()}}</div>
+        </div>
+        <div *ngFor="let subcat of cat.subcats" style="display:flex">
+          <div *ngFor="let null of tempArray let i = index"
+            style="width:45px;height:35px;border-radius:5px;border:1px solid black">{{getmambo(i+1,cat.id)}}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- expense -->
+    <div *ngFor="let cat of financialService.expenseCategories" style="display: flex;">
+      <div *ngIf="cat.active" style="display: flex;">
+
+        <div *ngIf="cat.subcats.length === 0" style="display:flex">
+          <div *ngFor="let null of tempArray let i = index"
+            style="width:45px;height:35px;border-radius:5px;border:1px solid black">{{getEmptymambo()}}</div>
+        </div>
+
+        <div *ngIf="cat.subcats.length !== 0">
+
+          <div style="display:flex">
+            <div *ngFor="let null of tempArray let i = index"
+              style="width:45px;height:35px;border-radius:5px;border:1px solid black">{{getmambo(i+1,cat.id)}}</div>
+          </div>
+
+          <div *ngFor="let subcat of cat.subcats" style="display:flex">
+            <div *ngFor="let null of tempArray let i = index"
+              style="width:45px;height:35px;border-radius:5px;border:1px solid red">{{getSubmambo(i+1,subcat.id)}}</div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+
+
+  </div>
+</div>

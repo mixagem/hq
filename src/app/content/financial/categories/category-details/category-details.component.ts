@@ -25,7 +25,7 @@ export class CategoryDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this._route.snapshot.paramMap.get('id')!;
-    this.fiCategory = [...this._financialService.expanseCategories, ...this._financialService.incomeCategories].filter(obj => {
+    this.fiCategory = [...this._financialService.expenseCategories, ...this._financialService.incomeCategories].filter(obj => {
       return obj.id === this.id
     })[0];
     this.tempFiCategory = JSON.parse(JSON.stringify(this.fiCategory));
@@ -39,14 +39,14 @@ export class CategoryDetailsComponent implements OnInit {
         break;
 
       case 'save':
-        const categoriesArray = this.fiCategory.type === 'expense' ? [...this._financialService.expanseCategories] : [...this._financialService.incomeCategories];
+        const categoriesArray = this.fiCategory.type === 'expense' ? [...this._financialService.expenseCategories] : [...this._financialService.incomeCategories];
         let catIndex = 0;
         categoriesArray.forEach((cat, i) => {
           if (cat.id === this.fiCategory.id) {
             catIndex = i; return;
           }
         });
-        this.fiCategory.type === 'expense' ? this._financialService.expanseCategories[catIndex] = this.tempFiCategory : this._financialService.incomeCategories[catIndex] = { ...this.tempFiCategory };
+        this.fiCategory.type === 'expense' ? this._financialService.expenseCategories[catIndex] = this.tempFiCategory : this._financialService.incomeCategories[catIndex] = { ...this.tempFiCategory };
         this.editingSubCategories = false;
         this.ngOnInit();
         break;
@@ -68,12 +68,12 @@ export class CategoryDetailsComponent implements OnInit {
 
   addSubCategory(mainCatID: string) {
     // obter objeto da categoria principal
-    const mainCategory = [...this._financialService.expanseCategories, ...this._financialService.incomeCategories].filter(obj => {
+    const mainCategory = [...this._financialService.expenseCategories, ...this._financialService.incomeCategories].filter(obj => {
       return obj.id === mainCatID;
     })[0];
 
     // obter array de categorias, de acordo com o tipo de despesa da categoria principal
-    const categoriesArray = mainCategory.type === 'expense' ? [...this._financialService.expanseCategories] : [...this._financialService.incomeCategories];
+    const categoriesArray = mainCategory.type === 'expense' ? [...this._financialService.expenseCategories] : [...this._financialService.incomeCategories];
 
     // obter o index da categoria, à qual a subcategoria a ser eliminada, pertence
     let catIndex = 0;
@@ -90,18 +90,18 @@ export class CategoryDetailsComponent implements OnInit {
       budget: 0,
       active: false
     }
-    mainCategory.type === 'expense' ? this._financialService.expanseCategories[catIndex].subcats.push(newSubcat) : this._financialService.incomeCategories[catIndex].subcats.push(newSubcat);
+    mainCategory.type === 'expense' ? this._financialService.expenseCategories[catIndex].subcats.push(newSubcat) : this._financialService.incomeCategories[catIndex].subcats.push(newSubcat);
     this.ngOnInit();
   }
 
   removeSubCategory(subCatID: string, mainCatID: string): void {
     // obter objeto da categoria principal
-    const mainCategory = [...this._financialService.expanseCategories, ...this._financialService.incomeCategories].filter(obj => {
+    const mainCategory = [...this._financialService.expenseCategories, ...this._financialService.incomeCategories].filter(obj => {
       return obj.id === mainCatID;
     })[0];
 
     // obter array de categorias, de acordo com o tipo de despesa da categoria principal
-    const categoriesArray = mainCategory.type === 'expense' ? [...this._financialService.expanseCategories] : [...this._financialService.incomeCategories];
+    const categoriesArray = mainCategory.type === 'expense' ? [...this._financialService.expenseCategories] : [...this._financialService.incomeCategories];
 
     // obter o index da categoria, à qual a subcategoria a ser eliminada, pertence
     let catIndex = 0;
@@ -130,7 +130,7 @@ export class CategoryDetailsComponent implements OnInit {
     });
 
     // atualizar o array de sub-categorias, da categoria à qual a sub-categoria eliminada, pertencia
-    mainCategory.type === 'expense' ? this._financialService.expanseCategories[catIndex].subcats = finalSubCategoryArray : this._financialService.incomeCategories[catIndex].subcats = finalSubCategoryArray;
+    mainCategory.type === 'expense' ? this._financialService.expenseCategories[catIndex].subcats = finalSubCategoryArray : this._financialService.incomeCategories[catIndex].subcats = finalSubCategoryArray;
     this.ngOnInit();
   }
 
