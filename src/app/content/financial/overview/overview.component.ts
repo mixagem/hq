@@ -6,8 +6,8 @@ import { FinancialService } from '../financial.service';
 export type IMovTes = {
   date: Date,
   value: number,
-  cat: string,
-  subcat: string,
+  cat: number,
+  subcat: number,
   type: string,
   obs?: string
 }
@@ -40,10 +40,10 @@ export class OverviewComponent implements OnInit {
     }
     this.tempArray = Array(this.monthDays).fill(0)
     this.movTes = [
-      { date: new Date('August 5 , 1975'), value: 370, cat: 'salaries', subcat: 'refei',type:'income', obs: 'sd' },
-      { date: new Date('August 15 , 1975'), value: 50, cat: 'salaries', subcat: 'salary',type:'income', obs: 'sd' },
-      { date: new Date(), value: 110, cat: 'monthly', subcat: 'portagens',type:'expense', obs: 's' },
-      { date: new Date('August 31, 1975'), value: 220, cat: 'monthly', subcat: 'gotabules',type:'expense', obs: 's' }]
+      { date: new Date('August 5 , 1975'), value: 370, cat: 1, subcat: 2,type:'income', obs: 'sd' },
+      { date: new Date('August 15 , 1975'), value: 50, cat: 1, subcat: 1,type:'income', obs: 'sd' },
+      { date: new Date(), value: 110, cat: 2, subcat: 3,type:'expense', obs: 's' },
+      { date: new Date('August 31, 1975'), value: 220, cat: 2, subcat: 4,type:'expense', obs: 's' }]
   }
 
   ngOnInit(): void {
@@ -57,14 +57,14 @@ export class OverviewComponent implements OnInit {
     return value
   }
 
-  getCatValue(day: number, cat: string): number {
+  getCatValue(day: number, cat: number): number {
     const dailyCatMovs = this.movTes.filter(mov => mov.date.getDate() === day);
     let value = 0;
     if (dailyCatMovs.length > 0) { dailyCatMovs.forEach(mov => { if (mov.cat === cat) { value += mov.value } }); }
     return value
   }
 
-  getSubcatValue(day: number, cat: string, subcat: string): number {
+  getSubcatValue(day: number, cat: number, subcat: number): number {
     const dailySubCatMovs = this.movTes.filter(mov => mov.date.getDate() === day);
     let value = 0;
     if (dailySubCatMovs.length > 0) {

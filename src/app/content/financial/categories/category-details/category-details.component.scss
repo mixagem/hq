@@ -24,10 +24,16 @@ mat-radio-button {
     display: flex;
     flex-direction: column;
     &:nth-child(1) {
-      height: 35%;
+      height: 36px;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
     }
     &:nth-child(2) {
-      height: 65%;
+      height: calc(35% - 36px);
+    }
+    &:nth-child(3) {
+      height: calc(55% - 36px);
     }
   }
 }

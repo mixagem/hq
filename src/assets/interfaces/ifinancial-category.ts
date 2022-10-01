@@ -1,7 +1,7 @@
 import { IFinancialSubCategory } from "./ifinancial-sub-category";
 
 export interface IFinancialCategory {
-  id: string,
+  id: number,
   type: string,
   title: string,
   icon: string,

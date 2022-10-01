@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
@@ -10,18 +10,17 @@ import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 })
 export class FinancialService {
 
+  activeCatBorderColor: string;
   expenseCategories: IFinancialCategory[];
   incomeCategories: IFinancialCategory[];
 
   constructor(public _http: HttpClient) {
-
-    this.getCategories();
+    this.fetchCategories();
   }
 
-  getCategories(): void {
+  fetchCategories(): void {
 
     const call = this._http.get('http://localhost:16190/getcats')
-
     call.subscribe({
       next: (codeReceived) => {
         const resp = codeReceived as IFinancialCategory[];
@@ -31,12 +30,11 @@ export class FinancialService {
     })
   }
 
-  private handleError(err: HttpErrorResponse): Observable<never> {
+  handleError(err: HttpErrorResponse): Observable<never> {
     let errorMessage = '';
     if (err.error instanceof ErrorEvent) { errorMessage = `An error has ocurred: ${err.error.message}`; }
     else { errorMessage = `Server returned code: ${err.status}, error message is: ${err.message}`; }
     console.log(errorMessage);
     return throwError(() => errorMessage);
-
   }
 }
