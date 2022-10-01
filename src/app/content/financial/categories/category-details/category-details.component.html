@@ -25,7 +25,7 @@
     <div class="mhq-row">
       <div class="mhq-col-4 radio-group">
         <p>Tipo:</p>
-        <mat-radio-group color="primary" [value]="fiCategory.type">
+        <mat-radio-group color="primary" [(ngModel)]="fiCategory.type">
           <mat-radio-button value="expense">Despesa</mat-radio-button>
           <mat-radio-button value="income">Rendimento</mat-radio-button>
         </mat-radio-group>
@@ -43,7 +43,7 @@
         </mat-form-field>
       </div>
       <div class="mhq-col-2">
-        <mat-checkbox color="primary" [(ngModel)]="!fiCategory.active">Inativo</mat-checkbox>
+        <mat-checkbox color="primary"  [(ngModel)]="fiCategory.active">Ativo</mat-checkbox>
       </div>
     </div>
   </div>
@@ -74,7 +74,7 @@
           <th>ID</th>
           <th>Título</th>
           <th>Orçamento</th>
-          <th>Inativo</th>
+          <th>Ativo</th>
           <th></th>
         </tr>
       </thead>
@@ -83,7 +83,7 @@
           <td>{{subcat.id}}</td>
           <td>{{subcat.title}}</td>
           <td>{{subcat.budget}}</td>
-          <td>{{subcat.active}}</td>
+          <td><mat-checkbox color="primary" [checked]="subcat.active"></mat-checkbox></td>
           <td (click)="removeSubCategory(subcat.id,subcat.maincat)">
             <mat-icon>delete</mat-icon>
           </td>

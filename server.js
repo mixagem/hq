@@ -21,15 +21,18 @@ function getCats(req, res) {
   });
 
   let categories = [];
-  db.serialize(() => { db.each(`SELECT * FROM categories`, (err, cat) => { if (err) { console.error(err.message) } else { cat.subcats = []; categories.push(cat); } }); });
+  db.serialize(() => { db.each(`SELECT * FROM categories`, (err, cat) => { if (err) { console.error(err.message) } else {
+    cat.subcats = [];
+    cat.active==='true'? cat.active = true : cat.active = false;
+    categories.push(cat); } }); });
   db.serialize(() => { db.each(`SELECT * FROM subcategories`, (err, subcat) => { err ? console.error(err.message) : pushToCategory(subcat); }); });
 
   function pushToCategory(subcat) {
-    console.log('gere');
     categories.forEach((category, i) => {
       if (category.id === subcat.maincatid) { catIndex = i };
       return
     });
+    subcat.active==='true'? subcat.active = true: subcat.active = false;
     categories[catIndex].subcats.push(subcat)
   }
 

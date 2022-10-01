@@ -14,7 +14,7 @@ export class FinancialService {
   incomeCategories: IFinancialCategory[];
 
   constructor(public _http: HttpClient) {
-    
+
     this.getCategories();
   }
 
@@ -24,7 +24,6 @@ export class FinancialService {
 
     call.subscribe({
       next: (codeReceived) => {
-        console.log(codeReceived)
         const resp = codeReceived as IFinancialCategory[];
         this.expenseCategories = resp.filter(cat => cat.type === 'expense');
         this.incomeCategories = resp.filter(cat => cat.type === 'income');
