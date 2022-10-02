@@ -159,8 +159,6 @@ export class CategoryDetailsComponent implements OnInit {
   }
 
   removeSubCategory(subCatID: number): void {
-    console.log(subCatID);
-    console.log(this.id);
     const httpParams = new HttpParams().set('subcat', subCatID).set('cat', this.id)
     const call = this._http.post('http://localhost:16190/removesubcat', httpParams, { responseType: 'text' })
     call.subscribe({

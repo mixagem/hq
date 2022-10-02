@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
 import { FinancialService } from '../financial.service';
 
@@ -20,7 +20,7 @@ export type ItreasuryLogs = {
   styleUrls: ['./overview.component.scss']
 })
 
-export class OverviewComponent implements OnInit {
+export class OverviewComponent {
 
   monthDays: number;
   tempArray: Array<any>;
@@ -40,16 +40,7 @@ export class OverviewComponent implements OnInit {
         break;
     }
     this.tempArray = Array(this.monthDays).fill(0)
-    // this.treasuryLogs = [
-    //   { date: new Date('August 5 , 1975'), value: 370, cat: 1, subcat: 1,type:'income', obs: 'sd' },
-    //   { date: new Date('August 15 , 1975'), value: 50, cat: 1, subcat: 2,type:'income', obs: 'sd' },
-    //   { date: new Date(), value: 110, cat: 2, subcat: 3,type:'expense', obs: 's' },
-    //   { date: new Date('August 31, 1975'), value: 220, cat: 2, subcat: 4,type:'expense', obs: 's' }]
     this.treasuryLogs = this.financialService.treasuryLog
-  }
-
-  ngOnInit(): void {
-    console.log(new Date(this.treasuryLogs[0].date).getDate())
   }
 
   getDailySum(day: number) {

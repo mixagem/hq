@@ -32,26 +32,19 @@ function addTlog(req, res) {
   });
 
   const tlog = JSON.parse(req.body.tlog)
-
+  let newTlogID;
   db.serialize(() => {
-    db.run(`INSERT INTO treasurylog (title, date, value, cat, subcat, type, obs) VALUES ('${tlog.title}', '${tlog.date}', '${tlog.value}', '${tlog.cat}', '${tlog.subcat}', '${tlog.type}', '${tlog.obs}')`)
+    db.run(`INSERT INTO treasurylog (title, date, value, cat, subcat, type, obs) VALUES ('${tlog.title}', '${tlog.date}', '${tlog.value}', '${tlog.cat}', '${tlog.subcat}', '${tlog.type}', '${tlog.obs}')`);
 
-    .each(`SELECT * from sqlite_sequence where name='treasurylog'`, (err, resp) => { err ? console.error(err.message) : fuckyou2(resp[0].seq) });
+    db.all(`SELECT * from sqlite_sequence where name='treasurylog'`, (err, resp) => { err ? console.error(err.message) : fuckyou2(resp[0].seq) });
 
     function fuckyou2(newTLogID) {
       db.close((err) => {
-        err ? console.error(err.message) : res.send(newTLogID);
+        err ? console.error(err.message) : res.send(newTLogID.toString());
         console.log('Connection to MI HQ database has been closed.');
       });
     }
   });
-
-
-  db.close((err) => {
-    err ? console.error(err.message) : res.send('gucci');
-    console.log('Connection to MI HQ database has been closed.');
-  });
-
 }
 
 

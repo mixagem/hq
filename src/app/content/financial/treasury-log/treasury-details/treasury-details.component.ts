@@ -124,11 +124,7 @@ export class TreasuryDetailsComponent implements OnInit {
         this.subCatFormOptions.push(subcat.title)
       });
     });
-    console.log(this.catFormOptions)
-    console.log(this.subCatFormOptions)
-
     //datepicker
-    console.log(this._financialService.activeTreasuryLog.date)
     this.mypick = new FormControl(new Date(this._financialService.activeTreasuryLog.date));
   }
 

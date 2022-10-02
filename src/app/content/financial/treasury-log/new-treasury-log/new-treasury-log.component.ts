@@ -115,7 +115,8 @@ export class NewTreasuryLogComponent implements OnInit {
 
     call.subscribe({
       //TODO fazer addtlog no
-      next: codeReceived => { this.fetchTlog(Number(codeReceived)); },
+
+      next: codeReceived => {this.fetchTlog(Number(codeReceived)); },
       error: err => this._financialService.handleError(err)
     })
   }
@@ -129,8 +130,8 @@ export class NewTreasuryLogComponent implements OnInit {
         const timer = setTimeout(navi.bind(null, this._router), 1000) // tempo da animação antes de redirecionar
         function navi(router: Router): void {
           //marteladinha para fechar a modal
-          const ele = document.querySelector('.cdk-overlay-backdrop') as HTMLElement;
-          ele.click();
+          // const ele = document.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+          // ele.click();
           router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             router.navigate(['/fi/tlogs',tlogNewID]);
           });
