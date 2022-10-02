@@ -16,6 +16,27 @@ app.post('/savecat', function (req, res) { return saveCat(req, res); });
 app.post('/addsubcat', function (req, res) { return addSubCat(req, res); });
 app.post('/removesubcat', function (req, res) { return removeSubCat(req, res); });
 app.post('/addcat', function (req, res) { return addCat(req, res); });
+app.post('/removecat', function (req, res) { return removeCat(req, res); });
+
+
+function removeCat(req, res) {
+  const sqlite3 = require('sqlite3').verbose();
+  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+    if (err) { console.error(err.message); }
+    console.log('Connection to MI HQ database is now open.');
+  });
+
+  db.serialize(() => {
+    db.run(`DELETE FROM categories WHERE id=${req.body.cat}`)
+    db.run(`DELETE FROM subcategories WHERE maincatid=${req.body.cat}`)
+  });
+
+  db.close((err) => {
+    err ? console.error(err.message) : res.send('gucci');
+    console.log('Connection to MI HQ database has been closed.');
+  });
+
+}
 
 
 function removeSubCat(req, res) {

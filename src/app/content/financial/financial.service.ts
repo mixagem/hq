@@ -13,6 +13,7 @@ export class FinancialService {
   activeCatBorderColor: string;
   expenseCategories: IFinancialCategory[];
   incomeCategories: IFinancialCategory[];
+  activePreviewCategory: IFinancialCategory;
 
   constructor(public _http: HttpClient) {
     this.fetchCategories();

@@ -4,6 +4,48 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
 import { FinancialService } from '../../financial.service';
+import { MatDialog } from '@angular/material/dialog';
+
+@Component({
+  selector: 'delete-category-confirmation-modal',
+  templateUrl: './delete-category-confirmation-modal.html',
+  styleUrls: ['../../../../../assets/styles/mhq-large-modal.scss']
+})
+export class DeleteCategoryConfirmationModal {
+  constructor(public financialService: FinancialService,public _http: HttpClient,public router: Router) { }
+
+  removeCategory(): void {
+    const httpParams = new HttpParams().set('cat', this.financialService.activePreviewCategory.id)
+    const call = this._http.post('http://localhost:16190/removecat', httpParams, { responseType: 'text' })
+    call.subscribe({
+      next: codeReceived => { this.fetchCats(); },
+      error: err => this.financialService.handleError(err)
+    })
+  }
+
+  fetchCats() {
+    const call = this._http.get('http://localhost:16190/getcats')
+    call.subscribe({
+      next: (codeReceived) => {
+        const resp = codeReceived as IFinancialCategory[];
+        this.financialService.expenseCategories = resp.filter(cat => cat.type === 'expense');
+        this.financialService.incomeCategories = resp.filter(cat => cat.type === 'income');
+        document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight')
+
+        const timer = setTimeout(navi.bind(null, this.router), 1000) // tempo da animação antes de redirecionar
+        function navi(router: Router): void {
+          //marteladinha para fechar a modal
+          const ele = document.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+          ele.click();
+          router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            router.navigate(['/fi/cats']);
+          });
+        }
+      }, error: err => this.financialService.handleError(err)
+    })
+  }
+}
+
 
 @Component({
   selector: 'mhq-category-details',
@@ -17,7 +59,7 @@ export class CategoryDetailsComponent implements OnInit {
   orderingSubCategories: boolean;
   tempFiCategory: IFinancialCategory;
 
-  constructor(private _route: ActivatedRoute, private _financialService: FinancialService, public _router: Router, public _http: HttpClient) {
+  constructor(private _route: ActivatedRoute, private _financialService: FinancialService, public _router: Router, public _http: HttpClient, public dialog: MatDialog) {
     this.editingMode = false;
     this.orderingSubCategories = false;
   }
@@ -28,6 +70,16 @@ export class CategoryDetailsComponent implements OnInit {
       return obj.id === this.id
     })[0];
     this.tempFiCategory = JSON.parse(JSON.stringify(this.fiCategory));
+    this._financialService.activePreviewCategory = JSON.parse(JSON.stringify(this.fiCategory));
+  }
+
+  openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this.dialog.open(DeleteCategoryConfirmationModal, {
+      width: '50vw',
+      height: '50vh',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
   }
 
   saveCats(): void {
@@ -35,7 +87,7 @@ export class CategoryDetailsComponent implements OnInit {
     const call = this._http.post('http://localhost:16190/savecat', httpParams, { responseType: 'text' })
 
     call.subscribe({
-      next: codeReceived => { this.fetchCats(); this.editingMode = false;},
+      next: codeReceived => { this.fetchCats(); this.editingMode = false; },
       error: err => this._financialService.handleError(err)
     })
   }
@@ -74,21 +126,6 @@ export class CategoryDetailsComponent implements OnInit {
     function navi(router: Router): void {
       router.navigate(['/fi/cats'])
     }
-  }
-
-  addCategory():void {
-
-    // abre modal em new
-    // construct um novo com default (ala temp.catfi)
-    // ao gravar, enviar para bd
-    // ao fechar, fechar a modal (usa a funçção que ja existe para a outra)
-
-    // const httpParams = new HttpParams().set('cat', JSON.stringify(tempCat))
-    // const call = this._http.post('http://localhost:16190/addcat', httpParams, { responseType: 'text' })
-    // call.subscribe({
-    //   next: codeReceived => { this.fetchCats(); },
-    //   error: err => this._financialService.handleError(err)
-    // })
   }
 
   addSubCategory(catID: number) {

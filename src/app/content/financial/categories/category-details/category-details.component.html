@@ -1,8 +1,10 @@
 <div class="mhq-row full-height mhq-category-details-wrapper">
 
   <div class="mhq-wrapper-row mhq-mainform-actions">
-    <button *ngIf="!editingMode && !orderingSubCategories" mat-flat-button color="primary" (click)="toggleEditing('start')">Editar categoria</button>
-    <button *ngIf="!editingMode && !orderingSubCategories" mat-stroked-button color="warn" (click)="closeDetails()">Fechar</button>
+
+    <button *ngIf="!editingMode" mat-flat-button color="warn" (click)="openDialog('300ms', '150ms')">Remover categoria</button>
+    <button *ngIf="!editingMode" mat-flat-button color="primary" (click)="toggleEditing('start')">Editar categoria</button>
+    <button *ngIf="!editingMode" mat-stroked-button color="primary" (click)="closeDetails()">Fechar</button>
     <button *ngIf="editingMode" mat-flat-button style="background-color: var(--mhq-waikiki-sucess);" (click)="toggleEditing('save')">Guardar alterações</button>
     <button *ngIf="editingMode" mat-flat-button color="warn" (click)="toggleEditing('end')">Discartar alterações</button>
   </div>

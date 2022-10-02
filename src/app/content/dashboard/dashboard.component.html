@@ -1,37 +1,19 @@
 <h1>
   todo
 </h1>
+workflow<br>
+<ol>
+  <li>color picker</li>
+  <li>refractor server.js (pasta propria, mover tambem a bd)</li>
+  <li>defaults BD -> tentar usbstituir a incrementação com o date.now (worst case, consigo fazer via frontend)</li>
+  <li>mov tes bd fondations</li>
+</ol>
 
-workflow:
-1
-  <!-- > criar type para categoria expense
-  > matelar 2 objetos no constructor para continuar o desenvolvimento do ecrã
-  > criar modo listagem para mostrar os objetos
-  > desenvolver/aprender o routing com caminhos secundários (/fi/cats/{{"id da categoria"}} -->
-  > modo consulta/edição para os registos no caminho secundário
-2
-  > criar type  para categoria mov tesouraria
-  > material 2 objetos  no constructor para continuar o desenvolvimento do ecrã
-  > criar modo listagem para mostrar os objetos
-  > routing com caminhos secundários (/fi/movtes/{{"id do movimento"}}
-3
-  > deixar mateladas de 1 e 2
-  > criar excel view diária.
-    >> inicialmente, mês martelado igual aos dos objectos
-    >> foreach para as categorias
-    >> foreach de quadradinhos de acordo com o mes em questão
-    >> ao carregar no quadradinho, abre modal
-    >> sumatórios diários, e de categoria
-    >> saldo inicial
-  > quadradinhos com cor difrente caso fim de semana
-  > ^^ caso feriado/aniversario (vai buscar ao módulo da agenda)
-  > criar navegador. martelar inicio no primeiro mes de utilização. martelar fim do navegador até ao mes do ultimo registo
-  <br><br><br><div style="height:600px;overflow-y: scroll;word-wrap: break-word;">
+  <div style="height:600px;overflow-y: scroll;word-wrap: break-word;">
 
 v1 financial
 
 - submenu financial : excel view<br>
--- excel view: lado esquerod, as categorias a la ewxcell. lado direito, vista mensal, 1 quadrado por cada dia.<br>
 -- Excel view: 3 vistas, diária, mensal, anual<br>
 -- Opções mainform: adicionar gasto/income, alterar vista, mostrar categorias sem gastos/income, mostrar depsesas do tipo budget<br>
 -- adicionar registo: abre modal, com inputs para: categoria, sub-categoria (sendo possível crirar uma nova entrada de sub-categoria), detalhes da despesa, data despesa, recorrencia (periodo recorrencia + numero de recorrencias), valor, nif incluído, é budget?, é off-budget?<br>
@@ -40,10 +22,7 @@ v1 financial
 -- anual: igua ao mensal, mas para anual<br><br>
 
 - novo submenu: expense categories<br>
--- mainform modo lista tipo go. ao carregar no registo, é exibida a pagina com detalhges do registo, onde podemos editar algumas coisas (tipo inativo, nome), ou apagar a categoria (se for categoria principal, serão apagadas as subcategorias tb). caso existam registos, nao pode ser apagada.
 -- opções mainform: re-order (separar arrays de incomes e expenses para facilitar o re-order), adicionar novo (abre modal c 2 tabs, categoria, ou subcategoria)
--- inputs para  categoria : tipo de despesa (income / gasto), nome/icon/cor categoria, sub-categorias( tabela editável á la go, sendo possível adicionar novas linhas/remover linhas. colunas da tabela: id/nome/budget/inactive), inactive<br>
---inputs para subcategoria: cateogria principal/id/nome/budget/inactive<br>
 
 - sub-menu financial: movimentos tesouraria:<br>
 -- cada registo de despesa/income, adiciona a esta tabela. depois com base nesta tabela, é que o excel view é renderizado.<br>
