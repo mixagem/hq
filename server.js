@@ -12,12 +12,88 @@ app.use(express.urlencoded({ extended: true }));
 
 
 app.get('/getcats', function (req, res) { return getCats(req, res); });
+app.get('/gettlogs', function (req, res) { return getTLogs(req, res); });
 app.post('/savecat', function (req, res) { return saveCat(req, res); });
 app.post('/addsubcat', function (req, res) { return addSubCat(req, res); });
 app.post('/removesubcat', function (req, res) { return removeSubCat(req, res); });
 app.post('/addcat', function (req, res) { return addCat(req, res); });
 app.post('/removecat', function (req, res) { return removeCat(req, res); });
+app.post('/removetlog', function (req, res) { return removeTlog(req, res); });
+app.post('/savetlog', function (req, res) { return saveTlog(req, res); });
+app.post('/addtlog', function (req, res) { return addTlog(req, res); });
 
+
+
+function addTlog(req, res) {
+  const sqlite3 = require('sqlite3').verbose();
+  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+    if (err) { console.error(err.message); }
+    console.log('Connection to MI HQ database is now open.');
+  });
+
+  const tlog = JSON.parse(req.body.tlog)
+
+  db.serialize(() => {
+    db.run(`INSERT INTO treasurylog (title, date, value, cat, subcat, type, obs) VALUES ('${tlog.title}', '${tlog.date}', '${tlog.value}', '${tlog.cat}', '${tlog.subcat}', '${tlog.type}', '${tlog.obs}')`)
+
+    .each(`SELECT * from sqlite_sequence where name='treasurylog'`, (err, resp) => { err ? console.error(err.message) : fuckyou2(resp[0].seq) });
+
+    function fuckyou2(newTLogID) {
+      db.close((err) => {
+        err ? console.error(err.message) : res.send(newTLogID);
+        console.log('Connection to MI HQ database has been closed.');
+      });
+    }
+  });
+
+
+  db.close((err) => {
+    err ? console.error(err.message) : res.send('gucci');
+    console.log('Connection to MI HQ database has been closed.');
+  });
+
+}
+
+
+function saveTlog(req, res) {
+
+  const sqlite3 = require('sqlite3').verbose();
+  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+    if (err) { console.error(err.message); }
+    console.log('Connection to MI HQ database is now open.');
+  });
+
+  const tlog = JSON.parse(req.body.tlog);
+
+  db.serialize(() => {
+    db.each(`UPDATE treasurylog SET title='${tlog.title}', date='${tlog.date}', value='${tlog.value}', cat='${tlog.cat}', subcat='${tlog.subcat}', type='${tlog.type}', obs='${tlog.obs}' WHERE id='${tlog.id}'`, (err, resp) => { err ? console.error(err.message) : []; });
+  });
+
+  db.close((err) => {
+    err ? console.error(err.message) : res.send('gucci');
+    console.log('Connection to MI HQ database has been closed.');
+  });
+}
+
+
+function getTLogs(req, res) {
+  const sqlite3 = require('sqlite3').verbose();
+  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+    if (err) { console.error(err.message); }
+    console.log('Connection to MI HQ database is now open.');
+  });
+
+  let tlogs = [];
+  db.serialize(() => {
+    db.each(`SELECT * FROM treasurylog`, (err, tlog) => { err ? console.error(err.message) : tlogs.push(tlog); });
+  });
+
+
+  db.close((err) => {
+    err ? console.error(err.message) : res.send(tlogs);
+    console.log('Connection to MI HQ database has been closed.');
+  });
+}
 
 function removeCat(req, res) {
   const sqlite3 = require('sqlite3').verbose();
@@ -29,6 +105,24 @@ function removeCat(req, res) {
   db.serialize(() => {
     db.run(`DELETE FROM categories WHERE id=${req.body.cat}`)
     db.run(`DELETE FROM subcategories WHERE maincatid=${req.body.cat}`)
+  });
+
+  db.close((err) => {
+    err ? console.error(err.message) : res.send('gucci');
+    console.log('Connection to MI HQ database has been closed.');
+  });
+
+}
+
+function removeTlog(req, res) {
+  const sqlite3 = require('sqlite3').verbose();
+  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+    if (err) { console.error(err.message); }
+    console.log('Connection to MI HQ database is now open.');
+  });
+
+  db.serialize(() => {
+    db.run(`DELETE FROM treasurylog WHERE id=${req.body.tlog}`)
   });
 
   db.close((err) => {
@@ -123,7 +217,7 @@ function saveCat(req, res) {
     if (cat.subcats.length > 0) {
 
       cat.subcats.forEach(subcat => {
-        db.each(`INSERT INTO subcategories (maincatid, title, budget, active) VALUES ('${subcat.maincatid}', '${subcat.title}', '${subcat.budget}', '${subcat.active}' )`, (err, resp) => { err ? console.error(err.message) : []; });
+        db.each(`INSERT INTO subcategories (id, maincatid, title, budget, active) VALUES ('${subcat.id}', '${subcat.maincatid}', '${subcat.title}', '${subcat.budget}', '${subcat.active}' )`, (err, resp) => { err ? console.error(err.message) : []; });
       });
     }
   });

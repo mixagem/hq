@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
 import { FinancialService } from '../financial.service';
 
 
 
-export type IMovTes = {
+export type ItreasuryLogs = {
   date: Date,
   value: number,
   cat: number,
@@ -23,7 +24,7 @@ export class OverviewComponent implements OnInit {
 
   monthDays: number;
   tempArray: Array<any>;
-  movTes: Array<IMovTes>;
+  treasuryLogs: ITreasuryLog[];
 
   constructor(public financialService: FinancialService) {
     const currentDate = new Date();
@@ -39,39 +40,42 @@ export class OverviewComponent implements OnInit {
         break;
     }
     this.tempArray = Array(this.monthDays).fill(0)
-    this.movTes = [
-      { date: new Date('August 5 , 1975'), value: 370, cat: 1, subcat: 3,type:'income', obs: 'sd' },
-      { date: new Date('August 15 , 1975'), value: 50, cat: 1, subcat: 4,type:'income', obs: 'sd' },
-      { date: new Date(), value: 110, cat: 2, subcat: 1,type:'expense', obs: 's' },
-      { date: new Date('August 31, 1975'), value: 220, cat: 2, subcat: 2,type:'expense', obs: 's' }]
+    // this.treasuryLogs = [
+    //   { date: new Date('August 5 , 1975'), value: 370, cat: 1, subcat: 1,type:'income', obs: 'sd' },
+    //   { date: new Date('August 15 , 1975'), value: 50, cat: 1, subcat: 2,type:'income', obs: 'sd' },
+    //   { date: new Date(), value: 110, cat: 2, subcat: 3,type:'expense', obs: 's' },
+    //   { date: new Date('August 31, 1975'), value: 220, cat: 2, subcat: 4,type:'expense', obs: 's' }]
+    this.treasuryLogs = this.financialService.treasuryLog
   }
 
   ngOnInit(): void {
-
+    console.log(new Date(this.treasuryLogs[0].date).getDate())
   }
 
   getDailySum(day: number) {
-    const dailyMovs = this.movTes.filter(mov => mov.date.getDate() === day);
+
+    const dailyMovs = this.treasuryLogs.filter(log => new Date(log.date).getDate() === day);
     let value = 0;
-    if (dailyMovs.length > 0) { dailyMovs.forEach(mov => { mov.type === 'expense'? value -= mov.value : value += mov.value }); }
+    if (dailyMovs.length > 0) { dailyMovs.forEach(log => { log.type === 'expense'? value -= log.value : value += log.value }); }
     return value
   }
 
   getCatValue(day: number, cat: number): number {
-    const dailyCatMovs = this.movTes.filter(mov => mov.date.getDate() === day);
+
+    const dailyCatLogs = this.treasuryLogs.filter(log => new Date(log.date).getDate() === day);
     let value = 0;
-    if (dailyCatMovs.length > 0) { dailyCatMovs.forEach(mov => { if (mov.cat === cat) { value += mov.value } }); }
+    if (dailyCatLogs.length > 0) { dailyCatLogs.forEach(log => { if (log.cat == cat) { value += log.value } }); }
     return value
   }
 
   getSubcatValue(day: number, cat: number, subcat: number): number {
-    const dailySubCatMovs = this.movTes.filter(mov => mov.date.getDate() === day);
+    const dailySubCatLogs = this.treasuryLogs.filter(log => new Date(log.date).getDate() === day);
     let value = 0;
-    if (dailySubCatMovs.length > 0) {
-      dailySubCatMovs.forEach(mov => {
+    if (dailySubCatLogs.length > 0) {
+      dailySubCatLogs.forEach(log => {
 
-        if (mov.subcat === subcat && mov.cat === cat) {
-          value += mov.value
+        if (log.subcat == subcat && log.cat == cat) {
+          value += log.value
         }
       });
     }

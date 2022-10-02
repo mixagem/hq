@@ -10,6 +10,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { OverviewComponent } from 'src/app/content/financial/overview/overview.component';
 import { NewCategoryComponent } from 'src/app/content/financial/categories/new-category/new-category.component';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { TreasuryLogComponent } from 'src/app/content/financial/treasury-log/treasury-log.component';
+import { TreasuryDetailsComponent, DeleteTlogConfirmationModal } from 'src/app/content/financial/treasury-log/treasury-details/treasury-details.component';
+import { NewTreasuryLogComponent } from 'src/app/content/financial/treasury-log/new-treasury-log/new-treasury-log.component';
 
 
 @NgModule({
@@ -19,22 +22,32 @@ import { ColorPickerModule } from 'ngx-color-picker';
     CategoryDetailsComponent,
     OverviewComponent,
     NewCategoryComponent,
-    DeleteCategoryConfirmationModal]
-    ,
+    DeleteCategoryConfirmationModal,
+    TreasuryLogComponent,
+    TreasuryDetailsComponent,
+    DeleteTlogConfirmationModal,
+    NewTreasuryLogComponent
+
+  ],
   imports: [
     CommonModule,
     BrowserModule,
     AppRoutingModule,
     MaterialImportsModule,
     HttpClientModule,
-    ColorPickerModule
+    ColorPickerModule,
   ],
   exports: [
     FinancialComponent,
     CategoriesComponent,
     CategoryDetailsComponent,
     OverviewComponent,
-    DeleteCategoryConfirmationModal
+    DeleteCategoryConfirmationModal,
+    TreasuryLogComponent,
+    TreasuryDetailsComponent,
+    DeleteTlogConfirmationModal,
+    NewTreasuryLogComponent
+
   ]
 })
 export class FinancialModule { }

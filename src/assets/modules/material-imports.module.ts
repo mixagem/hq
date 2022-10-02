@@ -28,7 +28,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import {MatDividerModule} from '@angular/material/divider';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -61,7 +64,9 @@ import {MatDividerModule} from '@angular/material/divider';
     MatTooltipModule,
     MatSnackBarModule,
     MatProgressBarModule,
-    MatDividerModule
+    MatDividerModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
 
   exports: [
@@ -94,7 +99,9 @@ import {MatDividerModule} from '@angular/material/divider';
     MatTooltipModule,
     MatSnackBarModule,
     MatProgressBarModule,
-    MatDividerModule
+    MatDividerModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ]
 })
 export class MaterialImportsModule { }

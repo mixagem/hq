@@ -50,7 +50,7 @@ export class NavmenuService {
       isMainTitle: false,
       haveChild: false,
       name: 'Movimentos tesouraria',
-      route: '/fi/movtes',
+      route: '/fi/tlogs',
       parentEntry: 'fi'
     },{
       isMainTitle: false,

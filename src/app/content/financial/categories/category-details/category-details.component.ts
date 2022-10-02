@@ -5,7 +5,6 @@ import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
 import { FinancialService } from '../../financial.service';
 import { MatDialog } from '@angular/material/dialog';
-import { MatCardTitleGroup } from '@angular/material/card';
 
 @Component({
   selector: 'delete-category-confirmation-modal',
@@ -57,14 +56,12 @@ export class CategoryDetailsComponent implements OnInit {
   id: number;
   fiCategory: IFinancialCategory;
   editingMode: boolean;
-  orderingSubCategories: boolean;
   tempFiCategory: IFinancialCategory;
   bgColorPicker: string;
   textColorPicker: string;
 
   constructor(private _route: ActivatedRoute, private _financialService: FinancialService, public _router: Router, public _http: HttpClient, public dialog: MatDialog) {
     this.editingMode = false;
-    this.orderingSubCategories = false;
   }
 
   ngOnInit(): void {
