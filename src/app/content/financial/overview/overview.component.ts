@@ -40,10 +40,10 @@ export class OverviewComponent implements OnInit {
     }
     this.tempArray = Array(this.monthDays).fill(0)
     this.movTes = [
-      { date: new Date('August 5 , 1975'), value: 370, cat: 1, subcat: 2,type:'income', obs: 'sd' },
-      { date: new Date('August 15 , 1975'), value: 50, cat: 1, subcat: 1,type:'income', obs: 'sd' },
-      { date: new Date(), value: 110, cat: 2, subcat: 3,type:'expense', obs: 's' },
-      { date: new Date('August 31, 1975'), value: 220, cat: 2, subcat: 4,type:'expense', obs: 's' }]
+      { date: new Date('August 5 , 1975'), value: 370, cat: 1, subcat: 3,type:'income', obs: 'sd' },
+      { date: new Date('August 15 , 1975'), value: 50, cat: 1, subcat: 4,type:'income', obs: 'sd' },
+      { date: new Date(), value: 110, cat: 2, subcat: 1,type:'expense', obs: 's' },
+      { date: new Date('August 31, 1975'), value: 220, cat: 2, subcat: 2,type:'expense', obs: 's' }]
   }
 
   ngOnInit(): void {

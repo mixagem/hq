@@ -16,6 +16,7 @@ export class FinancialService {
 
   constructor(public _http: HttpClient) {
     this.fetchCategories();
+    this.activeCatBorderColor = ('55,55,55')
   }
 
   fetchCategories(): void {

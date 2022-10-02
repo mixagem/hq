@@ -4,6 +4,7 @@ import { AgendaComponent } from './content/agenda/agenda.component';
 import { DashboardComponent } from './content/dashboard/dashboard.component';
 import { CategoriesComponent } from './content/financial/categories/categories.component';
 import { CategoryDetailsComponent } from './content/financial/categories/category-details/category-details.component';
+import { NewCategoryComponent } from './content/financial/categories/new-category/new-category.component';
 import { FinancialComponent } from './content/financial/financial.component';
 import { OverviewComponent } from './content/financial/overview/overview.component';
 
@@ -18,9 +19,11 @@ const routes: Routes = [{
     {
       path: 'overview', component: OverviewComponent
     }, {
-      path: 'cats', component: CategoriesComponent, children: [{
-        path: ':id', component: CategoryDetailsComponent
-      }]
+      path: 'cats', component: CategoriesComponent, children: [
+        { path: 'add', component: NewCategoryComponent },
+        {
+          path: ':id', component: CategoryDetailsComponent
+        }]
     }
   ]
 }

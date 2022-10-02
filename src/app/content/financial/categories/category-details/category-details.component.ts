@@ -70,17 +70,28 @@ export class CategoryDetailsComponent implements OnInit {
 
   closeDetails(): void {
     document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight')
-    const timer = setTimeout(navi.bind(null, this._router), 800) // tempo da animação antes de redirecionar
+    const timer = setTimeout(navi.bind(null, this._router), 1000) // tempo da animação antes de redirecionar
     function navi(router: Router): void {
       router.navigate(['/fi/cats'])
     }
   }
 
+  addCategory():void {
 
-  // redo: fazer qeury ao add À bd,
-  // depois fazer re-query no service
+    // abre modal em new
+    // construct um novo com default (ala temp.catfi)
+    // ao gravar, enviar para bd
+    // ao fechar, fechar a modal (usa a funçção que ja existe para a outra)
+
+    // const httpParams = new HttpParams().set('cat', JSON.stringify(tempCat))
+    // const call = this._http.post('http://localhost:16190/addcat', httpParams, { responseType: 'text' })
+    // call.subscribe({
+    //   next: codeReceived => { this.fetchCats(); },
+    //   error: err => this._financialService.handleError(err)
+    // })
+  }
+
   addSubCategory(catID: number) {
-
     const tempSubcat: IFinancialSubCategory = {
       id: Date.now(),
       maincat: catID,
@@ -95,51 +106,17 @@ export class CategoryDetailsComponent implements OnInit {
       next: codeReceived => { this.fetchCats(); },
       error: err => this._financialService.handleError(err)
     })
-
-
   }
 
-
-  // redo: fazer qeury ao add À bd,
-  // depois fazer re-query no service
-  removeSubCategory(subCatID: number, mainCatID: number): void {
-    // obter objeto da categoria principal
-    const mainCategory = [...this._financialService.expenseCategories, ...this._financialService.incomeCategories].filter(obj => {
-      return obj.id === mainCatID;
-    })[0];
-
-    // obter array de categorias, de acordo com o tipo de despesa da categoria principal
-    const categoriesArray = mainCategory.type === 'expense' ? [...this._financialService.expenseCategories] : [...this._financialService.incomeCategories];
-
-    // obter o index da categoria, à qual a subcategoria a ser eliminada, pertence
-    let catIndex = 0;
-    categoriesArray.forEach((cat, i) => {
-      if (cat.id === mainCatID) {
-        catIndex = i; return;
-      }
-    });
-
-    // obter array de subcategorias, à qual a subcategoria a ser eliminada, pertence
-    const subcategoriesArray = [...categoriesArray][catIndex].subcats
-
-    // obter o index da subcategoria a ser eliminada
-    let subCatIndex = 0;
-    subcategoriesArray.forEach((subCat, i) => {
-      if (subCat.id === subCatID) {
-        subCatIndex = i; return;
-      }
-    });
-
-    // construção de novo array de subcategorias
-    let finalSubCategoryArray: IFinancialSubCategory[] = [];
-    subcategoriesArray.forEach((subCat, i) => {
-      // faz push do subcategoriesArray, excepto para a subcategoria a eliminar
-      i !== subCatIndex ? finalSubCategoryArray.push(subCat) : [];
-    });
-
-    // atualizar o array de sub-categorias, da categoria à qual a sub-categoria eliminada, pertencia
-    mainCategory.type === 'expense' ? this._financialService.expenseCategories[catIndex].subcats = finalSubCategoryArray : this._financialService.incomeCategories[catIndex].subcats = finalSubCategoryArray;
-    this.ngOnInit();
+  removeSubCategory(subCatID: number): void {
+    console.log(subCatID);
+    console.log(this.id);
+    const httpParams = new HttpParams().set('subcat', subCatID).set('cat', this.id)
+    const call = this._http.post('http://localhost:16190/removesubcat', httpParams, { responseType: 'text' })
+    call.subscribe({
+      next: codeReceived => { this.fetchCats(); },
+      error: err => this._financialService.handleError(err)
+    })
   }
 
 }

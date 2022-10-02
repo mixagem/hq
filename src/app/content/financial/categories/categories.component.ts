@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.scss']
 })
-export class CategoriesComponent implements AfterViewInit {
+export class CategoriesComponent implements AfterViewInit, OnInit {
 
 
   dataSource: MatTableDataSource<IFinancialCategory>;
@@ -21,11 +21,24 @@ export class CategoriesComponent implements AfterViewInit {
     this.displayedColumns = ['icon', 'title', 'type', 'active'];
   }
 
+  ngOnInit(): void {
+    console.log('sdf')
+    this.dataSource = new MatTableDataSource<IFinancialCategory>([...this.financialService.expenseCategories, ...this.financialService.incomeCategories]);
+    this.displayedColumns = ['icon', 'title', 'type', 'active'];
+  }
+
+
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+  }
+
+  addCategory(){
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/fi/cats/add']);
+    });
   }
 
   showCategoryDetails(categoryID: number) {

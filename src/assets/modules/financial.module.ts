@@ -8,6 +8,7 @@ import { MaterialImportsModule } from './material-imports.module';
 import { CategoryDetailsComponent } from 'src/app/content/financial/categories/category-details/category-details.component';
 import { HttpClientModule } from '@angular/common/http';
 import { OverviewComponent } from 'src/app/content/financial/overview/overview.component';
+import { NewCategoryComponent } from 'src/app/content/financial/categories/new-category/new-category.component';
 
 
 
@@ -16,7 +17,8 @@ import { OverviewComponent } from 'src/app/content/financial/overview/overview.c
     FinancialComponent,
     CategoriesComponent,
     CategoryDetailsComponent,
-    OverviewComponent]
+    OverviewComponent,
+    NewCategoryComponent]
     ,
   imports: [
     CommonModule,
