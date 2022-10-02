@@ -9,7 +9,7 @@ import { CategoryDetailsComponent, DeleteCategoryConfirmationModal } from 'src/a
 import { HttpClientModule } from '@angular/common/http';
 import { OverviewComponent } from 'src/app/content/financial/overview/overview.component';
 import { NewCategoryComponent } from 'src/app/content/financial/categories/new-category/new-category.component';
-
+import { ColorPickerModule } from 'ngx-color-picker';
 
 
 @NgModule({
@@ -27,6 +27,7 @@ import { NewCategoryComponent } from 'src/app/content/financial/categories/new-c
     AppRoutingModule,
     MaterialImportsModule,
     HttpClientModule,
+    ColorPickerModule
   ],
   exports: [
     FinancialComponent,

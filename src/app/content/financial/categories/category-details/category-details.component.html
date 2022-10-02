@@ -93,18 +93,49 @@
           <mat-radio-button value="income">Rendimento</mat-radio-button>
         </mat-radio-group>
       </div>
+
+
+
       <div class="mhq-col-4">
+        <mat-form-field appearance="fill">
+          <mat-label>Cor etiqueta</mat-label>
+          <input matInput [cpPosition]="'bottom'"
+          [cpOutputFormat]="'rgba'"
+          [cpAlphaChannel]="'disabled'"
+          [cpPositionOffset]="'5%'"
+          [cpPositionRelativeToArrow]="true"
+          [cpCancelButton]="true"
+          [cpOKButton]="true"
+          [cpSaveClickOutside]="false"
+          [(colorPicker)]="bgColorPicker" [(ngModel)]="bgColorPicker">
+        </mat-form-field>
+      </div>
+      <!-- <div class="mhq-col-4">
         <mat-form-field appearance="fill">
           <mat-label>Cor etiqueta</mat-label>
           <input matInput [(ngModel)]="tempFiCategory.bgcolor">
         </mat-form-field>
-      </div>
+      </div> -->
       <div class="mhq-col-4">
+        <mat-form-field appearance="fill">
+          <mat-label>Cor texto</mat-label>
+          <input matInput [cpPosition]="'bottom'"
+          [cpOutputFormat]="'rgba'"
+          [cpAlphaChannel]="'disabled'"
+          [cpPositionOffset]="'5%'"
+          [cpPositionRelativeToArrow]="true"
+          [cpCancelButton]="true"
+          [cpOKButton]="true"
+          [cpSaveClickOutside]="false"
+          [(colorPicker)]="textColorPicker" [(ngModel)]="textColorPicker">
+        </mat-form-field>
+      </div>
+      <!-- <div class="mhq-col-4">
         <mat-form-field appearance="fill">
           <mat-label>Cor texto</mat-label>
           <input matInput [(ngModel)]="tempFiCategory.textcolor">
         </mat-form-field>
-      </div>
+      </div> -->
 
     </div>
   </div>

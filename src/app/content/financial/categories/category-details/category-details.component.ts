@@ -5,6 +5,7 @@ import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
 import { FinancialService } from '../../financial.service';
 import { MatDialog } from '@angular/material/dialog';
+import { MatCardTitleGroup } from '@angular/material/card';
 
 @Component({
   selector: 'delete-category-confirmation-modal',
@@ -12,7 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['../../../../../assets/styles/mhq-large-modal.scss']
 })
 export class DeleteCategoryConfirmationModal {
-  constructor(public financialService: FinancialService,public _http: HttpClient,public router: Router) { }
+  constructor(public financialService: FinancialService, public _http: HttpClient, public router: Router) { }
 
   removeCategory(): void {
     const httpParams = new HttpParams().set('cat', this.financialService.activePreviewCategory.id)
@@ -58,6 +59,8 @@ export class CategoryDetailsComponent implements OnInit {
   editingMode: boolean;
   orderingSubCategories: boolean;
   tempFiCategory: IFinancialCategory;
+  bgColorPicker: string;
+  textColorPicker: string;
 
   constructor(private _route: ActivatedRoute, private _financialService: FinancialService, public _router: Router, public _http: HttpClient, public dialog: MatDialog) {
     this.editingMode = false;
@@ -83,16 +86,18 @@ export class CategoryDetailsComponent implements OnInit {
   }
 
   saveCats(): void {
+
+
     const httpParams = new HttpParams().set('cat', JSON.stringify(this.tempFiCategory))
     const call = this._http.post('http://localhost:16190/savecat', httpParams, { responseType: 'text' })
 
     call.subscribe({
-      next: codeReceived => { this.fetchCats(); this.editingMode = false; },
+      next: codeReceived => { this.fetchCats(true); this.editingMode = false; },
       error: err => this._financialService.handleError(err)
     })
   }
 
-  fetchCats() {
+  fetchCats(refresh: boolean = false) {
     const call = this._http.get('http://localhost:16190/getcats')
     call.subscribe({
       next: (codeReceived) => {
@@ -100,6 +105,13 @@ export class CategoryDetailsComponent implements OnInit {
         this._financialService.expenseCategories = resp.filter(cat => cat.type === 'expense');
         this._financialService.incomeCategories = resp.filter(cat => cat.type === 'income');
         this.ngOnInit();
+        if (refresh) {
+
+          this._financialService.activeCatBorderColor = this.tempFiCategory.bgcolor;
+          this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            this._router.navigate(['/fi/cats', this.id]);
+          });
+        }
       }, error: err => this._financialService.handleError(err)
     })
   }
@@ -109,9 +121,13 @@ export class CategoryDetailsComponent implements OnInit {
       case 'start':
         this.tempFiCategory = JSON.parse(JSON.stringify(this.fiCategory));
         this.editingMode = true;
+        this.bgColorPicker = this.tempFiCategory.bgcolor
+        this.textColorPicker = this.tempFiCategory.textcolor
         break;
 
       case 'save':
+        this.tempFiCategory.bgcolor = this.bgColorPicker.replace('rgb(', '').replace(')', '');
+        this.tempFiCategory.textcolor = this.textColorPicker.replace('rgb(', '').replace(')', '');
         this.saveCats();
         break;
 
