@@ -65,11 +65,7 @@ export class FinancialService implements OnInit {
 
   }
 
-  // vai á bd buscar as categorias
-  // fetch () -> utilizado no construtor do servico /
-  //      ao introduzir e remover uma sub categoria modo edição /
-  //      remover categoria
-  // fetch ('catdetails') -> utilizado ao gravar alterações no cat details
+  //vai á bd buscar as categorias
   fetchCategories(source: string = '', catID?: number): void {
 
     const call = this._http.get('http://localhost:16190/getcats');
@@ -91,6 +87,42 @@ export class FinancialService implements OnInit {
         if (source === 'refreshSubcategories') {
           this.onInitTriggerCall();
         }
+
+        if (source === 'addCategory') {
+          // fechar a gaveta do registo
+          document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
+
+          const timer = setTimeout(navi.bind(null, this._router), 1000);
+
+          function navi(router: Router): void {
+            router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+              router.navigate(['/fi/cats']);
+            });
+          }
+
+          this.onInitTriggerCall();
+
+        }
+
+        if (source === 'removeCategory') {
+          // fechar a gaveta do registo
+          document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
+
+          const timer = setTimeout(navi.bind(null, this._router), 1000);
+
+          function navi(router: Router): void {
+            //marteladinha para fechar a modal
+            const ele = document.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+            ele.click();
+
+            router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+              router.navigate(['/fi/cats']);
+            });
+          }
+
+          this.onInitTriggerCall();
+        }
+
       },
       error: err => this.handleError(err)
     });
