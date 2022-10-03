@@ -48,8 +48,11 @@
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
   </mat-paginator>
 </div>
-<div id="mhq-category-details" class="animate__animated animate__slideInRight mhq-mainform-container mhq-row"
+<!-- <div id="mhq-category-details" class="animate__animated animate__slideInRight mhq-mainform-container mhq-row"
   [ngStyle]="{'border-left': '30px solid rgb('+financialService.activeCatBorderColor+')'}"
+  *ngIf="router.url !== '/fi/tlogs'"> -->
+  <div id="mhq-category-details" class="animate__animated animate__slideInRight mhq-mainform-container mhq-row"
+  [ngStyle]="{'border-left': '30px solid rgb(1,1,1)'}"
   *ngIf="router.url !== '/fi/tlogs'">
   <router-outlet></router-outlet>
 </div>

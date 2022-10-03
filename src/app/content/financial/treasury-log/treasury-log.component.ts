@@ -49,7 +49,7 @@ export class TreasuryLogComponent implements AfterViewInit {
   }
 
   showLogDetails(logID: number, catID: number): void {
-    this.financialService.activeCatBorderColor = [...this.financialService.expenseCategories, ...this.financialService.incomeCategories].filter(cat => cat.id == catID)[0].bgcolor;
+    // this.financialService.activeCatBorderColor = [...this.financialService.expenseCategories, ...this.financialService.incomeCategories].filter(cat => cat.id == catID)[0].bgcolor;
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this.router.navigate(['/fi/tlogs', logID]);
     });

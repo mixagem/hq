@@ -146,7 +146,7 @@
 
     <div *ngIf="fiCategory.subcats.length===0 && !editingMode">no rows.</div>
 
-      <div *ngIf="fiCategory.subcats.length===0 && editingMode" >no rows. <span (click)="addSubCategory(fiCategory.id)">click to
+      <div *ngIf="fiCategory.subcats.length===0 && editingMode" >no rows. <span (click)="addSubCategory()">click to
         add</span></div>
 
     <table *ngIf="fiCategory.subcats.length>0 && !editingMode">
@@ -200,7 +200,7 @@
           </td>
         </tr>
         <tr>
-          <td colspan="6" (click)="addSubCategory(fiCategory.id)">add-shiet bro</td>
+          <td colspan="6" (click)="addSubCategory()">add-shiet bro</td>
         </tr>
       </tbody>
     </table>
