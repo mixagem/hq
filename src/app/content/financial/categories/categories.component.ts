@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'mhq-categories',
   templateUrl: './categories.component.html',
-  styleUrls: ['./categories.component.scss']
+  styleUrls: ['./categories.component.scss','../../../../assets/styles/mhq-mainform.scss']
 })
 
 export class CategoriesComponent implements AfterViewInit, OnInit {

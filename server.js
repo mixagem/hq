@@ -78,7 +78,7 @@ function getTLogs(req, res) {
 
   let tlogs = [];
   db.serialize(() => {
-    db.each(`SELECT * FROM treasurylog`, (err, tlog) => { err ? console.error(err.message) : tlogs.push(tlog); });
+    db.each(`SELECT * FROM treasurylog ORDERBY id DESC`, (err, tlog) => { err ? console.error(err.message) : tlogs.push(tlog); });
   });
 
 

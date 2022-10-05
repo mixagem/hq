@@ -4,55 +4,47 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
 import { FinancialService } from '../financial.service';
+import { TreasuryService } from './treasury.service';
 
 @Component({
   selector: 'mhq-treasury-log',
   templateUrl: './treasury-log.component.html',
-  styleUrls: ['./treasury-log.component.scss']
+  styleUrls: ['./treasury-log.component.scss','../../../../assets/styles/mhq-mainform.scss']
 })
-export class TreasuryLogComponent implements AfterViewInit {
+export class TreasuryLogComponent implements AfterViewInit, OnInit {
 
+  // datasource para tabela
   dataSource: MatTableDataSource<ITreasuryLog>;
+  // array com as colunas da tabela
   displayedColumns: string[];
 
-  constructor(public financialService: FinancialService, public router: Router) {
-    this.dataSource = new MatTableDataSource<ITreasuryLog>(this.financialService.treasuryLog);
+  constructor(public treasuryService: TreasuryService, public financialService: FinancialService, public router: Router) { }
+
+  ngOnInit(): void {
+    // incializar tabela
+    this.dataSource = new MatTableDataSource<ITreasuryLog>(this.treasuryService.treasuryLog);
     this.displayedColumns = ['cat', 'title', 'date', 'value'];
   }
 
+  // paginador da tabela
   @ViewChild(MatPaginator) paginator: MatPaginator;
-
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
   }
 
-  addTreasuryLog(): void {
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate(['/fi/tlogs/add']);
+  // navegação para modo de consulta de registo
+  viewMode(logID: number, catID: number): void {
+
+    // loop para obter a cor do border da categoria para aplicar na consulta do registo
+    this.financialService.allCategories.forEach(cat => {
+      if (cat.id == catID) { this.treasuryService.recordBorderStyle = { "background-color": 'rgb(' + cat.bgcolor + ')' }; return }
     });
-  }
 
-  getCatStyle(catID: number): string {
-    const cat = [...this.financialService.expenseCategories, ...this.financialService.incomeCategories].filter(cat => cat.id == catID)[0];
-    return `background:rgb(${cat.bgcolor});color:rgb(${cat.textcolor});`
-  }
-
-  getCatLabel(catID: number, subcatID: number): string {
-    const maincat = [...this.financialService.expenseCategories, ...this.financialService.incomeCategories].filter(cat => cat.id == catID)[0]
-    const subcatTitle = [...maincat.subcats].filter(subcat => subcat.id == subcatID)[0].title;
-    return subcatTitle
-  }
-
-  getCatIcon(catID: number): string {
-    const icon = [...this.financialService.expenseCategories, ...this.financialService.incomeCategories].filter(cat => cat.id == catID)[0].icon
-    return icon
-  }
-
-  showLogDetails(logID: number, catID: number): void {
-    // this.financialService.activeCatBorderColor = [...this.financialService.expenseCategories, ...this.financialService.incomeCategories].filter(cat => cat.id == catID)[0].bgcolor;
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this.router.navigate(['/fi/tlogs', logID]);
     });
   }
+
+
 
 }

@@ -1,0 +1,32 @@
+#mhq-category-details {
+  position: absolute;
+  top: var(--navbar-height);
+  right: 0;
+  height: calc(100vh - var(--navbar-height));
+  width: 70vw;
+  padding:0;
+}
+::ng-deep mhq-category-details,
+::ng-deep mhq-treasury-details {
+  width: 70vw;
+}
+
+::ng-deep mhq-new-category,
+::ng-deep mhq-new-treasury-log {
+  width: 100%;
+}
+
+.mhq-mainform-header{
+  justify-content: space-between;
+}
+
+.mhq-mainform-actions {
+  height: 36px;
+  padding-bottom: 5px;
+  mat-icon {
+    padding-right: 4px;
+    margin-bottom: 3px;
+    margin-left: -5px;
+    font-size:24px;
+  }
+}

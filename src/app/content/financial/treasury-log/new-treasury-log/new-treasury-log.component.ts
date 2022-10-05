@@ -6,27 +6,38 @@ import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
 import { FinancialService } from '../../financial.service';
 import { map, startWith } from 'rxjs/operators';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { TreasuryService } from '../treasury.service';
+import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
 
 @Component({
   selector: 'mhq-new-treasury-log',
   templateUrl: './new-treasury-log.component.html',
-  styleUrls: ['./new-treasury-log.component.scss']
+  styleUrls: ['../../../../../assets/styles/mhq-mainform-details.scss']
 })
 export class NewTreasuryLogComponent implements OnInit {
 
   tempTlog: ITreasuryLog;
   mypick: FormControl<any>;
 
+// autocomplete categoria
   catForm = new FormControl('');
   catFormOptions: string[] = [];
   catFilteredOptions: Observable<string[]>;
+  private _catfilter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.catFormOptions.filter(option => option.toLowerCase().includes(filterValue));
+  }
 
+  // autocomplete sub categoria
   subCatForm = new FormControl('');
   subCatFormOptions: string[] = [];
   subCatFilteredOptions: Observable<string[]>;
+  private _subcatfilter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.subCatFormOptions.filter(option => option.toLowerCase().includes(filterValue));
+  }
 
-
-  constructor(private _financialService: FinancialService, private _route: ActivatedRoute, public _router: Router,public _http: HttpClient) {
+  constructor(public financialService: FinancialService, public treasuryService: TreasuryService, private _route: ActivatedRoute, public _router: Router, public _http: HttpClient) {
 
     this.tempTlog = {
       id: 0,
@@ -38,16 +49,6 @@ export class NewTreasuryLogComponent implements OnInit {
       type: 'expense',
       obs: ''
     }
-  }
-
-  private _catfilter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.catFormOptions.filter(option => option.toLowerCase().includes(filterValue));
-  }
-
-  private _subcatfilter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.subCatFormOptions.filter(option => option.toLowerCase().includes(filterValue));
   }
 
   ngOnInit(): void {
@@ -66,11 +67,11 @@ export class NewTreasuryLogComponent implements OnInit {
 
     this.catFormOptions = [];
     this.subCatFormOptions = [];
-    const allCats = [...this._financialService.expenseCategories, ...this._financialService.incomeCategories]
-    const fetchCatLabels = allCats.forEach(cat => {
+    const allCats = [...this.financialService.expenseCategories, ...this.financialService.incomeCategories]
+    allCats.forEach(cat => {
       this.catFormOptions.push(cat.title)
     });
-    const fetchSubCatLabels = allCats.forEach(cat => {
+    allCats.forEach(cat => {
       cat.subcats.forEach(subcat => {
         this.subCatFormOptions.push(subcat.title)
       });
@@ -84,18 +85,27 @@ export class NewTreasuryLogComponent implements OnInit {
 
       case 'save':
 
+        // converter a data do picker para guardar da bd
         this.tempTlog.date = new Date(this.mypick.value.toISOString()).getTime();
 
-        const catID = [...this._financialService.incomeCategories, ...this._financialService.expenseCategories].filter(cat => cat.title === this.catForm.value)[0].id
+        let subCats : IFinancialSubCategory[]; // subcats da categoria selecioanda
 
-        const subcatstofilter = [...this._financialService.incomeCategories, ...this._financialService.expenseCategories].filter(cat => cat.id == catID)[0].subcats;
+        // obter o ID da categoria selecionada
+        const catID = [...this.financialService.allCategories].forEach(cat => {
+          if (cat.title === this.catForm.value) {subCats = cat.subcats; return cat.id}
+          return;
+        });
 
-        const subCatID = subcatstofilter.filter(subcat => subcat.title === this.subCatForm.value)[0].id
+        // obter o ID da sub-categoria selecionada
+        const subCatID = subCats!.forEach(subcat => {
+          subcat.title == this.subCatForm.value
+        });
 
-        this.tempTlog.cat = catID;
-        this.tempTlog.subcat = subCatID;
+        // converter de títilo para o id das catgorias
+        this.tempTlog.cat = catID!;
+        this.tempTlog.subcat = subCatID!;
 
-        this.saveTlog();
+        this.saveTreasurylog();
 
         break;
 
@@ -108,35 +118,14 @@ export class NewTreasuryLogComponent implements OnInit {
     }
   }
 
-  saveTlog(): void {
+  saveTreasurylog(): void {
 
     const httpParams = new HttpParams().set('tlog', JSON.stringify(this.tempTlog))
     const call = this._http.post('http://localhost:16190/addtlog', httpParams, { responseType: 'text' })
 
     call.subscribe({
-      //TODO fazer addtlog no
-
-      next: codeReceived => {this.fetchTlog(Number(codeReceived)); },
-      error: err => this._financialService.handleError(err)
-    })
-  }
-
-  fetchTlog(tlogNewID: number) {
-    const call = this._http.get('http://localhost:16190/gettlogs')
-    call.subscribe({
-      next: (codeReceived) => {
-        const resp = codeReceived as ITreasuryLog[];
-        this._financialService.treasuryLog = resp;
-        const timer = setTimeout(navi.bind(null, this._router), 1000) // tempo da animação antes de redirecionar
-        function navi(router: Router): void {
-          //marteladinha para fechar a modal
-          // const ele = document.querySelector('.cdk-overlay-backdrop') as HTMLElement;
-          // ele.click();
-          router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-            router.navigate(['/fi/tlogs',tlogNewID]);
-          });
-        }
-      }, error: err => this._financialService.handleError(err)
+      next: codeReceived => { this.treasuryService.fetchTreasuryLog('saveTreasuryLog', Number(codeReceived)); },
+      error: err => this.financialService.handleError(err)
     })
   }
 

@@ -19,7 +19,7 @@ const DEFAULT_FICATEGORY = {
 @Component({
   selector: 'mhq-new-category',
   templateUrl: './new-category.component.html',
-  styleUrls: ['../category-details/category-details.component.scss'] // utiliza os mesmos estilos que o category details
+  styleUrls: ['../../../../../assets/styles/mhq-mainform-details.scss']
 })
 
 export class NewCategoryComponent implements OnInit {

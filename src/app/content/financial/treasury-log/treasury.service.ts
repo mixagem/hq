@@ -1,9 +1,10 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subject, throwError } from 'rxjs';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
+import { FinancialService } from '../financial.service';
 
 type RecordBorderStyle = {
   "background-color": string
@@ -13,28 +14,23 @@ type RecordBorderStyle = {
   providedIn: 'root'
 })
 
-export class FinancialService implements OnInit {
-
+export class TreasuryService {
   //trigger para onInit
   onInitTrigger: Subject<any>;
 
   // cor a ser utilizada no border dos detalhes da categoria/movimento tesouraria
   recordBorderStyle: RecordBorderStyle;
 
-  // arrays para as categorias existentes em bd
-  allCategories: IFinancialCategory[];
-  expenseCategories: IFinancialCategory[];
-  incomeCategories: IFinancialCategory[];
-  // clone da categoria atualmente em consulta
-  activePreviewCategory: IFinancialCategory;
+  // arrays para os movimentos  existentes em bd
+  treasuryLog: ITreasuryLog[];
 
-  //boolean para verificar se é duplicada ou é criada nova categoria
-  cloningCategory: Boolean;
+  // clone do movimento  atualmente em consulta
+  activeTreasuryLog: ITreasuryLog;
 
+  cloningTLog: Boolean;
 
-  constructor(private _http: HttpClient, private _router: Router) {
-    // vai buscar à bd as categorias e movimentos existentes
-    this.fetchCategories();
+  constructor(private _http: HttpClient, private _router: Router, private financialService: FinancialService) {
+    this.fetchTreasuryLog();
     this.onInitTrigger = new Subject<any>();
   }
 
@@ -43,51 +39,45 @@ export class FinancialService implements OnInit {
   }
 
   ngOnInit(): void {
-    this.cloningCategory = false;
+    this.cloningTLog = false;
   }
 
+  // vai á bd buscar os movimentos
+  fetchTreasuryLog(source: string = '', LogID?: number): void {
 
-
-  //vai á bd buscar as categorias
-  fetchCategories(source: string = '', catID?: number): void {
-
-    const call = this._http.get('http://localhost:16190/getcats');
+    const call = this._http.get('http://localhost:16190/gettlogs');
 
     call.subscribe({
       next: (codeReceived) => {
-        const resp = codeReceived as IFinancialCategory[];
+        const resp = codeReceived as ITreasuryLog[];
         // guardar no serviço a resposta da bd
-        this.allCategories = resp;
-        this.expenseCategories = resp.filter(cat => cat.type === 'expense');
-        this.incomeCategories = resp.filter(cat => cat.type === 'income');
+        this.treasuryLog = resp;
 
-        if (source === 'saveCategories') {
+        if (source === 'saveTreasuryLog') {
           this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-            this._router.navigate(['/fi/cats', catID]);
+            this._router.navigate(['/fi/tlogs', LogID]);
           });
         }
 
-        if (source === 'refreshSubcategories') {
-          this.onInitTriggerCall();
-        }
 
-        if (source === 'addCategory') {
+        if (source === 'addTreasuryLog') {
           // fechar a gaveta do registo
           document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
 
-          const timer = setTimeout(navi.bind(null, this._router), 1000);
+          const timer = setTimeout(navi.bind(null, this._router), 1000) // tempo da animação antes de redirecionar
 
           function navi(router: Router): void {
             router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-              router.navigate(['/fi/cats']);
+              router.navigate(['/fi/tlogs']);
             });
           }
 
           this.onInitTriggerCall();
-
         }
 
-        if (source === 'removeCategory') {
+
+
+        if (source === 'removeTreasuryLog') {
           // fechar a gaveta do registo
           document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
 
@@ -99,33 +89,29 @@ export class FinancialService implements OnInit {
             ele.click();
 
             router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-              router.navigate(['/fi/cats']);
+              router.navigate(['/fi/tlogs']);
             });
           }
 
           this.onInitTriggerCall();
         }
-
       },
       error: err => this.handleError(err)
     });
 
   }
 
-  // navegação para modo de introdução
-  addMode(cloningCategory: boolean): void {
+  addMode(cloningTLog: boolean): void {
 
     // verifica se é duplicação ou é introdução normal
-    this.cloningCategory = cloningCategory;
-    (!this.cloningCategory) ? this.recordBorderStyle = { 'background-color': 'red' } : [];
-    // navegação para modo de introdução de registo
-    this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this._router.navigate(['/fi/cats/add']);
-    });
+    this.cloningTLog = cloningTLog;
+    (!this.cloningTLog) ? this.recordBorderStyle = { 'background-color': 'red' } : [];
 
+    this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this._router.navigate(['/fi/tlogs/add']);
+    });
   }
 
-  // fecha a consulta do registo, e retorna para o modo listagem
   closeDetails(): void {
 
     document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight')
@@ -133,13 +119,65 @@ export class FinancialService implements OnInit {
     const timer = setTimeout(navi.bind(null, this._router), 1000)
 
     function navi(router: Router): void {
-      router.navigate(['/fi/cats'])
+      router.navigate(['/fi/tlogs'])
     }
 
   }
 
+  // utilizado no render da listagem
+  getCatStyle(catID: number): string {
+    let style: string;
+    const cat = [...this.financialService.allCategories].forEach(cat => {
+      if (cat.id == catID) return style = `background:rgb(${cat.bgcolor});color:rgb(${cat.textcolor});`
+      return;
+    });
+    return style!;
+  }
 
+  getCatLabel(catID: number): string {
 
+    let mainCat: IFinancialCategory;
+
+    [...this.financialService.allCategories].forEach(cat => {
+      if (cat.id == catID) return mainCat = cat
+      return;
+    });
+
+    return mainCat!.title;
+  }
+
+  // utilizado no render da listagem
+  getSubCatLabel(catID: number, subcatID: number): string {
+
+    let mainCat: IFinancialCategory;
+
+    [...this.financialService.allCategories].forEach(cat => {
+      if (cat.id == catID) return mainCat = cat
+      return;
+    });
+
+    let subCatTitle: string;
+
+    [...mainCat!.subcats].forEach(subcat => {
+      if (subcat.id == subcatID) return subCatTitle = subcat.title
+      return;
+    });
+
+    return subCatTitle!;
+  }
+
+  // utilizado no render da listagem
+  getCatIcon(catID: number): string {
+
+    let icon: string;
+
+    [...this.financialService.allCategories].forEach(cat => {
+      if (cat.id == catID) return icon = cat.icon
+      return
+    });
+
+    return icon!
+  }
 
   // tratamento erros
   handleError(err: HttpErrorResponse): Observable<never> {
@@ -149,4 +187,5 @@ export class FinancialService implements OnInit {
     console.log(errorMessage);
     return throwError(() => errorMessage);
   }
+
 }

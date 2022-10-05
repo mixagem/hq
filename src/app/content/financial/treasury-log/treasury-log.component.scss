@@ -1,39 +1,3 @@
-#mhq-category-details {
-  position: absolute;
-  top: var(--navbar-height);
-  right: 0;
-  height: calc(100vh - var(--navbar-height));
-  background: #fafafa;
-  width: 70vw;
-  // border-left: 30px solid var(--mhq-waikiki-color-3);
-}
-
-::ng-deep mhq-treasury-details {
-  width: 70vw;
-}
-
-::ng-deep mhq-new-treasury-log {
-  width: 100%;
-}
-
-
-.mhq-mainform-header{
-  justify-content: space-between;
-}
-
-.mhq-mainform-actions {
-  height: 36px;
-  padding-bottom: 5px;
-  mat-icon {
-    padding-right: 4px;
-    margin-bottom: 3px;
-    margin-left: -5px;
-    font-size:24px;
-  }
-}
-
-
-
 table {
   width: 100%;
   tr:not(.mat-header-row):hover {
@@ -44,7 +8,7 @@ table {
     th {
       text-align: center;
       &:nth-child(1) {
-        width: 150px;
+        width: 15%;
         padding:0;
 
       }

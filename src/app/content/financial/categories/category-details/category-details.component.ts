@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'mhq-category-details',
   templateUrl: './category-details.component.html',
-  styleUrls: ['./category-details.component.scss']
+  styleUrls: ['../../../../../assets/styles/mhq-mainform-details.scss']
 })
 
 export class CategoryDetailsComponent implements OnInit {
@@ -25,8 +25,8 @@ export class CategoryDetailsComponent implements OnInit {
   bgColorPicker: string;
   textColorPicker: string;
 
-  constructor(private _route: ActivatedRoute, public financialService: FinancialService, private _router: Router, private _http: HttpClient, private _dialog: MatDialog) {
-    this.editingMode = false; // está aqui porque ao adicionar/remover sub cats, tenho de chama o on-init
+  constructor(private _route: ActivatedRoute, public financialService: FinancialService, private _http: HttpClient, private _dialog: MatDialog) {
+    this.editingMode = false;
   }
 
   ngOnInit(): void {
@@ -138,7 +138,6 @@ export class DeleteCategoryConfirmationModal {
   removeCategory(): void {
 
     const httpParams = new HttpParams().set('cat', this.financialService.activePreviewCategory.id)
-
     const call = this._http.post('http://localhost:16190/removecat', httpParams, { responseType: 'text' })
 
     call.subscribe({

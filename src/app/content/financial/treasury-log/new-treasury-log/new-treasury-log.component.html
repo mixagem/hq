@@ -1,116 +1,124 @@
-<p>new-treasury-log works!</p>
 <div class="mhq-row full-height mhq-category-details-wrapper">
+  <div class="mhq-categories-drawer-left">
+    <div class="mhq-quickaction-close" (click)="treasuryService.closeDetails()">
+      <mat-icon>close</mat-icon>
+    </div>
 
-  <div class="mhq-wrapper-row mhq-mainform-actions">
+    <div class="mhq-quickaction-save" (click)="toggleEditing('save')"><button mat-icon-button>
+        <mat-icon>save</mat-icon>
+      </button></div>
+    <div class="mhq-quickaction-delete" (click)="toggleEditing('end')"><button mat-icon-button>
+        <mat-icon>not_interested</mat-icon>
+      </button></div>
 
-    <button mat-flat-button style="background-color: var(--mhq-waikiki-sucess);" (click)="toggleEditing('save')">Guardar
-      alterações</button>
-    <button mat-flat-button color="warn" (click)="toggleEditing('end')">Discartar
-      alterações</button>
+
+    <div [ngStyle]="treasuryService.recordBorderStyle"></div>
   </div>
 
-  <div class="mhq-wrapper-row">
+  <div class="mhq-categories-drawer-right">
 
-    <h1>Detalhes</h1>
+    <div class="mhq-wrapper-row">
 
-    <div class="mhq-row">
+      <h1>Detalhes</h1>
 
-      <div class="mhq-col-1">
-        <mat-form-field appearance="fill">
-          <mat-label>ID</mat-label>
-          <input matInput [(ngModel)]="tempTlog.id">
-        </mat-form-field>
-      </div>
+      <div class="mhq-row">
 
-      <div class="mhq-col-8">
-        <mat-form-field appearance="fill">
-          <mat-label>Título</mat-label>
-          <input matInput [(ngModel)]="tempTlog.title">
-        </mat-form-field>
-      </div>
+        <div class="mhq-col-1">
+          <mat-form-field appearance="fill">
+            <mat-label>ID</mat-label>
+            <input matInput [(ngModel)]="tempTlog.id">
+          </mat-form-field>
+        </div>
 
-      <div class="mhq-col-3">
-        <!-- <mat-form-field appearance="fill">
+        <div class="mhq-col-8">
+          <mat-form-field appearance="fill">
+            <mat-label>Título</mat-label>
+            <input matInput [(ngModel)]="tempTlog.title">
+          </mat-form-field>
+        </div>
+
+        <div class="mhq-col-3">
+          <!-- <mat-form-field appearance="fill">
           <mat-label>Data</mat-label>
           <input matInput [(ngModel)]="tempTlog.date">
         </mat-form-field> -->
-        <mat-form-field appearance="fill">
-          <mat-label>Data</mat-label>
-          <input matInput [matDatepicker]="tlogDatePicker" [formControl]="mypick">
-          <mat-hint>DD/MM/YYYY</mat-hint>
-          <mat-datepicker-toggle matSuffix [for]="tlogDatePicker"></mat-datepicker-toggle>
-          <mat-datepicker #tlogDatePicker></mat-datepicker>
-        </mat-form-field>
-
-
-
-      </div>
-
-    </div>
-    <div class="mhq-row">
-
-      <div class="mhq-col-4 radio-group">
-        <p>Tipo:</p>
-        <mat-radio-group color="primary" [(ngModel)]="tempTlog.type">
-          <mat-radio-button value="expense">Despesa</mat-radio-button>
-          <mat-radio-button value="income">Rendimento</mat-radio-button>
-        </mat-radio-group>
-      </div>
-
-      <div class="mhq-col-4">
-        <!-- tenho de fazer select -->
-
-        <form class="mhq-cats-form">
-          <mat-form-field>
-            <mat-label>Categoria</mat-label>
-            <input type="text" matInput [formControl]="catForm" [matAutocomplete]="cat">
-            <mat-autocomplete autoActiveFirstOption #cat="matAutocomplete">
-              <mat-option *ngFor="let option of catFilteredOptions | async" [value]="option">
-                {{option}}
-              </mat-option>
-            </mat-autocomplete>
+          <mat-form-field appearance="fill">
+            <mat-label>Data</mat-label>
+            <input matInput [matDatepicker]="tlogDatePicker" [formControl]="mypick">
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle matSuffix [for]="tlogDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #tlogDatePicker></mat-datepicker>
           </mat-form-field>
-        </form>
+
+
+
+        </div>
 
       </div>
+      <div class="mhq-row">
 
-      <div class="mhq-col-4">
+        <div class="mhq-col-4 radio-group">
+          <p>Tipo:</p>
+          <mat-radio-group color="primary" [(ngModel)]="tempTlog.type">
+            <mat-radio-button value="expense">Despesa</mat-radio-button>
+            <mat-radio-button value="income">Rendimento</mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <div class="mhq-col-4">
+          <!-- tenho de fazer select -->
+
+          <form class="mhq-cats-form">
+            <mat-form-field>
+              <mat-label>Categoria</mat-label>
+              <input type="text" matInput [formControl]="catForm" [matAutocomplete]="cat">
+              <mat-autocomplete autoActiveFirstOption #cat="matAutocomplete">
+                <mat-option *ngFor="let option of catFilteredOptions | async" [value]="option">
+                  {{option}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+
+        </div>
+
+        <div class="mhq-col-4">
 
 
-        <form class="mhq-subcats-form">
-          <mat-form-field>
-            <mat-label>Categoria</mat-label>
-            <input type="text" matInput [formControl]="subCatForm" [matAutocomplete]="subcat">
-            <mat-autocomplete autoActiveFirstOption #subcat="matAutocomplete">
-              <mat-option *ngFor="let option of subCatFilteredOptions | async" [value]="option">
-                {{option}}
-              </mat-option>
-            </mat-autocomplete>
+          <form class="mhq-subcats-form">
+            <mat-form-field>
+              <mat-label>Categoria</mat-label>
+              <input type="text" matInput [formControl]="subCatForm" [matAutocomplete]="subcat">
+              <mat-autocomplete autoActiveFirstOption #subcat="matAutocomplete">
+                <mat-option *ngFor="let option of subCatFilteredOptions | async" [value]="option">
+                  {{option}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+
+
+        </div>
+
+      </div>
+      <div class="mhq-row">
+
+        <div class="mhq-col-9">
+          <mat-form-field appearance="fill">
+            <mat-label>Obs</mat-label>
+            <textarea matInput [(ngModel)]="tempTlog.obs"></textarea>
           </mat-form-field>
-        </form>
+        </div>
 
-
+        <div class="mhq-col-3">
+          <mat-form-field appearance="fill">
+            <mat-label>Valor</mat-label>
+            <input matInput [(ngModel)]="tempTlog.value">
+          </mat-form-field>
+        </div>
       </div>
 
     </div>
-    <div class="mhq-row">
-
-      <div class="mhq-col-9">
-        <mat-form-field appearance="fill">
-          <mat-label>Obs</mat-label>
-          <textarea matInput [(ngModel)]="tempTlog.obs"></textarea>
-        </mat-form-field>
-      </div>
-
-      <div class="mhq-col-3">
-        <mat-form-field appearance="fill">
-          <mat-label>Valor</mat-label>
-          <input matInput [(ngModel)]="tempTlog.value">
-        </mat-form-field>
-      </div>
-    </div>
-
   </div>
 
-  <!-- <div class="mhq-wrapper-row" *ngIf="editingMode"></div> -->
 </div>

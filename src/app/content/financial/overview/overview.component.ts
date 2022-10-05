@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
 import { FinancialService } from '../financial.service';
+import { TreasuryService } from '../treasury-log/treasury.service';
 
 
 
@@ -26,7 +27,7 @@ export class OverviewComponent {
   tempArray: Array<any>;
   treasuryLogs: ITreasuryLog[];
 
-  constructor(public financialService: FinancialService) {
+  constructor(public financialService: FinancialService, public treasuryService: TreasuryService) {
     const currentDate = new Date();
     switch (currentDate.getMonth() + 1) {
       case 1: case 3: case 5: case 7: case 8: case 10: case 12:
@@ -40,7 +41,7 @@ export class OverviewComponent {
         break;
     }
     this.tempArray = Array(this.monthDays).fill(0)
-    this.treasuryLogs = this.financialService.treasuryLog
+    this.treasuryLogs = this.treasuryService.treasuryLog
   }
 
   getDailySum(day: number) {
