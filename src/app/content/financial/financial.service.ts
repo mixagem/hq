@@ -6,7 +6,7 @@ import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
 
 type RecordBorderStyle = {
-  "border-left": string
+  "background-color": string
 }
 
 @Injectable({
@@ -46,7 +46,7 @@ export class FinancialService implements OnInit {
 
   ngOnInit(): void {
     // definir a cor inicial para o border dos detalhes da categoria/movimento tesouraria
-    this.recordBorderStyle['border-left'] = '30px dashed red';
+    this.recordBorderStyle['background-color'] = 'red';
   }
 
   // vai á bd buscar os movimentos

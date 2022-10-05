@@ -38,7 +38,7 @@ export class CategoriesComponent implements AfterViewInit, OnInit {
   addMode(): void {
 
     // atualiza a cor do border a ser utilizada na introdução de registo
-    this.financialService.recordBorderStyle = { "border-left": '30px dashed red' }
+    this.financialService.recordBorderStyle = { "background-color": 'red' }
 
     // navegação para modo de introdução de registo
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
@@ -52,7 +52,7 @@ export class CategoriesComponent implements AfterViewInit, OnInit {
 
     // loop para obter a cor do border da categoria para aplicar na consulta do registo
     this.financialService.allCategories.forEach(cat => {
-      if (cat.id === catID) { this.financialService.recordBorderStyle = { "border-left": '30px solid rgb(' + cat.bgcolor + ')' }; return }
+      if (cat.id === catID) { this.financialService.recordBorderStyle = { "background-color": 'rgb(' + cat.bgcolor + ')' }; return }
     });
 
     // navegação para modo de consulta de registo

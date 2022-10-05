@@ -5,6 +5,8 @@
   height: calc(100vh - var(--navbar-height));
   background: #fafafa;
   width: 70vw;
+  padding:0;
+  padding-right:2vw;
   // border-left: 30px solid var(--mhq-waikiki-color-3);
 }
 ::ng-deep mhq-category-details {

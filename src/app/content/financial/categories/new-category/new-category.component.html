@@ -1,5 +1,11 @@
 <div class="mhq-row full-height mhq-category-details-wrapper">
 
+
+  <div class="mhq-categories-drawer-left" [ngStyle]="financialService.recordBorderStyle">
+    left
+  </div>
+
+  <div class="mhq-categories-drawer-right">
   <div class="mhq-wrapper-row mhq-mainform-actions">
     <button  mat-flat-button style="background-color: var(--mhq-waikiki-sucess);" (click)="addCategoryActions('save')">Guardar alterações</button>
     <button  mat-flat-button color="warn" (click)="addCategoryActions('end')">Discartar alterações</button>
@@ -102,6 +108,6 @@
     </table>
 
   </div>
-
+</div>
 
 </div>

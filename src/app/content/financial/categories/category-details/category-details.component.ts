@@ -25,20 +25,19 @@ export class CategoryDetailsComponent implements OnInit {
   bgColorPicker: string;
   textColorPicker: string;
 
-  constructor(private _route: ActivatedRoute, private _financialService: FinancialService, private _router: Router, private _http: HttpClient, private _dialog: MatDialog) {
+  constructor(private _route: ActivatedRoute, public financialService: FinancialService, private _router: Router, private _http: HttpClient, private _dialog: MatDialog) {
     this.editingMode = false; // está aqui porque ao adicionar/remover sub cats, tenho de chama o on-init
   }
 
   ngOnInit(): void {
     this.id = Number(this._route.snapshot.paramMap.get('id')!);
-    [...this._financialService.allCategories].forEach(cat => {
+    [...this.financialService.allCategories].forEach(cat => {
       if (cat.id === this.id) { this.fiCategory = cat; return }
     });
     this.tempFiCategory = { ...this.fiCategory }
-    this._financialService.activePreviewCategory = { ...this.fiCategory }
-
+    this.financialService.activePreviewCategory = { ...this.fiCategory }
     // trigger remoto do OnInit
-    this._financialService.onInitTrigger.subscribe(myCustomParam => {
+    this.financialService.onInitTrigger.subscribe(myCustomParam => {
       this.ngOnInit();
     });
   }
@@ -60,8 +59,8 @@ export class CategoryDetailsComponent implements OnInit {
     const call = this._http.post('http://localhost:16190/savecat', httpParams, { responseType: 'text' })
 
     call.subscribe({
-      next: codeReceived => { this._financialService.fetchCategories('saveCategories', this.id); this.editingMode = false; },
-      error: err => this._financialService.handleError(err)
+      next: codeReceived => { this.financialService.fetchCategories('saveCategories', this.id); this.editingMode = false; },
+      error: err => this.financialService.handleError(err)
     })
 
   }
@@ -81,7 +80,7 @@ export class CategoryDetailsComponent implements OnInit {
         // remover a parte do rgb(), e guardar apenas os valores
         this.tempFiCategory.bgcolor = this.bgColorPicker.replace('rgb(', '').replace(')', '');
         this.tempFiCategory.textcolor = this.textColorPicker.replace('rgb(', '').replace(')', '');
-        this._financialService.recordBorderStyle['border-left'] = '30px solid rgb(' + this.tempFiCategory.bgcolor + ')';
+        this.financialService.recordBorderStyle['background-color'] = 'rgb(' + this.tempFiCategory.bgcolor + ')';
         this.saveCategory();
         break;
 
@@ -119,8 +118,8 @@ export class CategoryDetailsComponent implements OnInit {
     const call = this._http.post('http://localhost:16190/addsubcat', httpParams, { responseType: 'text' })
 
     call.subscribe({
-      next: codeReceived => { this._financialService.fetchCategories('refreshSubcategories', this.id); },
-      error: err => this._financialService.handleError(err)
+      next: codeReceived => { this.financialService.fetchCategories('refreshSubcategories', this.id); },
+      error: err => this.financialService.handleError(err)
     })
 
   }
@@ -131,8 +130,8 @@ export class CategoryDetailsComponent implements OnInit {
     const httpParams = new HttpParams().set('subcat', subCatID).set('cat', this.id)
     const call = this._http.post('http://localhost:16190/removesubcat', httpParams, { responseType: 'text' })
     call.subscribe({
-      next: codeReceived => { this._financialService.fetchCategories('refreshSubcategories', this.id); },
-      error: err => this._financialService.handleError(err)
+      next: codeReceived => { this.financialService.fetchCategories('refreshSubcategories', this.id); },
+      error: err => this.financialService.handleError(err)
     })
   }
 
