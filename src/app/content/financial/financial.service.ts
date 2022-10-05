@@ -33,6 +33,9 @@ export class FinancialService implements OnInit {
   // clone do movimento  atualmente em consulta
   activeTreasuryLog: ITreasuryLog;
 
+  //boolean para verificar se é duplicada ou é criada nova categoria
+  cloningCategory:Boolean;
+
   constructor(private _http: HttpClient, private _router: Router) {
     // vai buscar à bd as categorias e movimentos existentes
     this.fetchCategories();
@@ -45,8 +48,8 @@ export class FinancialService implements OnInit {
   }
 
   ngOnInit(): void {
-    // definir a cor inicial para o border dos detalhes da categoria/movimento tesouraria
-    this.recordBorderStyle['background-color'] = 'red';
+    this.cloningCategory = false;
+
   }
 
   // vai á bd buscar os movimentos
@@ -126,6 +129,32 @@ export class FinancialService implements OnInit {
       },
       error: err => this.handleError(err)
     });
+
+  }
+
+  // navegação para modo de introdução
+  addMode(cloningCategory: boolean): void {
+
+    // verifica se é duplicação ou é introdução normal
+   this.cloningCategory = cloningCategory;
+   (!this.cloningCategory) ? this.recordBorderStyle = {'background-color':'red'} : [];
+    // navegação para modo de introdução de registo
+    this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this._router.navigate(['/fi/cats/add']);
+    });
+
+  }
+
+  // fecha a consulta do registo, e retorna para o modo listagem
+  closeDetails(): void {
+
+    document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight')
+
+    const timer = setTimeout(navi.bind(null, this._router), 1000)
+
+    function navi(router: Router): void {
+      router.navigate(['/fi/cats'])
+    }
 
   }
 

@@ -4,7 +4,7 @@
     <h1>
       <mat-icon>account_balance</mat-icon>Categorias
     </h1>
-    <div class="mhq-mainform-actions"><button mat-flat-button color="primary" (click)="addMode()">
+    <div class="mhq-mainform-actions"><button mat-flat-button color="primary" (click)="financialService.addMode(false)">
         <mat-icon>add</mat-icon>Adicionar categoria
       </button>
     </div>
@@ -44,7 +44,7 @@
 
   </table>
 
-  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
 
 </div>
 

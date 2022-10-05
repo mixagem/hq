@@ -90,19 +90,6 @@ export class CategoryDetailsComponent implements OnInit {
     }
   }
 
-  // fecha a consulta do registo, e retorna para o modo listagem
-  closeDetails(): void {
-
-    document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight')
-
-    const timer = setTimeout(navi.bind(null, this._router), 1000)
-
-    function navi(router: Router): void {
-      router.navigate(['/fi/cats'])
-    }
-
-  }
-
   // adicionar sub-categoria à categoria em edição
   addSubCategory(): void {
 

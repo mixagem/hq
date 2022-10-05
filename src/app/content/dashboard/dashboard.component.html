@@ -1,4 +1,4 @@
-<h1>
+<div class="mhq-mainform-container"><h1>
   todo
 </h1>
 workflow<br>
@@ -8,74 +8,88 @@ workflow<br>
   <li>mov tes bd fondations</li>
 </ol>
 
-  <div style="height:600px;overflow-y: scroll;word-wrap: break-word;">
+<div style="height:600px;overflow-y: scroll;word-wrap: break-word;">
 
-v1 financial
+  v1 financial
 
-- submenu financial : excel view<br>
--- Excel view: 3 vistas, diária, mensal, anual<br>
--- Opções mainform: adicionar gasto/income, alterar vista, mostrar categorias sem gastos/income, mostrar depsesas do tipo budget<br>
--- adicionar registo: abre modal, com inputs para: categoria, sub-categoria (sendo possível crirar uma nova entrada de sub-categoria), detalhes da despesa, data despesa, recorrencia (periodo recorrencia + numero de recorrencias), valor, nif incluído, é budget?, é off-budget?<br>
--- vista diária : 1 quadrado por dia (todos na horizontal). ao carregar, abre modal com as informações o dia (gastos / income), sendo possível remover o gasto do dia (NOTA 1). estes gastos e incomes, serão registados noutro sub menu, movimentos de tesouraria<br>
--- mensal: 1 quadrado por mês. ao carregar, abre modal com os resumos do mês, não sendo possível a gestão de gastos nesta vista (adicionar ou remover)<br>
--- anual: igua ao mensal, mas para anual<br><br>
+  - submenu financial : excel view<br>
+  -- Excel view: 3 vistas, diária, mensal, anual<br>
+  -- Opções mainform: adicionar gasto/income, alterar vista, mostrar categorias sem gastos/income, mostrar depsesas do
+  tipo budget<br>
+  -- adicionar registo: abre modal, com inputs para: categoria, sub-categoria (sendo possível crirar uma nova entrada de
+  sub-categoria), detalhes da despesa, data despesa, recorrencia (periodo recorrencia + numero de recorrencias), valor,
+  nif incluído, é budget?, é off-budget?<br>
+  -- vista diária : 1 quadrado por dia (todos na horizontal). ao carregar, abre modal com as informações o dia (gastos /
+  income), sendo possível remover o gasto do dia (NOTA 1). estes gastos e incomes, serão registados noutro sub menu,
+  movimentos de tesouraria<br>
+  -- mensal: 1 quadrado por mês. ao carregar, abre modal com os resumos do mês, não sendo possível a gestão de gastos
+  nesta vista (adicionar ou remover)<br>
+  -- anual: igua ao mensal, mas para anual<br><br>
 
-- novo submenu: expense categories<br>
--- opções mainform: re-order (separar arrays de incomes e expenses para facilitar o re-order), adicionar novo (abre modal c 2 tabs, categoria, ou subcategoria)
+  - novo submenu: expense categories<br>
+  -- opções mainform: re-order (separar arrays de incomes e expenses para facilitar o re-order), adicionar novo (abre
+  modal c 2 tabs, categoria, ou subcategoria)
 
-- sub-menu financial: movimentos tesouraria:<br>
--- cada registo de despesa/income, adiciona a esta tabela. depois com base nesta tabela, é que o excel view é renderizado.<br>
--- esta tabela deve ter as colunas: id movimento tesouraria, valor, categoria, sub-categoria, descrição, data, recorrencia-id, nif incluido, budget<br>
--- cada recorrencia, é um novo registo, mas tem o recorrencia-id para agrupar e identificar os varios registosa de uma recorrencia<br><br>
--- modo listagem a la go, e com sub-routing incluído (de modo a ser possível linkar através o ecrã efatura check. ao visitar registo, e exibida a janela com os detalhes da despesa)
+  - sub-menu financial: movimentos tesouraria:<br>
+  -- cada registo de despesa/income, adiciona a esta tabela. depois com base nesta tabela, é que o excel view é
+  renderizado.<br>
+  -- esta tabela deve ter as colunas: id movimento tesouraria, valor, categoria, sub-categoria, descrição, data,
+  recorrencia-id, nif incluido, budget<br>
+  -- cada recorrencia, é um novo registo, mas tem o recorrencia-id para agrupar e identificar os varios registosa de uma
+  recorrencia<br><br>
+  -- modo listagem a la go, e com sub-routing incluído (de modo a ser possível linkar através o ecrã efatura check. ao
+  visitar registo, e exibida a janela com os detalhes da despesa)
 
-- sub-menu financial: budgeting:<br>
--- acções mainform: add budget expense<br>
--- modo de lista das despesas que são identificadas como budget<br>
--- ações do registo: torna despesas de budget em despesa legit<br><br>
+  - sub-menu financial: budgeting:<br>
+  -- acções mainform: add budget expense<br>
+  -- modo de lista das despesas que são identificadas como budget<br>
+  -- ações do registo: torna despesas de budget em despesa legit<br><br>
 
-- sub-menu financial: efatura check<br>
--- para os registos que sejam nif incluido, é adicionada á tabela e-fatura check a respetiva despesa<br>
--- esta tabela tem as colunas id movimento tesouraria, valor despesa, categoria efatura<br><br>
+  - sub-menu financial: efatura check<br>
+  -- para os registos que sejam nif incluido, é adicionada á tabela e-fatura check a respetiva despesa<br>
+  -- esta tabela tem as colunas id movimento tesouraria, valor despesa, categoria efatura<br><br>
 
-- sub-menu financial: budget analysis<br>
--- graficos snapshot (procurar biblioteca :D) a mostrar as varias cenas com orçamentos <br><br>
-
-
-- sub-menu financial: salary analysis<br>
--- tabela de referencia com taxas iva, e projecção para salários e talz. <br><br>
-
-- sub-menu financial: savings<br>
--- graficos snapshot a mostrar as varias poupanças e sua evolução (e projeção) <br><br>
-
-- sub-menu financial: off-budget analysis<br>
--- relatório de despesas identificadas como off-budget<br>
--- sumatório de off-budgets mais diferença do orçamento para o real. no final, valor a ser enviado para poupança<br>
--- gráfico snapshot a mostrar a evolução dos off-budget (0) vs realizado (poder ser positivo, ou negativo)<br><br>
+  - sub-menu financial: budget analysis<br>
+  -- graficos snapshot (procurar biblioteca :D) a mostrar as varias cenas com orçamentos <br><br>
 
 
-(NOTA 1 - são necessários 2 arrays com os diferentes tipos de gastos: recorrentes e n recorrentes. no caso de ser n recorrentes, certificar que todas as entradas sao eliminadas - quando fizer o foreach para os recorrentes, ter isto em conta)
-<br><br>
+  - sub-menu financial: salary analysis<br>
+  -- tabela de referencia com taxas iva, e projecção para salários e talz. <br><br>
 
-v2 - agenda<br>
-- remover submenu agenda (ficar apenas menu principal)<br>
--- trabalhar recorrencias<br>
----> mensal(mensalidades), anual (aniversarios)<br>
--- trabalhar categorias<br>
---sub-menu: aniversários & feriados<br>
--- eventos de dia inteiro (tipo aleart idk)<br>
--- eventos recorrentes via à senaba  (para identficar semanas de trabalho mais easy)<br><br>
+  - sub-menu financial: savings<br>
+  -- graficos snapshot a mostrar as varias poupanças e sua evolução (e projeção) <br><br>
 
--ngx scrollbars<br>
--sqlite<br>
--express server<br><br>
+  - sub-menu financial: off-budget analysis<br>
+  -- relatório de despesas identificadas como off-budget<br>
+  -- sumatório de off-budgets mais diferença do orçamento para o real. no final, valor a ser enviado para poupança<br>
+  -- gráfico snapshot a mostrar a evolução dos off-budget (0) vs realizado (poder ser positivo, ou negativo)<br><br>
 
--electron<br>
--nexe<br>
 
-<br>
-- interação calendars google api numa v3<br>
-- menu warehouse numa v4<br>
-- menu gym numa v5<br><br>
+  (NOTA 1 - são necessários 2 arrays com os diferentes tipos de gastos: recorrentes e n recorrentes. no caso de ser n
+  recorrentes, certificar que todas as entradas sao eliminadas - quando fizer o foreach para os recorrentes, ter isto em
+  conta)
+  <br><br>
 
+  v2 - agenda<br>
+  - remover submenu agenda (ficar apenas menu principal)<br>
+  -- trabalhar recorrencias<br>
+  ---> mensal(mensalidades), anual (aniversarios)<br>
+  -- trabalhar categorias<br>
+  --sub-menu: aniversários & feriados<br>
+  -- eventos de dia inteiro (tipo aleart idk)<br>
+  -- eventos recorrentes via à senaba (para identficar semanas de trabalho mais easy)<br><br>
+
+  -ngx scrollbars<br>
+  -sqlite<br>
+  -express server<br><br>
+
+  -electron<br>
+  -nexe<br>
+
+  <br>
+  - interação calendars google api numa v3<br>
+  - menu warehouse numa v4<br>
+  - menu gym numa v5<br><br>
+
+</div>
 </div>

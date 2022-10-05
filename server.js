@@ -229,7 +229,7 @@ function getCats(req, res) {
   });
   let categories = [];
   db.serialize(() => {
-    db.each(`SELECT * FROM categories`, (err, cat) => {
+    db.each(`SELECT * FROM categories ORDER BY id DESC`, (err, cat) => {
       if (err) { console.error(err.message) } else {
         cat.subcats = [];
         cat.active === 'true' ? cat.active = true : cat.active = false;

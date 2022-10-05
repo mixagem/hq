@@ -18,9 +18,7 @@ export class CategoriesComponent implements AfterViewInit, OnInit {
   // array com as colunas da tabela
   displayedColumns: string[];
 
-  constructor(public financialService: FinancialService, public router: Router) {
-
-  }
+  constructor(public financialService: FinancialService, public router: Router) {  }
 
   ngOnInit(): void {
     // incializar tabela
@@ -32,19 +30,6 @@ export class CategoriesComponent implements AfterViewInit, OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
-  }
-
-  // navegação para modo de introdução de registo
-  addMode(): void {
-
-    // atualiza a cor do border a ser utilizada na introdução de registo
-    this.financialService.recordBorderStyle = { "background-color": 'red' }
-
-    // navegação para modo de introdução de registo
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate(['/fi/cats/add']);
-    });
-
   }
 
   // navegação para modo de consulta de registo

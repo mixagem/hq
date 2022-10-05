@@ -1,9 +1,7 @@
 <div class="mhq-row full-height mhq-category-details-wrapper">
 
-
-
   <div class="mhq-categories-drawer-left">
-    <div class="mhq-quickaction-close" (click)="closeDetails()">
+    <div class="mhq-quickaction-close" (click)="financialService.closeDetails()">
       <mat-icon>close</mat-icon>
     </div>
     <div *ngIf="!editingMode" class="mhq-quickaction-default" (click)="toggleEditing('start')"><button mat-icon-button>
@@ -16,7 +14,7 @@
       <mat-icon>not_interested</mat-icon>
     </button></div>
 
-    <div *ngIf="!editingMode" class="mhq-quickaction-default"><button mat-icon-button>
+    <div *ngIf="!editingMode" class="mhq-quickaction-default"><button mat-icon-button (click)="financialService.addMode(true)">
       <mat-icon>file_copy</mat-icon>
     </button></div>
 

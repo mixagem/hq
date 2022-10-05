@@ -1,113 +1,120 @@
 <div class="mhq-row full-height mhq-category-details-wrapper">
 
+  <div class="mhq-categories-drawer-left">
+    <div class="mhq-quickaction-close" (click)="financialService.closeDetails()">
+      <mat-icon>close</mat-icon>
+    </div>
 
-  <div class="mhq-categories-drawer-left" [ngStyle]="financialService.recordBorderStyle">
-    left
+    <div class="mhq-quickaction-save" (click)="addCategoryActions('save')"><button mat-icon-button>
+        <mat-icon>save</mat-icon>
+      </button></div>
+    <div class="mhq-quickaction-delete" (click)="addCategoryActions('end')"><button mat-icon-button>
+        <mat-icon>not_interested</mat-icon>
+      </button></div>
+
+
+    <div [ngStyle]="financialService.recordBorderStyle"></div>
   </div>
 
   <div class="mhq-categories-drawer-right">
-  <div class="mhq-wrapper-row mhq-mainform-actions">
-    <button  mat-flat-button style="background-color: var(--mhq-waikiki-sucess);" (click)="addCategoryActions('save')">Guardar alterações</button>
-    <button  mat-flat-button color="warn" (click)="addCategoryActions('end')">Discartar alterações</button>
-  </div>
 
+    <div class="mhq-wrapper-row">
+      <h1>Detalhes</h1>
+      <div class="mhq-row">
+        <div class="mhq-col-1">
+          <mat-form-field appearance="fill">
+            <mat-label>ID</mat-label>
+            <input matInput disabled [value]="tempFiCategory.id">
+          </mat-form-field>
+        </div>
+        <div class="mhq-col-8">
+          <mat-form-field appearance="fill">
+            <mat-label>Título</mat-label>
+            <input matInput [(ngModel)]="tempFiCategory.title">
+          </mat-form-field>
+        </div>
+        <div class="mhq-col-1">
+          <mat-form-field appearance="fill">
+            <mat-label>Icon</mat-label>
+            <input matInput [(ngModel)]="tempFiCategory.icon">
+          </mat-form-field>
+        </div>
+        <div class="mhq-col-2 mhq-checkbox-wrapper">
+          <mat-checkbox color="primary" [(ngModel)]="tempFiCategory.active">Ativo</mat-checkbox>
+        </div>
+      </div>
+      <div class="mhq-row">
+        <div class="mhq-col-4 radio-group">
+          <p>Tipo:</p>
+          <mat-radio-group color="primary" [(ngModel)]="tempFiCategory.type">
+            <mat-radio-button value="expense">Despesa</mat-radio-button>
+            <mat-radio-button value="income">Rendimento</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="mhq-col-4">
+          <mat-form-field appearance="fill">
+            <mat-label>Cor etiqueta</mat-label>
+            <input matInput [cpPosition]="'bottom'" [cpOutputFormat]="'rgba'" [cpAlphaChannel]="'disabled'"
+              [cpPositionOffset]="'5%'" [cpPositionRelativeToArrow]="true" [cpCancelButton]="true" [cpOKButton]="true"
+              [cpSaveClickOutside]="false" [(colorPicker)]="bgColorPicker" [(ngModel)]="bgColorPicker">
+          </mat-form-field>
+        </div>
+        <div class="mhq-col-4">
+          <mat-form-field appearance="fill">
+            <mat-label>Cor etiqueta</mat-label>
+            <input matInput [cpPosition]="'bottom'" [cpOutputFormat]="'rgba'" [cpAlphaChannel]="'disabled'"
+              [cpPositionOffset]="'5%'" [cpPositionRelativeToArrow]="true" [cpCancelButton]="true" [cpOKButton]="true"
+              [cpSaveClickOutside]="false" [(colorPicker)]="textColorPicker" [(ngModel)]="textColorPicker">
+          </mat-form-field>
+        </div>
 
-  <div class="mhq-wrapper-row">
-    <h1>Detalhes</h1>
-    <div class="mhq-row">
-      <div class="mhq-col-1">
-        <mat-form-field appearance="fill">
-          <mat-label>ID</mat-label>
-          <input matInput disabled [value]="tempFiCategory.id">
-        </mat-form-field>
-      </div>
-      <div class="mhq-col-8">
-        <mat-form-field appearance="fill">
-          <mat-label>Título</mat-label>
-          <input matInput [(ngModel)]="tempFiCategory.title">
-        </mat-form-field>
-      </div>
-      <div class="mhq-col-1">
-        <mat-form-field appearance="fill">
-          <mat-label>Icon</mat-label>
-          <input matInput [(ngModel)]="tempFiCategory.icon">
-        </mat-form-field>
-      </div>
-      <div class="mhq-col-2 mhq-checkbox-wrapper">
-        <mat-checkbox color="primary"  [(ngModel)]="tempFiCategory.active">Ativo</mat-checkbox>
       </div>
     </div>
-    <div class="mhq-row">
-      <div class="mhq-col-4 radio-group">
-        <p>Tipo:</p>
-        <mat-radio-group color="primary" [(ngModel)]="tempFiCategory.type">
-          <mat-radio-button value="expense">Despesa</mat-radio-button>
-          <mat-radio-button value="income">Rendimento</mat-radio-button>
-        </mat-radio-group>
-      </div>
-      <div class="mhq-col-4">
-        <mat-form-field appearance="fill">
-          <mat-label>Cor etiqueta</mat-label>
-          <input matInput [(ngModel)]="tempFiCategory.bgcolor">
-        </mat-form-field>
-      </div>
-      <div class="mhq-col-4">
-        <mat-form-field appearance="fill">
-          <mat-label>Cor texto</mat-label>
-          <input matInput [(ngModel)]="tempFiCategory.textcolor">
-        </mat-form-field>
-      </div>
+
+
+    <div class="mhq-wrapper-row">
+      <h1>Sub-categorias</h1>
+
+      <div *ngIf="tempFiCategory.subcats.length===0">no rows. <span (click)="addSubCategory()">click to
+          add</span></div>
+
+      <table *ngIf="tempFiCategory.subcats.length>0">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Orçamento</th>
+            <th>Ativo</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let tempsubcat of tempFiCategory.subcats; let i = index;">
+            <td>
+              <mat-form-field appearance="fill">
+                <mat-label>Título</mat-label>
+                <input matInput [(ngModel)]="tempsubcat.title">
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field appearance="fill">
+                <mat-label>Orçamento</mat-label>
+                <input matInput [(ngModel)]="tempsubcat.budget">
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-checkbox color="primary" [(ngModel)]="tempsubcat.active"></mat-checkbox>
+            </td>
+            <td (click)="removeSubCategory(i)">
+              <mat-icon>delete</mat-icon>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="6" (click)="addSubCategory()">add-shiet bro</td>
+          </tr>
+        </tbody>
+      </table>
 
     </div>
   </div>
-
-
-  <div class="mhq-wrapper-row">
-    <h1>Sub-categorias</h1>
-
-
-
-      <div *ngIf="tempFiCategory.subcats.length===0" >no rows. <span (click)="addSubCategory()">click to
-        add</span></div>
-
-
-    <table *ngIf="tempFiCategory.subcats.length>0">
-      <thead>
-        <tr>
-          <th>Título</th>
-          <th>Orçamento</th>
-          <th>Ativo</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let tempsubcat of tempFiCategory.subcats; let i = index;">
-          <td>
-            <mat-form-field appearance="fill">
-              <mat-label>Título</mat-label>
-              <input matInput [(ngModel)]="tempsubcat.title">
-            </mat-form-field>
-          </td>
-          <td>
-            <mat-form-field appearance="fill">
-              <mat-label>Orçamento</mat-label>
-              <input matInput [(ngModel)]="tempsubcat.budget">
-            </mat-form-field>
-          </td>
-          <td>
-            <mat-checkbox color="primary" [(ngModel)]="tempsubcat.active"></mat-checkbox>
-          </td>
-          <td (click)="removeSubCategory(i)">
-            <mat-icon>delete</mat-icon>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="6" (click)="addSubCategory()">add-shiet bro</td>
-        </tr>
-      </tbody>
-    </table>
-
-  </div>
-</div>
 
 </div>
