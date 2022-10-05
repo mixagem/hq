@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
@@ -8,6 +8,17 @@ import { map, startWith } from 'rxjs/operators';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { TreasuryService } from '../treasury.service';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
+
+const DEFAULT_TLOG: ITreasuryLog = {
+  id: 0,
+  title: 'temp',
+  date: Date.now(),
+  value: 0,
+  cat: 0,
+  subcat: 0,
+  type: 'expense',
+  obs: ''
+}
 
 @Component({
   selector: 'mhq-new-treasury-log',
@@ -19,8 +30,8 @@ export class NewTreasuryLogComponent implements OnInit {
   tempTlog: ITreasuryLog;
   mypick: FormControl<any>;
 
-// autocomplete categoria
-  catForm = new FormControl('');
+  // autocomplete categoria
+  catForm = new FormControl('', [Validators.required]);
   catFormOptions: string[] = [];
   catFilteredOptions: Observable<string[]>;
   private _catfilter(value: string): string[] {
@@ -29,7 +40,7 @@ export class NewTreasuryLogComponent implements OnInit {
   }
 
   // autocomplete sub categoria
-  subCatForm = new FormControl('');
+  subCatForm = new FormControl('', [Validators.required]);
   subCatFormOptions: string[] = [];
   subCatFilteredOptions: Observable<string[]>;
   private _subcatfilter(value: string): string[] {
@@ -37,19 +48,7 @@ export class NewTreasuryLogComponent implements OnInit {
     return this.subCatFormOptions.filter(option => option.toLowerCase().includes(filterValue));
   }
 
-  constructor(public financialService: FinancialService, public treasuryService: TreasuryService, private _route: ActivatedRoute, public _router: Router, public _http: HttpClient) {
-
-    this.tempTlog = {
-      id: 0,
-      title: 'temp',
-      date: Date.now(),
-      value: 0,
-      cat: 0,
-      subcat: 0,
-      type: 'expense',
-      obs: ''
-    }
-  }
+  constructor(public financialService: FinancialService, public treasuryService: TreasuryService, private _route: ActivatedRoute, public _router: Router, public _http: HttpClient) { }
 
   ngOnInit(): void {
 
@@ -67,7 +66,7 @@ export class NewTreasuryLogComponent implements OnInit {
 
     this.catFormOptions = [];
     this.subCatFormOptions = [];
-    const allCats = [...this.financialService.expenseCategories, ...this.financialService.incomeCategories]
+    const allCats = [...this.financialService.allCategories]
     allCats.forEach(cat => {
       this.catFormOptions.push(cat.title)
     });
@@ -77,7 +76,15 @@ export class NewTreasuryLogComponent implements OnInit {
       });
     });
 
+    if (this.treasuryService.cloningTLog) {
+      this.tempTlog = this.treasuryService.activeTreasuryLog
+      this.tempTlog.id = 0
+    } else {
+      this.tempTlog = DEFAULT_TLOG
+    }
+
     this.mypick = new FormControl(new Date(this.tempTlog.date));
+
   }
 
   toggleEditing(action: string): void {
@@ -85,26 +92,31 @@ export class NewTreasuryLogComponent implements OnInit {
 
       case 'save':
 
+        if (this.catForm.errors || this.subCatForm.errors) { return alert('fuck you') }
+
         // converter a data do picker para guardar da bd
         this.tempTlog.date = new Date(this.mypick.value.toISOString()).getTime();
 
-        let subCats : IFinancialSubCategory[]; // subcats da categoria selecioanda
+        let catID: number; // id da categoria
+        let catBGColor: string // cor da categoria
+        let subCats: IFinancialSubCategory[]; // subcats da categoria selecioanda
 
-        // obter o ID da categoria selecionada
-        const catID = [...this.financialService.allCategories].forEach(cat => {
-          if (cat.title === this.catForm.value) {subCats = cat.subcats; return cat.id}
-          return;
+        // obter o ID, BGColor e SubCategorias  da categoria selecionada
+        [...this.financialService.allCategories].forEach(cat => {
+          if (cat.title === this.catForm.value) { catBGColor = cat.bgcolor; subCats = cat.subcats; catID = cat.id; return; }
         });
 
         // obter o ID da sub-categoria selecionada
-        const subCatID = subCats!.forEach(subcat => {
-          subcat.title == this.subCatForm.value
+        let subCatID: number;
+        subCats!.forEach(subcat => {
+          if (subcat.title === this.subCatForm.value) { subCatID = subcat.id; return; }
         });
 
         // converter de títilo para o id das catgorias
         this.tempTlog.cat = catID!;
         this.tempTlog.subcat = subCatID!;
-
+        
+        this.treasuryService.recordBorderStyle['background-color'] = 'rgb(' + catBGColor! + ')';
         this.saveTreasurylog();
 
         break;

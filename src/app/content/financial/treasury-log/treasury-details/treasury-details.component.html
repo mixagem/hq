@@ -15,7 +15,7 @@
       </button></div>
 
     <div *ngIf="!editingMode" class="mhq-quickaction-default"><button mat-icon-button
-        (click)="treasuryService.addMode(false)">
+        (click)="treasuryService.addMode(true)">
         <mat-icon>file_copy</mat-icon>
       </button></div>
 
@@ -151,7 +151,7 @@
             <mat-form-field>
               <mat-label>Categoria</mat-label>
               <input type="text" matInput [formControl]="catForm" [matAutocomplete]="cat">
-              <mat-autocomplete autoActiveFirstOption #cat="matAutocomplete">
+              <mat-autocomplete autoActiveFirstOption #cat="matAutocomplete" required>
                 <mat-option *ngFor="let option of catFilteredOptions | async" [value]="option">
                   {{option}}
                 </mat-option>
@@ -168,7 +168,7 @@
             <mat-form-field>
               <mat-label>Categoria</mat-label>
               <input type="text" matInput [formControl]="subCatForm" [matAutocomplete]="subcat">
-              <mat-autocomplete autoActiveFirstOption #subcat="matAutocomplete">
+              <mat-autocomplete autoActiveFirstOption #subcat="matAutocomplete" required>
                 <mat-option *ngFor="let option of subCatFilteredOptions | async" [value]="option">
                   {{option}}
                 </mat-option>

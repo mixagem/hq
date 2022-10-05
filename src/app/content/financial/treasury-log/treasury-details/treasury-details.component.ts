@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -9,6 +9,7 @@ import { FinancialService } from '../../financial.service';
 import { map, startWith } from 'rxjs/operators';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { TreasuryService } from '../treasury.service';
+import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
 
 @Component({
   selector: 'mhq-treasury-details',
@@ -23,7 +24,7 @@ export class TreasuryDetailsComponent implements OnInit {
   mypick: FormControl<any>;
 
   // autocomplete categoria
-  catForm = new FormControl('');
+  catForm = new FormControl('', [Validators.required]);
   catFormOptions: string[] = [];
   catFilteredOptions: Observable<string[]>;
   private _catfilter(value: string): string[] {
@@ -32,7 +33,7 @@ export class TreasuryDetailsComponent implements OnInit {
   }
 
   // autocomplete sub categoria
-  subCatForm = new FormControl('');
+  subCatForm = new FormControl('', [Validators.required]);
   subCatFormOptions: string[] = [];
   subCatFilteredOptions: Observable<string[]>;
   private _subcatfilter(value: string): string[] {
@@ -96,6 +97,11 @@ export class TreasuryDetailsComponent implements OnInit {
 
     //datepicker
     this.mypick = new FormControl(new Date(this.treasuryService.activeTreasuryLog.date));
+
+    // trigger remoto do OnInit
+    this.treasuryService.onInitTrigger.subscribe(myCustomParam => {
+      this.ngOnInit();
+    });
   }
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
@@ -107,7 +113,7 @@ export class TreasuryDetailsComponent implements OnInit {
     });
   }
 
-  saveTlog(): void {
+  saveTreasurylog(): void {
 
     const httpParams = new HttpParams().set('tlog', JSON.stringify(this.tempTreasuryLog))
     const call = this._http.post('http://localhost:16190/savetlog', httpParams, { responseType: 'text' })
@@ -125,25 +131,37 @@ export class TreasuryDetailsComponent implements OnInit {
       case 'start':
 
         this.tempTreasuryLog = JSON.parse(JSON.stringify(this.treasuryLog));
-
         this.editingMode = true;
-
         break;
 
       case 'save':
 
+        if (this.catForm.errors || this.subCatForm.errors) { return alert('fuck you') }
+
+        // converter a data do picker para guardar da bd
         this.tempTreasuryLog.date = new Date(this.mypick.value.toISOString()).getTime();
 
-        const catID = [...this._financialService.allCategories].filter(cat => cat.title === this.catForm.value)[0].id
+        let catID: number; // id da categoria
+        let catBGColor: string // cor da categoria
+        let subCats: IFinancialSubCategory[]; // subcats da categoria selecioanda
 
-        const subcatstofilter = [...this._financialService.allCategories].filter(cat => cat.id == catID)[0].subcats;
+        // obter o ID, BGColor e SubCategorias  da categoria selecionada
+        [...this._financialService.allCategories].forEach(cat => {
+          if (cat.title === this.catForm.value) { catBGColor = cat.bgcolor; subCats = cat.subcats; catID = cat.id; return; }
+        });
 
-        const subCatID = subcatstofilter.filter(subcat => subcat.title === this.subCatForm.value)[0].id
+        // obter o ID da sub-categoria selecionada
+        let subCatID: number;
+        subCats!.forEach(subcat => {
+          if (subcat.title === this.subCatForm.value) { subCatID = subcat.id; return; }
+        });
 
-        this.tempTreasuryLog.cat = catID;
-        this.tempTreasuryLog.subcat = subCatID;
+        // converter de títilo para o id das catgorias
+        this.tempTreasuryLog.cat = catID!;
+        this.tempTreasuryLog.subcat = subCatID!;
 
-        this.saveTlog();
+        this.treasuryService.recordBorderStyle['background-color'] = 'rgb(' + catBGColor! + ')';
+        this.saveTreasurylog();
 
         break;
 

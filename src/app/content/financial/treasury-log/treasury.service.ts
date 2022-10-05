@@ -57,25 +57,9 @@ export class TreasuryService {
           this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             this._router.navigate(['/fi/tlogs', LogID]);
           });
-        }
-
-
-        if (source === 'addTreasuryLog') {
-          // fechar a gaveta do registo
-          document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
-
-          const timer = setTimeout(navi.bind(null, this._router), 1000) // tempo da animação antes de redirecionar
-
-          function navi(router: Router): void {
-            router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-              router.navigate(['/fi/tlogs']);
-            });
-          }
 
           this.onInitTriggerCall();
         }
-
-
 
         if (source === 'removeTreasuryLog') {
           // fechar a gaveta do registo
@@ -178,6 +162,8 @@ export class TreasuryService {
 
     return icon!
   }
+
+  
 
   // tratamento erros
   handleError(err: HttpErrorResponse): Observable<never> {
