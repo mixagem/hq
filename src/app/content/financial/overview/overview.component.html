@@ -47,7 +47,8 @@
         </div>
       </div>
 
-      <div style="height:40px;background-color: red;margin-top:20px;">Total</div>
+      <div style="height:40px;background-color:aquamarine;margin-top:20px;">Total</div>
+      <div style="height:40px;background-color:darkkhaki;margin-top:20px;">Total Acomulado</div>
 
 
     </div>
@@ -73,14 +74,16 @@
 
             <div style="display:flex">
               <div *ngFor="let null of tempArray let i = index" class="mhq-overview-cat-cell"
-                [ngStyle]="{'background-color':'rgba('+cat.bgcolor+',.3)','color':'rgb('+cat.textcolor+')'}">
+                [ngStyle]="{'background-color':'rgba('+cat.bgcolor+',.3)','color':'rgb('+cat.textcolor+')'}"
+                (click)="showDailyCatDetails(cat.id,i+1)">
                 {{getCatValue(i+1,cat.id)}}</div>
             </div>
 
             <div *ngFor="let subcat of cat.subcats">
               <div *ngIf="subcat.active" style="display: flex;">
                 <div *ngFor="let null of tempArray let i = index" class="mhq-overview-subcat-cell"
-                  [ngStyle]="{'background-color':'rgba('+cat.bgcolor+',.3)','color':'rgb('+cat.textcolor+')'}">
+                  [ngStyle]="{'background-color':'rgba('+cat.bgcolor+',.3)','color':'rgb('+cat.textcolor+')'}"
+                  (click)="showDailySubCatDetails(subcat.id,i+1)">
                   {{getSubcatValue(i+1,cat.id,subcat.id)}}</div>
               </div>
             </div>
@@ -97,14 +100,16 @@
 
             <div style="display:flex">
               <div *ngFor="let null of tempArray let i = index" class="mhq-overview-cat-cell"
-                [ngStyle]="{'background-color':'rgba('+cat.bgcolor+',.3)','color':'rgb('+cat.textcolor+')'}">
+                [ngStyle]="{'background-color':'rgba('+cat.bgcolor+',.3)','color':'rgb('+cat.textcolor+')'}"
+                (click)="showDailyCatDetails(cat.id,i+1)">
                 {{getCatValue(i+1,cat.id)}}</div>
             </div>
 
             <div *ngFor="let subcat of cat.subcats">
               <div *ngIf="subcat.active" style="display: flex;">
                 <div *ngFor="let null of tempArray let i = index" class="mhq-overview-subcat-cell"
-                  [ngStyle]="{'background-color':'rgba('+cat.bgcolor+',.3)','color':'rgb('+cat.textcolor+')'}">
+                  [ngStyle]="{'background-color':'rgba('+cat.bgcolor+',.3)','color':'rgb('+cat.textcolor+')'}"
+                  (click)="showDailySubCatDetails(subcat.id,i+1)">
                   {{getSubcatValue(i+1,cat.id,subcat.id)}}</div>
               </div>
             </div>
@@ -115,10 +120,17 @@
         </div>
       </div>
 
-      <div style="height: 45px;margin-top:20px;display: flex;">
+      <div style="height: 40px;margin-top:20px;display: flex;">
+        <div *ngFor="let null of tempArray let i = index" class="mhq-overview-cat-cell"
+          [ngStyle]="{'background-color':'rgba(0,0,0,.3)','color':'rgb(255,255,255)'}"
+          (click)="showDailySumDetails(i+1)">
+          {{getDailySum(i+1)}}</div>
+      </div>
+
+      <div style="height: 40px;margin-top:20px;display: flex;">
         <div *ngFor="let null of tempArray let i = index" class="mhq-overview-cat-cell"
           [ngStyle]="{'background-color':'rgba(0,0,0,.3)','color':'rgb(255,255,255)'}">
-          {{getDailySum(i+1)}}</div>
+          {{getSuperSum(i+1)}}</div>
       </div>
 
 

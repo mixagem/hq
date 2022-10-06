@@ -1,3 +1,4 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
 import { FinancialService } from '../financial.service';
@@ -31,8 +32,9 @@ export class OverviewComponent implements OnInit {
   selectedMonthLocale: string;
   monthDays: number;
   selectedYear: number;
+  dailySumEvolution: number[];
 
-  constructor(public financialService: FinancialService, public treasuryService: TreasuryService) {
+  constructor(public financialService: FinancialService, public treasuryService: TreasuryService, private _http: HttpClient) {
     this.currentDate = new Date();
   }
 
@@ -55,10 +57,10 @@ export class OverviewComponent implements OnInit {
     this.tempArray = Array(this.monthDays).fill(0)
     this.treasuryLogs = this.treasuryService.treasuryLog
     this.selectedMonthLocale = this.currentDate.toLocaleString('default', { month: 'long' });
+    this.getDailySumEvolution();
   }
 
-  nextMonth() {
-    // debugger;
+  nextMonth(): void {
     let currentMonth = Number(this.currentDate.toISOString().slice(5, 7))
     if (currentMonth === 12) {
       let nextYear = Number(this.currentDate.toISOString().slice(0, 4)) + 1
@@ -71,8 +73,7 @@ export class OverviewComponent implements OnInit {
     this.ngOnInit();
   }
 
-  previousMonth() {
-    // debugger;
+  previousMonth(): void {
     let currentMonth = Number(this.currentDate.toISOString().slice(5, 7))
     if (currentMonth === 1) {
       let previousYear = Number(this.currentDate.toISOString().slice(0, 4)) - 1
@@ -85,7 +86,10 @@ export class OverviewComponent implements OnInit {
     this.ngOnInit();
   }
 
-  getDailySum(day: number) {
+
+  getSuperSum(day: number) { return this.dailySumEvolution[day-1]; }
+
+  getDailySum(day: number): number {
 
     let value = 0;
     this.treasuryLogs.forEach(tlog => {
@@ -124,4 +128,31 @@ export class OverviewComponent implements OnInit {
 
     return value
   }
+
+
+  getDailySumEvolution() {
+
+    const httpParams = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear)
+    const call = this._http.post('http://localhost:16190/dailysumevo', httpParams, { responseType: 'json' })
+
+    call.subscribe({
+      next: codeReceived => { const resp = codeReceived as number[]; this.dailySumEvolution = resp; },
+      error: err => this.financialService.handleError(err)
+    })
+    // query 1 à bd com o valor acomulado ao inicio do mês => getDailySumEvolution()
+    // query2 à bd: obter  os movimentos para o mês selecionado => getDailySumEvolution()
+    // fazer loop para todos os dias do mes, em que mandamos o resultado do acomulado do dia para um array de resultados acomulados => [dailySumEvolution]
+    // saldo acomumlado dia 1 = saldo acomulado + saldo dia 1
+    // dia n... = saldo dia n + saldo acomulado dia n-1
+  }
+
+  showDailySumDetails(day: number) { alert('tudo do dia ' + day + ' de ' + this.selectedMonthLocale + ' de ' + this.selectedYear) }
+  // faz query à bd de todos os movimentos do dia
+  // abre modal a mostrar os movimentos (com ligações diretas para o bagulho yo very pro)
+  showDailySubCatDetails(subcatID: number, day: number) { alert('para a subategoria ' + subcatID + ', tudo do dia ' + day + ' de ' + this.selectedMonthLocale + ' de ' + this.selectedYear) }
+  // faz query à bd de todos os movimentos do dia para a subcategoria selecionada
+  // abre modal a mostrar os movimentos (com ligações diretas para o bagulho yo very pro)
+  showDailyCatDetails(catID: number, day: number) { alert('para a categoria ' + catID + ', tudo do dia ' + day + ' de ' + this.selectedMonthLocale + ' de ' + this.selectedYear) }
+  // faz query à bd de todos os movimentos do dia para a categoria  selecionada
+  // abre modal a mostrar os movimentos (com ligações diretas para o bagulho yo very pro)
 }

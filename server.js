@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-
+dailysumevo
 app.get('/getcats', function (req, res) { return getCats(req, res); });
 app.get('/gettlogs', function (req, res) { return getTLogs(req, res); });
 app.post('/savecat', function (req, res) { return saveCat(req, res); });
@@ -22,6 +22,37 @@ app.post('/removetlog', function (req, res) { return removeTlog(req, res); });
 app.post('/savetlog', function (req, res) { return saveTlog(req, res); });
 app.post('/addtlog', function (req, res) { return addTlog(req, res); });
 
+app.post('/dailysumevo', function (req, res) { return genDailySumEvo(req, res); });
+
+function genDailySumEvo(req, res) {
+  const sqlite3 = require('sqlite3').verbose();
+  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+    if (err) { console.error(err.message); }
+    console.log('Connection to MI HQ database is now open.');
+  });
+
+  function isItExpense(value, type) {
+    return type === 'expense' ? -value : value
+  }
+
+  const dateObj = new Date('2022-01-01T00:00:00.000Z')
+  dateObj.setMonth(req.body.month)
+  dateObj.setFullYear(req.body.year)
+  const dateInMillisecs = dateObj.getTime();
+  let dailySumEvo;
+  let monthMovements;
+  db.serialize(() => {
+
+    db.each(`SELECT * FROM treasurylog WHERE date < ${dateInMillisecs}`, (err, row) => { err ? console.error(err.message) : monthMovements.push(row) });
+
+    // for each para todos os dias do mes (a enviar no chamada api). a cada dia, verifica se existem monthmovements. caso existam, atualiza o valor, e só depois manda para o array dos acomulados
+
+  })
+  db.close((err) => {
+    err ? console.error(err.message) : res.send(dailySumEvo);
+    console.log('Connection to MI HQ database has been closed.');
+  });
+}
 
 
 function addTlog(req, res) {
