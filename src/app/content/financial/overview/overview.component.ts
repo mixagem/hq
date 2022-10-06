@@ -87,7 +87,7 @@ export class OverviewComponent implements OnInit {
   }
 
 
-  getSuperSum(day: number) { return this.dailySumEvolution[day-1]; }
+  getSuperSum(day: number) { return this.dailySumEvolution[day - 1]; }
 
   getDailySum(day: number): number {
 
@@ -132,11 +132,15 @@ export class OverviewComponent implements OnInit {
 
   getDailySumEvolution() {
 
-    const httpParams = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear)
+    this.dailySumEvolution = [];
+
+    const httpParams = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear).set('days', this.monthDays)
     const call = this._http.post('http://localhost:16190/dailysumevo', httpParams, { responseType: 'json' })
 
     call.subscribe({
-      next: codeReceived => { const resp = codeReceived as number[]; this.dailySumEvolution = resp; },
+      next: codeReceived => {
+        const resp = codeReceived as number[]; this.dailySumEvolution = resp;
+       },
       error: err => this.financialService.handleError(err)
     })
     // query 1 à bd com o valor acomulado ao inicio do mês => getDailySumEvolution()

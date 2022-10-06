@@ -10,7 +10,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-dailysumevo
 app.get('/getcats', function (req, res) { return getCats(req, res); });
 app.get('/gettlogs', function (req, res) { return getTLogs(req, res); });
 app.post('/savecat', function (req, res) { return saveCat(req, res); });
@@ -39,17 +38,38 @@ function genDailySumEvo(req, res) {
   dateObj.setMonth(req.body.month)
   dateObj.setFullYear(req.body.year)
   const dateInMillisecs = dateObj.getTime();
-  let dailySumEvo;
-  let monthMovements;
+  let acomulatedMovements = [];
   db.serialize(() => {
 
-    db.each(`SELECT * FROM treasurylog WHERE date < ${dateInMillisecs}`, (err, row) => { err ? console.error(err.message) : monthMovements.push(row) });
+    db.each(`SELECT * FROM treasurylog WHERE date < ${dateInMillisecs}`, (err, row) => { err ? console.error(err.message) : acomulatedMovements.push(row) });
 
     // for each para todos os dias do mes (a enviar no chamada api). a cada dia, verifica se existem monthmovements. caso existam, atualiza o valor, e só depois manda para o array dos acomulados
 
   })
+
+  function fuckyou3() {
+    let dailySumEvo = [];
+
+    for (i = 0; i < req.body.days; i++) {
+      let dailysum = 0;
+
+      if (i !== 0) { dailysum += dailySumEvo[i - 1] }
+
+
+      acomulatedMovements.forEach(movement => {
+
+        if ((new Date(movement.date).getDate()) === i + 1) {
+          movement.type === 'expense' ? dailysum -= movement.value : dailysum += movement.value
+        }
+      });
+
+      dailySumEvo.push(dailysum)
+    }
+    res.send(dailySumEvo)
+  }
+
   db.close((err) => {
-    err ? console.error(err.message) : res.send(dailySumEvo);
+    err ? console.error(err.message) : fuckyou3();
     console.log('Connection to MI HQ database has been closed.');
   });
 }
@@ -109,7 +129,7 @@ function getTLogs(req, res) {
 
   let tlogs = [];
   db.serialize(() => {
-    db.each(`SELECT * FROM treasurylog ORDERBY id DESC`, (err, tlog) => { err ? console.error(err.message) : tlogs.push(tlog); });
+    db.each(`SELECT * FROM treasurylog ORDER BY id DESC`, (err, tlog) => { err ? console.error(err.message) : tlogs.push(tlog); });
   });
 
 
