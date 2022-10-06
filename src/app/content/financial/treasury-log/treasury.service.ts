@@ -89,7 +89,7 @@ export class TreasuryService {
 
     // verifica se é duplicação ou é introdução normal
     this.cloningTLog = cloningTLog;
-    (!this.cloningTLog) ? this.recordBorderStyle = { 'background-color': 'red' } : [];
+    (!this.cloningTLog) ? this.recordBorderStyle = { 'background-color': 'gray' } : [];
 
     this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this._router.navigate(['/fi/tlogs/add']);
@@ -163,7 +163,7 @@ export class TreasuryService {
     return icon!
   }
 
-  
+
 
   // tratamento erros
   handleError(err: HttpErrorResponse): Observable<never> {

@@ -117,7 +117,7 @@ export class FinancialService implements OnInit {
 
     // verifica se é duplicação ou é introdução normal
     this.cloningCategory = cloningCategory;
-    (!this.cloningCategory) ? this.recordBorderStyle = { 'background-color': 'red' } : [];
+    (!this.cloningCategory) ? this.recordBorderStyle = { 'background-color': 'gray' } : [];
     // navegação para modo de introdução de registo
     this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this._router.navigate(['/fi/cats/add']);
