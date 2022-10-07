@@ -70,17 +70,20 @@ export function addNewTreasurylog(req, res) {
 
   const tlog = JSON.parse(req.body.tlog);
 
-  let newTlogID;
+
 
   db.serialize(() => {
 
-    db.run(`INSERT INTO treasurylog (title, date, value, cat, subcat, type, obs) VALUES ('${tlog.title}', '${tlog.date}', '${tlog.value}', '${tlog.cat}', '${tlog.subcat}', '${tlog.type}', '${tlog.obs}')`, (err, resp) => {err ? console.error(err.message) : console.log('Treasury log sucessfully created.')});
-
-    db.all(`SELECT * from sqlite_sequence where name='treasurylog'`, (err, resp) => { err ? console.error(err.message) : newTlogID = resp[0].seq });
+    db.run(`INSERT INTO treasurylog (title, date, value, cat, subcat, type, obs) VALUES ('${tlog.title}', '${tlog.date}', '${tlog.value}', '${tlog.cat}', '${tlog.subcat}', '${tlog.type}', '${tlog.obs}')`, (err, resp) => { err ? console.error(err.message) : console.log('Treasury log sucessfully created.') });
+    db.all(`SELECT * from sqlite_sequence where name='treasurylog'`, (err, resp) => { err ? console.error(err.message) : close(resp[0].seq) });
 
   });
 
-  db.close((err) => {
-    err ? console.error(err.message) : res.send(newTLogID.toString());
-  });
+  function close(newTlogID) {
+    console.log(newTlogID)
+    db.close((err) => {
+      err ? console.error(err.message) : res.send(newTlogID.toString());
+    });
+  }
+
 }

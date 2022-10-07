@@ -1,5 +1,9 @@
-<mat-progress-bar *ngIf="!treasuryService.loadingComplete" mode="indeterminate"></mat-progress-bar>
-<div *ngIf="treasuryService.loadingComplete" class="mhq-mainform-container">
+<mat-progress-bar *ngIf="!evoReady" mode="indeterminate"></mat-progress-bar>
+<!-- substituir progresss bar, por estrutura fixa, com base nas categorias que fizemos loading-->
+
+
+
+<div *ngIf="evoReady" class="mhq-mainform-container">
 
   <div class="mhq-row mhq-mainform-header">
     <h1>
@@ -83,11 +87,11 @@
             <div *ngFor="let subcat of cat.subcats">
               <div *ngIf="subcat.active" style="display: flex;">
                 <div *ngFor="let null of tempArray let i = index" class="mhq-overview-subcat-cell"
-                [ngStyle]="getSubcatValue(i+1,cat.id,subcat.id) === 0 ?
+                [ngStyle]="getSubcatValue(i+1,subcat.id) === 0 ?
                 {'background-color':'rgba('+cat.bgcolor+',.2)','color':'transparent'}
                   :{'background-color':'rgba('+cat.bgcolor+',.65)','color':'rgb('+cat.textcolor+')'}"
                   (click)="showDailySubCatDetails(subcat.id,i+1)">
-                  {{getSubcatValue(i+1,cat.id,subcat.id)}}</div>
+                  {{getSubcatValue(i+1,subcat.id)}}</div>
               </div>
             </div>
 
@@ -111,11 +115,11 @@
             <div *ngFor="let subcat of cat.subcats">
               <div *ngIf="subcat.active" style="display: flex;">
                 <div *ngFor="let null of tempArray let i = index" class="mhq-overview-subcat-cell"
-                [ngStyle]="getSubcatValue(i+1,cat.id,subcat.id) === 0 ?
+                [ngStyle]="getSubcatValue(i+1,subcat.id) === 0 ?
                 {'background-color':'rgba('+cat.bgcolor+',.2)','color':'transparent'}
                   :{'background-color':'rgba('+cat.bgcolor+',.65)','color':'rgb('+cat.textcolor+')'}"
                   (click)="showDailySubCatDetails(subcat.id,i+1)">
-                  {{getSubcatValue(i+1,cat.id,subcat.id)}}</div>
+                  {{getSubcatValue(i+1,subcat.id)}}</div>
               </div>
             </div>
 

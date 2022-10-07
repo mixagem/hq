@@ -27,17 +27,21 @@ export class OverviewComponent implements OnInit {
   tempArray: Array<any>;
   treasuryLogs: ITreasuryLog[];
 
+  evoReady: Boolean;
+
   currentDate: Date
   selectedMonth: number;
   selectedMonthLocale: string;
   monthDays: number;
   selectedYear: number;
   dailySumEvolution: number[];
+  dailySumAcomEvolution: number[];
   dailyCatEvolution: object;
   dailySubCatEvolution: object;
 
   constructor(public financialService: FinancialService, public treasuryService: TreasuryService, private _http: HttpClient) {
     this.currentDate = new Date();
+    this.evoReady = false;
   }
 
   ngOnInit(): void {
@@ -45,7 +49,7 @@ export class OverviewComponent implements OnInit {
     this.treasuryService.onInitTrigger.subscribe(myCustomParam => {
       this.ngOnInit();
     });
-    if(!this.treasuryService.loadingComplete){return}
+    if (!this.financialService.loadingComplete) { return }
     this.selectedMonth = this.currentDate.getMonth() + 1
     console.log(this.selectedMonth)
     switch (this.selectedMonth) {
@@ -64,8 +68,8 @@ export class OverviewComponent implements OnInit {
     this.tempArray = Array(this.monthDays).fill(0)
     this.treasuryLogs = this.treasuryService.treasuryLog
     this.selectedMonthLocale = this.currentDate.toLocaleString('default', { month: 'long' });
-    this.getDailySumEvolution();
-    this.getCategoriesEvolution()
+    this.getDailySumAcomEvolution();
+    this.getCategoriesEvolution();
   }
 
   nextMonth(): void {
@@ -78,6 +82,7 @@ export class OverviewComponent implements OnInit {
       currentMonth < 9 ? nextMonth = '0' + (currentMonth + 1) : nextMonth = (currentMonth + 1).toString();
       this.currentDate = new Date(this.currentDate.toISOString().replace(/-[0-9]{2}-/, '-' + nextMonth + '-'))
     }
+    this.evoReady = false;
     this.ngOnInit();
   }
 
@@ -91,64 +96,73 @@ export class OverviewComponent implements OnInit {
       currentMonth > 10 ? previousMonth = (currentMonth - 1).toString() : previousMonth = '0' + (currentMonth - 1);
       this.currentDate = new Date(this.currentDate.toISOString().replace(/-[0-9]{2}-/, '-' + previousMonth + '-'))
     }
+    this.evoReady = false;
     this.ngOnInit();
   }
 
 
-  getSuperSum(day: number) { return this.dailySumEvolution[day - 1]; }
+  getSuperSum(day: number) { return this.dailySumAcomEvolution[day - 1]; }
 
   getDailySum(day: number): number {
 
-    let value = 0;
-    this.treasuryLogs.forEach(tlog => {
-      if ((new Date(tlog.date).getDate()) === day && (new Date(tlog.date).getMonth() + 1) === this.selectedMonth && (new Date(tlog.date).getFullYear()) === this.selectedYear) {
-        tlog.type === 'expense' ? value -= tlog.value : value += tlog.value
-      }
-    });
+    // let value = 0;
+    // this.treasuryLogs.forEach(tlog => {
+    //   if ((new Date(tlog.date).getDate()) === day && (new Date(tlog.date).getMonth() + 1) === this.selectedMonth && (new Date(tlog.date).getFullYear()) === this.selectedYear) {
+    //     tlog.type === 'expense' ? value -= tlog.value : value += tlog.value
+    //   }
+    // });
 
-    return value
+    // return value
+
+    return this.dailySumEvolution[day - 1];
+
   }
 
   getCatValue(day: number, cat: number): number {
 
-    let value = 0;
-    this.treasuryLogs.forEach(tlog => {
-      if ((new Date(tlog.date).getDate()) === day && (new Date(tlog.date).getMonth() + 1) === this.selectedMonth && (new Date(tlog.date).getFullYear()) === this.selectedYear) {
-        if (tlog.cat == cat) {
-          value += tlog.value
-        }
-      }
-    });
+    // let value = 0;
+    // this.treasuryLogs.forEach(tlog => {
+    //   if ((new Date(tlog.date).getDate()) === day && (new Date(tlog.date).getMonth() + 1) === this.selectedMonth && (new Date(tlog.date).getFullYear()) === this.selectedYear) {
+    //     if (tlog.cat == cat) {
+    //       value += tlog.value
+    //     }
+    //   }
+    // });
 
-    return value
+    // return value
+
+
+    return this.dailyCatEvolution[cat as keyof typeof this.dailyCatEvolution][day - 1]
   }
 
-  getSubcatValue(day: number, cat: number, subcat: number): number {
+  getSubcatValue(day: number, subcat: number): number {
 
-    let value = 0;
-    this.treasuryLogs.forEach(tlog => {
-      if ((new Date(tlog.date).getDate()) === day && (new Date(tlog.date).getMonth() + 1) === this.selectedMonth && (new Date(tlog.date).getFullYear()) === this.selectedYear) {
-        if (tlog.subcat == subcat && tlog.cat == cat) {
-          value += tlog.value
-        }
-      }
-    });
+    // let value = 0;
+    // this.treasuryLogs.forEach(tlog => {
+    //   if ((new Date(tlog.date).getDate()) === day && (new Date(tlog.date).getMonth() + 1) === this.selectedMonth && (new Date(tlog.date).getFullYear()) === this.selectedYear) {
+    //     if (tlog.subcat == subcat && tlog.cat == cat) {
+    //       value += tlog.value
+    //     }
+    //   }
+    // });
 
-    return value
+    // return value
+
+    return this.dailySubCatEvolution[subcat as keyof typeof this.dailySubCatEvolution][day - 1]
   }
 
 
-  getDailySumEvolution() {
+  getDailySumAcomEvolution() {
 
-    this.dailySumEvolution = [];
+    this.dailySumAcomEvolution = [];
 
     const httpParams = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear).set('days', this.monthDays)
     const call = this._http.post('http://localhost:16190/dailysumevo', httpParams, { responseType: 'json' })
 
     call.subscribe({
       next: codeReceived => {
-        const resp = codeReceived as number[]; this.dailySumEvolution = resp;
-       },
+        const resp = codeReceived as number[]; this.dailySumAcomEvolution = resp;
+      },
       error: err => this.financialService.handleError(err)
     })
     // query 1 à bd com o valor acomulado ao inicio do mês => getDailySumEvolution()
@@ -168,8 +182,9 @@ export class OverviewComponent implements OnInit {
 
     call.subscribe({
       next: codeReceived => {
-        const resp = codeReceived as object[]; this.dailyCatEvolution = resp[0]; this.dailySubCatEvolution = resp[1];
-        console.log(codeReceived)
+        const resp = codeReceived as object[]; this.dailyCatEvolution = resp[0]; this.dailySubCatEvolution = resp[1]; console.log(this.dailySumEvolution = resp[2] as number[]);
+        this.evoReady = true;
+        console.log(this.dailyCatEvolution[1 as keyof typeof this.dailyCatEvolution][9]) // fuck yes bro
       },
       error: err => this.financialService.handleError(err)
     })

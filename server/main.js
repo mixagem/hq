@@ -1,4 +1,4 @@
-import { genDailySumEvo, genDailyCategoriesEvo } from './overviewMethods.js';
+import { genDailySumAcomEvo, genDailyCategoriesEvo } from './overviewMethods.js';
 import { addNewTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog } from './treasuryMethods.js';
 import { getCategories, createNewCategory, deleteCategory, addSubCategory, removeSubCategory, saveCategory } from './categoriesMethods.js'
 import express from 'express';
@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 
 
 // overview
-app.post('/dailysumevo', function (req, res) { return genDailySumEvo(req, res); });
+app.post('/dailysumevo', function (req, res) { return genDailySumAcomEvo(req, res); });
 app.post('/dailycatsevo', function (req, res) { return genDailyCategoriesEvo(req, res); });
 
 // categories

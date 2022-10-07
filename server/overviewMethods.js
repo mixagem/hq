@@ -1,13 +1,6 @@
 import sqlite3 from 'sqlite3';
 
-
-// TODO SNAPSHOT PARA TODOS REDO
-// no post, recebemos 1 array com as categorias para fazer snapshot
-// por cada objeto de array, fazer uma query do genero select value from treasurylog where data < {data_recebida} and cat = {cat_recebida}
-// no ultimo item do foreach, envia para a fuckyou4, onde fazemos o tratamento e fazemos o db.close, ssuka
-
-
-//snapshot para categorias
+//snapshots das categorias / subcategorias
 export function genDailyCategoriesEvo(req, res) {
 
   let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
@@ -36,17 +29,14 @@ export function genDailyCategoriesEvo(req, res) {
   db.serialize(() => {
 
     db.each(`SELECT * FROM treasurylog WHERE date < ${dataFiMilli} AND date >= ${dataIniMilli}`, (err, row) => { err ? console.error(err.message) : monthlyMovments.push(row) })
-      .each(`SELECT * FROM categories WHERE active = 'true' `,(err,row) => {err ? console.error(err.message) : categoryList.push(row.id)})
-      .each(`SELECT * FROM subcategories WHERE active = 'true' `,(err,row) => {err ? console.error(err.message) : subCategoryList.push(row.id)})
+      .each(`SELECT * FROM categories WHERE active = 'true' `, (err, row) => { err ? console.error(err.message) : categoryList.push(row.id) })
+      .each(`SELECT * FROM subcategories WHERE active = 'true' `, (err, row) => { err ? console.error(err.message) : subCategoryList.push(row.id) })
 
   })
-
-
 
   db.close((err) => {
     err ? console.error(err.message) : generateSnapshots();
   });
-
 
   function generateSnapshots() {
 
@@ -59,8 +49,6 @@ export function genDailyCategoriesEvo(req, res) {
         let value = 0;
         monthlyMovments.forEach(movement => {
 
-          // console.log(movement)
-          // console.log(category)
           if ((new Date(movement.date).getDate()) === i + 1 && movement.cat == category) {
             value += movement.value;
           }
@@ -100,101 +88,27 @@ export function genDailyCategoriesEvo(req, res) {
     });
 
     console.log('Subcategories snapshots sucessfully generated.');
-    res.send([generatedCategorySnapshots,generatedSubCategorySnapshots])
+    console.log('Generating dailysum snapshot...');
+
+    let dailySumEvo = Array(Number(req.body.days)).fill(0)
+    monthlyMovments.forEach(movement => {
+      movement.type === 'expense' ? dailySumEvo[(new Date(movement.date).getDate()) - 1] -= movement.value : dailySumEvo[(new Date(movement.date).getDate()) - 1] += movement.value
+    });
+
+    console.log('Dailysum snapshot sucessfully generated.');
+    res.send([generatedCategorySnapshots, generatedSubCategorySnapshots, dailySumEvo])
 
   }
 }
 
 
-
-
-
-
-
-// // snapshot para subcategorias
-// export function genDailySubCategoriesEvo(req, res) {
-
-//   let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
-//     if (err) { console.error(err.message); }
-//     console.log('Generating subcategories snapshots...');
-//   });
-
-//   const dataIni = new Date('2022-01-01T00:00:00.000Z')
-//   dataIni.setMonth(req.body.month - 1)
-//   dataIni.setFullYear(req.body.year)
-
-//   const dataFi = new Date('2022-01-01T00:00:00.000Z')
-//   dataFi.setMonth(req.body.month)
-//   dataFi.setFullYear(req.body.year)
-
-//   const dataIniMilli = dataIni.getTime();
-//   const dataFiMilli = dataFi.getTime();
-
-//   let monthlyMovments = [];
-//   let generatedSubCategorySnapshots = {};
-
-//   const subCategoryList = req.body.subcategorylist; // select para as categorias que estão ativas
-
-//   db.serialize(() => {
-
-//     db.each(`SELECT * FROM treasurylog WHERE date < ${dataFiMilli} AND date >= ${dataIniMilli}`, (err, row) => { err ? console.error(err.message) : monthlyMovments.push(row) });
-
-//   })
-
-//   db.close((err) => {
-//     err ? console.error(err.message) : generateSnapshots();
-//   });
-
-
-//   function generateSnapshots() {
-
-//     subCategoryList.forEach(subcategory => {
-
-//       let subCategorySnapshot = [];
-
-//       for (let i = 0; i < req.body.days; i++) {
-
-//         let value = 0;
-//         monthlyMovments.forEach(movement => {
-
-//           if ((new Date(movement.date).getDate()) === i + 1 && movement.subcat === subcategory) {
-//             value += movement.value;
-//           }
-
-//         });
-
-//         subCategorySnapshot[i] = value;
-//       }
-
-//       generatedSubCategorySnapshots[`${subcategory}`] = subCategorySnapshot;
-
-//     });
-
-//     console.log('Subcategories snapshots sucessfully generated.');
-
-//     res.send(generatedCategorySnapshots)
-
-//   }
-// }
-
-
-
-
-
-
-
-
-
-
-
 // snapshot total acumulado
-export function genDailySumEvo(req, res) {
+export function genDailySumAcomEvo(req, res) {
 
   let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
     if (err) { console.error(err.message); }
-    console.log('Connection to MI HQ database is now open.');
+    console.log('Generating daily acomul snapshot...');
   });
-
 
   const dataIni = new Date('2022-01-01T00:00:00.000Z')
   dataIni.setMonth(req.body.month - 1)
@@ -215,15 +129,17 @@ export function genDailySumEvo(req, res) {
     db.each(`SELECT * FROM treasurylog WHERE date < ${dataFiMilli} AND date >= ${dataIniMilli}`, (err, row) => { err ? console.error(err.message) : monthlyMovments.push(row) })
       .all(`SELECT SUM(value) FROM treasurylog WHERE type='income' AND date < ${dataIniMilli - 1}`, (err, row) => { err ? console.error(err.message) : initialSum.push(Object.values(row[0])[0]) })
       .all(`SELECT SUM(value) FROM treasurylog WHERE type='expense' AND date < ${dataIniMilli - 1}`, (err, row) => { err ? console.error(err.message) : initialSum.push(Object.values(row[0])[0]) })
+
   })
 
   db.close((err) => {
-    err ? console.error(err.message) : generateSnapshot();
-    console.log('Connection to MI HQ database has been closed.');
+    err ? console.error(err.message) : generateAcomSnapshot();
+    console.log('Daily acomul snapshot sucessfully generated.');
   });
 
-  function generateSnapshot() {
-    let dailySumEvo = [];
+  function generateAcomSnapshot() {
+
+    let dailySumAcomEvo = [];
     let initialSumCalculated = 0;
 
     initialSum.forEach((sum, i) => {
@@ -235,20 +151,16 @@ export function genDailySumEvo(req, res) {
       let dailysum = 0;
 
       if (i === 0) { dailysum += initialSumCalculated }
-      if (i !== 0) { dailysum += dailySumEvo[i - 1] }
+      if (i !== 0) { dailysum += dailySumAcomEvo[i - 1] }
 
+      monthlyMovments.forEach(movement => { if ((new Date(movement.date).getDate()) === i + 1) { movement.type === 'expense' ? dailysum -= movement.value : dailysum += movement.value } });
 
-      monthlyMovments.forEach(movement => {
+      dailySumAcomEvo.push(dailysum);
 
-        if ((new Date(movement.date).getDate()) === i + 1) {
-          movement.type === 'expense' ? dailysum -= movement.value : dailysum += movement.value
-        }
-      });
-
-      dailySumEvo.push(dailysum)
     }
-    res.send(dailySumEvo)
-  }
 
+    res.send(dailySumAcomEvo);
+
+  }
 
 }
