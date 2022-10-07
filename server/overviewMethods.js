@@ -86,7 +86,7 @@ export function genDailyCategoriesEvo(req, res) {
         let value = 0;
         monthlyMovments.forEach(movement => {
 
-          if ((new Date(movement.date).getDate()) === i + 1 && movement.subcat === subcategory) {
+          if ((new Date(movement.date).getDate()) === i + 1 && movement.subcat == subcategory) {
             value += movement.value;
           }
 
@@ -100,7 +100,6 @@ export function genDailyCategoriesEvo(req, res) {
     });
 
     console.log('Subcategories snapshots sucessfully generated.');
-
     res.send([generatedCategorySnapshots,generatedSubCategorySnapshots])
 
   }

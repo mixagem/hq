@@ -1,3 +1,5 @@
+
+<mat-progress-bar *ngIf="!tablesReady" mode="indeterminate"></mat-progress-bar>
 <div *ngIf="tablesReady" class="mhq-mainform-container">
 
   <div class="mhq-row mhq-mainform-header">
@@ -47,6 +49,7 @@
   <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
 
 </div>
+
 
 <div id="mhq-category-details" class="animate__animated animate__slideInRight mhq-mainform-container mhq-row"
 

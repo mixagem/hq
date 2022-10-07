@@ -1,4 +1,6 @@
-<div class="mhq-mainform-container">
+<mat-progress-bar *ngIf="!treasuryService.loadingComplete" mode="indeterminate"></mat-progress-bar>
+
+<div *ngIf="treasuryService.loadingComplete" class="mhq-mainform-container">
 
   <div class="mhq-row mhq-mainform-header">
     <h1>
@@ -45,7 +47,7 @@
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
   </mat-paginator>
 </div>
-still loading
+
 <div id="mhq-category-details" class="animate__animated animate__slideInRight mhq-mainform-container mhq-row"
   *ngIf="router.url !== '/fi/tlogs'">
   <router-outlet></router-outlet>

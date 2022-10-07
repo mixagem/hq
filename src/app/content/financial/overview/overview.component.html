@@ -1,3 +1,4 @@
+<mat-progress-bar *ngIf="!treasuryService.loadingComplete" mode="indeterminate"></mat-progress-bar>
 <div *ngIf="treasuryService.loadingComplete" class="mhq-mainform-container">
 
   <div class="mhq-row mhq-mainform-header">
@@ -148,4 +149,3 @@
 
 </div>
 
-still loading

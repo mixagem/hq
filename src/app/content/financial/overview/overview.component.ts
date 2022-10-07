@@ -33,6 +33,8 @@ export class OverviewComponent implements OnInit {
   monthDays: number;
   selectedYear: number;
   dailySumEvolution: number[];
+  dailyCatEvolution: object;
+  dailySubCatEvolution: object;
 
   constructor(public financialService: FinancialService, public treasuryService: TreasuryService, private _http: HttpClient) {
     this.currentDate = new Date();
@@ -63,6 +65,7 @@ export class OverviewComponent implements OnInit {
     this.treasuryLogs = this.treasuryService.treasuryLog
     this.selectedMonthLocale = this.currentDate.toLocaleString('default', { month: 'long' });
     this.getDailySumEvolution();
+    this.getCategoriesEvolution()
   }
 
   nextMonth(): void {
@@ -153,6 +156,24 @@ export class OverviewComponent implements OnInit {
     // fazer loop para todos os dias do mes, em que mandamos o resultado do acomulado do dia para um array de resultados acomulados => [dailySumEvolution]
     // saldo acomumlado dia 1 = saldo acomulado + saldo dia 1
     // dia n... = saldo dia n + saldo acomulado dia n-1
+  }
+
+  getCategoriesEvolution() {
+
+    this.dailyCatEvolution = [];
+    this.dailySubCatEvolution = [];
+
+    const httpParams = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear).set('days', this.monthDays)
+    const call = this._http.post('http://localhost:16190/dailycatsevo', httpParams, { responseType: 'json' })
+
+    call.subscribe({
+      next: codeReceived => {
+        const resp = codeReceived as object[]; this.dailyCatEvolution = resp[0]; this.dailySubCatEvolution = resp[1];
+        console.log(codeReceived)
+      },
+      error: err => this.financialService.handleError(err)
+    })
+
   }
 
   showDailySumDetails(day: number) { alert('tudo do dia ' + day + ' de ' + this.selectedMonthLocale + ' de ' + this.selectedYear) }
