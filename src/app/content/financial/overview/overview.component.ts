@@ -39,6 +39,11 @@ export class OverviewComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // trigger remoto do OnInit
+    this.treasuryService.onInitTrigger.subscribe(myCustomParam => {
+      this.ngOnInit();
+    });
+    if(!this.treasuryService.loadingComplete){return}
     this.selectedMonth = this.currentDate.getMonth() + 1
     console.log(this.selectedMonth)
     switch (this.selectedMonth) {

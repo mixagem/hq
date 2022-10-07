@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FinancialService } from './content/financial/financial.service';
+import { OverviewService } from './content/financial/overview/overview.service';
 import { TreasuryService } from './content/financial/treasury-log/treasury.service';
 
 @Component({

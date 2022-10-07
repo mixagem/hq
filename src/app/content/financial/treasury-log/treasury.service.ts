@@ -15,6 +15,9 @@ type RecordBorderStyle = {
 })
 
 export class TreasuryService {
+
+  loadingComplete: Boolean;
+
   //trigger para onInit
   onInitTrigger: Subject<any>;
 
@@ -30,6 +33,7 @@ export class TreasuryService {
   cloningTLog: Boolean;
 
   constructor(private _http: HttpClient, private _router: Router, private financialService: FinancialService) {
+    this.loadingComplete = false;
     this.fetchTreasuryLog();
     this.onInitTrigger = new Subject<any>();
   }
@@ -52,13 +56,14 @@ export class TreasuryService {
         const resp = codeReceived as ITreasuryLog[];
         // guardar no serviço a resposta da bd
         this.treasuryLog = resp;
-
+        this.loadingComplete = true;
+        
         if (source === 'saveTreasuryLog') {
           this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             this._router.navigate(['/fi/tlogs', LogID]);
           });
 
-          this.onInitTriggerCall();
+
         }
 
         if (source === 'removeTreasuryLog') {
@@ -77,8 +82,10 @@ export class TreasuryService {
             });
           }
 
-          this.onInitTriggerCall();
+
         }
+        this.onInitTriggerCall();
+
       },
       error: err => this.handleError(err)
     });
