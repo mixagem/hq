@@ -31,7 +31,7 @@ export class NewTreasuryLogComponent implements OnInit {
   mypick: FormControl<any>;
 
   // autocomplete categoria
-  catForm = new FormControl('', [Validators.required]);
+  catForm: FormControl
   catFormOptions: string[] = [];
   catFilteredOptions: Observable<string[]>;
   private _catfilter(value: string): string[] {
@@ -40,7 +40,7 @@ export class NewTreasuryLogComponent implements OnInit {
   }
 
   // autocomplete sub categoria
-  subCatForm = new FormControl('', [Validators.required]);
+  subCatForm: FormControl
   subCatFormOptions: string[] = [];
   subCatFilteredOptions: Observable<string[]>;
   private _subcatfilter(value: string): string[] {
@@ -52,6 +52,21 @@ export class NewTreasuryLogComponent implements OnInit {
 
   ngOnInit(): void {
 
+    if (this.treasuryService.cloningTLog) {
+      this.tempTlog = this.treasuryService.activeTreasuryLog
+      this.tempTlog.id = 0
+    } else {
+      this.tempTlog = DEFAULT_TLOG
+    }
+
+    if (this.treasuryService.cloningTLog) {
+      this.catForm = new FormControl(this.treasuryService.getCatLabel(this.tempTlog.cat), [Validators.required]);
+      this.subCatForm = new FormControl(this.treasuryService.getSubCatLabel(this.tempTlog.cat, this.tempTlog.subcat), [Validators.required]);
+    } else {
+      this.catForm = new FormControl('', [Validators.required]);
+      this.subCatForm = new FormControl('', [Validators.required]);
+    }
+    
     // auto complete
     this.catFilteredOptions = this.catForm.valueChanges.pipe(
       startWith(''),
@@ -75,13 +90,6 @@ export class NewTreasuryLogComponent implements OnInit {
         this.subCatFormOptions.push(subcat.title)
       });
     });
-
-    if (this.treasuryService.cloningTLog) {
-      this.tempTlog = this.treasuryService.activeTreasuryLog
-      this.tempTlog.id = 0
-    } else {
-      this.tempTlog = DEFAULT_TLOG
-    }
 
     this.mypick = new FormControl(new Date(this.tempTlog.date));
 
@@ -115,7 +123,7 @@ export class NewTreasuryLogComponent implements OnInit {
         // converter de títilo para o id das catgorias
         this.tempTlog.cat = catID!;
         this.tempTlog.subcat = subCatID!;
-        
+
         this.treasuryService.recordBorderStyle['background-color'] = 'rgb(' + catBGColor! + ')';
         this.saveTreasurylog();
 

@@ -24,7 +24,7 @@ export class TreasuryDetailsComponent implements OnInit {
   mypick: FormControl<any>;
 
   // autocomplete categoria
-  catForm = new FormControl('', [Validators.required]);
+  catForm: FormControl
   catFormOptions: string[] = [];
   catFilteredOptions: Observable<string[]>;
   private _catfilter(value: string): string[] {
@@ -33,7 +33,7 @@ export class TreasuryDetailsComponent implements OnInit {
   }
 
   // autocomplete sub categoria
-  subCatForm = new FormControl('', [Validators.required]);
+  subCatForm : FormControl
   subCatFormOptions: string[] = [];
   subCatFilteredOptions: Observable<string[]>;
   private _subcatfilter(value: string): string[] {
@@ -70,6 +70,9 @@ export class TreasuryDetailsComponent implements OnInit {
     this.treasuryService.activeTreasuryLog = JSON.parse(JSON.stringify(this.treasuryLog));
 
     // auto complete categoria
+    this.catForm = new FormControl(this.treasuryService.getCatLabel(this.tempTreasuryLog.cat), [Validators.required]);
+    this.subCatForm = new FormControl(this.treasuryService.getSubCatLabel(this.tempTreasuryLog.cat,this.treasuryLog.subcat), [Validators.required]);
+
 
     this.catFormOptions = [];
     const allCats = [...this._financialService.allCategories]
@@ -97,6 +100,8 @@ export class TreasuryDetailsComponent implements OnInit {
 
     //datepicker
     this.mypick = new FormControl(new Date(this.treasuryService.activeTreasuryLog.date));
+
+
 
     // trigger remoto do OnInit
     this.treasuryService.onInitTrigger.subscribe(myCustomParam => {
