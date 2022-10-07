@@ -15,6 +15,8 @@ type RecordBorderStyle = {
 
 export class FinancialService implements OnInit {
 
+  loadingComplete: Boolean;
+
   //trigger para onInit
   onInitTrigger: Subject<any>;
 
@@ -33,6 +35,7 @@ export class FinancialService implements OnInit {
 
 
   constructor(private _http: HttpClient, private _router: Router) {
+    this.loadingComplete = false;
     // vai buscar à bd as categorias e movimentos existentes
     this.fetchCategories();
     this.onInitTrigger = new Subject<any>();
@@ -60,7 +63,7 @@ export class FinancialService implements OnInit {
         this.allCategories = resp;
         this.expenseCategories = resp.filter(cat => cat.type === 'expense');
         this.incomeCategories = resp.filter(cat => cat.type === 'income');
-
+        this.loadingComplete = true;
         if (source === 'saveCategories') {
           this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             this._router.navigate(['/fi/cats', catID]);
@@ -68,7 +71,7 @@ export class FinancialService implements OnInit {
         }
 
         if (source === 'refreshSubcategories') {
-          this.onInitTriggerCall();
+
         }
 
         if (source === 'addCategory') {
@@ -83,7 +86,7 @@ export class FinancialService implements OnInit {
             });
           }
 
-          this.onInitTriggerCall();
+
 
         }
 
@@ -103,8 +106,10 @@ export class FinancialService implements OnInit {
             });
           }
 
-          this.onInitTriggerCall();
+
         }
+
+        this.onInitTriggerCall();
 
       },
       error: err => this.handleError(err)

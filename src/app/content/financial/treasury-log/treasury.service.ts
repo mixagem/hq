@@ -53,17 +53,16 @@ export class TreasuryService {
 
     call.subscribe({
       next: (codeReceived) => {
+
         const resp = codeReceived as ITreasuryLog[];
         // guardar no serviço a resposta da bd
         this.treasuryLog = resp;
         this.loadingComplete = true;
-        
+
         if (source === 'saveTreasuryLog') {
           this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             this._router.navigate(['/fi/tlogs', LogID]);
           });
-
-
         }
 
         if (source === 'removeTreasuryLog') {

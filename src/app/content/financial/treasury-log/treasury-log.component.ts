@@ -13,6 +13,8 @@ import { TreasuryService } from './treasury.service';
 })
 export class TreasuryLogComponent implements AfterViewInit, OnInit {
 
+
+
   // datasource para tabela
   dataSource: MatTableDataSource<ITreasuryLog>;
   // array com as colunas da tabela
@@ -21,6 +23,13 @@ export class TreasuryLogComponent implements AfterViewInit, OnInit {
   constructor(public treasuryService: TreasuryService, public financialService: FinancialService, public router: Router) { }
 
   ngOnInit(): void {
+
+     // trigger remoto do OnInit
+     this.treasuryService.onInitTrigger.subscribe(myCustomParam => {
+      this.ngOnInit();
+      this.ngAfterViewInit();
+    });
+    if(!this.treasuryService.loadingComplete){return}
     // incializar tabela
     this.dataSource = new MatTableDataSource<ITreasuryLog>(this.treasuryService.treasuryLog);
     this.displayedColumns = ['cat', 'title', 'date', 'value'];
@@ -29,6 +38,7 @@ export class TreasuryLogComponent implements AfterViewInit, OnInit {
   // paginador da tabela
   @ViewChild(MatPaginator) paginator: MatPaginator;
   ngAfterViewInit(): void {
+    if(!this.treasuryService.loadingComplete){return}
     this.dataSource.paginator = this.paginator;
   }
 

@@ -13,22 +13,34 @@ import { Router } from '@angular/router';
 
 export class CategoriesComponent implements AfterViewInit, OnInit {
 
+  tablesReady: Boolean;
+
   // datasource para tabela
   dataSource: MatTableDataSource<IFinancialCategory>;
   // array com as colunas da tabela
   displayedColumns: string[];
 
-  constructor(public financialService: FinancialService, public router: Router) {  }
+  constructor(public financialService: FinancialService, public router: Router) {
+    this.tablesReady = false;
+   }
 
   ngOnInit(): void {
+    // trigger remoto do OnInit
+    this.financialService.onInitTrigger.subscribe(myCustomParam => {
+      this.ngOnInit();
+      this.ngAfterViewInit();
+    });
+    if(!this.financialService.loadingComplete){return}
     // incializar tabela
     this.dataSource = new MatTableDataSource<IFinancialCategory>([...this.financialService.allCategories]);
     this.displayedColumns = ['icon', 'title', 'type', 'active'];
+    this.tablesReady = true;
   }
 
   // paginador da tabela
   @ViewChild(MatPaginator) paginator: MatPaginator;
   ngAfterViewInit(): void {
+    if(!this.financialService.loadingComplete){return}
     this.dataSource.paginator = this.paginator;
   }
 

@@ -1,7 +1,9 @@
 <div class="mhq-mainform-container">
 
   <div class="mhq-row mhq-mainform-header">
-    <h1><mat-icon>account_balance</mat-icon>Movimentos de tesouraria</h1>
+    <h1>
+      <mat-icon>account_balance</mat-icon>Movimentos de tesouraria
+    </h1>
     <div class="mhq-mainform-actions"><button mat-flat-button color="primary" (click)="treasuryService.addMode(false)">
         <mat-icon>add</mat-icon>Adicionar movimento
       </button>
@@ -13,7 +15,9 @@
     <ng-container matColumnDef="cat">
       <th mat-header-cell *matHeaderCellDef> Categoria </th>
       <td mat-cell *matCellDef="let element" [style]="treasuryService.getCatStyle(element.cat)">
-        <mat-icon>{{treasuryService.getCatIcon(element.cat)}}</mat-icon> {{treasuryService.getSubCatLabel(element.cat,element.subcat)}} </td>
+        <mat-icon>{{treasuryService.getCatIcon(element.cat)}}</mat-icon>
+        {{treasuryService.getSubCatLabel(element.cat,element.subcat)}}
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="date">
@@ -41,7 +45,8 @@
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
   </mat-paginator>
 </div>
-  <div id="mhq-category-details" class="animate__animated animate__slideInRight mhq-mainform-container mhq-row"
+still loading
+<div id="mhq-category-details" class="animate__animated animate__slideInRight mhq-mainform-container mhq-row"
   *ngIf="router.url !== '/fi/tlogs'">
   <router-outlet></router-outlet>
 </div>
