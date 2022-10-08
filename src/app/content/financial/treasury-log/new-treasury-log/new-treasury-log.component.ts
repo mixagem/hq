@@ -3,19 +3,20 @@ import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
-import { FinancialService } from '../../financial.service';
+import { CategoriesService } from '../../categories/categories.service';
 import { map, startWith } from 'rxjs/operators';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { TreasuryService } from '../treasury.service';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
+import { MatDatepicker } from '@angular/material/datepicker';
 
 const DEFAULT_TLOG: ITreasuryLog = {
-  id: 0,
-  title: 'temp',
-  date: Date.now(),
+  id: 0, //ignrado ao ser enviado para bd
+  title: 'Novo movimento de tesouraria',
+  date: Date.now(), // a ser definido pelo utilizador
   value: 0,
-  cat: 0,
-  subcat: 0,
+  cat: 0, // a ser definido pelo utilizador
+  subcat: 0, // a ser definido pelo utilizador
   type: 'expense',
   obs: ''
 }
@@ -27,8 +28,11 @@ const DEFAULT_TLOG: ITreasuryLog = {
 })
 export class NewTreasuryLogComponent implements OnInit {
 
+  // datepicker
+  treasuryLogDatepicker: MatDatepicker<any>;
+  treasuryLogDatepickerForm: FormControl<any>;
+
   tempTlog: ITreasuryLog;
-  mypick: FormControl<any>;
 
   // autocomplete categoria
   catForm: FormControl
@@ -48,7 +52,7 @@ export class NewTreasuryLogComponent implements OnInit {
     return this.subCatFormOptions.filter(option => option.toLowerCase().includes(filterValue));
   }
 
-  constructor(public financialService: FinancialService, public treasuryService: TreasuryService, private _route: ActivatedRoute, public _router: Router, public _http: HttpClient) { }
+  constructor(public categoriesService: CategoriesService, public treasuryService: TreasuryService, private _route: ActivatedRoute, public _router: Router, public _http: HttpClient) { }
 
   ngOnInit(): void {
 
@@ -66,7 +70,10 @@ export class NewTreasuryLogComponent implements OnInit {
       this.catForm = new FormControl('', [Validators.required]);
       this.subCatForm = new FormControl('', [Validators.required]);
     }
-    
+
+    this.treasuryLogDatepickerForm = new FormControl(new Date(this.tempTlog.date), [Validators.required]);
+
+
     // auto complete
     this.catFilteredOptions = this.catForm.valueChanges.pipe(
       startWith(''),
@@ -81,7 +88,7 @@ export class NewTreasuryLogComponent implements OnInit {
 
     this.catFormOptions = [];
     this.subCatFormOptions = [];
-    const allCats = [...this.financialService.allCategories]
+    const allCats = [...this.categoriesService.allCategories]
     allCats.forEach(cat => {
       this.catFormOptions.push(cat.title)
     });
@@ -91,11 +98,10 @@ export class NewTreasuryLogComponent implements OnInit {
       });
     });
 
-    this.mypick = new FormControl(new Date(this.tempTlog.date));
 
   }
 
-  toggleEditing(action: string): void {
+  newTreasuryLogRecordActions(action: string): void {
     switch (action) {
 
       case 'save':
@@ -103,14 +109,14 @@ export class NewTreasuryLogComponent implements OnInit {
         if (this.catForm.errors || this.subCatForm.errors) { return alert('fuck you') }
 
         // converter a data do picker para guardar da bd
-        this.tempTlog.date = new Date(this.mypick.value.toISOString()).getTime();
+        this.tempTlog.date = this.treasuryLogDatepickerForm.value.getTime();
 
         let catID: number; // id da categoria
         let catBGColor: string // cor da categoria
         let subCats: IFinancialSubCategory[]; // subcats da categoria selecioanda
 
         // obter o ID, BGColor e SubCategorias  da categoria selecionada
-        [...this.financialService.allCategories].forEach(cat => {
+        [...this.categoriesService.allCategories].forEach(cat => {
           if (cat.title === this.catForm.value) { catBGColor = cat.bgcolor; subCats = cat.subcats; catID = cat.id; return; }
         });
 
@@ -124,7 +130,7 @@ export class NewTreasuryLogComponent implements OnInit {
         this.tempTlog.cat = catID!;
         this.tempTlog.subcat = subCatID!;
 
-        this.treasuryService.recordBorderStyle['background-color'] = 'rgb(' + catBGColor! + ')';
+        this.treasuryService.recordBorderStyle['background-color'] = catBGColor!;
         this.saveTreasurylog();
 
         break;
@@ -141,11 +147,11 @@ export class NewTreasuryLogComponent implements OnInit {
   saveTreasurylog(): void {
 
     const httpParams = new HttpParams().set('tlog', JSON.stringify(this.tempTlog))
-    const call = this._http.post('http://localhost:16190/addtlog', httpParams, { responseType: 'text' })
+    const call = this._http.post('http://localhost:16190/createtreasurylog', httpParams, { responseType: 'text' })
 
     call.subscribe({
       next: codeReceived => { this.treasuryService.fetchTreasuryLog('saveTreasuryLog', Number(codeReceived)); },
-      error: err => this.financialService.handleError(err)
+      error: err => this.categoriesService.handleError(err)
     })
   }
 

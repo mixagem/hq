@@ -48,7 +48,7 @@
   </mat-paginator>
 </div>
 
-<div id="mhq-category-details" class="animate__animated animate__slideInRight mhq-mainform-container mhq-row"
-  *ngIf="router.url !== '/fi/tlogs'">
+<div *ngIf="router.url !== '/fi/tlogs'" id="mhq-category-details"
+  class="animate__animated animate__slideInRight mhq-mainform-container mhq-row">
   <router-outlet></router-outlet>
 </div>

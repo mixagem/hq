@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
-import { FinancialService } from '../../financial.service';
+import { CategoriesService } from '../categories.service';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
@@ -13,31 +13,40 @@ import { MatDialog } from '@angular/material/dialog';
 })
 
 export class CategoryDetailsComponent implements OnInit {
+
   // id da categoria em consulta
   id: number;
+
   // clone da categoria utilizada em consulta
   fiCategory: IFinancialCategory;
   // clone da categoria utilizada no modo  edição
   tempFiCategory: IFinancialCategory;
+
   // boolean com o estado do modo de edição
   editingMode: boolean;
-  // placeholders com as cores da categoria, para inputs dos colorpickers
-  bgColorPicker: string;
-  textColorPicker: string;
 
-  constructor(private _route: ActivatedRoute, public financialService: FinancialService, private _http: HttpClient, private _dialog: MatDialog) {
+  constructor(private _route: ActivatedRoute, public categoriesService: CategoriesService, private _http: HttpClient, private _dialog: MatDialog) {
     this.editingMode = false;
   }
 
   ngOnInit(): void {
+
+    //obter o id da categoria em consulta
     this.id = Number(this._route.snapshot.paramMap.get('id')!);
-    [...this.financialService.allCategories].forEach(cat => {
-      if (cat.id === this.id) { this.fiCategory = cat; return }
+
+    // clone da categoria
+    [...this.categoriesService.allCategories].forEach(category => {
+      if (category.id === this.id) { this.fiCategory = category; return }
     });
+
+    // clone da categoria enviado para o serviço
+    this.categoriesService.activePreviewCategory = { ...this.fiCategory }
+
+    // clone da categoria para edição
     this.tempFiCategory = { ...this.fiCategory }
-    this.financialService.activePreviewCategory = { ...this.fiCategory }
+
     // trigger remoto do OnInit
-    this.financialService.onInitTrigger.subscribe(myCustomParam => {
+    this.categoriesService.onInitTrigger.subscribe(nono => {
       this.ngOnInit();
     });
   }
@@ -52,35 +61,34 @@ export class CategoryDetailsComponent implements OnInit {
     });
   }
 
-  // ação de main-form para guardar categorias
+  // envia para bd as alterações efetuadas à categoria/sub-categorias
   saveCategory(): void {
 
     const httpParams = new HttpParams().set('cat', JSON.stringify(this.tempFiCategory))
-    const call = this._http.post('http://localhost:16190/savecat', httpParams, { responseType: 'text' })
+    const call = this._http.post('http://localhost:16190/updatecategory', httpParams, { responseType: 'text' })
 
     call.subscribe({
-      next: codeReceived => { this.financialService.fetchCategories('saveCategories', this.id); this.editingMode = false; },
-      error: err => this.financialService.handleError(err)
+      next: codeReceived => {
+        this.categoriesService.fetchCategories('saveCategory', this.id);
+        this.editingMode = false;
+      },
+      error: err => this.categoriesService.handleError(err)
     })
 
   }
 
-  // switch com operações do registo do modo edição (modo edição, guardar, e/ou discartar alterçaões)
-  toggleEditing(action: string): void {
+  // Ações de registo do modo de edição
+  editingCategoryRecordActions(action: string): void {
     switch (action) {
 
       case 'start':
         this.tempFiCategory = JSON.parse(JSON.stringify(this.fiCategory));
         this.editingMode = true;
-        this.bgColorPicker = this.tempFiCategory.bgcolor
-        this.textColorPicker = this.tempFiCategory.textcolor
+
         break;
 
       case 'save':
-        // remover a parte do rgb(), e guardar apenas os valores
-        this.tempFiCategory.bgcolor = this.bgColorPicker.replace('rgb(', '').replace(')', '');
-        this.tempFiCategory.textcolor = this.textColorPicker.replace('rgb(', '').replace(')', '');
-        this.financialService.recordBorderStyle['background-color'] = 'rgb(' + this.tempFiCategory.bgcolor + ')';
+        this.categoriesService.recordBorderStyle['background-color'] = this.tempFiCategory.bgcolor;
         this.saveCategory();
         break;
 
@@ -91,34 +99,34 @@ export class CategoryDetailsComponent implements OnInit {
   }
 
   // adicionar sub-categoria à categoria em edição
-  addSubCategory(): void {
+  attachSubcategory(): void {
 
-    const tempSubcat: IFinancialSubCategory = {
-      id: Date.now(),
+    const DEFAULT_FISUBCATEGORY: IFinancialSubCategory = {
+      id: 0, //ignorado ao ser enviado para a bd
       maincat: this.id,
       title: 'Nova Sub-Categoria',
       budget: 0,
       active: false
     }
 
-    const httpParams = new HttpParams().set('subcat', JSON.stringify(tempSubcat))
-    const call = this._http.post('http://localhost:16190/addsubcat', httpParams, { responseType: 'text' })
+    const httpParams = new HttpParams().set('subcat', JSON.stringify(DEFAULT_FISUBCATEGORY))
+    const call = this._http.post('http://localhost:16190/attachsubcat', httpParams, { responseType: 'text' })
 
     call.subscribe({
-      next: codeReceived => { this.financialService.fetchCategories('refreshSubcategories', this.id); },
-      error: err => this.financialService.handleError(err)
+      next: codeReceived => { this.categoriesService.fetchCategories('', this.id); },
+      error: err => this.categoriesService.handleError(err)
     })
 
   }
 
   // remover sub-categoria à categoria em edição
-  removeSubCategory(subCatID: number): void {
+  dettachSubcategory(subCatID: number): void {
 
     const httpParams = new HttpParams().set('subcat', subCatID).set('cat', this.id)
-    const call = this._http.post('http://localhost:16190/removesubcat', httpParams, { responseType: 'text' })
+    const call = this._http.post('http://localhost:16190/dettachsubcat', httpParams, { responseType: 'text' })
     call.subscribe({
-      next: codeReceived => { this.financialService.fetchCategories('refreshSubcategories', this.id); },
-      error: err => this.financialService.handleError(err)
+      next: codeReceived => { this.categoriesService.fetchCategories('', this.id); },
+      error: err => this.categoriesService.handleError(err)
     })
   }
 
@@ -133,16 +141,16 @@ export class CategoryDetailsComponent implements OnInit {
 
 export class DeleteCategoryConfirmationModal {
 
-  constructor(public financialService: FinancialService, private _http: HttpClient) { }
+  constructor(public categoriesService: CategoriesService, private _http: HttpClient) { }
 
-  removeCategory(): void {
+  deleteCategory(): void {
 
-    const httpParams = new HttpParams().set('cat', this.financialService.activePreviewCategory.id)
-    const call = this._http.post('http://localhost:16190/removecat', httpParams, { responseType: 'text' })
+    const httpParams = new HttpParams().set('cat', this.categoriesService.activePreviewCategory.id)
+    const call = this._http.post('http://localhost:16190/deletecategory', httpParams, { responseType: 'text' })
 
     call.subscribe({
-      next: codeReceived => { this.financialService.fetchCategories('removeCategory'); },
-      error: err => this.financialService.handleError(err)
+      next: codeReceived => { this.categoriesService.fetchCategories('deleteCategory'); },
+      error: err => this.categoriesService.handleError(err)
     })
 
   }

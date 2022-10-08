@@ -1,18 +1,27 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
-import { FinancialService } from '../../financial.service';
+import { CategoriesService } from '../categories.service';
 import { Router } from '@angular/router';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
 
-const DEFAULT_FICATEGORY = {
+// objecto default para modo de introdução de nova categoria
+const DEFAULT_FICATEGORY: IFinancialCategory = {
   id: 0,
   type: 'expense',
-  title: 'temp',
+  title: 'Nova categoria',
   icon: 'dns',
-  bgcolor: '0,0,0',
-  textcolor: '255,255,255',
+  bgcolor: 'rgb(0,0,0)',
+  textcolor: 'rgb(255,255,255)',
   subcats: [],
+  active: false
+}
+
+const DEFAULT_FISUBCATEGORY: IFinancialSubCategory = {
+  id: Date.now(),
+  maincat: 0,
+  title: 'Nova sub-categoria',
+  budget: 0,
   active: false
 }
 
@@ -27,75 +36,68 @@ export class NewCategoryComponent implements OnInit {
   // categoria utilizada no modo  de introdução
   tempFiCategory: IFinancialCategory;
 
-  // placeholders com as cores da categoria, para inputs dos colorpickers
-  bgColorPicker: string;
-  textColorPicker: string;
-
-  constructor(public financialService: FinancialService, public _http: HttpClient, public _router: Router) { }
+  constructor(public categoriesService: CategoriesService, public _http: HttpClient, public _router: Router) { }
 
   ngOnInit(): void {
 
-    // cria a categoria temporaária de acordo com o tipo de introdução
-    if (this.financialService.cloningCategory) {
-      this.tempFiCategory = this.financialService.activePreviewCategory
+    // cria a categoria temporária de acordo com o tipo de introdução
+    if (this.categoriesService.cloningCategory) {
+      // caso seja duplicação de um registo
+      this.tempFiCategory = this.categoriesService.activePreviewCategory
+      // reseta o id (apenas influência visualmente, na chamada à bd eu ignoro este campo)
       this.tempFiCategory.id = 0
     } else {
+      // caso seja uma nova introduçãp
       this.tempFiCategory = DEFAULT_FICATEGORY
     }
 
-    this.bgColorPicker = this.tempFiCategory.bgcolor
-    this.textColorPicker = this.tempFiCategory.textcolor
   }
 
-  // quick-actions (save e discard)
-  addCategoryActions(action: string): void {
+  // ações de registo
+  newCategoryRecordActions(action: string): void {
+
     switch (action) {
       case 'save':
-        // remover a parte do rgb(), e guardar apenas os valores
-        this.tempFiCategory.bgcolor = this.bgColorPicker.replace('rgb(', '').replace(')', '');
-        this.tempFiCategory.textcolor = this.textColorPicker.replace('rgb(', '').replace(')', '');
-        this.saveCategory();
+        this.createNewCategory();
         break;
 
       case 'end': default:
+        // fechar a gaveta
         document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight')
-        const timer = setTimeout(navi.bind(null, this._router), 1000) // tempo da animação antes de redirecionar
+
+        const timer = setTimeout(navi.bind(null, this._router), 1000)
         function navi(router: Router): void {
           router.navigate(['/fi/cats'])
         }
     }
   }
 
-  // adicionar sub-categoria à respetiva tabela
-  addSubCategory(): void {
-    const tempSubcat: IFinancialSubCategory = {
-      id: Date.now(),
-      maincat: 0,
-      title: 'Nova sub-categoria',
-      budget: 0,
-      active: false
-    }
-    this.tempFiCategory.subcats.push(tempSubcat)
+  // concluí o modo de introdução (manda para bd, faz fresh à listagem e à gaveta)
+  createNewCategory(): void {
+    const httpParams = new HttpParams().set('cat', JSON.stringify(this.tempFiCategory))
+    const call = this._http.post('http://localhost:16190/newcategory', httpParams, { responseType: 'text' })
+
+    call.subscribe({
+      next: codeReceived => {
+        const createdCategoryAssignedID = codeReceived as unknown as number;
+        this.categoriesService.fetchCategories('saveCategory', createdCategoryAssignedID);
+      },
+      error: err => this.categoriesService.handleError(err)
+    })
   }
 
-  // remover sub-categoria da respetiva tabela
-  removeSubCategory(subCatIndex: number): void {
+  // adicionar sub-categoria à categoria
+  createSubcategory(): void {
+    this.tempFiCategory.subcats.push(DEFAULT_FISUBCATEGORY);
+  }
+
+  // remover sub-categoria da categoria
+  deleteSubcategory(subCatIndex: number): void {
     let newSubcats: IFinancialSubCategory[] = [];
     this.tempFiCategory.subcats.forEach((subcat, i) => {
       if (subCatIndex !== i) { newSubcats.push(subcat) }
     });
     this.tempFiCategory.subcats = [...newSubcats];
-  }
-
-  // termina o modo de introdução (manda para bd, e encaminha o user para o modo de listgem, que é refrescado após a gaveta fechar)
-  saveCategory(): void {
-    const httpParams = new HttpParams().set('cat', JSON.stringify(this.tempFiCategory))
-    const call = this._http.post('http://localhost:16190/addcat', httpParams, { responseType: 'text' })
-
-    call.subscribe({
-      next: codeReceived => { this.financialService.fetchCategories('addCategory'); },
-      error: err => this.financialService.handleError(err)
-    })
   }
 
 }

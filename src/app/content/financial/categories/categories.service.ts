@@ -3,7 +3,6 @@ import { Injectable, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subject, throwError } from 'rxjs';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
-import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
 
 type RecordBorderStyle = {
   "background-color": string
@@ -13,8 +12,9 @@ type RecordBorderStyle = {
   providedIn: 'root'
 })
 
-export class FinancialService implements OnInit {
+export class CategoriesService implements OnInit {
 
+  // variável com o estado da comunicação à bd
   loadingComplete: Boolean;
 
   //trigger para onInit
@@ -27,12 +27,12 @@ export class FinancialService implements OnInit {
   allCategories: IFinancialCategory[];
   expenseCategories: IFinancialCategory[];
   incomeCategories: IFinancialCategory[];
+
   // clone da categoria atualmente em consulta
   activePreviewCategory: IFinancialCategory;
 
   //boolean para verificar se é duplicada ou é criada nova categoria
   cloningCategory: Boolean;
-
 
   constructor(private _http: HttpClient, private _router: Router) {
     this.loadingComplete = false;
@@ -49,12 +49,10 @@ export class FinancialService implements OnInit {
     this.cloningCategory = false;
   }
 
-
-
   //vai á bd buscar as categorias
   fetchCategories(source: string = '', catID?: number): void {
 
-    const call = this._http.get('http://localhost:16190/getcats');
+    const call = this._http.get('http://localhost:16190/fetchcats');
 
     call.subscribe({
       next: (codeReceived) => {
@@ -64,38 +62,20 @@ export class FinancialService implements OnInit {
         this.expenseCategories = resp.filter(cat => cat.type === 'expense');
         this.incomeCategories = resp.filter(cat => cat.type === 'income');
         this.loadingComplete = true;
-        if (source === 'saveCategories') {
+
+        // faz refresh da listagem e da gaveta
+        if (source === 'saveCategory') {
           this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             this._router.navigate(['/fi/cats', catID]);
           });
         }
 
-        if (source === 'refreshSubcategories') {
+        // fecha a gaveta do registo, fecha a modal e faz refresh da listagem
+        if (source === 'deleteCategory') {
 
-        }
-
-        if (source === 'addCategory') {
-          // fechar a gaveta do registo
           document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
 
           const timer = setTimeout(navi.bind(null, this._router), 1000);
-
-          function navi(router: Router): void {
-            router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-              router.navigate(['/fi/cats']);
-            });
-          }
-
-
-
-        }
-
-        if (source === 'removeCategory') {
-          // fechar a gaveta do registo
-          document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
-
-          const timer = setTimeout(navi.bind(null, this._router), 1000);
-
           function navi(router: Router): void {
             //marteladinha para fechar a modal
             const ele = document.querySelector('.cdk-overlay-backdrop') as HTMLElement;
@@ -106,9 +86,9 @@ export class FinancialService implements OnInit {
             });
           }
 
-
         }
 
+        // refresh do OnInit
         this.onInitTriggerCall();
 
       },
@@ -117,12 +97,13 @@ export class FinancialService implements OnInit {
 
   }
 
-  // navegação para modo de introdução
+  // abre a gaveta do registo em modo de introdução
   addMode(cloningCategory: boolean): void {
 
     // verifica se é duplicação ou é introdução normal
     this.cloningCategory = cloningCategory;
     (!this.cloningCategory) ? this.recordBorderStyle = { 'background-color': 'gray' } : [];
+
     // navegação para modo de introdução de registo
     this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this._router.navigate(['/fi/cats/add']);
@@ -130,20 +111,17 @@ export class FinancialService implements OnInit {
 
   }
 
-  // fecha a consulta do registo, e retorna para o modo listagem
+  // fecha a gaveta do registo
   closeDetails(): void {
 
     document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight')
 
     const timer = setTimeout(navi.bind(null, this._router), 1000)
-
     function navi(router: Router): void {
       router.navigate(['/fi/cats'])
     }
 
   }
-
-
 
 
   // tratamento erros

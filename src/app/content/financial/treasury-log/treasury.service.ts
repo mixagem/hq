@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, Subject, throwError } from 'rxjs';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
-import { FinancialService } from '../financial.service';
+import { CategoriesService } from '../categories/categories.service';
 
 type RecordBorderStyle = {
   "background-color": string
@@ -32,7 +32,7 @@ export class TreasuryService {
 
   cloningTLog: Boolean;
 
-  constructor(private _http: HttpClient, private _router: Router, private financialService: FinancialService) {
+  constructor(private _http: HttpClient, private _router: Router, private categoriesService: CategoriesService) {
     this.loadingComplete = false;
     this.fetchTreasuryLog();
     this.onInitTrigger = new Subject<any>();
@@ -49,7 +49,7 @@ export class TreasuryService {
   // vai á bd buscar os movimentos
   fetchTreasuryLog(source: string = '', LogID?: number): void {
 
-    const call = this._http.get('http://localhost:16190/gettlogs');
+    const call = this._http.get('http://localhost:16190/fetchtreasurylogs');
 
     call.subscribe({
       next: (codeReceived) => {
@@ -59,20 +59,20 @@ export class TreasuryService {
         this.treasuryLog = resp;
         this.loadingComplete = true;
 
+        // faz refresh ao modo listagem e à gaveta do registo em edição/introdução
         if (source === 'saveTreasuryLog') {
           this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
             this._router.navigate(['/fi/tlogs', LogID]);
           });
         }
 
-        if (source === 'removeTreasuryLog') {
-          // fechar a gaveta do registo
+        // fecha a gaveta do registo, fecha a modal e faz refresh ao modo listagem
+        if (source === 'deleteTreasuryLog') {
+
           document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
 
           const timer = setTimeout(navi.bind(null, this._router), 1000);
-
           function navi(router: Router): void {
-            //marteladinha para fechar a modal
             const ele = document.querySelector('.cdk-overlay-backdrop') as HTMLElement;
             ele.click();
 
@@ -81,8 +81,8 @@ export class TreasuryService {
             });
           }
 
-
         }
+
         this.onInitTriggerCall();
 
       },
@@ -117,8 +117,8 @@ export class TreasuryService {
   // utilizado no render da listagem
   getCatStyle(catID: number): string {
     let style: string;
-    const cat = [...this.financialService.allCategories].forEach(cat => {
-      if (cat.id == catID) return style = `background:rgb(${cat.bgcolor});color:rgb(${cat.textcolor});`
+    const cat = [...this.categoriesService.allCategories].forEach(cat => {
+      if (cat.id == catID) return style = `background:${cat.bgcolor};color:${cat.textcolor};`
       return;
     });
     return style!;
@@ -128,7 +128,7 @@ export class TreasuryService {
 
     let mainCat: IFinancialCategory;
 
-    [...this.financialService.allCategories].forEach(cat => {
+    [...this.categoriesService.allCategories].forEach(cat => {
       if (cat.id == catID) return mainCat = cat
       return;
     });
@@ -141,7 +141,7 @@ export class TreasuryService {
 
     let mainCat: IFinancialCategory;
 
-    [...this.financialService.allCategories].forEach(cat => {
+    [...this.categoriesService.allCategories].forEach(cat => {
       if (cat.id == catID) return mainCat = cat
       return;
     });
@@ -161,7 +161,7 @@ export class TreasuryService {
 
     let icon: string;
 
-    [...this.financialService.allCategories].forEach(cat => {
+    [...this.categoriesService.allCategories].forEach(cat => {
       if (cat.id == catID) return icon = cat.icon
       return
     });

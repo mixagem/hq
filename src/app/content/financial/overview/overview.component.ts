@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
-import { FinancialService } from '../financial.service';
+import { CategoriesService } from '../categories/categories.service';
 import { TreasuryService } from '../treasury-log/treasury.service';
 import { OverviewService } from './overview.service';
 
@@ -41,7 +41,7 @@ export class OverviewComponent implements OnInit {
   dailyCatEvolution: object;
   dailySubCatEvolution: object;
 
-  constructor(public financialService: FinancialService, public treasuryService: TreasuryService, private _http: HttpClient, private _dialog: MatDialog, private _overviewService: OverviewService) {
+  constructor(public categoriesService: CategoriesService, public treasuryService: TreasuryService, private _http: HttpClient, private _dialog: MatDialog, private _overviewService: OverviewService) {
     this.currentDate = new Date();
     this.evoReady = false;
   }
@@ -51,7 +51,7 @@ export class OverviewComponent implements OnInit {
     this.treasuryService.onInitTrigger.subscribe(myCustomParam => {
       this.ngOnInit();
     });
-    if (!this.financialService.loadingComplete) { return }
+    if (!this.categoriesService.loadingComplete) { return }
     this.selectedMonth = this.currentDate.getMonth() + 1
     console.log(this.selectedMonth)
     switch (this.selectedMonth) {
@@ -122,7 +122,7 @@ export class OverviewComponent implements OnInit {
       next: codeReceived => {
         const resp = codeReceived as number[]; this.dailySumAcomEvolution = resp;
       },
-      error: err => this.financialService.handleError(err)
+      error: err => this.categoriesService.handleError(err)
     })
     // query 1 à bd com o valor acomulado ao inicio do mês => getDailySumEvolution()
     // query2 à bd: obter  os movimentos para o mês selecionado => getDailySumEvolution()
@@ -145,7 +145,7 @@ export class OverviewComponent implements OnInit {
         this.evoReady = true;
         console.log(this.dailyCatEvolution[1 as keyof typeof this.dailyCatEvolution][9]) // fuck yes bro
       },
-      error: err => this.financialService.handleError(err)
+      error: err => this.categoriesService.handleError(err)
     })
 
   }
@@ -160,7 +160,7 @@ export class OverviewComponent implements OnInit {
         this._overviewService.treasuryLogsForDetails = resp
         this.openDialog('300ms', '150ms')
       },
-      error: err => this.financialService.handleError(err)
+      error: err => this.categoriesService.handleError(err)
     })
 
 
@@ -177,7 +177,7 @@ export class OverviewComponent implements OnInit {
         this._overviewService.treasuryLogsForDetails = resp
         this.openDialog('300ms', '150ms')
       },
-      error: err => this.financialService.handleError(err)
+      error: err => this.categoriesService.handleError(err)
     })
   }
 
@@ -193,7 +193,7 @@ export class OverviewComponent implements OnInit {
         this._overviewService.treasuryLogsForDetails = resp
         this.openDialog('300ms', '150ms')
       },
-      error: err => this.financialService.handleError(err)
+      error: err => this.categoriesService.handleError(err)
     })
 
   }
@@ -226,7 +226,7 @@ export class OverviewDetailsModal implements OnInit {
 
 
 
-  constructor(public financialService: FinancialService, private _http: HttpClient, public overviewService: OverviewService) { }
+  constructor(public categoriesService: CategoriesService, private _http: HttpClient, public overviewService: OverviewService) { }
 
   ngOnInit(): void {
 

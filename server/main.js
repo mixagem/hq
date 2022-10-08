@@ -1,6 +1,6 @@
 import { genDailySumAcomEvo, genDailyCategoriesEvo, getDailyCatDetails, getDailySubCatDetails, getDailyDetails} from './overviewMethods.js';
 import { addNewTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog } from './treasuryMethods.js';
-import { getCategories, createNewCategory, deleteCategory, addSubCategory, removeSubCategory, saveCategory } from './categoriesMethods.js'
+import { fetchCategories, createNewCategory, deleteCategory, addSubCategory, removeSubCategory, saveCategory } from './categoriesMethods.js'
 import express from 'express';
 
 const app = express();
@@ -13,25 +13,25 @@ app.use(express.urlencoded({ extended: true }));
 
 
 // overview
-app.post('/dailysumevo', function (req, res) { return genDailySumAcomEvo(req, res); });
-app.post('/dailycatsevo', function (req, res) { return genDailyCategoriesEvo(req, res); });
+app.post('/dailysumevo', function (req, res) { return genDailySumAcomEvo(req, res); }); //snapshot
+app.post('/dailycatsevo', function (req, res) { return genDailyCategoriesEvo(req, res); }); //snapshot
 app.post('/getdailydetails', function(req,res) { return getDailyDetails(req,res)})
 app.post('/getdailycatdetails', function(req,res) { return getDailyCatDetails(req,res)})
 app.post('/getdailysubcatdetails', function(req,res) { return getDailySubCatDetails(req,res)})
 
 // categories
-app.get('/getcats', function (req, res) { return getCategories(req, res); });
-app.post('/addcat', function (req, res) { return createNewCategory(req, res); });
-app.post('/removecat', function (req, res) { return deleteCategory(req, res); });
-app.post('/addsubcat', function (req, res) { return addSubCategory(req, res); });
-app.post('/removesubcat', function (req, res) { return removeSubCategory(req, res); });
-app.post('/savecat', function (req, res) { return saveCategory(req, res); });
+app.get('/fetchcats', function (req, res) { return fetchCategories(req, res); });
+app.post('/newcategory', function (req, res) { return createNewCategory(req, res); });
+app.post('/deletecategory', function (req, res) { return deleteCategory(req, res); });
+app.post('/attachsubcat', function (req, res) { return addSubCategory(req, res); });
+app.post('/dettachsubcat', function (req, res) { return removeSubCategory(req, res); });
+app.post('/updatecategory', function (req, res) { return saveCategory(req, res); });
 
 // treasury
-app.get('/gettlogs', function (req, res) { return fetchTreasuryLogs(req, res); });
-app.post('/removetlog', function (req, res) { return deleteTreasuryLog(req, res); });
-app.post('/savetlog', function (req, res) { return updateTreasuryLog(req, res); });
-app.post('/addtlog', function (req, res) { return addNewTreasurylog(req, res); });
+app.get('/fetchtreasurylogs', function (req, res) { return fetchTreasuryLogs(req, res); });
+app.post('/deletetreasurylog', function (req, res) { return deleteTreasuryLog(req, res); });
+app.post('/updatetreasurylog', function (req, res) { return updateTreasuryLog(req, res); });
+app.post('/createtreasurylog', function (req, res) { return addNewTreasurylog(req, res); });
 
 
 // TODO SNAPSHOT PARA TODOS REDO

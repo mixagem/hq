@@ -1,20 +1,20 @@
 <div class="mhq-row full-height mhq-category-details-wrapper">
 
   <div class="mhq-categories-drawer-left">
-    <div class="mhq-quickaction-close" (click)="financialService.closeDetails()">
+    <div class="mhq-quickaction-close" (click)="categoriesService.closeDetails()">
       <mat-icon>close</mat-icon>
     </div>
-    <div *ngIf="!editingMode" class="mhq-quickaction-default" (click)="toggleEditing('start')"><button mat-icon-button>
+    <div *ngIf="!editingMode" class="mhq-quickaction-default" (click)="editingCategoryRecordActions('start')"><button mat-icon-button>
       <mat-icon>edit</mat-icon>
     </button></div>
-    <div *ngIf="editingMode" class="mhq-quickaction-save" (click)="toggleEditing('save')"><button mat-icon-button>
+    <div *ngIf="editingMode" class="mhq-quickaction-save" (click)="editingCategoryRecordActions('save')"><button mat-icon-button>
       <mat-icon>save</mat-icon>
     </button></div>
-    <div *ngIf="editingMode" class="mhq-quickaction-delete" (click)="toggleEditing('end')"><button mat-icon-button>
+    <div *ngIf="editingMode" class="mhq-quickaction-delete" (click)="editingCategoryRecordActions('end')"><button mat-icon-button>
       <mat-icon>not_interested</mat-icon>
     </button></div>
 
-    <div *ngIf="!editingMode" class="mhq-quickaction-default"><button mat-icon-button (click)="financialService.addMode(true)">
+    <div *ngIf="!editingMode" class="mhq-quickaction-default"><button mat-icon-button (click)="categoriesService.addMode(true)">
       <mat-icon>file_copy</mat-icon>
     </button></div>
 
@@ -22,7 +22,7 @@
       <mat-icon>delete</mat-icon>
     </button></div>
 
-    <div [ngStyle]="financialService.recordBorderStyle"></div>
+    <div [ngStyle]="categoriesService.recordBorderStyle"></div>
   </div>
 
 
@@ -119,16 +119,14 @@
           <mat-form-field appearance="fill">
             <mat-label>Cor etiqueta</mat-label>
             <input matInput [cpPosition]="'bottom'" [cpOutputFormat]="'rgba'" [cpAlphaChannel]="'disabled'"
-              [cpPositionOffset]="'5%'" [cpPositionRelativeToArrow]="true" [cpCancelButton]="true" [cpOKButton]="true"
-              [cpSaveClickOutside]="false" [(colorPicker)]="bgColorPicker" [(ngModel)]="bgColorPicker">
+              [cpPositionOffset]="'5%'" [cpPositionRelativeToArrow]="true" [(colorPicker)]="tempFiCategory.bgcolor" [(ngModel)]="tempFiCategory.bgcolor">
           </mat-form-field>
         </div>
         <div class="mhq-col-4">
           <mat-form-field appearance="fill">
             <mat-label>Cor texto</mat-label>
             <input matInput [cpPosition]="'bottom'" [cpOutputFormat]="'rgba'" [cpAlphaChannel]="'disabled'"
-              [cpPositionOffset]="'5%'" [cpPositionRelativeToArrow]="true" [cpCancelButton]="true" [cpOKButton]="true"
-              [cpSaveClickOutside]="false" [(colorPicker)]="textColorPicker" [(ngModel)]="textColorPicker">
+              [cpPositionOffset]="'5%'" [cpPositionRelativeToArrow]="true" [(colorPicker)]="tempFiCategory.textcolor" [(ngModel)]="tempFiCategory.textcolor">
           </mat-form-field>
         </div>
 
@@ -141,7 +139,7 @@
 
       <div *ngIf="fiCategory.subcats.length===0 && !editingMode">no rows.</div>
 
-      <div *ngIf="fiCategory.subcats.length===0 && editingMode">no rows. <span (click)="addSubCategory()">click to
+      <div *ngIf="fiCategory.subcats.length===0 && editingMode">no rows. <span (click)="attachSubcategory()">click to
           add</span></div>
 
       <table *ngIf="fiCategory.subcats.length>0 && !editingMode">
@@ -192,12 +190,12 @@
             <td>
               <div class="mhq-mat-inputs-margin"><mat-checkbox color="primary" [(ngModel)]="tempsubcat.active"></mat-checkbox></div>
             </td>
-            <td (click)="removeSubCategory(tempsubcat.id)"><div class="mhq-mat-inputs-margin">
+            <td (click)="dettachSubcategory(tempsubcat.id)"><div class="mhq-mat-inputs-margin">
               <button mat-icon-button><mat-icon>delete</mat-icon></button>
             </div></td>
           </tr>
           <tr>
-            <td colspan="6" (click)="addSubCategory()">add-shiet bro</td>
+            <td colspan="6" (click)="attachSubcategory()">add-shiet bro</td>
           </tr>
         </tbody>
       </table>

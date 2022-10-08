@@ -4,13 +4,13 @@
     <div class="mhq-quickaction-close" (click)="treasuryService.closeDetails()">
       <mat-icon>close</mat-icon>
     </div>
-    <div *ngIf="!editingMode" class="mhq-quickaction-default" (click)="toggleEditing('start')"><button mat-icon-button>
+    <div *ngIf="!editingMode" class="mhq-quickaction-default" (click)="editingTreasuryLogRecordActions('start')"><button mat-icon-button>
         <mat-icon>edit</mat-icon>
       </button></div>
-    <div *ngIf="editingMode" class="mhq-quickaction-save" (click)="toggleEditing('save')"><button mat-icon-button>
+    <div *ngIf="editingMode" class="mhq-quickaction-save" (click)="editingTreasuryLogRecordActions('save')"><button mat-icon-button>
         <mat-icon>save</mat-icon>
       </button></div>
-    <div *ngIf="editingMode" class="mhq-quickaction-delete" (click)="toggleEditing('end')"><button mat-icon-button>
+    <div *ngIf="editingMode" class="mhq-quickaction-delete" (click)="editingTreasuryLogRecordActions('end')"><button mat-icon-button>
         <mat-icon>not_interested</mat-icon>
       </button></div>
 
@@ -109,7 +109,7 @@
         <div class="mhq-col-1">
           <mat-form-field appearance="fill">
             <mat-label>ID</mat-label>
-            <input matInput [(ngModel)]="tempTreasuryLog.id">
+            <input matInput disabled [(ngModel)]="tempTreasuryLog.id">
           </mat-form-field>
         </div>
 
@@ -124,10 +124,10 @@
 
           <mat-form-field appearance="fill">
             <mat-label>Data</mat-label>
-            <input matInput [matDatepicker]="tlogDatePicker" [formControl]="mypick">
+            <input matInput [matDatepicker]="treasuryLogDatepicker" [formControl]="treasuryLogDatepickerForm">
             <mat-hint>DD/MM/YYYY</mat-hint>
-            <mat-datepicker-toggle matSuffix [for]="tlogDatePicker"></mat-datepicker-toggle>
-            <mat-datepicker #tlogDatePicker></mat-datepicker>
+            <mat-datepicker-toggle matSuffix [for]="treasuryLogDatepicker"></mat-datepicker-toggle>
+            <mat-datepicker #treasuryLogDatepicker></mat-datepicker>
           </mat-form-field>
 
 

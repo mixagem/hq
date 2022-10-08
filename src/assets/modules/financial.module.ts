@@ -11,7 +11,7 @@ import { OverviewComponent, OverviewDetailsModal } from 'src/app/content/financi
 import { NewCategoryComponent } from 'src/app/content/financial/categories/new-category/new-category.component';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { TreasuryLogComponent } from 'src/app/content/financial/treasury-log/treasury-log.component';
-import { TreasuryDetailsComponent, DeleteTlogConfirmationModal } from 'src/app/content/financial/treasury-log/treasury-details/treasury-details.component';
+import { TreasuryDetailsComponent, DeleteTreasuryLogConfirmationModal } from 'src/app/content/financial/treasury-log/treasury-details/treasury-details.component';
 import { NewTreasuryLogComponent } from 'src/app/content/financial/treasury-log/new-treasury-log/new-treasury-log.component';
 
 
@@ -25,7 +25,7 @@ import { NewTreasuryLogComponent } from 'src/app/content/financial/treasury-log/
     DeleteCategoryConfirmationModal,
     TreasuryLogComponent,
     TreasuryDetailsComponent,
-    DeleteTlogConfirmationModal,
+    DeleteTreasuryLogConfirmationModal,
     NewTreasuryLogComponent,
     OverviewDetailsModal
 
@@ -46,7 +46,7 @@ import { NewTreasuryLogComponent } from 'src/app/content/financial/treasury-log/
     DeleteCategoryConfirmationModal,
     TreasuryLogComponent,
     TreasuryDetailsComponent,
-    DeleteTlogConfirmationModal,
+    DeleteTreasuryLogConfirmationModal,
     NewTreasuryLogComponent,
     OverviewDetailsModal
 

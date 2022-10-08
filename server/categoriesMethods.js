@@ -1,7 +1,7 @@
 import sqlite3 from 'sqlite3';
 
 // ######>  vai buscar à bd as acategorias existentes
-export function getCategories(req, res) {
+export function fetchCategories(req, res) {
 
   let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
     if (err) { console.error(err.message); }
@@ -16,7 +16,7 @@ export function getCategories(req, res) {
       if (err) { console.error(err.message) }
       else {
         cat.subcats = []; // na tabela da bd, não existe a coluna subcats, tenho que a declarar aqui
-        cat.active === 'true' ? cat.active = true : cat.active = false; // conversão string para boolean
+        cat.active === 'true' ? cat.active = true : cat.active = false; // conversão string para boolean (o sqlite não tem colunas do tipo boolean)
         categories.push(cat);
       }
     });
@@ -75,7 +75,7 @@ export function createNewCategory(req, res) {
     }
 
     db.close((err) => {
-      err ? console.error(err.message) : res.send('gucci'); // desenvolver tratamento de erro do lado do front end
+      err ? console.error(err.message) : res.send(catID); // desenvolver tratamento de erro do lado do front end
     });
   }
 }

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { FinancialService } from './content/financial/financial.service';
-import { OverviewService } from './content/financial/overview/overview.service';
+import { CategoriesService } from './content/financial/categories/categories.service';
 import { TreasuryService } from './content/financial/treasury-log/treasury.service';
 
 @Component({
@@ -10,5 +9,5 @@ import { TreasuryService } from './content/financial/treasury-log/treasury.servi
 })
 export class AppComponent {
   title = 'hq';
-  constructor (private _financialService:FinancialService, private _treasuryService:TreasuryService){};
+  constructor (private _categoriesService:CategoriesService, private _treasuryService:TreasuryService){};
 }

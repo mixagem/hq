@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
-import { FinancialService } from '../../financial.service';
+import { CategoriesService } from '../../categories/categories.service';
 import { map, startWith } from 'rxjs/operators';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { TreasuryService } from '../treasury.service';
@@ -20,8 +20,8 @@ import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-cate
 export class TreasuryDetailsComponent implements OnInit {
 
   // datepicker
-  tlogDatePicker: MatDatepicker<any>;
-  mypick: FormControl<any>;
+  treasuryLogDatepicker: MatDatepicker<any>;
+  treasuryLogDatepickerForm: FormControl<any>;
 
   // autocomplete categoria
   catForm: FormControl
@@ -33,7 +33,7 @@ export class TreasuryDetailsComponent implements OnInit {
   }
 
   // autocomplete sub categoria
-  subCatForm : FormControl
+  subCatForm: FormControl
   subCatFormOptions: string[] = [];
   subCatFilteredOptions: Observable<string[]>;
   private _subcatfilter(value: string): string[] {
@@ -43,65 +43,62 @@ export class TreasuryDetailsComponent implements OnInit {
 
   // id do movimento em consulta
   id: number;
+
   // clone do movimento utilizada em consulta
   treasuryLog: ITreasuryLog;
   // clone do moviment utilizada no modo edição
   tempTreasuryLog: ITreasuryLog;
+
   // boolean com o estado do modo de edição
   editingMode: boolean;
 
-  constructor(private _route: ActivatedRoute, public _router: Router, public treasuryService: TreasuryService, public dialog: MatDialog, public _http: HttpClient, private _financialService: FinancialService) {
+  constructor(private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, private _categoriesService: CategoriesService) {
     this.editingMode = false;
   }
 
   ngOnInit(): void {
-    // id
+
+    // obter id
     this.id = Number(this._route.snapshot.paramMap.get('id')!);
-    // fetch snapshot
-    // this.tlog = this.treasuryService.treasuryLog.filter(tlog => {
-    //   return tlog.id === this.id
-    // })[0];
-    [...this.treasuryService.treasuryLog].forEach(tlog => {
-      if (tlog.id === this.id) { this.treasuryLog = tlog; return }
-    });
-    // tlog snapshot
+
+    // obter snapshot do movimento
+    [...this.treasuryService.treasuryLog].forEach(treasurylog => { if (treasurylog.id === this.id) { this.treasuryLog = treasurylog; return } });
+
+    // clone do movimento para modo de edição
     this.tempTreasuryLog = JSON.parse(JSON.stringify(this.treasuryLog));
-    // clonse snapshot para editar
+
+    // clone do movimento enviado para o serviço
     this.treasuryService.activeTreasuryLog = JSON.parse(JSON.stringify(this.treasuryLog));
 
-    // auto complete categoria
+    this.treasuryLogDatepickerForm = new FormControl(new Date(this.treasuryLog.date), [Validators.required]);
+
+    //  form controls para auto completes categorias/subcategorias
     this.catForm = new FormControl(this.treasuryService.getCatLabel(this.tempTreasuryLog.cat), [Validators.required]);
-    this.subCatForm = new FormControl(this.treasuryService.getSubCatLabel(this.tempTreasuryLog.cat,this.treasuryLog.subcat), [Validators.required]);
+    this.subCatForm = new FormControl(this.treasuryService.getSubCatLabel(this.tempTreasuryLog.cat, this.treasuryLog.subcat), [Validators.required]);
 
-
+    // criar array com os títulos das categorias/subcategorias
     this.catFormOptions = [];
-    const allCats = [...this._financialService.allCategories]
-    allCats.forEach(cat => {
-      this.catFormOptions.push(cat.title)
-    });
-
-    this.catFilteredOptions = this.catForm.valueChanges.pipe(
-      startWith(''),
-      map(value => this._catfilter(value || '')),
-    );
-
-    // auto complete sub categoria categoria
-    this.subCatFilteredOptions = this.subCatForm.valueChanges.pipe(
-      startWith(''),
-      map(value => this._subcatfilter(value || '')),
-    );
-
     this.subCatFormOptions = [];
-    allCats.forEach(cat => {
+
+    [...this._categoriesService.allCategories].forEach(cat => {
+      // adicionar titulo cat
+      this.catFormOptions.push(cat.title)
+
+      // adicionar subtitulos das categorias
       cat.subcats.forEach(subcat => {
         this.subCatFormOptions.push(subcat.title)
       });
     });
 
-    //datepicker
-    this.mypick = new FormControl(new Date(this.treasuryService.activeTreasuryLog.date));
-
-
+    // filtros autocompletes
+    this.catFilteredOptions = this.catForm.valueChanges.pipe(
+      startWith(''),
+      map(value => this._catfilter(value || '')),
+    );
+    this.subCatFilteredOptions = this.subCatForm.valueChanges.pipe(
+      startWith(''),
+      map(value => this._subcatfilter(value || '')),
+    );
 
     // trigger remoto do OnInit
     this.treasuryService.onInitTrigger.subscribe(myCustomParam => {
@@ -109,19 +106,10 @@ export class TreasuryDetailsComponent implements OnInit {
     });
   }
 
-  openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
-    this.dialog.open(DeleteTlogConfirmationModal, {
-      width: '50vw',
-      height: '50vh',
-      enterAnimationDuration,
-      exitAnimationDuration,
-    });
-  }
-
   saveTreasurylog(): void {
 
     const httpParams = new HttpParams().set('tlog', JSON.stringify(this.tempTreasuryLog))
-    const call = this._http.post('http://localhost:16190/savetlog', httpParams, { responseType: 'text' })
+    const call = this._http.post('http://localhost:16190/updatetreasurylog', httpParams, { responseType: 'text' })
 
     call.subscribe({
       next: codeReceived => { this.treasuryService.fetchTreasuryLog('saveTreasuryLog', this.tempTreasuryLog.id); this.editingMode = false; },
@@ -129,7 +117,7 @@ export class TreasuryDetailsComponent implements OnInit {
     })
   }
 
-  toggleEditing(action: string): void {
+  editingTreasuryLogRecordActions(action: string): void {
 
     switch (action) {
 
@@ -143,15 +131,14 @@ export class TreasuryDetailsComponent implements OnInit {
 
         if (this.catForm.errors || this.subCatForm.errors) { return alert('fuck you') }
 
-        // converter a data do picker para guardar da bd
-        this.tempTreasuryLog.date = new Date(this.mypick.value.toISOString()).getTime();
+        this.tempTreasuryLog.date = this.treasuryLogDatepickerForm.value.getTime();
 
         let catID: number; // id da categoria
         let catBGColor: string // cor da categoria
         let subCats: IFinancialSubCategory[]; // subcats da categoria selecioanda
 
         // obter o ID, BGColor e SubCategorias  da categoria selecionada
-        [...this._financialService.allCategories].forEach(cat => {
+        [...this._categoriesService.allCategories].forEach(cat => {
           if (cat.title === this.catForm.value) { catBGColor = cat.bgcolor; subCats = cat.subcats; catID = cat.id; return; }
         });
 
@@ -165,7 +152,7 @@ export class TreasuryDetailsComponent implements OnInit {
         this.tempTreasuryLog.cat = catID!;
         this.tempTreasuryLog.subcat = subCatID!;
 
-        this.treasuryService.recordBorderStyle['background-color'] = 'rgb(' + catBGColor! + ')';
+        this.treasuryService.recordBorderStyle['background-color'] = catBGColor!;
         this.saveTreasurylog();
 
         break;
@@ -173,6 +160,15 @@ export class TreasuryDetailsComponent implements OnInit {
       case 'end': default:
         this.editingMode = false;
     }
+  }
+
+  openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this._dialog.open(DeleteTreasuryLogConfirmationModal, {
+      width: '50vw',
+      height: '50vh',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
   }
 
 }
@@ -183,17 +179,17 @@ export class TreasuryDetailsComponent implements OnInit {
   styleUrls: ['../../../../../assets/styles/mhq-large-modal.scss']
 })
 
-export class DeleteTlogConfirmationModal {
+export class DeleteTreasuryLogConfirmationModal {
 
-  constructor(public treasuryService: TreasuryService, public _http: HttpClient, public router: Router) { }
+  constructor(public treasuryService: TreasuryService, private _http: HttpClient) { }
 
-  removeTreasuryLog() {
+  deleteTreasuryLog() {
 
     const httpParams = new HttpParams().set('tlog', this.treasuryService.activeTreasuryLog.id)
-    const call = this._http.post('http://localhost:16190/removetlog', httpParams, { responseType: 'text' })
+    const call = this._http.post('http://localhost:16190/deletetreasurylog', httpParams, { responseType: 'text' })
 
     call.subscribe({
-      next: codeReceived => { this.treasuryService.fetchTreasuryLog('removeTreasuryLog'); },
+      next: codeReceived => { this.treasuryService.fetchTreasuryLog('deleteTreasuryLog'); },
       error: err => this.treasuryService.handleError(err)
     })
   }
