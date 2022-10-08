@@ -9,6 +9,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { TreasuryService } from '../treasury.service';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
 import { MatDatepicker } from '@angular/material/datepicker';
+import { MiscService } from 'src/assets/services/misc.service';
 
 const DEFAULT_TLOG: ITreasuryLog = {
   id: 0, //ignrado ao ser enviado para bd
@@ -53,7 +54,7 @@ export class NewTreasuryLogComponent implements OnInit {
     return this.subcategoryFormOptions.filter(option => option.toLowerCase().includes(filterValue));
   }
 
-  constructor(public categoriesService: CategoriesService, public treasuryService: TreasuryService, private _route: ActivatedRoute, public _router: Router, public _http: HttpClient) { }
+  constructor(private _miscService:MiscService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, private _route: ActivatedRoute, public _router: Router, public _http: HttpClient) { }
 
   ngOnInit(): void {
 
@@ -70,8 +71,8 @@ export class NewTreasuryLogComponent implements OnInit {
 
     // forms para inputs autocomplete
     if (this.treasuryService.cloningTreasuryLog) {
-      this.catForm = new FormControl(this.treasuryService.getCategoryTitle(this.tempTreasuryLog.cat), [Validators.required]);
-      this.subCatForm = new FormControl(this.treasuryService.getSubcategoryTitle(this.tempTreasuryLog.cat, this.tempTreasuryLog.subcat), [Validators.required]);
+      this.catForm = new FormControl(this._miscService.getCategoryTitle(this.tempTreasuryLog.cat), [Validators.required]);
+      this.subCatForm = new FormControl(this._miscService.getSubcategoryTitle(this.tempTreasuryLog.cat, this.tempTreasuryLog.subcat), [Validators.required]);
     } else {
       this.catForm = new FormControl('', [Validators.required]);
       this.subCatForm = new FormControl('', [Validators.required]);

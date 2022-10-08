@@ -1,7 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
+import { MiscService } from 'src/assets/services/misc.service';
 import { CategoriesService } from '../categories/categories.service';
 import { TreasuryService } from '../treasury-log/treasury.service';
 import { OverviewService } from './overview.service';
@@ -29,7 +32,7 @@ export class OverviewComponent implements OnInit {
   dailyCatEvolution: object;
   dailySubCatEvolution: object;
 
-  constructor(public categoriesService: CategoriesService, public treasuryService: TreasuryService, private _http: HttpClient, private _dialog: MatDialog, private _overviewService: OverviewService) {
+  constructor(public categoriesService: CategoriesService, public treasuryService: TreasuryService, private _http: HttpClient, private _dialog: MatDialog, private _overviewService: OverviewService, private _miscService: MiscService) {
     this.currentDate = new Date();
     this.evoReady = false;
   }
@@ -132,7 +135,7 @@ export class OverviewComponent implements OnInit {
       next: codeReceived => {
         const resp = codeReceived as ITreasuryLog[]
         this._overviewService.treasuryLogsForDetails = resp
-        this.openDialog('300ms', '150ms')
+        this.openDialog('300ms', '150ms', 'daily', day)
       },
       error: err => this.categoriesService.handleError(err)
     })
@@ -146,7 +149,7 @@ export class OverviewComponent implements OnInit {
       next: codeReceived => {
         const resp = codeReceived as ITreasuryLog[]
         this._overviewService.treasuryLogsForDetails = resp
-        this.openDialog('300ms', '150ms')
+        this.openDialog('300ms', '150ms', 'subcategory', day, subcatID)
       },
       error: err => this.categoriesService.handleError(err)
     })
@@ -160,22 +163,42 @@ export class OverviewComponent implements OnInit {
       next: codeReceived => {
         const resp = codeReceived as ITreasuryLog[]
         this._overviewService.treasuryLogsForDetails = resp
-        this.openDialog('300ms', '150ms')
+        this.openDialog('300ms', '150ms', 'category', day, catID)
       },
       error: err => this.categoriesService.handleError(err)
     })
   }
 
   // modal
-  openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+  openDialog(enterAnimationDuration: string, exitAnimationDuration: string, source: string, day: number, catOrSubcat?: number): void {
+    console.log(source)
+    switch (source) {
+
+      case 'category':
+        this._overviewService.source = source;
+        this._overviewService.titleForDetails = `Detalhes da categoria ${this._miscService.getCategoryTitle(catOrSubcat!)} @ ${day}/${this.selectedMonthLocale}/${this.selectedYear}`
+        break;
+
+      case 'subcategory':
+        this._overviewService.source = source;
+        this._overviewService.titleForDetails = `Detalhes da subcategoria ${this._miscService.getSubcategoryTitle(this._miscService.getCategoryIDFromSubcategoryID(catOrSubcat!), catOrSubcat!)} @ ${day}/${this.selectedMonthLocale}/${this.selectedYear}`
+        break;
+
+      case 'daily':
+        this._overviewService.source = source;
+        this._overviewService.titleForDetails = `Detalhes globais @ ${day}/${this.selectedMonthLocale}/${this.selectedYear}`
+        break;
+    }
+
+
     this._dialog.open(OverviewDetailsModal, {
       width: '50vw',
       height: '50vh',
       enterAnimationDuration,
       exitAnimationDuration,
     });
-  }
 
+  }
 }
 
 
@@ -186,12 +209,47 @@ export class OverviewComponent implements OnInit {
   styleUrls: ['../../../../assets/styles/mhq-large-modal.scss']
 })
 
-export class OverviewDetailsModal {
+export class OverviewDetailsModal implements AfterViewInit, OnInit {
 
-  constructor(public overviewService: OverviewService) { }
+  // datasource para tabela
+  dataSource: MatTableDataSource<ITreasuryLog>;
+  isDataSourceEmpty: Boolean;
 
-  datePipe(dateInMilli: number): string {
-    return new Date(dateInMilli).toLocaleDateString('pt')
+  // array com as colunas da tabela
+  displayedColumns: string[];
+
+  constructor(public categoriesService: CategoriesService, public overviewService: OverviewService, public miscService: MiscService) {
+    // this.tablesReady = false;
+  }
+
+  ngOnInit(): void {
+
+    this.dataSource = new MatTableDataSource<ITreasuryLog>([...this.overviewService.treasuryLogsForDetails]);
+
+    this.overviewService.treasuryLogsForDetails.length === 0 ? this.isDataSourceEmpty = true : this.isDataSourceEmpty = false;
+    
+    switch (this.overviewService.source) {
+
+      case 'category':
+        this.displayedColumns = ['subcat', 'title', 'value', 'link'];
+        break;
+
+      case 'subcategory':
+        this.displayedColumns = ['title', 'value', 'link'];
+        break;
+
+      case 'daily':
+        this.displayedColumns = ['icon', 'cat', 'subcat', 'title', 'value', 'link'];
+        break;
+    }
+
+  }
+
+  // paginador da tabela
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  // afterViewInit para tabela
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
   }
 
 }

@@ -94,7 +94,6 @@ export class TreasuryService {
 
   }
 
-
   // inicia o modo de introdução / duplicação
   addMode(cloningTreasuryLog: boolean): void {
 
@@ -118,39 +117,6 @@ export class TreasuryService {
     }
 
   }
-
-  // metodos utilizados no render do modo listagem listagem
-  getCatStyle(catID: number): string {
-    let style: string;
-    [...this._categoriesService.allCategories].forEach(cat => { if (cat.id == catID) { style = `background:${cat.bgcolor};color:${cat.textcolor};` } });
-
-    return style!;
-  }
-
-  getCategoryTitle(catID: number): string {
-    let categoryTitle: string;
-    [...this._categoriesService.allCategories].forEach(cat => { if (cat.id == catID) categoryTitle = cat.title });
-
-    return categoryTitle!;
-  }
-
-  getSubcategoryTitle(catID: number, subcatID: number): string {
-    let mainCat: IFinancialCategory;
-    [...this._categoriesService.allCategories].forEach(cat => { if (cat.id == catID) mainCat = cat });
-
-    let subCatTitle: string;
-    [...mainCat!.subcats].forEach(subcat => { if (subcat.id == subcatID) subCatTitle = subcat.title });
-
-    return subCatTitle!;
-  }
-
-  getCategoryIcon(catID: number): string {
-    let icon: string;
-    [...this._categoriesService.allCategories].forEach(cat => { if (cat.id == catID) icon = cat.icon });
-
-    return icon!
-  }
-
 
   // tratamento erros
   handleError(err: HttpErrorResponse): Observable<never> {

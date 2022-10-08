@@ -75,7 +75,7 @@ export function createNewCategory(req, res) {
     }
 
     db.close((err) => {
-      err ? console.error(err.message) : res.send(catID); // desenvolver tratamento de erro do lado do front end
+      err ? console.error(err.message) : res.send(catID.toString()); // desenvolver tratamento de erro do lado do front end
     });
   }
 }

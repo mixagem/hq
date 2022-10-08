@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
+import { MiscService } from 'src/assets/services/misc.service';
 import { CategoriesService } from '../categories/categories.service';
 import { TreasuryService } from './treasury.service';
 
@@ -21,7 +22,7 @@ export class TreasuryLogComponent implements AfterViewInit, OnInit {
   // paginador da tabela
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(public treasuryService: TreasuryService, public categoriesService: CategoriesService, public router: Router) { }
+  constructor(public treasuryService: TreasuryService, public categoriesService: CategoriesService, public router: Router, public miscService:MiscService) { }
 
   ngOnInit(): void {
 

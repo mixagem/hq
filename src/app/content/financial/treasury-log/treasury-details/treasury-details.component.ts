@@ -10,6 +10,7 @@ import { map, startWith } from 'rxjs/operators';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { TreasuryService } from '../treasury.service';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
+import { MiscService } from 'src/assets/services/misc.service';
 
 @Component({
   selector: 'mhq-treasury-details',
@@ -52,7 +53,7 @@ export class TreasuryDetailsComponent implements OnInit {
   // boolean com o estado do modo de edição
   editingMode: boolean;
 
-  constructor(private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, private _categoriesService: CategoriesService) {
+  constructor(private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, private _categoriesService: CategoriesService, public miscService:MiscService) {
     this.editingMode = false;
   }
 
@@ -74,8 +75,8 @@ export class TreasuryDetailsComponent implements OnInit {
     this.treasuryLogDatepickerForm = new FormControl(new Date(this.treasuryLog.date), [Validators.required]);
 
     //  form controls para auto completes categorias/subcategorias
-    this.catForm = new FormControl(this.treasuryService.getCategoryTitle(this.tempTreasuryLog.cat), [Validators.required]);
-    this.subCatForm = new FormControl(this.treasuryService.getSubcategoryTitle(this.tempTreasuryLog.cat, this.treasuryLog.subcat), [Validators.required]);
+    this.catForm = new FormControl(this.miscService.getCategoryTitle(this.tempTreasuryLog.cat), [Validators.required]);
+    this.subCatForm = new FormControl(this.miscService.getSubcategoryTitle(this.tempTreasuryLog.cat, this.treasuryLog.subcat), [Validators.required]);
 
     // criar array com os títulos das categorias/subcategorias
     this.catFormOptions = [];

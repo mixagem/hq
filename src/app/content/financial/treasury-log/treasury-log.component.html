@@ -16,9 +16,9 @@
 
     <ng-container matColumnDef="cat">
       <th mat-header-cell *matHeaderCellDef> Categoria </th>
-      <td mat-cell *matCellDef="let element" [style]="treasuryService.getCatStyle(element.cat)">
-        <mat-icon>{{treasuryService.getCategoryIcon(element.cat)}}</mat-icon>
-        {{treasuryService.getSubcategoryTitle(element.cat,element.subcat)}}
+      <td mat-cell *matCellDef="let element" [style]="miscService.getCatStyle(element.cat)">
+        <mat-icon>{{miscService.getCategoryIcon(element.cat)}}</mat-icon>
+        {{miscService.getSubcategoryTitle(element.cat,element.subcat)}}
       </td>
     </ng-container>
 
@@ -44,7 +44,7 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="viewMode(row.id,row.cat)"></tr>
   </table>
 
-  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+  <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons>
   </mat-paginator>
 </div>
 

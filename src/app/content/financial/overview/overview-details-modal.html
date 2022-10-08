@@ -1,8 +1,60 @@
-<div *ngFor="let treasurylog of overviewService.treasuryLogsForDetails">
-  {{treasurylog.title}}
-  {{datePipe(treasurylog.date)}}
-  {{treasurylog.value}}
-  {{treasurylog.cat}}
-  {{treasurylog.subcat}}
+<h1 mat-dialog-title class="mhq-modal-header">
+  <mat-icon>feed</mat-icon>{{overviewService.titleForDetails}}
+</h1>
+
+<div mat-dialog-content class="mhq-modal-content-wrapper">
+
+  <div *ngIf="isDataSourceEmpty">no movs found bro</div>
+
+  <table *ngIf="!isDataSourceEmpty" mat-table [dataSource]="dataSource" style="width: 100%;">
+
+    <ng-container matColumnDef="icon" *ngIf="overviewService.source === 'daily'">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        <mat-icon>{{miscService.getCategoryIconFromSubcategoryID(element.subcat)}}</mat-icon>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cat" *ngIf="overviewService.source === 'daily'">
+      <th mat-header-cell *matHeaderCellDef>Categoria</th>
+      <td mat-cell *matCellDef="let element">
+        {{miscService.getCategoryTitle(element.cat)}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="subcat" *ngIf="overviewService.source !== 'subcategory'">
+      <th mat-header-cell *matHeaderCellDef>Subcategoria</th>
+      <td mat-cell *matCellDef="let element">
+       {{miscService.getSubcategoryTitleSimplex(element.subcat)}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef>Título</th>
+      <td mat-cell *matCellDef="let element">
+        {{element.title}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="value">
+      <th mat-header-cell *matHeaderCellDef>Valor</th>
+      <td mat-cell *matCellDef="let element" [style]="element.type === 'expense' ? 'font-weight:500;color:red' : 'font-weight:500;color:green' ">
+        {{element.type === 'expense'?'- ':''}}{{element.value | currency:'EUR'}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="link">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        <mat-icon>link</mat-icon>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  </table>
+
+  <mat-paginator *ngIf="!isDataSourceEmpty" [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
 
 </div>

@@ -10,6 +10,8 @@ import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
 export class OverviewService implements OnInit {
 
   treasuryLogsForDetails: ITreasuryLog[]
+  titleForDetails: string
+  source:string;
 
   constructor() { }
 
