@@ -24,7 +24,7 @@
 .mhq-overview-incomecats-wrapper {
   .mhq-overview-cat-loop{
     .mhq-overview-cat:first-child  {
-      margin-top: 40px;
+      margin-top: 10px;
       border-top-left-radius: 15px;
     }
   }
@@ -47,13 +47,6 @@
   }
 }
 
-.mhq-overview-expensecells-wrapper {
-  .mhq-overview-cat-loop{
-    .mhq-overview-cells-warpper:first-child  {
-      margin-top:10px;
-    }
-  }
-}
 
 .mhq-overview-cat-cell,
 .mhq-overview-subcat-cell {

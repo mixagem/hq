@@ -1,4 +1,4 @@
-import { genDailySumAcomEvo, genDailyCategoriesEvo } from './overviewMethods.js';
+import { genDailySumAcomEvo, genDailyCategoriesEvo, getDailyCatDetails, getDailySubCatDetails, getDailyDetails} from './overviewMethods.js';
 import { addNewTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog } from './treasuryMethods.js';
 import { getCategories, createNewCategory, deleteCategory, addSubCategory, removeSubCategory, saveCategory } from './categoriesMethods.js'
 import express from 'express';
@@ -6,7 +6,7 @@ import express from 'express';
 const app = express();
 const port = 16190;
 
-app.listen(port, () => console.log(".: MI HQ - Listening on por 16190 :."));
+app.listen(port, () => console.log(".: MI HQ - Listening on port 16190 :."));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -15,6 +15,9 @@ app.use(express.urlencoded({ extended: true }));
 // overview
 app.post('/dailysumevo', function (req, res) { return genDailySumAcomEvo(req, res); });
 app.post('/dailycatsevo', function (req, res) { return genDailyCategoriesEvo(req, res); });
+app.post('/getdailydetails', function(req,res) { return getDailyDetails(req,res)})
+app.post('/getdailycatdetails', function(req,res) { return getDailyCatDetails(req,res)})
+app.post('/getdailysubcatdetails', function(req,res) { return getDailySubCatDetails(req,res)})
 
 // categories
 app.get('/getcats', function (req, res) { return getCategories(req, res); });

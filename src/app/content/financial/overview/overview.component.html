@@ -16,7 +16,7 @@
 
   <div class="mhq-row">
     <!-- secção categorias -->
-    <div class="mhq-col-2" style="padding-right:10px;">
+    <div class="mhq-col-2" style="padding-right:10px;padding-top: 40px;">
 
       <div class="mhq-overview-incomecats-wrapper">
         <div *ngFor="let cat of financialService.incomeCategories" class="mhq-overview-cat-loop">
@@ -52,8 +52,8 @@
         </div>
       </div>
 
-      <div style="height:40px;background-color:aquamarine;margin-top:20px;">Total</div>
-      <div style="height:40px;background-color:darkkhaki;margin-top:20px;">Total Acomulado</div>
+      <div style="height:40px;background-color:aquamarine;">Total</div>
+      <div style="height:40px;background-color:darkkhaki">Total Acomulado</div>
 
 
     </div>
@@ -77,7 +77,7 @@
 
 
 
-            <div style="display:flex">
+            <div style="height: 40px;display: flex;margin-top:10px;">
               <div *ngFor="let null of tempArray let i = index" class="mhq-overview-cat-cell"
                 [ngStyle]="{'background-color':'rgba('+cat.bgcolor+',.65)','color':'rgb('+cat.textcolor+')'}"
                 (click)="showDailyCatDetails(cat.id,i+1)">
@@ -105,7 +105,7 @@
           <div *ngIf="cat.active" class="mhq-overview-cells-warpper">
 
 
-            <div style="display:flex">
+            <div style="display:flex;margin-top:10px;">
               <div *ngFor="let null of tempArray let i = index" class="mhq-overview-cat-cell"
                 [ngStyle]="{'background-color':'rgba('+cat.bgcolor+',.63)','color':'rgb('+cat.textcolor+')'}"
                 (click)="showDailyCatDetails(cat.id,i+1)">
@@ -129,14 +129,14 @@
         </div>
       </div>
 
-      <div style="height: 40px;margin-top:20px;display: flex;">
+      <div style="height: 40px;display: flex;">
         <div *ngFor="let null of tempArray let i = index" class="mhq-overview-cat-cell"
           [ngStyle]="{'background-color':'rgba(0,0,0,.3)','color':'rgb(255,255,255)'}"
           (click)="showDailySumDetails(i+1)">
           {{getDailySum(i+1)}}</div>
       </div>
 
-      <div style="height: 40px;margin-top:20px;display: flex;">
+      <div style="height: 40px;display: flex;">
         <div *ngFor="let null of tempArray let i = index" class="mhq-overview-cat-cell"
           [ngStyle]="{'background-color':'rgba(0,0,0,.3)','color':'rgb(255,255,255)'}">
           {{getSuperSum(i+1)}}</div>

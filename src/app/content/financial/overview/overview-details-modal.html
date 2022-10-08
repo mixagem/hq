@@ -1,0 +1,8 @@
+<div *ngFor="let treasurylog of overviewService.treasuryLogsForDetails">
+  {{treasurylog.title}}
+  {{datePipe(treasurylog.date)}}
+  {{treasurylog.value}}
+  {{treasurylog.cat}}
+  {{treasurylog.subcat}}
+
+</div>

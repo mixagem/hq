@@ -1,8 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
 import { FinancialService } from '../financial.service';
 import { TreasuryService } from '../treasury-log/treasury.service';
+import { OverviewService } from './overview.service';
 
 
 
@@ -39,7 +41,7 @@ export class OverviewComponent implements OnInit {
   dailyCatEvolution: object;
   dailySubCatEvolution: object;
 
-  constructor(public financialService: FinancialService, public treasuryService: TreasuryService, private _http: HttpClient) {
+  constructor(public financialService: FinancialService, public treasuryService: TreasuryService, private _http: HttpClient, private _dialog: MatDialog, private _overviewService: OverviewService) {
     this.currentDate = new Date();
     this.evoReady = false;
   }
@@ -72,6 +74,8 @@ export class OverviewComponent implements OnInit {
     this.getCategoriesEvolution();
   }
 
+
+
   nextMonth(): void {
     let currentMonth = Number(this.currentDate.toISOString().slice(5, 7))
     if (currentMonth === 12) {
@@ -102,54 +106,9 @@ export class OverviewComponent implements OnInit {
 
 
   getSuperSum(day: number) { return this.dailySumAcomEvolution[day - 1]; }
-
-  getDailySum(day: number): number {
-
-    // let value = 0;
-    // this.treasuryLogs.forEach(tlog => {
-    //   if ((new Date(tlog.date).getDate()) === day && (new Date(tlog.date).getMonth() + 1) === this.selectedMonth && (new Date(tlog.date).getFullYear()) === this.selectedYear) {
-    //     tlog.type === 'expense' ? value -= tlog.value : value += tlog.value
-    //   }
-    // });
-
-    // return value
-
-    return this.dailySumEvolution[day - 1];
-
-  }
-
-  getCatValue(day: number, cat: number): number {
-
-    // let value = 0;
-    // this.treasuryLogs.forEach(tlog => {
-    //   if ((new Date(tlog.date).getDate()) === day && (new Date(tlog.date).getMonth() + 1) === this.selectedMonth && (new Date(tlog.date).getFullYear()) === this.selectedYear) {
-    //     if (tlog.cat == cat) {
-    //       value += tlog.value
-    //     }
-    //   }
-    // });
-
-    // return value
-
-
-    return this.dailyCatEvolution[cat as keyof typeof this.dailyCatEvolution][day - 1]
-  }
-
-  getSubcatValue(day: number, subcat: number): number {
-
-    // let value = 0;
-    // this.treasuryLogs.forEach(tlog => {
-    //   if ((new Date(tlog.date).getDate()) === day && (new Date(tlog.date).getMonth() + 1) === this.selectedMonth && (new Date(tlog.date).getFullYear()) === this.selectedYear) {
-    //     if (tlog.subcat == subcat && tlog.cat == cat) {
-    //       value += tlog.value
-    //     }
-    //   }
-    // });
-
-    // return value
-
-    return this.dailySubCatEvolution[subcat as keyof typeof this.dailySubCatEvolution][day - 1]
-  }
+  getDailySum(day: number): number { return this.dailySumEvolution[day - 1]; }
+  getCatValue(day: number, cat: number): number { return this.dailyCatEvolution[cat as keyof typeof this.dailyCatEvolution][day - 1] }
+  getSubcatValue(day: number, subcat: number): number { return this.dailySubCatEvolution[subcat as keyof typeof this.dailySubCatEvolution][day - 1] }
 
 
   getDailySumAcomEvolution() {
@@ -191,13 +150,94 @@ export class OverviewComponent implements OnInit {
 
   }
 
-  showDailySumDetails(day: number) { alert('tudo do dia ' + day + ' de ' + this.selectedMonthLocale + ' de ' + this.selectedYear) }
-  // faz query à bd de todos os movimentos do dia
-  // abre modal a mostrar os movimentos (com ligações diretas para o bagulho yo very pro)
-  showDailySubCatDetails(subcatID: number, day: number) { alert('para a subategoria ' + subcatID + ', tudo do dia ' + day + ' de ' + this.selectedMonthLocale + ' de ' + this.selectedYear) }
-  // faz query à bd de todos os movimentos do dia para a subcategoria selecionada
-  // abre modal a mostrar os movimentos (com ligações diretas para o bagulho yo very pro)
-  showDailyCatDetails(catID: number, day: number) { alert('para a categoria ' + catID + ', tudo do dia ' + day + ' de ' + this.selectedMonthLocale + ' de ' + this.selectedYear) }
-  // faz query à bd de todos os movimentos do dia para a categoria  selecionada
-  // abre modal a mostrar os movimentos (com ligações diretas para o bagulho yo very pro)
+  showDailySumDetails(day: number) {
+    const httpParams = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear).set('day', day);
+    const call = this._http.post('http://localhost:16190/getdailydetails', httpParams, { responseType: 'json' })
+
+    call.subscribe({
+      next: codeReceived => {
+        const resp = codeReceived as ITreasuryLog[]
+        this._overviewService.treasuryLogsForDetails = resp
+        this.openDialog('300ms', '150ms')
+      },
+      error: err => this.financialService.handleError(err)
+    })
+
+
+  }
+
+  showDailySubCatDetails(subcatID: number, day: number) {
+
+    const httpParams = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear).set('day', day).set('subcat', subcatID);
+    const call = this._http.post('http://localhost:16190/getdailysubcatdetails', httpParams, { responseType: 'json' })
+
+    call.subscribe({
+      next: codeReceived => {
+        const resp = codeReceived as ITreasuryLog[]
+        this._overviewService.treasuryLogsForDetails = resp
+        this.openDialog('300ms', '150ms')
+      },
+      error: err => this.financialService.handleError(err)
+    })
+  }
+
+
+  showDailyCatDetails(catID: number, day: number) {
+
+    const httpParams = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear).set('day', day).set('cat', catID);
+    const call = this._http.post('http://localhost:16190/getdailycatdetails', httpParams, { responseType: 'json' })
+
+    call.subscribe({
+      next: codeReceived => {
+        const resp = codeReceived as ITreasuryLog[]
+        this._overviewService.treasuryLogsForDetails = resp
+        this.openDialog('300ms', '150ms')
+      },
+      error: err => this.financialService.handleError(err)
+    })
+
+  }
+
+
+  // modal
+  openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this._dialog.open(OverviewDetailsModal, {
+      width: '50vw',
+      height: '50vh',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
+  }
+
+}
+
+
+
+
+// modal
+@Component({
+  selector: 'overview-details-modal',
+  templateUrl: './overview-details-modal.html',
+  styleUrls: ['../../../../assets/styles/mhq-large-modal.scss']
+})
+
+export class OverviewDetailsModal implements OnInit {
+
+
+
+
+  constructor(public financialService: FinancialService, private _http: HttpClient, public overviewService: OverviewService) { }
+
+  ngOnInit(): void {
+
+
+
+  }
+
+  datePipe(dateInMilli:number): string {
+    return new Date(dateInMilli).toLocaleDateString('pt')
+  }
+
+
+
 }
