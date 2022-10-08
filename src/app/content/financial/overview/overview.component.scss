@@ -22,8 +22,8 @@
 }
 
 .mhq-overview-incomecats-wrapper {
-  .mhq-overview-cat-loop{
-    .mhq-overview-cat:first-child  {
+  .mhq-overview-cat-loop {
+    .mhq-overview-cat:first-child {
       margin-top: 10px;
       border-top-left-radius: 15px;
     }
@@ -39,14 +39,13 @@
 }
 
 .mhq-overview-expensecats-wrapper {
-  .mhq-overview-cat-loop{
+  .mhq-overview-cat-loop {
     .mhq-overview-cat:first-child {
       margin-top: 10px;
       border-top-left-radius: 15px;
     }
   }
 }
-
 
 .mhq-overview-cat-cell,
 .mhq-overview-subcat-cell {
@@ -67,4 +66,43 @@
 .mhq-overview-subcat-cell {
   height: 30px;
   padding: 1px 2px;
+}
+
+.mhq-overview-totals-wrapper {
+  margin-top: 10px;
+
+  div {
+    color: #fff;
+    &:nth-child(1) {
+      background-color: rgb(88, 88, 88);
+      border-top-left-radius: 15px;
+    }
+
+    &:nth-child(2) {
+      background-color: rgb(44, 44, 44);
+      border-bottom-left-radius: 15px;
+    }
+  }
+}
+
+.mhq-overview-totals-cells-wrapper {
+  margin-top: 10px;
+
+  div {
+    height: 40px;
+    display: flex;
+    color: #fff;
+
+    &:nth-child(1) {
+      div {
+        background-color: rgba(88, 88, 88,.65);
+      }
+    }
+
+    &:nth-child(2) {
+      div {
+        background-color: rgb(44, 44, 44,.65);
+      }
+    }
+  }
 }

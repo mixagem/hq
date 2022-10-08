@@ -11,12 +11,8 @@ export class OverviewService implements OnInit {
 
   treasuryLogsForDetails: ITreasuryLog[]
 
-  constructor() {
+  constructor() { }
 
-  }
-
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void { }
 
 }

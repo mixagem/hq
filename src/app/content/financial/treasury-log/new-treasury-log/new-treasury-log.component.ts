@@ -26,78 +26,82 @@ const DEFAULT_TLOG: ITreasuryLog = {
   templateUrl: './new-treasury-log.component.html',
   styleUrls: ['../../../../../assets/styles/mhq-mainform-details.scss']
 })
+
 export class NewTreasuryLogComponent implements OnInit {
 
   // datepicker
   treasuryLogDatepicker: MatDatepicker<any>;
   treasuryLogDatepickerForm: FormControl<any>;
 
-  tempTlog: ITreasuryLog;
+  tempTreasuryLog: ITreasuryLog;
 
   // autocomplete categoria
   catForm: FormControl
-  catFormOptions: string[] = [];
+  categoryFormOptions: string[] = [];
   catFilteredOptions: Observable<string[]>;
   private _catfilter(value: string): string[] {
     const filterValue = value.toLowerCase();
-    return this.catFormOptions.filter(option => option.toLowerCase().includes(filterValue));
+    return this.categoryFormOptions.filter(option => option.toLowerCase().includes(filterValue));
   }
 
   // autocomplete sub categoria
   subCatForm: FormControl
-  subCatFormOptions: string[] = [];
+  subcategoryFormOptions: string[] = [];
   subCatFilteredOptions: Observable<string[]>;
   private _subcatfilter(value: string): string[] {
     const filterValue = value.toLowerCase();
-    return this.subCatFormOptions.filter(option => option.toLowerCase().includes(filterValue));
+    return this.subcategoryFormOptions.filter(option => option.toLowerCase().includes(filterValue));
   }
 
   constructor(public categoriesService: CategoriesService, public treasuryService: TreasuryService, private _route: ActivatedRoute, public _router: Router, public _http: HttpClient) { }
 
   ngOnInit(): void {
 
-    if (this.treasuryService.cloningTLog) {
-      this.tempTlog = this.treasuryService.activeTreasuryLog
-      this.tempTlog.id = 0
+    // clone inicial
+    if (this.treasuryService.cloningTreasuryLog) {
+      this.tempTreasuryLog = this.treasuryService.activeTreasuryLog;
+      this.tempTreasuryLog.id = 0;
     } else {
-      this.tempTlog = DEFAULT_TLOG
+      this.tempTreasuryLog = JSON.parse(JSON.stringify(DEFAULT_TLOG));
     }
 
-    if (this.treasuryService.cloningTLog) {
-      this.catForm = new FormControl(this.treasuryService.getCatLabel(this.tempTlog.cat), [Validators.required]);
-      this.subCatForm = new FormControl(this.treasuryService.getSubCatLabel(this.tempTlog.cat, this.tempTlog.subcat), [Validators.required]);
+     // datepicker
+     this.treasuryLogDatepickerForm = new FormControl(new Date(this.tempTreasuryLog.date), [Validators.required]);
+
+    // forms para inputs autocomplete
+    if (this.treasuryService.cloningTreasuryLog) {
+      this.catForm = new FormControl(this.treasuryService.getCategoryTitle(this.tempTreasuryLog.cat), [Validators.required]);
+      this.subCatForm = new FormControl(this.treasuryService.getSubcategoryTitle(this.tempTreasuryLog.cat, this.tempTreasuryLog.subcat), [Validators.required]);
     } else {
       this.catForm = new FormControl('', [Validators.required]);
       this.subCatForm = new FormControl('', [Validators.required]);
     }
 
-    this.treasuryLogDatepickerForm = new FormControl(new Date(this.tempTlog.date), [Validators.required]);
-
-
-    // auto complete
+    // auto completes
     this.catFilteredOptions = this.catForm.valueChanges.pipe(
       startWith(''),
       map(value => this._catfilter(value || '')),
     );
 
-    // auto complete
     this.subCatFilteredOptions = this.subCatForm.valueChanges.pipe(
       startWith(''),
       map(value => this._subcatfilter(value || '')),
     );
 
-    this.catFormOptions = [];
-    this.subCatFormOptions = [];
-    const allCats = [...this.categoriesService.allCategories]
-    allCats.forEach(cat => {
-      this.catFormOptions.push(cat.title)
-    });
-    allCats.forEach(cat => {
-      cat.subcats.forEach(subcat => {
-        this.subCatFormOptions.push(subcat.title)
-      });
-    });
+    this.categoryFormOptions = [];
+    this.subcategoryFormOptions = [];
 
+    const allCats = [...this.categoriesService.allCategories]
+
+    allCats.forEach(category => {
+
+      this.categoryFormOptions.push(category.title)
+
+      category.subcats.forEach(subcategory => {
+        this.subcategoryFormOptions.push(subcategory.title)
+      });
+
+    });
 
   }
 
@@ -109,7 +113,7 @@ export class NewTreasuryLogComponent implements OnInit {
         if (this.catForm.errors || this.subCatForm.errors) { return alert('fuck you') }
 
         // converter a data do picker para guardar da bd
-        this.tempTlog.date = this.treasuryLogDatepickerForm.value.getTime();
+        this.tempTreasuryLog.date = this.treasuryLogDatepickerForm.value.getTime();
 
         let catID: number; // id da categoria
         let catBGColor: string // cor da categoria
@@ -127,8 +131,8 @@ export class NewTreasuryLogComponent implements OnInit {
         });
 
         // converter de títilo para o id das catgorias
-        this.tempTlog.cat = catID!;
-        this.tempTlog.subcat = subCatID!;
+        this.tempTreasuryLog.cat = catID!;
+        this.tempTreasuryLog.subcat = subCatID!;
 
         this.treasuryService.recordBorderStyle['background-color'] = catBGColor!;
         this.saveTreasurylog();
@@ -146,7 +150,7 @@ export class NewTreasuryLogComponent implements OnInit {
 
   saveTreasurylog(): void {
 
-    const httpParams = new HttpParams().set('tlog', JSON.stringify(this.tempTlog))
+    const httpParams = new HttpParams().set('tlog', JSON.stringify(this.tempTreasuryLog))
     const call = this._http.post('http://localhost:16190/createtreasurylog', httpParams, { responseType: 'text' })
 
     call.subscribe({

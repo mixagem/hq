@@ -69,14 +69,14 @@
         <div class="mhq-col-4">
           <mat-form-field appearance="fill">
             <mat-label>Categoria</mat-label>
-            <input matInput disabled [value]="treasuryService.getCatLabel(treasuryLog.cat)">
+            <input matInput disabled [value]="treasuryService.getCategoryTitle(treasuryLog.cat)">
           </mat-form-field>
         </div>
 
         <div class="mhq-col-4">
           <mat-form-field appearance="fill">
             <mat-label>Sub-categoria</mat-label>
-            <input matInput disabled [value]="treasuryService.getSubCatLabel(treasuryLog.cat,treasuryLog.subcat)">
+            <input matInput disabled [value]="treasuryService.getSubcategoryTitle(treasuryLog.cat,treasuryLog.subcat)">
           </mat-form-field>
         </div>
 

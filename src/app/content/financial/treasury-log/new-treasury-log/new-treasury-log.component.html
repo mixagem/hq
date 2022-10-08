@@ -26,21 +26,21 @@
         <div class="mhq-col-1">
           <mat-form-field appearance="fill">
             <mat-label>ID</mat-label>
-            <input matInput disabled [(ngModel)]="tempTlog.id">
+            <input matInput disabled [(ngModel)]="tempTreasuryLog.id">
           </mat-form-field>
         </div>
 
         <div class="mhq-col-8">
           <mat-form-field appearance="fill">
             <mat-label>Título</mat-label>
-            <input matInput [(ngModel)]="tempTlog.title">
+            <input matInput [(ngModel)]="tempTreasuryLog.title">
           </mat-form-field>
         </div>
 
         <div class="mhq-col-3">
           <!-- <mat-form-field appearance="fill">
           <mat-label>Data</mat-label>
-          <input matInput [(ngModel)]="tempTlog.date">
+          <input matInput [(ngModel)]="tempTreasuryLog.date">
         </mat-form-field> -->
           <mat-form-field appearance="fill">
             <mat-label>Data</mat-label>
@@ -59,7 +59,7 @@
 
         <div class="mhq-col-4 radio-group">
           <p>Tipo:</p>
-          <mat-radio-group color="primary" [(ngModel)]="tempTlog.type">
+          <mat-radio-group color="primary" [(ngModel)]="tempTreasuryLog.type">
             <mat-radio-button value="expense">Despesa</mat-radio-button>
             <mat-radio-button value="income">Rendimento</mat-radio-button>
           </mat-radio-group>
@@ -105,14 +105,14 @@
         <div class="mhq-col-9">
           <mat-form-field appearance="fill">
             <mat-label>Obs</mat-label>
-            <textarea matInput [(ngModel)]="tempTlog.obs"></textarea>
+            <textarea matInput [(ngModel)]="tempTreasuryLog.obs"></textarea>
           </mat-form-field>
         </div>
 
         <div class="mhq-col-3">
           <mat-form-field appearance="fill">
             <mat-label>Valor</mat-label>
-            <input matInput [(ngModel)]="tempTlog.value">
+            <input matInput [(ngModel)]="tempTreasuryLog.value">
           </mat-form-field>
         </div>
       </div>

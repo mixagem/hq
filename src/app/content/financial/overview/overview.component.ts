@@ -6,18 +6,6 @@ import { CategoriesService } from '../categories/categories.service';
 import { TreasuryService } from '../treasury-log/treasury.service';
 import { OverviewService } from './overview.service';
 
-
-
-export type ItreasuryLogs = {
-  date: Date,
-  value: number,
-  cat: number,
-  subcat: number,
-  type: string,
-  obs?: string
-}
-
-
 @Component({
   selector: 'mhq-overview',
   templateUrl: './overview.component.html',
@@ -74,8 +62,6 @@ export class OverviewComponent implements OnInit {
     this.getCategoriesEvolution();
   }
 
-
-
   nextMonth(): void {
     let currentMonth = Number(this.currentDate.toISOString().slice(5, 7))
     if (currentMonth === 12) {
@@ -104,15 +90,10 @@ export class OverviewComponent implements OnInit {
     this.ngOnInit();
   }
 
-
-  getSuperSum(day: number) { return this.dailySumAcomEvolution[day - 1]; }
-  getDailySum(day: number): number { return this.dailySumEvolution[day - 1]; }
   getCatValue(day: number, cat: number): number { return this.dailyCatEvolution[cat as keyof typeof this.dailyCatEvolution][day - 1] }
   getSubcatValue(day: number, subcat: number): number { return this.dailySubCatEvolution[subcat as keyof typeof this.dailySubCatEvolution][day - 1] }
 
-
-  getDailySumAcomEvolution() {
-
+  getDailySumAcomEvolution(): void { // total acomulado
     this.dailySumAcomEvolution = [];
 
     const httpParams = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear).set('days', this.monthDays)
@@ -124,15 +105,9 @@ export class OverviewComponent implements OnInit {
       },
       error: err => this.categoriesService.handleError(err)
     })
-    // query 1 à bd com o valor acomulado ao inicio do mês => getDailySumEvolution()
-    // query2 à bd: obter  os movimentos para o mês selecionado => getDailySumEvolution()
-    // fazer loop para todos os dias do mes, em que mandamos o resultado do acomulado do dia para um array de resultados acomulados => [dailySumEvolution]
-    // saldo acomumlado dia 1 = saldo acomulado + saldo dia 1
-    // dia n... = saldo dia n + saldo acomulado dia n-1
   }
 
-  getCategoriesEvolution() {
-
+  getCategoriesEvolution(): void {   // categorias, subcategorias e total n acmoluado
     this.dailyCatEvolution = [];
     this.dailySubCatEvolution = [];
 
@@ -147,10 +122,9 @@ export class OverviewComponent implements OnInit {
       },
       error: err => this.categoriesService.handleError(err)
     })
-
   }
 
-  showDailySumDetails(day: number) {
+  showDailySumDetails(day: number): void {
     const httpParams = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear).set('day', day);
     const call = this._http.post('http://localhost:16190/getdailydetails', httpParams, { responseType: 'json' })
 
@@ -162,12 +136,9 @@ export class OverviewComponent implements OnInit {
       },
       error: err => this.categoriesService.handleError(err)
     })
-
-
   }
 
-  showDailySubCatDetails(subcatID: number, day: number) {
-
+  showDailySubCatDetails(subcatID: number, day: number): void {
     const httpParams = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear).set('day', day).set('subcat', subcatID);
     const call = this._http.post('http://localhost:16190/getdailysubcatdetails', httpParams, { responseType: 'json' })
 
@@ -181,9 +152,7 @@ export class OverviewComponent implements OnInit {
     })
   }
 
-
-  showDailyCatDetails(catID: number, day: number) {
-
+  showDailyCatDetails(catID: number, day: number): void {
     const httpParams = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear).set('day', day).set('cat', catID);
     const call = this._http.post('http://localhost:16190/getdailycatdetails', httpParams, { responseType: 'json' })
 
@@ -195,9 +164,7 @@ export class OverviewComponent implements OnInit {
       },
       error: err => this.categoriesService.handleError(err)
     })
-
   }
-
 
   // modal
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
@@ -212,8 +179,6 @@ export class OverviewComponent implements OnInit {
 }
 
 
-
-
 // modal
 @Component({
   selector: 'overview-details-modal',
@@ -221,23 +186,12 @@ export class OverviewComponent implements OnInit {
   styleUrls: ['../../../../assets/styles/mhq-large-modal.scss']
 })
 
-export class OverviewDetailsModal implements OnInit {
+export class OverviewDetailsModal {
 
+  constructor(public overviewService: OverviewService) { }
 
-
-
-  constructor(public categoriesService: CategoriesService, private _http: HttpClient, public overviewService: OverviewService) { }
-
-  ngOnInit(): void {
-
-
-
-  }
-
-  datePipe(dateInMilli:number): string {
+  datePipe(dateInMilli: number): string {
     return new Date(dateInMilli).toLocaleDateString('pt')
   }
-
-
 
 }

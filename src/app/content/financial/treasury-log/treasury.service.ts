@@ -16,6 +16,7 @@ type RecordBorderStyle = {
 
 export class TreasuryService {
 
+  // boolean com o estado do loading dos movimentos da bd
   loadingComplete: Boolean;
 
   //trigger para onInit
@@ -30,9 +31,10 @@ export class TreasuryService {
   // clone do movimento  atualmente em consulta
   activeTreasuryLog: ITreasuryLog;
 
-  cloningTLog: Boolean;
+  // boolean que indica se é duplicação ou intrudução nova
+  cloningTreasuryLog: Boolean;
 
-  constructor(private _http: HttpClient, private _router: Router, private categoriesService: CategoriesService) {
+  constructor(private _http: HttpClient, private _router: Router, private _categoriesService: CategoriesService) {
     this.loadingComplete = false;
     this.fetchTreasuryLog();
     this.onInitTrigger = new Subject<any>();
@@ -43,7 +45,7 @@ export class TreasuryService {
   }
 
   ngOnInit(): void {
-    this.cloningTLog = false;
+    this.cloningTreasuryLog = false;
   }
 
   // vai á bd buscar os movimentos
@@ -73,6 +75,7 @@ export class TreasuryService {
 
           const timer = setTimeout(navi.bind(null, this._router), 1000);
           function navi(router: Router): void {
+            // fecha a modal
             const ele = document.querySelector('.cdk-overlay-backdrop') as HTMLElement;
             ele.click();
 
@@ -91,84 +94,62 @@ export class TreasuryService {
 
   }
 
-  addMode(cloningTLog: boolean): void {
+
+  // inicia o modo de introdução / duplicação
+  addMode(cloningTreasuryLog: boolean): void {
 
     // verifica se é duplicação ou é introdução normal
-    this.cloningTLog = cloningTLog;
-    (!this.cloningTLog) ? this.recordBorderStyle = { 'background-color': 'gray' } : [];
+    this.cloningTreasuryLog = cloningTreasuryLog;
+    (!this.cloningTreasuryLog) ? this.recordBorderStyle = { 'background-color': 'gray' } : [];
 
     this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this._router.navigate(['/fi/tlogs/add']);
     });
   }
 
+  // fecha a gaveta e volta para o modo de listagem
   closeDetails(): void {
 
     document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight')
 
     const timer = setTimeout(navi.bind(null, this._router), 1000)
-
     function navi(router: Router): void {
       router.navigate(['/fi/tlogs'])
     }
 
   }
 
-  // utilizado no render da listagem
+  // metodos utilizados no render do modo listagem listagem
   getCatStyle(catID: number): string {
     let style: string;
-    const cat = [...this.categoriesService.allCategories].forEach(cat => {
-      if (cat.id == catID) return style = `background:${cat.bgcolor};color:${cat.textcolor};`
-      return;
-    });
+    [...this._categoriesService.allCategories].forEach(cat => { if (cat.id == catID) { style = `background:${cat.bgcolor};color:${cat.textcolor};` } });
+
     return style!;
   }
 
-  getCatLabel(catID: number): string {
+  getCategoryTitle(catID: number): string {
+    let categoryTitle: string;
+    [...this._categoriesService.allCategories].forEach(cat => { if (cat.id == catID) categoryTitle = cat.title });
 
-    let mainCat: IFinancialCategory;
-
-    [...this.categoriesService.allCategories].forEach(cat => {
-      if (cat.id == catID) return mainCat = cat
-      return;
-    });
-
-    return mainCat!.title;
+    return categoryTitle!;
   }
 
-  // utilizado no render da listagem
-  getSubCatLabel(catID: number, subcatID: number): string {
-
+  getSubcategoryTitle(catID: number, subcatID: number): string {
     let mainCat: IFinancialCategory;
-
-    [...this.categoriesService.allCategories].forEach(cat => {
-      if (cat.id == catID) return mainCat = cat
-      return;
-    });
+    [...this._categoriesService.allCategories].forEach(cat => { if (cat.id == catID) mainCat = cat });
 
     let subCatTitle: string;
-
-    [...mainCat!.subcats].forEach(subcat => {
-      if (subcat.id == subcatID) return subCatTitle = subcat.title
-      return;
-    });
+    [...mainCat!.subcats].forEach(subcat => { if (subcat.id == subcatID) subCatTitle = subcat.title });
 
     return subCatTitle!;
   }
 
-  // utilizado no render da listagem
-  getCatIcon(catID: number): string {
-
+  getCategoryIcon(catID: number): string {
     let icon: string;
-
-    [...this.categoriesService.allCategories].forEach(cat => {
-      if (cat.id == catID) return icon = cat.icon
-      return
-    });
+    [...this._categoriesService.allCategories].forEach(cat => { if (cat.id == catID) icon = cat.icon });
 
     return icon!
   }
-
 
 
   // tratamento erros

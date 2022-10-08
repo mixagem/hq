@@ -5,7 +5,7 @@ import { CategoriesService } from '../categories.service';
 import { Router } from '@angular/router';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
 
-// objecto default para modo de introdução de nova categoria
+// objectos default para modo de introdução de nova categoria/subcategorias
 const DEFAULT_FICATEGORY: IFinancialCategory = {
   id: 0,
   type: 'expense',
@@ -36,7 +36,7 @@ export class NewCategoryComponent implements OnInit {
   // categoria utilizada no modo  de introdução
   tempFiCategory: IFinancialCategory;
 
-  constructor(public categoriesService: CategoriesService, public _http: HttpClient, public _router: Router) { }
+  constructor(public categoriesService: CategoriesService, private _http: HttpClient, private _router: Router) { }
 
   ngOnInit(): void {
 
@@ -48,7 +48,7 @@ export class NewCategoryComponent implements OnInit {
       this.tempFiCategory.id = 0
     } else {
       // caso seja uma nova introduçãp
-      this.tempFiCategory = DEFAULT_FICATEGORY
+      this.tempFiCategory = JSON.parse(JSON.stringify(DEFAULT_FICATEGORY));
     }
 
   }

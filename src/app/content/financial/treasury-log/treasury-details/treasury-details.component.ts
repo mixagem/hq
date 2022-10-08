@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
 import { CategoriesService } from '../../categories/categories.service';
@@ -70,11 +70,12 @@ export class TreasuryDetailsComponent implements OnInit {
     // clone do movimento enviado para o serviço
     this.treasuryService.activeTreasuryLog = JSON.parse(JSON.stringify(this.treasuryLog));
 
+    // datepicker
     this.treasuryLogDatepickerForm = new FormControl(new Date(this.treasuryLog.date), [Validators.required]);
 
     //  form controls para auto completes categorias/subcategorias
-    this.catForm = new FormControl(this.treasuryService.getCatLabel(this.tempTreasuryLog.cat), [Validators.required]);
-    this.subCatForm = new FormControl(this.treasuryService.getSubCatLabel(this.tempTreasuryLog.cat, this.treasuryLog.subcat), [Validators.required]);
+    this.catForm = new FormControl(this.treasuryService.getCategoryTitle(this.tempTreasuryLog.cat), [Validators.required]);
+    this.subCatForm = new FormControl(this.treasuryService.getSubcategoryTitle(this.tempTreasuryLog.cat, this.treasuryLog.subcat), [Validators.required]);
 
     // criar array com os títulos das categorias/subcategorias
     this.catFormOptions = [];

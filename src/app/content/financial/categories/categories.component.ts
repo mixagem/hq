@@ -5,11 +5,10 @@ import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 import { CategoriesService } from './categories.service';
 import { Router } from '@angular/router';
 
-
 @Component({
   selector: 'mhq-categories',
   templateUrl: './categories.component.html',
-  styleUrls: ['./categories.component.scss','../../../../assets/styles/mhq-mainform.scss']
+  styleUrls: ['./categories.component.scss', '../../../../assets/styles/mhq-mainform.scss']
 })
 
 export class CategoriesComponent implements AfterViewInit, OnInit {
@@ -23,18 +22,18 @@ export class CategoriesComponent implements AfterViewInit, OnInit {
 
   constructor(public categoriesService: CategoriesService, public router: Router) {
     this.tablesReady = false;
-   }
+  }
 
   ngOnInit(): void {
 
     // trigger remoto do OnInit
-    this.categoriesService.onInitTrigger.subscribe(myCustomParam => {
+    this.categoriesService.onInitTrigger.subscribe(nono => {
       this.ngOnInit();
       this.ngAfterViewInit();
     });
 
     // se o loading não tiver pronto, interrompe o ngOnInit
-    if(!this.categoriesService.loadingComplete){return}
+    if (!this.categoriesService.loadingComplete) { return }
 
     // incializar tabela
     this.dataSource = new MatTableDataSource<IFinancialCategory>([...this.categoriesService.allCategories]);
@@ -48,7 +47,7 @@ export class CategoriesComponent implements AfterViewInit, OnInit {
   // afterViewInit para tabela
   ngAfterViewInit(): void {
     // se o loading não tiver pronto, interrompe o ngOnInit
-    if(!this.categoriesService.loadingComplete){return}
+    if (!this.categoriesService.loadingComplete) { return }
     this.dataSource.paginator = this.paginator;
   }
 

@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subject, throwError } from 'rxjs';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
@@ -12,12 +12,12 @@ type RecordBorderStyle = {
   providedIn: 'root'
 })
 
-export class CategoriesService implements OnInit {
+export class CategoriesService {
 
   // variável com o estado da comunicação à bd
   loadingComplete: Boolean;
 
-  //trigger para onInit
+  // trigger para onInit
   onInitTrigger: Subject<any>;
 
   // cor a ser utilizada no border dos detalhes da categoria/movimento tesouraria
@@ -31,22 +31,19 @@ export class CategoriesService implements OnInit {
   // clone da categoria atualmente em consulta
   activePreviewCategory: IFinancialCategory;
 
-  //boolean para verificar se é duplicada ou é criada nova categoria
+  // boolean para verificar se é duplicada ou é criada nova categoria
   cloningCategory: Boolean;
 
   constructor(private _http: HttpClient, private _router: Router) {
     this.loadingComplete = false;
-    // vai buscar à bd as categorias e movimentos existentes
-    this.fetchCategories();
-    this.onInitTrigger = new Subject<any>();
+    this.cloningCategory = false;
+    this.fetchCategories(); // vai buscar à bd as categorias e movimentos existentes. quando concluído, passa o loadingComplete = true
+    this.onInitTrigger = new Subject<any>(); // trigger para onInit do componente
   }
 
+  // trigger para onInit do componente
   onInitTriggerCall(): void {
     this.onInitTrigger.next('');
-  }
-
-  ngOnInit(): void {
-    this.cloningCategory = false;
   }
 
   //vai á bd buscar as categorias
@@ -57,6 +54,7 @@ export class CategoriesService implements OnInit {
     call.subscribe({
       next: (codeReceived) => {
         const resp = codeReceived as IFinancialCategory[];
+
         // guardar no serviço a resposta da bd
         this.allCategories = resp;
         this.expenseCategories = resp.filter(cat => cat.type === 'expense');
@@ -77,7 +75,7 @@ export class CategoriesService implements OnInit {
 
           const timer = setTimeout(navi.bind(null, this._router), 1000);
           function navi(router: Router): void {
-            //marteladinha para fechar a modal
+            // fechar a modal
             const ele = document.querySelector('.cdk-overlay-backdrop') as HTMLElement;
             ele.click();
 
@@ -122,7 +120,6 @@ export class CategoriesService implements OnInit {
     }
 
   }
-
 
   // tratamento erros
   handleError(err: HttpErrorResponse): Observable<never> {
