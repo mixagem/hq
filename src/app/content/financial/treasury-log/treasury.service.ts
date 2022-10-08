@@ -34,6 +34,7 @@ export class TreasuryService {
   // boolean que indica se é duplicação ou intrudução nova
   cloningTreasuryLog: Boolean;
 
+
   constructor(private _http: HttpClient, private _router: Router, private _categoriesService: CategoriesService) {
     this.loadingComplete = false;
     this.fetchTreasuryLog();
@@ -99,7 +100,8 @@ export class TreasuryService {
 
     // verifica se é duplicação ou é introdução normal
     this.cloningTreasuryLog = cloningTreasuryLog;
-    (!this.cloningTreasuryLog) ? this.recordBorderStyle = { 'background-color': 'gray' } : [];
+
+    if (!this.cloningTreasuryLog) { this.recordBorderStyle = { 'background-color': 'gray' } }
 
     this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this._router.navigate(['/fi/tlogs/add']);

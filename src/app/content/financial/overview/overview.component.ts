@@ -176,17 +176,17 @@ export class OverviewComponent implements OnInit {
 
       case 'category':
         this._overviewService.source = source;
-        this._overviewService.titleForDetails = `Detalhes da categoria ${this._miscService.getCategoryTitle(catOrSubcat!)} @ ${day}/${this.selectedMonthLocale}/${this.selectedYear}`
+        this._overviewService.titleForDetails = `${this._miscService.getCategoryTitle(catOrSubcat!)} @ ${day}/${this.selectedMonthLocale}/${this.selectedYear}`
         break;
 
       case 'subcategory':
         this._overviewService.source = source;
-        this._overviewService.titleForDetails = `Detalhes da subcategoria ${this._miscService.getSubcategoryTitle(this._miscService.getCategoryIDFromSubcategoryID(catOrSubcat!), catOrSubcat!)} @ ${day}/${this.selectedMonthLocale}/${this.selectedYear}`
+        this._overviewService.titleForDetails = `${this._miscService.getSubcategoryTitle(this._miscService.getCategoryIDFromSubcategoryID(catOrSubcat!), catOrSubcat!)} @ ${day}/${this.selectedMonthLocale}/${this.selectedYear}`
         break;
 
       case 'daily':
         this._overviewService.source = source;
-        this._overviewService.titleForDetails = `Detalhes globais @ ${day}/${this.selectedMonthLocale}/${this.selectedYear}`
+        this._overviewService.titleForDetails = `Resumo de movimentos @ ${day}/${this.selectedMonthLocale}/${this.selectedYear}`
         break;
     }
 
@@ -227,7 +227,7 @@ export class OverviewDetailsModal implements AfterViewInit, OnInit {
     this.dataSource = new MatTableDataSource<ITreasuryLog>([...this.overviewService.treasuryLogsForDetails]);
 
     this.overviewService.treasuryLogsForDetails.length === 0 ? this.isDataSourceEmpty = true : this.isDataSourceEmpty = false;
-    
+
     switch (this.overviewService.source) {
 
       case 'category':

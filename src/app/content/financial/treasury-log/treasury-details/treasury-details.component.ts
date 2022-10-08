@@ -53,7 +53,7 @@ export class TreasuryDetailsComponent implements OnInit {
   // boolean com o estado do modo de edição
   editingMode: boolean;
 
-  constructor(private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, private _categoriesService: CategoriesService, public miscService:MiscService) {
+  constructor(private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, private _categoriesService: CategoriesService, public miscService: MiscService) {
     this.editingMode = false;
   }
 

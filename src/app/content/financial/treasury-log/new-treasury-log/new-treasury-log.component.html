@@ -70,12 +70,17 @@
           <form class="mhq-cats-form">
             <mat-form-field>
               <mat-label>Categoria</mat-label>
-              <input type="text" matInput [formControl]="catForm" [matAutocomplete]="cat">
-              <mat-autocomplete autoActiveFirstOption #cat="matAutocomplete">
+              <!-- <input type="text" matInput [formControl]="catForm" [matAutocomplete]="cat">
+              <mat-autocomplete autoActiveFirstOption #cat="matAutocomplete"  >
                 <mat-option *ngFor="let option of catFilteredOptions | async" [value]="option">
                   {{option}}
                 </mat-option>
-              </mat-autocomplete>
+              </mat-autocomplete> -->
+              <mat-select [formControl]="catForm" (selectionChange)="categorySelectChanged($event)">
+                <mat-option *ngFor="let option of categoriesList" [value]="option">
+                  {{option}}
+                </mat-option>
+              </mat-select>
             </mat-form-field>
           </form>
 
@@ -86,13 +91,18 @@
 
           <form class="mhq-subcats-form">
             <mat-form-field>
-              <mat-label>Categoria</mat-label>
-              <input type="text" matInput [formControl]="subCatForm" [matAutocomplete]="subcat">
-              <mat-autocomplete autoActiveFirstOption #subcat="matAutocomplete">
+              <mat-label>Sub categoria</mat-label>
+              <!-- <input type="text" matInput [formControl]="subCatForm" [matAutocomplete]="subcat">
+              <mat-autocomplete autoActiveFirstOption #subcat="matAutocomplete"  >
                 <mat-option *ngFor="let option of subCatFilteredOptions | async" [value]="option">
                   {{option}}
                 </mat-option>
-              </mat-autocomplete>
+              </mat-autocomplete> -->
+              <mat-select [formControl]="subcatForm">
+                <mat-option *ngFor="let option of subcategoriesList" [value]="option">
+                  {{option}}
+                </mat-option>
+              </mat-select>
             </mat-form-field>
           </form>
 
