@@ -11,6 +11,7 @@ import { MatDatepicker } from '@angular/material/datepicker';
 import { TreasuryService } from '../treasury.service';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
 import { MiscService } from 'src/assets/services/misc.service';
+import { ThisReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'mhq-treasury-details',
@@ -63,7 +64,7 @@ export class TreasuryDetailsComponent implements OnInit {
     this.id = Number(this._route.snapshot.paramMap.get('id')!);
 
     // obter snapshot do movimento
-    [...this.treasuryService.treasuryLog].forEach(treasurylog => { if (treasurylog.id === this.id) { this.treasuryLog = treasurylog; return } });
+    this.treasuryLog = [...this.treasuryService.treasuryLog].filter(treasurylog => treasurylog.id === this.id)[0];
 
     // clone do movimento para modo de edição
     this.tempTreasuryLog = JSON.parse(JSON.stringify(this.treasuryLog));
@@ -135,25 +136,16 @@ export class TreasuryDetailsComponent implements OnInit {
 
         this.tempTreasuryLog.date = this.treasuryLogDatepickerForm.value.getTime();
 
-        let catID: number; // id da categoria
-        let catBGColor: string // cor da categoria
-        let subCats: IFinancialSubCategory[]; // subcats da categoria selecioanda
-
-        // obter o ID, BGColor e SubCategorias  da categoria selecionada
-        [...this._categoriesService.allCategories].forEach(cat => {
-          if (cat.title === this.catForm.value) { catBGColor = cat.bgcolor; subCats = cat.subcats; catID = cat.id; return; }
-        });
-
+        const cat = [...this._categoriesService.allCategories].filter(cat => cat.title === this.catForm.value)[0]
+        const catBGColor: string = cat.bgcolor;
+        const subcats: IFinancialSubCategory[] = cat.subcats;
+        const catID: number = cat.id;
         // obter o ID da sub-categoria selecionada
-        let subCatID: number;
-        subCats!.forEach(subcat => {
-          if (subcat.title === this.subCatForm.value) { subCatID = subcat.id; return; }
-        });
+        const subCatID: number = subcats.filter(subcat => subcat.title === this.subCatForm.value)[0].id
 
         // converter de títilo para o id das catgorias
-        this.tempTreasuryLog.cat = catID!;
-        this.tempTreasuryLog.subcat = subCatID!;
-
+        this.tempTreasuryLog.cat = catID;
+        this.tempTreasuryLog.subcat = subCatID;
         this.treasuryService.recordBorderStyle['background-color'] = catBGColor!;
         this.saveTreasurylog();
 

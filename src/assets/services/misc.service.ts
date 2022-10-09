@@ -44,6 +44,11 @@ export class MiscService {
     return `background:${filteredCategory.bgcolor};color:${filteredCategory.textcolor};`;
   }
 
+  getCatStyleSimplex(catID: number): string[] {
+    const filteredCategory = [...this._categoriesService.allCategories].filter(cat => cat.id == catID)[0];
+    return  [filteredCategory.bgcolor, filteredCategory.textcolor]
+  }
+
   getSubcategoryTitle(catID: number, subcatID: number): string {
     const filteredCategory = [...this._categoriesService.allCategories].filter(cat => cat.id == catID)[0];
     const filteredSubcategoryTitle = [...filteredCategory.subcats].filter(subcat => subcat.id == subcatID)[0].title;
@@ -72,7 +77,7 @@ export class MiscService {
     return filteredCategoryID;
   }
 
-  getCategoryObjectFromID(catID: number) : IFinancialCategory {
+  getCategoryObjectFromID(catID: number): IFinancialCategory {
     const filteredCategory = [...this._categoriesService.allCategories].filter(cat => cat.id == catID)[0];
     return filteredCategory;
   }

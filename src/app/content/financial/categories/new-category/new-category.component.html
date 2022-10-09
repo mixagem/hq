@@ -56,7 +56,7 @@
             <mat-label>Cor fundo etiqueta</mat-label>
             <input matInput [cpPosition]="'bottom'" [cpOutputFormat]="'rgba'" [cpAlphaChannel]="'disabled'"
               [cpPositionOffset]="'5%'" [cpPositionRelativeToArrow]="true" [cpCancelButton]="true" [cpOKButton]="true"
-              [cpSaveClickOutside]="false" [(colorPicker)]="tempFiCategory.bgcolor" [(ngModel)]="tempFiCategory.bgcolor">
+              [cpSaveClickOutside]="true" [(colorPicker)]="tempFiCategory.bgcolor" [(ngModel)]="tempFiCategory.bgcolor">
           </mat-form-field>
         </div>
         <div class="mhq-col-4">
@@ -64,7 +64,7 @@
             <mat-label>Cor texto etiqueta</mat-label>
             <input matInput [cpPosition]="'bottom'" [cpOutputFormat]="'rgba'" [cpAlphaChannel]="'disabled'"
               [cpPositionOffset]="'5%'" [cpPositionRelativeToArrow]="true" [cpCancelButton]="true" [cpOKButton]="true"
-              [cpSaveClickOutside]="false" [(colorPicker)]="tempFiCategory.textcolor" [(ngModel)]="tempFiCategory.textcolor">
+              [cpSaveClickOutside]="true" [(colorPicker)]="tempFiCategory.textcolor" [(ngModel)]="tempFiCategory.textcolor">
           </mat-form-field>
         </div>
 

@@ -13,7 +13,7 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { TreasuryLogComponent } from 'src/app/content/financial/treasury-log/treasury-log.component';
 import { TreasuryDetailsComponent, DeleteTreasuryLogConfirmationModal } from 'src/app/content/financial/treasury-log/treasury-details/treasury-details.component';
 import { NewTreasuryLogComponent } from 'src/app/content/financial/treasury-log/new-treasury-log/new-treasury-log.component';
-
+import { NgScrollbarModule } from 'ngx-scrollbar';
 
 @NgModule({
   declarations: [
@@ -37,6 +37,7 @@ import { NewTreasuryLogComponent } from 'src/app/content/financial/treasury-log/
     MaterialImportsModule,
     HttpClientModule,
     ColorPickerModule,
+    NgScrollbarModule
   ],
   exports: [
     FinancialComponent,

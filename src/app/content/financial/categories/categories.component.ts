@@ -54,10 +54,8 @@ export class CategoriesComponent implements AfterViewInit, OnInit {
   // navegação para modo de consulta de registo
   viewMode(catID: number): void {
 
-    // obter a cor da categoria para aplicar no border da gaveta
-    this.categoriesService.allCategories.forEach(cat => {
-      if (cat.id === catID) { this.categoriesService.recordBorderStyle = { "background-color": cat.bgcolor }; return }
-    });
+    const categoryBGColor  = this.categoriesService.allCategories.filter(cat => cat.id === catID)[0].bgcolor
+    this.categoriesService.recordBorderStyle = { "background-color": categoryBGColor };
 
     // navegação para modo de consulta de registo
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {

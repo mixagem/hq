@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
+import { NavigationStart, Router } from '@angular/router';
 import { CategoriesService } from './content/financial/categories/categories.service';
 import { TreasuryService } from './content/financial/treasury-log/treasury.service';
+
 
 @Component({
   selector: 'mhq-root',
@@ -9,5 +11,10 @@ import { TreasuryService } from './content/financial/treasury-log/treasury.servi
 })
 export class AppComponent {
   title = 'hq';
-  constructor (private _categoriesService:CategoriesService, private _treasuryService:TreasuryService){};
+
+  constructor(private _categoriesService: CategoriesService, private _treasuryService: TreasuryService, private _router: Router) {
+
+    // this._router.events.forEach((event) => {if (event instanceof NavigationStart) { console.log('aqui vem a função que limpa o array de timers') }});
+
+  }
 }

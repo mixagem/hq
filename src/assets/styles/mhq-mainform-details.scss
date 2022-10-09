@@ -111,6 +111,7 @@ h1 {
 }
 
 table {
+  width: 100%;
   border-collapse: collapse;
   thead {
     tr {
@@ -124,6 +125,18 @@ table {
         }
         &:last-child {
           border-top-right-radius: 10px;
+        }
+        &:nth-child(2) {
+          width: 60%;
+        }
+        &:nth-child(2) {
+          width: 20%;
+        }
+        &:nth-child(3) {
+          width: 10%;
+        }
+        &:nth-child(4) {
+          width: 10%;
         }
       }
     }
@@ -168,3 +181,6 @@ table {
 .mhq-mat-inputs-margin {
   margin-top: -10px;
 }
+
+
+// ::ng-deep .ng-scroll-viewport { background: var(--mhq-waikiki-color-2); }

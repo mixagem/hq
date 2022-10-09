@@ -35,9 +35,7 @@ export class CategoryDetailsComponent implements OnInit {
     this.id = Number(this._route.snapshot.paramMap.get('id')!);
 
     // clone da categoria
-    [...this.categoriesService.allCategories].forEach(category => {
-      if (category.id === this.id) { this.fiCategory = category; return }
-    });
+    this.fiCategory = [...this.categoriesService.allCategories].filter(category => category.id === this.id)[0]
 
     // clone da categoria enviado para o serviço
     this.categoriesService.activePreviewCategory = { ...this.fiCategory }

@@ -47,10 +47,8 @@ export class TreasuryLogComponent implements AfterViewInit, OnInit {
   // navegação para modo de consulta de registo
   viewMode(logID: number, catID: number): void {
 
-    // obter a cor da categoria para estilo da gaveta
-    this.categoriesService.allCategories.forEach(cat => {
-      if (cat.id == catID) { this.treasuryService.recordBorderStyle = { "background-color": cat.bgcolor }; return }
-    });
+    const categoryBGColor = this.categoriesService.allCategories.filter(cat => cat.id == catID)[0].bgcolor;
+    this.treasuryService.recordBorderStyle = { "background-color": categoryBGColor };
 
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this.router.navigate(['/fi/tlogs', logID]);

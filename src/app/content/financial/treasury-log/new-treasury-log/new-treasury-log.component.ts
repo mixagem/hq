@@ -63,7 +63,7 @@ export class NewTreasuryLogComponent implements OnInit {
     // forms para inputs autocomplete
     if (this.treasuryService.cloningTreasuryLog) {
       this.catForm = new FormControl(this._miscService.getCategoryTitle(this.tempTreasuryLog.cat), [Validators.required]);
-      this.subcatForm = new FormControl( {value: this._miscService.getSubcategoryTitle(this.tempTreasuryLog.cat, this.tempTreasuryLog.subcat), disabled: true}, [Validators.required]);
+      this.subcatForm = new FormControl({ value: this._miscService.getSubcategoryTitle(this.tempTreasuryLog.cat, this.tempTreasuryLog.subcat), disabled: true }, [Validators.required]);
 
       this._miscService.getCategoryObjectFromID(this.tempTreasuryLog.cat).subcats.forEach(subcat => {
         this.subcategoriesList.push(subcat.title)
@@ -71,7 +71,7 @@ export class NewTreasuryLogComponent implements OnInit {
       this.subcatForm.enable();
     } else {
       this.catForm = new FormControl('', [Validators.required]);
-      this.subcatForm = new FormControl({value: '', disabled: true}, [Validators.required]);
+      this.subcatForm = new FormControl({ value: '', disabled: true }, [Validators.required]);
 
 
 
@@ -96,19 +96,18 @@ export class NewTreasuryLogComponent implements OnInit {
         this.tempTreasuryLog.date = this.treasuryLogDatepickerForm.value.getTime();
 
         let catID: number; // id da categoria
-        let catBGColor: string // cor da categoria
+        let catBGColor: string; // cor da categoria
         let subCats: IFinancialSubCategory[]; // subcats da categoria selecioanda
 
         // obter o ID, BGColor e SubCategorias  da categoria selecionada
-        [...this.categoriesService.allCategories].forEach(cat => {
-          if (cat.title === this.catForm.value) { catBGColor = cat.bgcolor; subCats = cat.subcats; catID = cat.id; return; }
-        });
+        const cat = [...this.categoriesService.allCategories].filter(cat => cat.title === this.catForm.value)[0];
+        catBGColor = cat.bgcolor;
+        subCats = cat.subcats;
+        catID = cat.id
 
         // obter o ID da sub-categoria selecionada
-        let subCatID: number;
-        subCats!.forEach(subcat => {
-          if (subcat.title === this.subcatForm.value) { subCatID = subcat.id; return; }
-        });
+        const subCatID: number = subCats!.filter(subcat => subcat.title === this.subcatForm.value)[0].id;
+
 
         // converter de títilo para o id das catgorias
         this.tempTreasuryLog.cat = catID!;
@@ -120,7 +119,7 @@ export class NewTreasuryLogComponent implements OnInit {
         break;
 
       case 'end': default:
-        document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight')
+        document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
         const timer = setTimeout(navi.bind(null, this._router), 1000) // tempo da animação antes de redirecionar
         function navi(router: Router): void {
           router.navigate(['/fi/tlogs'])
@@ -130,8 +129,8 @@ export class NewTreasuryLogComponent implements OnInit {
 
   saveTreasurylog(): void {
 
-    const httpParams = new HttpParams().set('tlog', JSON.stringify(this.tempTreasuryLog))
-    const call = this._http.post('http://localhost:16190/createtreasurylog', httpParams, { responseType: 'text' })
+    const httpParams = new HttpParams().set('tlog', JSON.stringify(this.tempTreasuryLog));
+    const call = this._http.post('http://localhost:16190/createtreasurylog', httpParams, { responseType: 'text' });
 
     call.subscribe({
       next: codeReceived => { this.treasuryService.fetchTreasuryLog('saveTreasuryLog', Number(codeReceived)); },

@@ -4,23 +4,28 @@
     <div class="mhq-quickaction-close" (click)="categoriesService.closeDetails()">
       <mat-icon>close</mat-icon>
     </div>
-    <div *ngIf="!editingMode" class="mhq-quickaction-default" (click)="editingCategoryRecordActions('start')"><button mat-icon-button>
-      <mat-icon>edit</mat-icon>
-    </button></div>
-    <div *ngIf="editingMode" class="mhq-quickaction-save" (click)="editingCategoryRecordActions('save')"><button mat-icon-button>
-      <mat-icon>save</mat-icon>
-    </button></div>
-    <div *ngIf="editingMode" class="mhq-quickaction-delete" (click)="editingCategoryRecordActions('end')"><button mat-icon-button>
-      <mat-icon>not_interested</mat-icon>
-    </button></div>
+    <div *ngIf="!editingMode" class="mhq-quickaction-default" (click)="editingCategoryRecordActions('start')"><button
+        mat-icon-button>
+        <mat-icon>edit</mat-icon>
+      </button></div>
+    <div *ngIf="editingMode" class="mhq-quickaction-save" (click)="editingCategoryRecordActions('save')"><button
+        mat-icon-button>
+        <mat-icon>save</mat-icon>
+      </button></div>
+    <div *ngIf="editingMode" class="mhq-quickaction-delete" (click)="editingCategoryRecordActions('end')"><button
+        mat-icon-button>
+        <mat-icon>not_interested</mat-icon>
+      </button></div>
 
-    <div *ngIf="!editingMode" class="mhq-quickaction-default"><button mat-icon-button (click)="categoriesService.addMode(true)">
-      <mat-icon>file_copy</mat-icon>
-    </button></div>
+    <div *ngIf="!editingMode" class="mhq-quickaction-default"><button mat-icon-button
+        (click)="categoriesService.addMode(true)">
+        <mat-icon>file_copy</mat-icon>
+      </button></div>
 
-    <div *ngIf="!editingMode"  class="mhq-quickaction-delete" (click)="openDialog('300ms', '150ms')"><button mat-icon-button>
-      <mat-icon>delete</mat-icon>
-    </button></div>
+    <div *ngIf="!editingMode" class="mhq-quickaction-delete" (click)="openDialog('300ms', '150ms')"><button
+        mat-icon-button>
+        <mat-icon>delete</mat-icon>
+      </button></div>
 
     <div [ngStyle]="categoriesService.recordBorderStyle"></div>
   </div>
@@ -29,7 +34,9 @@
   <div class="mhq-categories-drawer-right">
 
     <div class="mhq-wrapper-row" *ngIf="!editingMode">
-      <h1><mat-icon>info_outline</mat-icon>Detalhes</h1>
+      <h1>
+        <mat-icon>info_outline</mat-icon>Detalhes
+      </h1>
       <div class="mhq-row">
         <div class="mhq-col-1">
           <mat-form-field appearance="fill">
@@ -80,7 +87,9 @@
 
 
     <div class="mhq-wrapper-row" *ngIf="editingMode">
-      <h1><mat-icon>info_outline</mat-icon>Detalhes</h1>
+      <h1>
+        <mat-icon>info_outline</mat-icon>Detalhes
+      </h1>
       <div class="mhq-row">
         <div class="mhq-col-1">
           <mat-form-field appearance="fill">
@@ -119,14 +128,18 @@
           <mat-form-field appearance="fill">
             <mat-label>Cor etiqueta</mat-label>
             <input matInput [cpPosition]="'bottom'" [cpOutputFormat]="'rgba'" [cpAlphaChannel]="'disabled'"
-              [cpPositionOffset]="'5%'" [cpPositionRelativeToArrow]="true" [(colorPicker)]="tempFiCategory.bgcolor" [(ngModel)]="tempFiCategory.bgcolor">
+              [cpPositionOffset]="'5%'" [cpPositionRelativeToArrow]="true" [cpCancelButton]="true" [cpOKButton]="true"
+              [cpSaveClickOutside]="true" [(colorPicker)]="tempFiCategory.bgcolor"
+              [(ngModel)]="tempFiCategory.bgcolor">
           </mat-form-field>
         </div>
         <div class="mhq-col-4">
           <mat-form-field appearance="fill">
             <mat-label>Cor texto</mat-label>
             <input matInput [cpPosition]="'bottom'" [cpOutputFormat]="'rgba'" [cpAlphaChannel]="'disabled'"
-              [cpPositionOffset]="'5%'" [cpPositionRelativeToArrow]="true" [(colorPicker)]="tempFiCategory.textcolor" [(ngModel)]="tempFiCategory.textcolor">
+              [cpPositionOffset]="'5%'" [cpPositionRelativeToArrow]="true" [cpCancelButton]="true" [cpOKButton]="true"
+              [cpSaveClickOutside]="true" [(colorPicker)]="tempFiCategory.textcolor"
+              [(ngModel)]="tempFiCategory.textcolor">
           </mat-form-field>
         </div>
 
@@ -135,35 +148,50 @@
 
 
     <div class="mhq-wrapper-row">
-      <h1><mat-icon>low_priority</mat-icon>Sub-categorias</h1>
+      <h1>
+        <mat-icon>low_priority</mat-icon>Sub-categorias
+      </h1>
 
       <div *ngIf="fiCategory.subcats.length===0 && !editingMode">no rows.</div>
 
       <div *ngIf="fiCategory.subcats.length===0 && editingMode">no rows. <span (click)="attachSubcategory()">click to
           add</span></div>
 
-      <table *ngIf="fiCategory.subcats.length>0 && !editingMode">
-        <thead>
-          <tr>
-            <th>Título</th>
-            <th>Orçamento</th>
-            <th>Ativa</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let subcat of fiCategory.subcats">
-            <td><div class="mhq-mat-inputs-margin">{{subcat.title}}</div></td>
-            <td><div class="mhq-mat-inputs-margin">{{subcat.budget}}</div></td>
-            <td>
-              <div class="mhq-mat-inputs-margin"><mat-checkbox color="primary" disabled [checked]="subcat.active"></mat-checkbox></div>
-            </td>
-            <td>
-            </td>
-          </tr>
+          <table *ngIf="fiCategory.subcats.length>0 && !editingMode">
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Orçamento</th>
+                <th>Ativa</th>
+                <th></th>
+              </tr>
+            </thead>
+          </table>
+      <ng-scrollbar *ngIf="fiCategory.subcats.length>0 && !editingMode" style="height: 100%;width: 100%;">
+        <table>
 
-        </tbody>
-      </table>
+
+          <tbody>
+            <tr *ngFor="let subcat of fiCategory.subcats">
+              <td>
+                <div class="mhq-mat-inputs-margin">{{subcat.title}}</div>
+              </td>
+              <td>
+                <div class="mhq-mat-inputs-margin">{{subcat.budget}}</div>
+              </td>
+              <td>
+                <div class="mhq-mat-inputs-margin">
+                  <mat-checkbox color="primary" disabled [checked]="subcat.active"></mat-checkbox>
+                </div>
+              </td>
+              <td>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </ng-scrollbar>
+
       <table *ngIf="tempFiCategory.subcats.length>0 && editingMode">
         <thead>
           <tr>
@@ -173,33 +201,50 @@
             <th></th>
           </tr>
         </thead>
-        <tbody>
-          <tr *ngFor="let tempsubcat of tempFiCategory.subcats">
-            <td>
-              <mat-form-field appearance="fill">
-                <mat-label>Título</mat-label>
-                <input matInput [(ngModel)]="tempsubcat.title">
-              </mat-form-field>
-            </td>
-            <td>
-              <mat-form-field appearance="fill">
-                <mat-label>Orçamento</mat-label>
-                <input matInput [(ngModel)]="tempsubcat.budget">
-              </mat-form-field>
-            </td>
-            <td>
-              <div class="mhq-mat-inputs-margin"><mat-checkbox color="primary" [(ngModel)]="tempsubcat.active"></mat-checkbox></div>
-            </td>
-            <td (click)="dettachSubcategory(tempsubcat.id)"><div class="mhq-mat-inputs-margin">
-              <button mat-icon-button><mat-icon>delete</mat-icon></button>
-            </div></td>
-          </tr>
-          <tr>
-            <td colspan="6" (click)="attachSubcategory()">add-shiet bro</td>
-          </tr>
-        </tbody>
       </table>
 
+      <ng-scrollbar *ngIf="tempFiCategory.subcats.length>0 && editingMode" style="height: 100%;width: 100%;">
+        <table>
+
+
+          <tbody>
+
+            <!-- content -->
+
+            <tr *ngFor="let tempsubcat of tempFiCategory.subcats">
+              <td>
+                <mat-form-field appearance="fill">
+                  <mat-label>Título</mat-label>
+                  <input matInput [(ngModel)]="tempsubcat.title">
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field appearance="fill">
+                  <mat-label>Orçamento</mat-label>
+                  <input matInput [(ngModel)]="tempsubcat.budget">
+                </mat-form-field>
+              </td>
+              <td>
+                <div class="mhq-mat-inputs-margin">
+                  <mat-checkbox color="primary" [(ngModel)]="tempsubcat.active"></mat-checkbox>
+                </div>
+              </td>
+              <td (click)="dettachSubcategory(tempsubcat.id)">
+                <div class="mhq-mat-inputs-margin">
+                  <button mat-icon-button>
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="6" (click)="attachSubcategory()">add-shiet bro</td>
+            </tr>
+
+          </tbody>
+
+        </table>
+      </ng-scrollbar>
     </div>
 
   </div>

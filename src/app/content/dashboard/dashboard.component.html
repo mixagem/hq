@@ -23,6 +23,37 @@
     9. orçamento sub-categoria, o que fazer disto<br>
     10. parar o timer ao navegaar para um outro ecrã<br>
     11. recorrencia movimentos tesouraria<br>
+
+
+
+bugs:
+
+tabela sub-categorias modo edição categoria
+	-> ao adicionar uma sub-cat, está a fazer refresh, perdendo o nome das categorias que alterámos
+			\ -> tenho de fzer redo, no chance. no modo edição, manter alterações apenas no frontend.
+
+
+selects
+   -> mensagem de erro quando falta categoria
+   -> adicionar os estilos da categoria ao select
+
+
+inputs valor
+    -> do valo recebido do input, converter virgulas em pontos
+    -> fazer regex com validador quando são utilizados mais que 1 "," ou "." -> dá erro e informa que só deve só utilizado 1 caracter para separar decimais
+    -> css: trocar pontos pelas virgulas
+
+labels valor
+    -> trocar pontos por vírgulas (fazer o meu próprio pipe se for precizo, já me tou a chatear com esses mambos default) e adicionar o símbolo do euro à direita
+                                           |-> neste pipe, adiconar o símbolo "-" caso o valor seja de expense ===> este pipe só serve para ser utilizado nas tabelas, nao mexer na vista excel
+
+
+bug do timer
+    -> terminar o timer ao fazer navegação
+
+
+
+
     <!-- <br>varios<ul>
       <li>ngx scrollbars</li>
       <li>fix refresh tabela inicial overview (depois de carregada uma vez as categorias, elas não precisam de fazer refresh, só os valores. pensar numa maneira para aproveitar o desenho para ser mais fluida a passagem de meses)</li>

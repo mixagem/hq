@@ -6,19 +6,12 @@
 
   <div *ngIf="isDataSourceEmpty">no movs found bro</div>
 
-  <table *ngIf="!isDataSourceEmpty" mat-table [dataSource]="dataSource" style="width: 100%;">
+  <table *ngIf="!isDataSourceEmpty" mat-table [dataSource]="dataSource" [class]="'mhq-overview-modal-'+overviewService.source">
 
     <ng-container matColumnDef="icon" *ngIf="overviewService.source === 'daily'">
       <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let element">
+      <td mat-cell *matCellDef="let element" [style]="miscService.getCatStyle(element.cat)">
         <mat-icon>{{miscService.getCategoryIconFromSubcategoryID(element.subcat)}}</mat-icon>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="cat" *ngIf="overviewService.source === 'daily'">
-      <th mat-header-cell *matHeaderCellDef>Categoria</th>
-      <td mat-cell *matCellDef="let element">
-        {{miscService.getCategoryTitle(element.cat)}}
       </td>
     </ng-container>
 
@@ -45,7 +38,7 @@
 
     <ng-container matColumnDef="link">
       <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let element">
+      <td mat-cell class="mhq-overview-modal-link" *matCellDef="let element" (click)="goToTreasuryLog(element.id, element.cat)">
         <mat-icon>link</mat-icon>
       </td>
     </ng-container>
@@ -55,6 +48,6 @@
 
   </table>
 
-  <mat-paginator *ngIf="!isDataSourceEmpty" [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+  <mat-paginator *ngIf="!isDataSourceEmpty" [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
 
 </div>

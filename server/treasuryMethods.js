@@ -11,7 +11,7 @@ export function fetchTreasuryLogs(req, res) {
   let tlogs = [];
 
   db.serialize(() => {
-    db.each(`SELECT * FROM treasurylog ORDER BY id DESC`, (err, tlog) => { err ? console.error(err.message) : tlogs.push(tlog); });
+    db.each(`SELECT * FROM treasurylog ORDER BY date DESC`, (err, tlog) => { err ? console.error(err.message) : tlogs.push(tlog); });
   });
 
   db.close((err) => {

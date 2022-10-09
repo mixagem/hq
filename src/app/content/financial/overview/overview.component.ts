@@ -3,6 +3,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
 import { MiscService } from 'src/assets/services/misc.service';
 import { CategoriesService } from '../categories/categories.service';
@@ -206,7 +207,7 @@ export class OverviewComponent implements OnInit {
 @Component({
   selector: 'overview-details-modal',
   templateUrl: './overview-details-modal.html',
-  styleUrls: ['../../../../assets/styles/mhq-large-modal.scss']
+  styleUrls: ['../../../../assets/styles/mhq-large-modal.scss', './overview-details-modal.scss']
 })
 
 export class OverviewDetailsModal implements AfterViewInit, OnInit {
@@ -218,7 +219,7 @@ export class OverviewDetailsModal implements AfterViewInit, OnInit {
   // array com as colunas da tabela
   displayedColumns: string[];
 
-  constructor(public categoriesService: CategoriesService, public overviewService: OverviewService, public miscService: MiscService) {
+  constructor(public categoriesService: CategoriesService, public overviewService: OverviewService, public miscService: MiscService, private _router: Router, private _treasuryService: TreasuryService) {
     // this.tablesReady = false;
   }
 
@@ -239,7 +240,7 @@ export class OverviewDetailsModal implements AfterViewInit, OnInit {
         break;
 
       case 'daily':
-        this.displayedColumns = ['icon', 'cat', 'subcat', 'title', 'value', 'link'];
+        this.displayedColumns = ['icon', 'subcat', 'title', 'value', 'link'];
         break;
     }
 
@@ -250,6 +251,13 @@ export class OverviewDetailsModal implements AfterViewInit, OnInit {
   // afterViewInit para tabela
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
+  }
+
+  goToTreasuryLog(treasuryLogID: number, categoryID: number) {
+    const ele = document.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+    ele.click();
+    this._treasuryService.recordBorderStyle = { 'background-color': this.miscService.getCatStyleSimplex(categoryID)[0] }
+    this._router.navigate(['/fi/tlogs', treasuryLogID]);
   }
 
 }

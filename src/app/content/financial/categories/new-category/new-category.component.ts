@@ -88,7 +88,8 @@ export class NewCategoryComponent implements OnInit {
 
   // adicionar sub-categoria à categoria
   createSubcategory(): void {
-    this.tempFiCategory.subcats.push(DEFAULT_FISUBCATEGORY);
+    this.tempFiCategory.subcats.push({...DEFAULT_FISUBCATEGORY});
+    console.log(this.tempFiCategory.subcats)
   }
 
   // remover sub-categoria da categoria
