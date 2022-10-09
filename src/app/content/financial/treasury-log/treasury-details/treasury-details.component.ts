@@ -13,6 +13,8 @@ import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-cate
 import { MiscService } from 'src/assets/services/misc.service';
 import { ThisReceiver } from '@angular/compiler';
 import { MatSelectChange } from '@angular/material/select';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MissingCategoriesSnackBarComponent } from '../missing-categories-snack-bar/missing-categories-snack-bar.component';
 
 @Component({
   selector: 'mhq-treasury-details',
@@ -46,7 +48,7 @@ export class TreasuryDetailsComponent implements OnInit {
   // boolean com o estado do modo de edição
   editingMode: boolean;
 
-  constructor(private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, private _categoriesService: CategoriesService, public miscService: MiscService) {
+  constructor(private _snackBar: MatSnackBar, private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, private _categoriesService: CategoriesService, public miscService: MiscService) {
     this.editingMode = false;
   }
 
@@ -69,13 +71,13 @@ export class TreasuryDetailsComponent implements OnInit {
 
     // forms para inputs autocomplete
 
-      this.catForm = new FormControl(this.miscService.getCategoryTitle(this.tempTreasuryLog.cat), [Validators.required]);
-      this.subcatForm = new FormControl({ value: this.miscService.getSubcategoryTitle(this.tempTreasuryLog.cat, this.tempTreasuryLog.subcat), disabled: true }, [Validators.required]);
+    this.catForm = new FormControl(this.miscService.getCategoryTitle(this.tempTreasuryLog.cat), [Validators.required]);
+    this.subcatForm = new FormControl({ value: this.miscService.getSubcategoryTitle(this.tempTreasuryLog.cat, this.tempTreasuryLog.subcat), disabled: true }, [Validators.required]);
 
-      this.miscService.getCategoryObjectFromID(this.tempTreasuryLog.cat).subcats.forEach(subcat => {
-        this.subcategoriesList.push(subcat.title)
-      });
-      this.subcatForm.enable();
+    this.miscService.getCategoryObjectFromID(this.tempTreasuryLog.cat).subcats.forEach(subcat => {
+      this.subcategoriesList.push(subcat.title)
+    });
+    this.subcatForm.enable();
 
 
     // opções para select
@@ -97,6 +99,12 @@ export class TreasuryDetailsComponent implements OnInit {
     })
   }
 
+  openMissingCategoriesSnackBar():void {
+    this._snackBar.openFromComponent(MissingCategoriesSnackBarComponent, {
+      duration: 5000, //ms
+    });
+  }
+
   editingTreasuryLogRecordActions(action: string): void {
 
     switch (action) {
@@ -109,7 +117,7 @@ export class TreasuryDetailsComponent implements OnInit {
 
       case 'save':
 
-        if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return alert('fuck you') }
+        if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this.openMissingCategoriesSnackBar() }
 
         this.tempTreasuryLog.date = this.treasuryLogDatepickerForm.value.getTime();
 
@@ -125,7 +133,7 @@ export class TreasuryDetailsComponent implements OnInit {
         this.tempTreasuryLog.subcat = subCatID;
         this.treasuryService.recordBorderStyle['background-color'] = catBGColor!;
 
-        this.tempTreasuryLog.value = Number(this.tempTreasuryLog.value.toString().replace(',','.')) // conversão de vírgulas para pontos
+        this.tempTreasuryLog.value = Number(this.tempTreasuryLog.value.toString().replace(',', '.')) // conversão de vírgulas para pontos
         this.saveTreasurylog();
 
         break;
@@ -180,4 +188,6 @@ export class DeleteTreasuryLogConfirmationModal {
     })
   }
 }
+
+
 

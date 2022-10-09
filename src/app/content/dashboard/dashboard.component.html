@@ -9,15 +9,10 @@
     1. mega code review (alterar nomes de variáveis e funções, adicionar tipo de retorno às funções, comentar código<br>
     fix no casts dos dados [onde uso Number(), toString, "as" qualquer coisa e == ])<br>
     refractor das funções do misc (uniformizar tudo)<br>
-    2. concluír tabelas de sub-categorias: substitir "no rows bro"<br>
-    3. concluir modal detalhes overview: substituir "no moves bro"<br>
     4 server review<br>
     5. css review<br>
-      5.1 inclui pipes para valores negativos (simbolo euro no lado direito, separador dos milhares em . em vez de ,)<br>
-    6. terminar desenho overview totais + modal<br>
     7. adicionar ação para novo movimento de tesouraria no ecrã do overview (gaveta igual ao ecra de movimentos de tesouraria)<br>
     8. desenvolver picker mÊs/ano para a vista diária<br>
-    9. fix acesso direto via link a um registo (ainda n carregou)<br>
     10. desenvolver ordenação de categorias<br>
     11. desenvolver ordenação de subcategorias<br>
     12. orçamento sub-categoria -> só vai ser utilizado na altura das analises, graficos e alertas<br>
@@ -28,25 +23,25 @@
 bugs:
 
 tabela sub-categorias modo edição categoria
-	-> ao adicionar uma sub-cat, está a fazer refresh, perdendo o nome das categorias que alterámos
-			\ -> tenho de fzer redo, no chance. no modo edição, manter alterações apenas no frontend.
+	-> ao adicionar uma sub-cat, está a fazer refresh, perdendo o nome das categorias que alterámos (alem disso está a mandar para bd.
+  -> o problema é que nao tinha id para atribuir aos novos subcats.
+  -> o que vou fazer, ao entrar no modo edição, no constructor tfaço uma query ao sequence dos subcats),
+  -> guardo este valor no serviço/componente
+  -> ao adicionar uma subcat, o valor do id deste subid deve ser o valor da query + 1 (a query devolve o ultimo subid utilizado)
+  -> depois de adicionar a subcat, incrementar a variável
+  -> ao gravar, para a parte das subcategorias, manter igual (apagar todas as que existem, fazer foreach das novas subcats para a bd (ordem crescente não vá o sequence atrofiar), e siga alfredo)
+  -> (ao remover a subcat, não posso fazer nada sem ter que dar granda volta - tenho de distinguir de novos subcats, de antigos, etc etc... nao rende. ficam gaps na bd, mas tem de ser assim mesmo.)
 
 
-selects
-   -> mensagem de erro quando falta categoria (atualmente manda-te só granda fuck you)
-
+No rows bro
+no movs bro
 
 inputs valor
     -> fazer regex com validador quando são utilizados mais que 1 "," ou "." -> dá erro e informa que só deve só utilizado 1 caracter para separar decimais
-    -> css: trocar pontos pelas virgulas
 
-labels valor
-    -> trocar pontos por vírgulas (fazer o meu próprio pipe se for precizo, já me tou a chatear com esses mambos default) e adicionar o símbolo do euro à direita
-                                           |-> neste pipe, adiconar o símbolo "-" caso o valor seja de expense ===> este pipe só serve para ser utilizado nas tabelas, nao mexer na vista excel
 
-bug paginador tabelas em acesso direito (via link)
 adicionar acesso direto aos registos
-
+testar mudança de página da tabela ao consultar o registo
 
 
 

@@ -7,7 +7,7 @@ import { AppRoutingModule } from 'src/app/app-routing.module';
 import { MaterialImportsModule } from './material-imports.module';
 import { CategoryDetailsComponent, DeleteCategoryConfirmationModal } from 'src/app/content/financial/categories/category-details/category-details.component';
 import { HttpClientModule } from '@angular/common/http';
-import { OverviewComponent, OverviewDetailsModal } from 'src/app/content/financial/overview/overview.component';
+import { OverviewComponent } from 'src/app/content/financial/overview/overview.component';
 import { NewCategoryComponent } from 'src/app/content/financial/categories/new-category/new-category.component';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { TreasuryLogComponent } from 'src/app/content/financial/treasury-log/treasury-log.component';
@@ -15,6 +15,8 @@ import { TreasuryDetailsComponent, DeleteTreasuryLogConfirmationModal } from 'sr
 import { NewTreasuryLogComponent } from 'src/app/content/financial/treasury-log/new-treasury-log/new-treasury-log.component';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { GuitaPipe } from '../pipes/guita.pipe';
+import { MissingCategoriesSnackBarComponent } from 'src/app/content/financial/treasury-log/missing-categories-snack-bar/missing-categories-snack-bar.component';
+import { OverviewDailyDetailsModalComponent } from 'src/app/content/financial/overview/overview-daily-details-modal/overview-daily-details-modal.component';
 
 @NgModule({
   declarations: [
@@ -28,8 +30,9 @@ import { GuitaPipe } from '../pipes/guita.pipe';
     TreasuryDetailsComponent,
     DeleteTreasuryLogConfirmationModal,
     NewTreasuryLogComponent,
-    OverviewDetailsModal,
-    GuitaPipe
+    GuitaPipe,
+    MissingCategoriesSnackBarComponent,
+    OverviewDailyDetailsModalComponent
 
   ],
   imports: [
@@ -51,8 +54,9 @@ import { GuitaPipe } from '../pipes/guita.pipe';
     TreasuryDetailsComponent,
     DeleteTreasuryLogConfirmationModal,
     NewTreasuryLogComponent,
-    OverviewDetailsModal,
-    GuitaPipe
+    GuitaPipe,
+    MissingCategoriesSnackBarComponent,
+    OverviewDailyDetailsModalComponent
 
   ]
 })

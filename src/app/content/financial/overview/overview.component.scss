@@ -128,9 +128,9 @@
 }
 
 ::ng-deep .overview-scrollbar {
-  background:var(--mhq-waikiki-color-1)!important;
+  background:var(--mhq-waikiki-color-0)!important;
   padding: 2px 5px!important;
-
+  opacity: .75!important;
 
   div {
     background:#fff!important;
@@ -138,5 +138,9 @@
 }
 
 ::ng-deep .scrollbar-control {
-  top: 40px!important;
+  top: 38px!important;
+}
+
+.mhq-overview-cat-loop .mhq-active-cat:first-of-type {
+	margin-top:8px!important
 }

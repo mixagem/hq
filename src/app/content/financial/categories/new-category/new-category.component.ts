@@ -59,6 +59,7 @@ export class NewCategoryComponent implements OnInit {
 
     switch (action) {
       case 'save':
+        this.categoriesService.recordBorderStyle['background-color'] = this.tempFiCategory.bgcolor
         this.createNewCategory();
         break;
 

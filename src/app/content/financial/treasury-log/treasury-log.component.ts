@@ -13,14 +13,17 @@ import { TreasuryService } from './treasury.service';
   styleUrls: ['./treasury-log.component.scss', '../../../../assets/styles/mhq-mainform.scss']
 })
 
-export class TreasuryLogComponent implements AfterViewInit, OnInit {
+export class TreasuryLogComponent implements OnInit {
 
   // datasource para tabela
   dataSource: MatTableDataSource<ITreasuryLog>;
   // array com as colunas da tabela
   displayedColumns: string[];
   // paginador da tabela
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+   // paginador da tabela
+   @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
+    this.dataSource.paginator = paginator;
+  }
 
   constructor(public treasuryService: TreasuryService, public categoriesService: CategoriesService, public router: Router, public miscService:MiscService) { }
 
@@ -37,12 +40,10 @@ export class TreasuryLogComponent implements AfterViewInit, OnInit {
     // incializar tabela
     this.dataSource = new MatTableDataSource<ITreasuryLog>(this.treasuryService.treasuryLog);
     this.displayedColumns = ['cat', 'title', 'date', 'value'];
-    this.ngAfterViewInit();
+
   }
 
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-  }
+
 
   // navegação para modo de consulta de registo
   viewMode(logID: number, catID: number): void {

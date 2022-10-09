@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./categories.component.scss', '../../../../assets/styles/mhq-mainform.scss']
 })
 
-export class CategoriesComponent implements AfterViewInit, OnInit {
+export class CategoriesComponent implements OnInit {
 
   // variável com o estado da construção da tabela (depois da comunicação à bd)
   tablesReady: Boolean;
@@ -29,7 +29,6 @@ export class CategoriesComponent implements AfterViewInit, OnInit {
     // trigger remoto do OnInit
     this.categoriesService.onInitTrigger.subscribe(nono => {
       this.ngOnInit();
-      this.ngAfterViewInit();
     });
 
     // se o loading não tiver pronto, interrompe o ngOnInit
@@ -43,18 +42,15 @@ export class CategoriesComponent implements AfterViewInit, OnInit {
   }
 
   // paginador da tabela
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  // afterViewInit para tabela
-  ngAfterViewInit(): void {
-    // se o loading não tiver pronto, interrompe o ngOnInit
-    if (!this.categoriesService.loadingComplete) { return }
-    this.dataSource.paginator = this.paginator;
+  @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
+    this.dataSource.paginator = paginator;
   }
+
 
   // navegação para modo de consulta de registo
   viewMode(catID: number): void {
 
-    const categoryBGColor  = this.categoriesService.allCategories.filter(cat => cat.id === catID)[0].bgcolor
+    const categoryBGColor = this.categoriesService.allCategories.filter(cat => cat.id === catID)[0].bgcolor
     this.categoriesService.recordBorderStyle = { "background-color": categoryBGColor };
 
     // navegação para modo de consulta de registo

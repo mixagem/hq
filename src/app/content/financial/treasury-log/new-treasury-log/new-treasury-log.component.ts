@@ -9,6 +9,8 @@ import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-cate
 import { MatDatepicker } from '@angular/material/datepicker';
 import { MiscService, TimerService } from 'src/assets/services/misc.service';
 import { MatSelectChange } from '@angular/material/select';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MissingCategoriesSnackBarComponent } from '../missing-categories-snack-bar/missing-categories-snack-bar.component';
 
 const DEFAULT_TLOG: ITreasuryLog = {
   id: 0, //ignrado ao ser enviado para bd
@@ -45,7 +47,7 @@ export class NewTreasuryLogComponent implements OnInit {
   subcategoriesList: string[] = [];
 
 
-  constructor(public miscService: MiscService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, private _route: ActivatedRoute, public _router: Router, public _http: HttpClient, private _timerService:TimerService) { }
+  constructor(private _snackBar:MatSnackBar, public miscService: MiscService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, private _route: ActivatedRoute, public _router: Router, public _http: HttpClient, private _timerService:TimerService) { }
 
   ngOnInit(): void {
 
@@ -86,11 +88,17 @@ export class NewTreasuryLogComponent implements OnInit {
 
   }
 
+  openMissingCategoriesSnackBar():void {
+    this._snackBar.openFromComponent(MissingCategoriesSnackBarComponent, {
+      duration: 5000, //ms
+    });
+  }
+
   newTreasuryLogRecordActions(action: string): void {
     switch (action) {
 
       case 'save':
-        if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return alert('fuck you') }
+        if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this.openMissingCategoriesSnackBar() }
 
         // converter a data do picker para guardar da bd
         this.tempTreasuryLog.date = this.treasuryLogDatepickerForm.value.getTime();

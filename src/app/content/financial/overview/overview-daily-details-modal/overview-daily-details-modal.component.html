@@ -1,4 +1,4 @@
-<h1 mat-dialog-title class="mhq-modal-header">
+<h1 mat-dialog-title class="mhq-modal-header" style="background: var(--mhq-waikiki-color-0);">
   <mat-icon>feed</mat-icon>{{overviewService.titleForDetails}}
 </h1>
 
@@ -38,8 +38,10 @@
 
     <ng-container matColumnDef="link">
       <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell class="mhq-overview-modal-link" *matCellDef="let element" (click)="goToTreasuryLog(element.id, element.cat)">
-        <mat-icon>link</mat-icon>
+      <td mat-cell class="mhq-overview-modal-link" *matCellDef="let element">
+        <button mat-icon-button [color]="'primary'" (click)="goToTreasuryLog(element.id, element.cat)">
+          <mat-icon>link</mat-icon>
+        </button>
       </td>
     </ng-container>
 

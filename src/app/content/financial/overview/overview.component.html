@@ -93,7 +93,7 @@
             <div *ngFor="let cat of categoriesService.incomeCategories" class="mhq-overview-cat-loop">
 
               <div *ngIf="cat.active">
-                <div style="height: 40px;display: flex;margin-top:10px;display:inline-flex">
+                <div style="height: 40px;display: flex;margin-top:10px;display:inline-flex" class="mhq-active-cat">
                   <div *ngFor="let null of tempArray let i = index" class="mhq-overview-cat-cell mhq-cell-not-empty"
                     [ngStyle]="{'background-color':cat.bgcolor,'color':cat.textcolor,'opacity':'0.65'}"
                     (click)="showDailyCatDetails(cat.id,i+1)">
