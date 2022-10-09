@@ -4,7 +4,7 @@
     <div class="mhq-quickaction-close" (click)="categoriesService.closeDetails()">
       <mat-icon>close</mat-icon>
     </div>
-    <div *ngIf="!editingMode" class="mhq-quickaction-default" (click)="editingCategoryRecordActions('start')"><button
+    <div *ngIf="!editingMode" class="mhq-quickaction-default" (click)="editingCategoryRecordActions('edit')"><button
         mat-icon-button>
         <mat-icon>edit</mat-icon>
       </button></div>
@@ -18,11 +18,11 @@
       </button></div>
 
     <div *ngIf="!editingMode" class="mhq-quickaction-default"><button mat-icon-button
-        (click)="categoriesService.addMode(true)">
+        (click)="categoriesService.createNewRecord(true)">
         <mat-icon>file_copy</mat-icon>
       </button></div>
 
-    <div *ngIf="!editingMode" class="mhq-quickaction-delete" (click)="openDialog('300ms', '150ms')"><button
+    <div *ngIf="!editingMode" class="mhq-quickaction-delete" (click)="deleteCategoryModal('300ms', '150ms')"><button
         mat-icon-button>
         <mat-icon>delete</mat-icon>
       </button></div>

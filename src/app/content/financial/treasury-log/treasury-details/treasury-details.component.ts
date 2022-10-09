@@ -3,15 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
 import { CategoriesService } from '../../categories/categories.service';
-import { map, startWith } from 'rxjs/operators';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { TreasuryService } from '../treasury.service';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
-import { MiscService } from 'src/assets/services/misc.service';
-import { ThisReceiver } from '@angular/compiler';
+import { ErrorHandlingService, MiscService } from 'src/assets/services/misc.service';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MissingCategoriesSnackBarComponent } from '../missing-categories-snack-bar/missing-categories-snack-bar.component';
@@ -48,7 +45,7 @@ export class TreasuryDetailsComponent implements OnInit {
   // boolean com o estado do modo de edição
   editingMode: boolean;
 
-  constructor(private _snackBar: MatSnackBar, private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, private _categoriesService: CategoriesService, public miscService: MiscService) {
+  constructor(private _errorHandlingService: ErrorHandlingService, private _snackBar: MatSnackBar, private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, private _categoriesService: CategoriesService, public miscService: MiscService) {
     this.editingMode = false;
   }
 
@@ -95,7 +92,7 @@ export class TreasuryDetailsComponent implements OnInit {
 
     call.subscribe({
       next: codeReceived => { this.treasuryService.fetchTreasuryLog('saveTreasuryLog', this.tempTreasuryLog.id); this.editingMode = false; },
-      error: err => this.treasuryService.handleError(err)
+      error: err => this._errorHandlingService.handleError(err)
     })
   }
 
@@ -175,7 +172,7 @@ export class TreasuryDetailsComponent implements OnInit {
 
 export class DeleteTreasuryLogConfirmationModal {
 
-  constructor(public treasuryService: TreasuryService, private _http: HttpClient) { }
+  constructor(public treasuryService: TreasuryService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService) { }
 
   deleteTreasuryLog() {
 
@@ -184,7 +181,7 @@ export class DeleteTreasuryLogConfirmationModal {
 
     call.subscribe({
       next: codeReceived => { this.treasuryService.fetchTreasuryLog('deleteTreasuryLog'); },
-      error: err => this.treasuryService.handleError(err)
+      error: err => this._errorHandlingService.handleError(err)
     })
   }
 }

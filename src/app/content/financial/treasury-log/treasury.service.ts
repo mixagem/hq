@@ -1,10 +1,9 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, Subject, throwError } from 'rxjs';
-import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
+import { Subject} from 'rxjs';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
-import { MiscService, TimerService } from 'src/assets/services/misc.service';
+import { ErrorHandlingService,  TimerService } from 'src/assets/services/misc.service';
 import { CategoriesService } from '../categories/categories.service';
 
 type RecordBorderStyle = {
@@ -36,7 +35,7 @@ export class TreasuryService {
   cloningTreasuryLog: Boolean;
 
 
-  constructor(private _http: HttpClient, private _router: Router, private _categoriesService: CategoriesService,private _timerService:TimerService) {
+  constructor(private _errorHandlingService: ErrorHandlingService, private _http: HttpClient, private _router: Router, private _categoriesService: CategoriesService,private _timerService:TimerService) {
     this.loadingComplete = false;
     this.fetchTreasuryLog();
     this.onInitTrigger = new Subject<any>();
@@ -62,6 +61,7 @@ export class TreasuryService {
         // guardar no serviço a resposta da bd
         this.treasuryLog = resp;
         this.loadingComplete = true;
+        console.log('we donze')
 
         // faz refresh ao modo listagem e à gaveta do registo em edição/introdução
         if (source === 'saveTreasuryLog') {
@@ -92,7 +92,7 @@ export class TreasuryService {
         this.onInitTriggerCall();
 
       },
-      error: err => this.handleError(err)
+      error: err => this._errorHandlingService.handleError(err)
     });
 
   }
@@ -123,13 +123,5 @@ export class TreasuryService {
 
   }
 
-  // tratamento erros
-  handleError(err: HttpErrorResponse): Observable<never> {
-    let errorMessage = '';
-    if (err.error instanceof ErrorEvent) { errorMessage = `An error has ocurred: ${err.error.message}`; }
-    else { errorMessage = `Server returned code: ${err.status}, error message is: ${err.message}`; }
-    console.log(errorMessage);
-    return throwError(() => errorMessage);
-  }
 
 }

@@ -20,18 +20,7 @@
 
 
 
-bugs:
-
-tabela sub-categorias modo edição categoria
-	-> ao adicionar uma sub-cat, está a fazer refresh, perdendo o nome das categorias que alterámos (alem disso está a mandar para bd.
-  -> o problema é que nao tinha id para atribuir aos novos subcats.
-  -> o que vou fazer, ao entrar no modo edição, no constructor tfaço uma query ao sequence dos subcats),
-  -> guardo este valor no serviço/componente
-  -> ao adicionar uma subcat, o valor do id deste subid deve ser o valor da query + 1 (a query devolve o ultimo subid utilizado)
-  -> depois de adicionar a subcat, incrementar a variável
-  -> ao gravar, para a parte das subcategorias, manter igual (apagar todas as que existem, fazer foreach das novas subcats para a bd (ordem crescente não vá o sequence atrofiar), e siga alfredo)
-  -> (ao remover a subcat, não posso fazer nada sem ter que dar granda volta - tenho de distinguir de novos subcats, de antigos, etc etc... nao rende. ficam gaps na bd, mas tem de ser assim mesmo.)
-
+todo:
 
 No rows bro
 no movs bro

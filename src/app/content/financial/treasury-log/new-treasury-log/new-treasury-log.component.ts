@@ -7,7 +7,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { TreasuryService } from '../treasury.service';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
 import { MatDatepicker } from '@angular/material/datepicker';
-import { MiscService, TimerService } from 'src/assets/services/misc.service';
+import { ErrorHandlingService, MiscService, TimerService } from 'src/assets/services/misc.service';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MissingCategoriesSnackBarComponent } from '../missing-categories-snack-bar/missing-categories-snack-bar.component';
@@ -47,7 +47,7 @@ export class NewTreasuryLogComponent implements OnInit {
   subcategoriesList: string[] = [];
 
 
-  constructor(private _snackBar:MatSnackBar, public miscService: MiscService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, private _route: ActivatedRoute, public _router: Router, public _http: HttpClient, private _timerService:TimerService) { }
+  constructor(private _errorHandlingService: ErrorHandlingService, private _snackBar:MatSnackBar, public miscService: MiscService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, private _route: ActivatedRoute, public _router: Router, public _http: HttpClient, private _timerService:TimerService) { }
 
   ngOnInit(): void {
 
@@ -144,7 +144,7 @@ export class NewTreasuryLogComponent implements OnInit {
 
     call.subscribe({
       next: codeReceived => { this.treasuryService.fetchTreasuryLog('saveTreasuryLog', Number(codeReceived)); },
-      error: err => this.categoriesService.handleError(err)
+      error: err => this._errorHandlingService.handleError(err)
     })
   }
 

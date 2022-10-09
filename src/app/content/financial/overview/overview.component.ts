@@ -5,7 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
-import { MiscService } from 'src/assets/services/misc.service';
+import { ErrorHandlingService, LoadingService, MiscService } from 'src/assets/services/misc.service';
 import { CategoriesService } from '../categories/categories.service';
 import { TreasuryService } from '../treasury-log/treasury.service';
 import { OverviewDailyDetailsModalComponent } from './overview-daily-details-modal/overview-daily-details-modal.component';
@@ -34,7 +34,7 @@ export class OverviewComponent implements OnInit {
   dailyCatEvolution: object;
   dailySubCatEvolution: object;
 
-  constructor(public categoriesService: CategoriesService, public treasuryService: TreasuryService, private _http: HttpClient, private _dialog: MatDialog, private _overviewService: OverviewService, private _miscService: MiscService) {
+  constructor(public categoriesService: CategoriesService, public treasuryService: TreasuryService, private _http: HttpClient, private _dialog: MatDialog, private _overviewService: OverviewService, private _miscService: MiscService, private _loadingService: LoadingService, private _errorHandlingService: ErrorHandlingService) {
     this.currentDate = new Date();
     this.evoReady = false;
   }
@@ -44,7 +44,7 @@ export class OverviewComponent implements OnInit {
     this.treasuryService.onInitTrigger.subscribe(myCustomParam => {
       this.ngOnInit();
     });
-    if (!this.categoriesService.loadingComplete) { return }
+    if (!this._loadingService.categoriesLoadingComplete) { return }
     this.selectedMonth = this.currentDate.getMonth() + 1
     console.log(this.selectedMonth)
     switch (this.selectedMonth) {
@@ -108,7 +108,7 @@ export class OverviewComponent implements OnInit {
       next: codeReceived => {
         const resp = codeReceived as number[]; this.dailySumAcomEvolution = resp;
       },
-      error: err => this.categoriesService.handleError(err)
+      error: err => this._errorHandlingService.handleError(err)
     })
   }
 
@@ -125,7 +125,7 @@ export class OverviewComponent implements OnInit {
         this.evoReady = true;
         console.log(this.dailyCatEvolution[1 as keyof typeof this.dailyCatEvolution][9]) // fuck yes bro
       },
-      error: err => this.categoriesService.handleError(err)
+      error: err => this._errorHandlingService.handleError(err)
     })
   }
 
@@ -139,7 +139,7 @@ export class OverviewComponent implements OnInit {
         this._overviewService.treasuryLogsForDetails = resp
         this.openDialog('300ms', '150ms', 'daily', day)
       },
-      error: err => this.categoriesService.handleError(err)
+      error: err => this._errorHandlingService.handleError(err)
     })
   }
 
@@ -153,7 +153,7 @@ export class OverviewComponent implements OnInit {
         this._overviewService.treasuryLogsForDetails = resp
         this.openDialog('300ms', '150ms', 'subcategory', day, subcatID)
       },
-      error: err => this.categoriesService.handleError(err)
+      error: err => this._errorHandlingService.handleError(err)
     })
   }
 
@@ -167,7 +167,7 @@ export class OverviewComponent implements OnInit {
         this._overviewService.treasuryLogsForDetails = resp
         this.openDialog('300ms', '150ms', 'category', day, catID)
       },
-      error: err => this.categoriesService.handleError(err)
+      error: err => this._errorHandlingService.handleError(err)
     })
   }
 

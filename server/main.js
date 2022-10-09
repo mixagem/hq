@@ -1,6 +1,6 @@
 import { genDailySumAcomEvo, genDailyCategoriesEvo, getDailyCatDetails, getDailySubCatDetails, getDailyDetails} from './overviewMethods.js';
 import { addNewTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog } from './treasuryMethods.js';
-import { fetchCategories, createNewCategory, deleteCategory, addSubCategory, removeSubCategory, saveCategory } from './categoriesMethods.js'
+import { fetchCategories, createNewCategory, deleteCategory, updateCategory, getSubcategorySequence } from './categoriesMethods.js'
 import express from 'express';
 
 const app = express();
@@ -12,6 +12,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
+
+
 // overview
 app.post('/dailysumevo', function (req, res) { return genDailySumAcomEvo(req, res); }); //snapshot
 app.post('/dailycatsevo', function (req, res) { return genDailyCategoriesEvo(req, res); }); //snapshot
@@ -21,11 +23,10 @@ app.post('/getdailysubcatdetails', function(req,res) { return getDailySubCatDeta
 
 // categories
 app.get('/fetchcats', function (req, res) { return fetchCategories(req, res); });
-app.post('/newcategory', function (req, res) { return createNewCategory(req, res); });
+app.get('/currentsubcategorysequence', function (req, res) { return getSubcategorySequence(req, res); });
+app.post('/createnewcategory', function (req, res) { return createNewCategory(req, res); });
 app.post('/deletecategory', function (req, res) { return deleteCategory(req, res); });
-app.post('/attachsubcat', function (req, res) { return addSubCategory(req, res); });
-app.post('/dettachsubcat', function (req, res) { return removeSubCategory(req, res); });
-app.post('/updatecategory', function (req, res) { return saveCategory(req, res); });
+app.post('/updatecategory', function (req, res) { return updateCategory(req, res); });
 
 // treasury
 app.get('/fetchtreasurylogs', function (req, res) { return fetchTreasuryLogs(req, res); });

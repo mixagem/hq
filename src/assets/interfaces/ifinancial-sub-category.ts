@@ -1,6 +1,6 @@
 export interface IFinancialSubCategory {
   id: number,
-  maincat: number,
+  maincatid: number,
   title: string,
   budget: number,
   active: boolean

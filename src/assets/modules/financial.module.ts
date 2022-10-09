@@ -5,7 +5,7 @@ import { CategoriesComponent } from 'src/app/content/financial/categories/catego
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { MaterialImportsModule } from './material-imports.module';
-import { CategoryDetailsComponent, DeleteCategoryConfirmationModal } from 'src/app/content/financial/categories/category-details/category-details.component';
+import { CategoryDetailsComponent } from 'src/app/content/financial/categories/category-details/category-details.component';
 import { HttpClientModule } from '@angular/common/http';
 import { OverviewComponent } from 'src/app/content/financial/overview/overview.component';
 import { NewCategoryComponent } from 'src/app/content/financial/categories/new-category/new-category.component';
@@ -17,6 +17,9 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 import { GuitaPipe } from '../pipes/guita.pipe';
 import { MissingCategoriesSnackBarComponent } from 'src/app/content/financial/treasury-log/missing-categories-snack-bar/missing-categories-snack-bar.component';
 import { OverviewDailyDetailsModalComponent } from 'src/app/content/financial/overview/overview-daily-details-modal/overview-daily-details-modal.component';
+import { DeleteCategoryConfirmationModalComponent } from 'src/app/content/financial/categories/category-details/delete-category-confirmation-modal/delete-category-confirmation-modal.component';
+import { MhqSucessSnackBarComponent } from '../components/mhq-sucess-snack-bar/mhq-sucess-snack-bar.component';
+import { MhqFailureSnackBarComponent } from '../components/mhq-failure-snack-bar/mhq-failure-snack-bar.component';
 
 @NgModule({
   declarations: [
@@ -25,14 +28,16 @@ import { OverviewDailyDetailsModalComponent } from 'src/app/content/financial/ov
     CategoryDetailsComponent,
     OverviewComponent,
     NewCategoryComponent,
-    DeleteCategoryConfirmationModal,
     TreasuryLogComponent,
     TreasuryDetailsComponent,
     DeleteTreasuryLogConfirmationModal,
     NewTreasuryLogComponent,
     GuitaPipe,
     MissingCategoriesSnackBarComponent,
-    OverviewDailyDetailsModalComponent
+    OverviewDailyDetailsModalComponent,
+    DeleteCategoryConfirmationModalComponent,
+    MhqSucessSnackBarComponent,
+    MhqFailureSnackBarComponent
 
   ],
   imports: [
@@ -49,14 +54,16 @@ import { OverviewDailyDetailsModalComponent } from 'src/app/content/financial/ov
     CategoriesComponent,
     CategoryDetailsComponent,
     OverviewComponent,
-    DeleteCategoryConfirmationModal,
     TreasuryLogComponent,
     TreasuryDetailsComponent,
     DeleteTreasuryLogConfirmationModal,
     NewTreasuryLogComponent,
     GuitaPipe,
     MissingCategoriesSnackBarComponent,
-    OverviewDailyDetailsModalComponent
+    OverviewDailyDetailsModalComponent,
+    DeleteCategoryConfirmationModalComponent,
+    MhqSucessSnackBarComponent,
+    MhqFailureSnackBarComponent
 
   ]
 })
