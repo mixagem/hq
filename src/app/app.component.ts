@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
+import { MiscService, TimerService } from 'src/assets/services/misc.service';
 import { CategoriesService } from './content/financial/categories/categories.service';
 import { TreasuryService } from './content/financial/treasury-log/treasury.service';
 
@@ -12,9 +13,9 @@ import { TreasuryService } from './content/financial/treasury-log/treasury.servi
 export class AppComponent {
   title = 'hq';
 
-  constructor(private _categoriesService: CategoriesService, private _treasuryService: TreasuryService, private _router: Router) {
+  constructor(private _categoriesService: CategoriesService, private _treasuryService: TreasuryService, private _router: Router, private _timerService:TimerService) {
 
-    // this._router.events.forEach((event) => {if (event instanceof NavigationStart) { console.log('aqui vem a função que limpa o array de timers') }});
+    this._router.events.forEach((event) => {if (event instanceof NavigationStart) { clearTimeout(this._timerService.timer) }});
 
   }
 }

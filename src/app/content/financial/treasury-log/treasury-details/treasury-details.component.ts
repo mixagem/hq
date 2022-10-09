@@ -12,6 +12,7 @@ import { TreasuryService } from '../treasury.service';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
 import { MiscService } from 'src/assets/services/misc.service';
 import { ThisReceiver } from '@angular/compiler';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'mhq-treasury-details',
@@ -27,21 +28,12 @@ export class TreasuryDetailsComponent implements OnInit {
 
   // autocomplete categoria
   catForm: FormControl
-  catFormOptions: string[] = [];
-  catFilteredOptions: Observable<string[]>;
-  private _catfilter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.catFormOptions.filter(option => option.toLowerCase().includes(filterValue));
-  }
+  categoriesList: string[] = [];
+
 
   // autocomplete sub categoria
-  subCatForm: FormControl
-  subCatFormOptions: string[] = [];
-  subCatFilteredOptions: Observable<string[]>;
-  private _subcatfilter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.subCatFormOptions.filter(option => option.toLowerCase().includes(filterValue));
-  }
+  subcatForm: FormControl
+  subcategoriesList: string[] = [];
 
   // id do movimento em consulta
   id: number;
@@ -75,38 +67,23 @@ export class TreasuryDetailsComponent implements OnInit {
     // datepicker
     this.treasuryLogDatepickerForm = new FormControl(new Date(this.treasuryLog.date), [Validators.required]);
 
-    //  form controls para auto completes categorias/subcategorias
-    this.catForm = new FormControl(this.miscService.getCategoryTitle(this.tempTreasuryLog.cat), [Validators.required]);
-    this.subCatForm = new FormControl(this.miscService.getSubcategoryTitle(this.tempTreasuryLog.cat, this.treasuryLog.subcat), [Validators.required]);
+    // forms para inputs autocomplete
 
-    // criar array com os títulos das categorias/subcategorias
-    this.catFormOptions = [];
-    this.subCatFormOptions = [];
+      this.catForm = new FormControl(this.miscService.getCategoryTitle(this.tempTreasuryLog.cat), [Validators.required]);
+      this.subcatForm = new FormControl({ value: this.miscService.getSubcategoryTitle(this.tempTreasuryLog.cat, this.tempTreasuryLog.subcat), disabled: true }, [Validators.required]);
 
-    [...this._categoriesService.allCategories].forEach(cat => {
-      // adicionar titulo cat
-      this.catFormOptions.push(cat.title)
-
-      // adicionar subtitulos das categorias
-      cat.subcats.forEach(subcat => {
-        this.subCatFormOptions.push(subcat.title)
+      this.miscService.getCategoryObjectFromID(this.tempTreasuryLog.cat).subcats.forEach(subcat => {
+        this.subcategoriesList.push(subcat.title)
       });
+      this.subcatForm.enable();
+
+
+    // opções para select
+    this._categoriesService.allCategories.forEach(cat => {
+      this.categoriesList.push(cat.title)
     });
 
-    // filtros autocompletes
-    this.catFilteredOptions = this.catForm.valueChanges.pipe(
-      startWith(''),
-      map(value => this._catfilter(value || '')),
-    );
-    this.subCatFilteredOptions = this.subCatForm.valueChanges.pipe(
-      startWith(''),
-      map(value => this._subcatfilter(value || '')),
-    );
 
-    // trigger remoto do OnInit
-    this.treasuryService.onInitTrigger.subscribe(myCustomParam => {
-      this.ngOnInit();
-    });
   }
 
   saveTreasurylog(): void {
@@ -132,7 +109,7 @@ export class TreasuryDetailsComponent implements OnInit {
 
       case 'save':
 
-        if (this.catForm.errors || this.subCatForm.errors) { return alert('fuck you') }
+        if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return alert('fuck you') }
 
         this.tempTreasuryLog.date = this.treasuryLogDatepickerForm.value.getTime();
 
@@ -141,12 +118,14 @@ export class TreasuryDetailsComponent implements OnInit {
         const subcats: IFinancialSubCategory[] = cat.subcats;
         const catID: number = cat.id;
         // obter o ID da sub-categoria selecionada
-        const subCatID: number = subcats.filter(subcat => subcat.title === this.subCatForm.value)[0].id
+        const subCatID: number = subcats.filter(subcat => subcat.title === this.subcatForm.value)[0].id
 
         // converter de títilo para o id das catgorias
         this.tempTreasuryLog.cat = catID;
         this.tempTreasuryLog.subcat = subCatID;
         this.treasuryService.recordBorderStyle['background-color'] = catBGColor!;
+
+        this.tempTreasuryLog.value = Number(this.tempTreasuryLog.value.toString().replace(',','.')) // conversão de vírgulas para pontos
         this.saveTreasurylog();
 
         break;
@@ -163,6 +142,19 @@ export class TreasuryDetailsComponent implements OnInit {
       enterAnimationDuration,
       exitAnimationDuration,
     });
+  }
+
+  categorySelectChanged(event: MatSelectChange): void {
+    const categoryID = this.miscService.getCategoryIDFromTitle(event.value);
+    const category = this._categoriesService.allCategories.filter(cat => cat.id === categoryID)[0];
+
+    this.subcategoriesList = [];
+    category.subcats.forEach(subcat => {
+      this.subcategoriesList.push(subcat.title)
+    });
+
+    this.subcatForm.setValue('')
+    this.subcategoriesList.length > 0 ? this.subcatForm.enable() : this.subcatForm.disable();
   }
 
 }

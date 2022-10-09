@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subject, throwError } from 'rxjs';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
+import { MiscService, TimerService } from 'src/assets/services/misc.service';
 
 type RecordBorderStyle = {
   "background-color": string
@@ -34,7 +35,7 @@ export class CategoriesService {
   // boolean para verificar se é duplicada ou é criada nova categoria
   cloningCategory: Boolean;
 
-  constructor(private _http: HttpClient, private _router: Router) {
+  constructor(private _http: HttpClient, private _router: Router, private _timerService:TimerService) {
     this.loadingComplete = false;
     this.cloningCategory = false;
     this.fetchCategories(); // vai buscar à bd as categorias e movimentos existentes. quando concluído, passa o loadingComplete = true
@@ -73,7 +74,8 @@ export class CategoriesService {
 
           document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
 
-          const timer = setTimeout(navi.bind(null, this._router), 1000);
+          // clearTimeout(this._timerService.timer);
+          this._timerService.timer = setTimeout(navi.bind(null, this._router), 1000);
           function navi(router: Router): void {
             // fechar a modal
             const ele = document.querySelector('.cdk-overlay-backdrop') as HTMLElement;
@@ -114,7 +116,8 @@ export class CategoriesService {
 
     document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight')
 
-    const timer = setTimeout(navi.bind(null, this._router), 1000)
+    // clearTimeout(this._timerService.timer);
+    this._timerService.timer = setTimeout(navi.bind(null, this._router), 1000)
     function navi(router: Router): void {
       router.navigate(['/fi/cats'])
     }

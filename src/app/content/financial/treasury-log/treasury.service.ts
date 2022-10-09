@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, Subject, throwError } from 'rxjs';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
+import { MiscService, TimerService } from 'src/assets/services/misc.service';
 import { CategoriesService } from '../categories/categories.service';
 
 type RecordBorderStyle = {
@@ -35,7 +36,7 @@ export class TreasuryService {
   cloningTreasuryLog: Boolean;
 
 
-  constructor(private _http: HttpClient, private _router: Router, private _categoriesService: CategoriesService) {
+  constructor(private _http: HttpClient, private _router: Router, private _categoriesService: CategoriesService,private _timerService:TimerService) {
     this.loadingComplete = false;
     this.fetchTreasuryLog();
     this.onInitTrigger = new Subject<any>();
@@ -74,7 +75,8 @@ export class TreasuryService {
 
           document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
 
-          const timer = setTimeout(navi.bind(null, this._router), 1000);
+          // clearTimeout(this._timerService.timer);
+          this._timerService.timer = setTimeout(navi.bind(null, this._router), 1000);
           function navi(router: Router): void {
             // fecha a modal
             const ele = document.querySelector('.cdk-overlay-backdrop') as HTMLElement;
@@ -113,7 +115,8 @@ export class TreasuryService {
 
     document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight')
 
-    const timer = setTimeout(navi.bind(null, this._router), 1000)
+    // clearTimeout(this._timerService.timer);
+    this._timerService.timer = setTimeout(navi.bind(null, this._router), 1000)
     function navi(router: Router): void {
       router.navigate(['/fi/tlogs'])
     }

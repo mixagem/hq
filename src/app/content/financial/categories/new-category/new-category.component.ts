@@ -4,6 +4,7 @@ import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 import { CategoriesService } from '../categories.service';
 import { Router } from '@angular/router';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
+import { MiscService, TimerService } from 'src/assets/services/misc.service';
 
 // objectos default para modo de introdução de nova categoria/subcategorias
 const DEFAULT_FICATEGORY: IFinancialCategory = {
@@ -36,7 +37,7 @@ export class NewCategoryComponent implements OnInit {
   // categoria utilizada no modo  de introdução
   tempFiCategory: IFinancialCategory;
 
-  constructor(public categoriesService: CategoriesService, private _http: HttpClient, private _router: Router) { }
+  constructor(public categoriesService: CategoriesService, private _http: HttpClient, private _router: Router, private _timerService:TimerService) { }
 
   ngOnInit(): void {
 
@@ -65,7 +66,8 @@ export class NewCategoryComponent implements OnInit {
         // fechar a gaveta
         document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight')
 
-        const timer = setTimeout(navi.bind(null, this._router), 1000)
+        // clearTimeout(this._timerService.timer);
+        this._timerService.timer = setTimeout(navi.bind(null, this._router), 1000)
         function navi(router: Router): void {
           router.navigate(['/fi/cats'])
         }

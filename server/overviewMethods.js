@@ -258,7 +258,7 @@ export function genDailySumAcomEvo(req, res) {
 
       monthlyMovments.forEach(movement => { if ((new Date(movement.date).getDate()) === i + 1) { movement.type === 'expense' ? dailysum -= movement.value : dailysum += movement.value } });
 
-      dailySumAcomEvo.push(dailysum);
+      dailySumAcomEvo.push(Number(dailysum).toFixed(2));
 
     }
 

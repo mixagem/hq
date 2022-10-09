@@ -7,7 +7,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { TreasuryService } from '../treasury.service';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
 import { MatDatepicker } from '@angular/material/datepicker';
-import { MiscService } from 'src/assets/services/misc.service';
+import { MiscService, TimerService } from 'src/assets/services/misc.service';
 import { MatSelectChange } from '@angular/material/select';
 
 const DEFAULT_TLOG: ITreasuryLog = {
@@ -45,7 +45,7 @@ export class NewTreasuryLogComponent implements OnInit {
   subcategoriesList: string[] = [];
 
 
-  constructor(private _miscService: MiscService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, private _route: ActivatedRoute, public _router: Router, public _http: HttpClient) { }
+  constructor(public miscService: MiscService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, private _route: ActivatedRoute, public _router: Router, public _http: HttpClient, private _timerService:TimerService) { }
 
   ngOnInit(): void {
 
@@ -62,10 +62,10 @@ export class NewTreasuryLogComponent implements OnInit {
 
     // forms para inputs autocomplete
     if (this.treasuryService.cloningTreasuryLog) {
-      this.catForm = new FormControl(this._miscService.getCategoryTitle(this.tempTreasuryLog.cat), [Validators.required]);
-      this.subcatForm = new FormControl({ value: this._miscService.getSubcategoryTitle(this.tempTreasuryLog.cat, this.tempTreasuryLog.subcat), disabled: true }, [Validators.required]);
+      this.catForm = new FormControl(this.miscService.getCategoryTitle(this.tempTreasuryLog.cat), [Validators.required]);
+      this.subcatForm = new FormControl({ value: this.miscService.getSubcategoryTitle(this.tempTreasuryLog.cat, this.tempTreasuryLog.subcat), disabled: true }, [Validators.required]);
 
-      this._miscService.getCategoryObjectFromID(this.tempTreasuryLog.cat).subcats.forEach(subcat => {
+      this.miscService.getCategoryObjectFromID(this.tempTreasuryLog.cat).subcats.forEach(subcat => {
         this.subcategoriesList.push(subcat.title)
       });
       this.subcatForm.enable();
@@ -90,7 +90,7 @@ export class NewTreasuryLogComponent implements OnInit {
     switch (action) {
 
       case 'save':
-        if (this.catForm.errors || this.subcatForm.errors) { return alert('fuck you') }
+        if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return alert('fuck you') }
 
         // converter a data do picker para guardar da bd
         this.tempTreasuryLog.date = this.treasuryLogDatepickerForm.value.getTime();
@@ -109,6 +109,7 @@ export class NewTreasuryLogComponent implements OnInit {
         const subCatID: number = subCats!.filter(subcat => subcat.title === this.subcatForm.value)[0].id;
 
 
+        this.tempTreasuryLog.value = Number(this.tempTreasuryLog.value.toString().replace(',','.')) // conversão de vírgulas para pontos
         // converter de títilo para o id das catgorias
         this.tempTreasuryLog.cat = catID!;
         this.tempTreasuryLog.subcat = subCatID!;
@@ -120,7 +121,8 @@ export class NewTreasuryLogComponent implements OnInit {
 
       case 'end': default:
         document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
-        const timer = setTimeout(navi.bind(null, this._router), 1000) // tempo da animação antes de redirecionar
+        // clearTimeout(this._timerService.timer);
+        this._timerService.timer = setTimeout(navi.bind(null, this._router), 1000) // tempo da animação antes de redirecionar
         function navi(router: Router): void {
           router.navigate(['/fi/tlogs'])
         }
@@ -139,7 +141,7 @@ export class NewTreasuryLogComponent implements OnInit {
   }
 
   categorySelectChanged(event: MatSelectChange): void {
-    const categoryID = this._miscService.getCategoryIDFromTitle(event.value);
+    const categoryID = this.miscService.getCategoryIDFromTitle(event.value);
     const category = this.categoriesService.allCategories.filter(cat => cat.id === categoryID)[0];
 
     this.subcategoriesList = [];
@@ -147,7 +149,8 @@ export class NewTreasuryLogComponent implements OnInit {
       this.subcategoriesList.push(subcat.title)
     });
 
-    this.subcatForm.enable();
+    this.subcatForm.setValue('')
+    this.subcategoriesList.length > 0 ? this.subcatForm.enable() : this.subcatForm.disable();
   }
 
 

@@ -70,14 +70,11 @@
           <form class="mhq-cats-form">
             <mat-form-field>
               <mat-label>Categoria</mat-label>
-              <!-- <input type="text" matInput [formControl]="catForm" [matAutocomplete]="cat">
-              <mat-autocomplete autoActiveFirstOption #cat="matAutocomplete"  >
-                <mat-option *ngFor="let option of catFilteredOptions | async" [value]="option">
-                  {{option}}
-                </mat-option>
-              </mat-autocomplete> -->
-              <mat-select [formControl]="catForm" (selectionChange)="categorySelectChanged($event)">
-                <mat-option *ngFor="let option of categoriesList" [value]="option">
+              <mat-select [formControl]="catForm" (selectionChange)="categorySelectChanged($event)" >
+                <mat-select-trigger>{{catForm.value}}</mat-select-trigger>
+                <mat-option *ngFor="let option of categoriesList" [value]="option"
+                  [style]="miscService.getCatStyle(miscService.getCategoryIDFromTitle(option))">
+                  <mat-icon>{{miscService.getCategoryIcon(miscService.getCategoryIDFromTitle(option))}}</mat-icon>
                   {{option}}
                 </mat-option>
               </mat-select>
@@ -92,12 +89,6 @@
           <form class="mhq-subcats-form">
             <mat-form-field>
               <mat-label>Sub categoria</mat-label>
-              <!-- <input type="text" matInput [formControl]="subCatForm" [matAutocomplete]="subcat">
-              <mat-autocomplete autoActiveFirstOption #subcat="matAutocomplete"  >
-                <mat-option *ngFor="let option of subCatFilteredOptions | async" [value]="option">
-                  {{option}}
-                </mat-option>
-              </mat-autocomplete> -->
               <mat-select [formControl]="subcatForm">
                 <mat-option *ngFor="let option of subcategoriesList" [value]="option">
                   {{option}}

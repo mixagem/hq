@@ -6,23 +6,22 @@
       todo
     </h1>
     ordem operações:<br>
-    1. mega code review (alterar nome do financial service para categories, alterar nome variáveis, adicionar tipo de retorno, comentário, fix no casts dos dados [onde uso Number() e == ])<br>
-    1.2 limpeza de foreach -> criar enums? para catid/título | catid/styles | subcatid/titulo | subcatid/styles <br>
-    1.2.1 mensagens erro autocomplete<br>
-    1.3. concluír "no rows bro" na tabela de subcategoria e modal detalhes overview<br>
-    1.4 server review<br>
-    2. css review<br>
-      2.1 inclui pipes para valores negativos (simbolo euro no lado direito, separador dos milhares em . em vez de ,)<br>
-    3. terminar desenho overview totais + modal<br>
-    4. adicionar ação para novo movimento de tesouraria no ecrã do overview (gaveta igual ao ecra de movimentos de tesouraria)<br>
-    5. desenvolver picker mÊs/ano para a vista diária<br>
-    6. fix acesso direto via link a um registo (ainda n carregou)<br>
-    6.1 desenvolver navegação da modal de detalhes do overview para o ecrã de movimentos<br>
-    7. desenvolver ordenação de categorias<br>
-    8. desenvolver ordenação de subcategorias<br>
-    9. orçamento sub-categoria, o que fazer disto<br>
-    10. parar o timer ao navegaar para um outro ecrã<br>
-    11. recorrencia movimentos tesouraria<br>
+    1. mega code review (alterar nomes de variáveis e funções, adicionar tipo de retorno às funções, comentar código<br>
+    fix no casts dos dados [onde uso Number(), toString, "as" qualquer coisa e == ])<br>
+    refractor das funções do misc (uniformizar tudo)<br>
+    2. concluír tabelas de sub-categorias: substitir "no rows bro"<br>
+    3. concluir modal detalhes overview: substituir "no moves bro"<br>
+    4 server review<br>
+    5. css review<br>
+      5.1 inclui pipes para valores negativos (simbolo euro no lado direito, separador dos milhares em . em vez de ,)<br>
+    6. terminar desenho overview totais + modal<br>
+    7. adicionar ação para novo movimento de tesouraria no ecrã do overview (gaveta igual ao ecra de movimentos de tesouraria)<br>
+    8. desenvolver picker mÊs/ano para a vista diária<br>
+    9. fix acesso direto via link a um registo (ainda n carregou)<br>
+    10. desenvolver ordenação de categorias<br>
+    11. desenvolver ordenação de subcategorias<br>
+    12. orçamento sub-categoria -> só vai ser utilizado na altura das analises, graficos e alertas<br>
+    13. recorrencia movimentos tesouraria<br>
 
 
 
@@ -34,12 +33,10 @@ tabela sub-categorias modo edição categoria
 
 
 selects
-   -> mensagem de erro quando falta categoria
-   -> adicionar os estilos da categoria ao select
+   -> mensagem de erro quando falta categoria (atualmente manda-te só granda fuck you)
 
 
 inputs valor
-    -> do valo recebido do input, converter virgulas em pontos
     -> fazer regex com validador quando são utilizados mais que 1 "," ou "." -> dá erro e informa que só deve só utilizado 1 caracter para separar decimais
     -> css: trocar pontos pelas virgulas
 
@@ -47,9 +44,8 @@ labels valor
     -> trocar pontos por vírgulas (fazer o meu próprio pipe se for precizo, já me tou a chatear com esses mambos default) e adicionar o símbolo do euro à direita
                                            |-> neste pipe, adiconar o símbolo "-" caso o valor seja de expense ===> este pipe só serve para ser utilizado nas tabelas, nao mexer na vista excel
 
-
-bug do timer
-    -> terminar o timer ao fazer navegação
+bug paginador tabelas em acesso direito (via link)
+adicionar acesso direto aos registos
 
 
 
@@ -61,10 +57,7 @@ bug do timer
       <li>ngx scrollbars</li></ul>
     overview<br>
     <ol>
-      <li>desenvolver modal para detalhes diários da categoria/subcategoria/total</li>
       <li>Ação para adicionar movimentos</li>
-      <li>adicionar snapshots com o saldo acomuado no inicio do mes e no final</li>
-      <li>afinar vista diária</li>
       <li>desenvolver vista mensal</li>
       <li>desenvolver vista anual</li>
     </ol>

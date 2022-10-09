@@ -14,6 +14,7 @@ import { TreasuryLogComponent } from 'src/app/content/financial/treasury-log/tre
 import { TreasuryDetailsComponent, DeleteTreasuryLogConfirmationModal } from 'src/app/content/financial/treasury-log/treasury-details/treasury-details.component';
 import { NewTreasuryLogComponent } from 'src/app/content/financial/treasury-log/new-treasury-log/new-treasury-log.component';
 import { NgScrollbarModule } from 'ngx-scrollbar';
+import { GuitaPipe } from '../pipes/guita.pipe';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
     TreasuryDetailsComponent,
     DeleteTreasuryLogConfirmationModal,
     NewTreasuryLogComponent,
-    OverviewDetailsModal
+    OverviewDetailsModal,
+    GuitaPipe
 
   ],
   imports: [
@@ -49,7 +51,8 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
     TreasuryDetailsComponent,
     DeleteTreasuryLogConfirmationModal,
     NewTreasuryLogComponent,
-    OverviewDetailsModal
+    OverviewDetailsModal,
+    GuitaPipe
 
   ]
 })

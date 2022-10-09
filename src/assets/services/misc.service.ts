@@ -3,6 +3,16 @@ import { CategoriesService } from 'src/app/content/financial/categories/categori
 import { IFinancialCategory } from '../interfaces/ifinancial-category';
 import { IFinancialSubCategory } from '../interfaces/ifinancial-sub-category';
 
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class TimerService {
+  timer: any;
+}
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -82,3 +92,5 @@ export class MiscService {
     return filteredCategory;
   }
 }
+
+

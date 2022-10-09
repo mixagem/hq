@@ -4,13 +4,16 @@
     <div class="mhq-quickaction-close" (click)="treasuryService.closeDetails()">
       <mat-icon>close</mat-icon>
     </div>
-    <div *ngIf="!editingMode" class="mhq-quickaction-default" (click)="editingTreasuryLogRecordActions('start')"><button mat-icon-button>
+    <div *ngIf="!editingMode" class="mhq-quickaction-default" (click)="editingTreasuryLogRecordActions('start')"><button
+        mat-icon-button>
         <mat-icon>edit</mat-icon>
       </button></div>
-    <div *ngIf="editingMode" class="mhq-quickaction-save" (click)="editingTreasuryLogRecordActions('save')"><button mat-icon-button>
+    <div *ngIf="editingMode" class="mhq-quickaction-save" (click)="editingTreasuryLogRecordActions('save')"><button
+        mat-icon-button>
         <mat-icon>save</mat-icon>
       </button></div>
-    <div *ngIf="editingMode" class="mhq-quickaction-delete" (click)="editingTreasuryLogRecordActions('end')"><button mat-icon-button>
+    <div *ngIf="editingMode" class="mhq-quickaction-delete" (click)="editingTreasuryLogRecordActions('end')"><button
+        mat-icon-button>
         <mat-icon>not_interested</mat-icon>
       </button></div>
 
@@ -30,7 +33,9 @@
   <div class="mhq-categories-drawer-right">
     <div class="mhq-wrapper-row" *ngIf="!editingMode">
 
-      <h1><mat-icon>info_outline</mat-icon>Detalhes</h1>
+      <h1>
+        <mat-icon>info_outline</mat-icon>Detalhes
+      </h1>
 
       <div class="mhq-row">
 
@@ -93,7 +98,7 @@
         <div class="mhq-col-3">
           <mat-form-field appearance="fill">
             <mat-label>Valor</mat-label>
-            <input matInput disabled [value]="treasuryLog.value| currency:'EUR'">
+            <input matInput disabled [value]="treasuryLog | guita">
           </mat-form-field>
         </div>
       </div>
@@ -102,7 +107,9 @@
 
     <div class="mhq-wrapper-row" *ngIf="editingMode">
 
-      <h1><mat-icon>info_outline</mat-icon>Detalhes</h1>
+      <h1>
+        <mat-icon>info_outline</mat-icon>Detalhes
+      </h1>
 
       <div class="mhq-row">
 
@@ -150,12 +157,14 @@
           <form class="mhq-cats-form">
             <mat-form-field>
               <mat-label>Categoria</mat-label>
-              <input type="text" matInput [formControl]="catForm" [matAutocomplete]="cat">
-              <mat-autocomplete autoActiveFirstOption #cat="matAutocomplete" required>
-                <mat-option *ngFor="let option of catFilteredOptions | async" [value]="option">
+              <mat-select [formControl]="catForm" (selectionChange)="categorySelectChanged($event)">
+                <mat-select-trigger>{{catForm.value}}</mat-select-trigger>
+                <mat-option *ngFor="let option of categoriesList" [value]="option"
+                  [style]="miscService.getCatStyle(miscService.getCategoryIDFromTitle(option))">
+                  <mat-icon>{{miscService.getCategoryIcon(miscService.getCategoryIDFromTitle(option))}}</mat-icon>
                   {{option}}
                 </mat-option>
-              </mat-autocomplete>
+              </mat-select>
             </mat-form-field>
           </form>
 
@@ -166,13 +175,12 @@
 
           <form class="mhq-subcats-form">
             <mat-form-field>
-              <mat-label>Categoria</mat-label>
-              <input type="text" matInput [formControl]="subCatForm" [matAutocomplete]="subcat">
-              <mat-autocomplete autoActiveFirstOption #subcat="matAutocomplete" required>
-                <mat-option *ngFor="let option of subCatFilteredOptions | async" [value]="option">
+              <mat-label>Sub categoria</mat-label>
+              <mat-select [formControl]="subcatForm">
+                <mat-option *ngFor="let option of subcategoriesList" [value]="option">
                   {{option}}
                 </mat-option>
-              </mat-autocomplete>
+              </mat-select>
             </mat-form-field>
           </form>
 

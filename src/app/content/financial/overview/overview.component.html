@@ -74,96 +74,100 @@
 
       </div>
 
-    <!-- fim categorias -->
+      <!-- fim categorias -->
     </div>
 
     <!-- celulas com valores -->
+    <!-- <div class="mhq-col-10"> -->
     <div class="mhq-col-10">
+      <ng-scrollbar style="width: 100%;height:100%;" [track]="'horizontal'" [position]="'invertX'" [trackClass]="'overview-scrollbar'">
+        <div style="width: auto;overflow-y: visible;">
+          <!-- cabeçalho com dias do mês  -->
+          <div style="display: inline-flex;">
+            <div *ngFor="let null of tempArray let i = index" class="mhq-overview-calendar-days">{{i+1}}</div>
+          </div>
 
-      <!-- cabeçalho com dias do mês  -->
-      <div style="display: flex;">
-        <div *ngFor="let null of tempArray let i = index" class="mhq-overview-calendar-days">{{i+1}}</div>
-      </div>
+          <!-- células income -->
+          <div class="mhq-overview-incomecells-wrapper">
 
-      <!-- células income -->
-      <div class="mhq-overview-incomecells-wrapper">
+            <div *ngFor="let cat of categoriesService.incomeCategories" class="mhq-overview-cat-loop">
 
-        <div *ngFor="let cat of categoriesService.incomeCategories" class="mhq-overview-cat-loop">
+              <div *ngIf="cat.active">
+                <div style="height: 40px;display: flex;margin-top:10px;display:inline-flex">
+                  <div *ngFor="let null of tempArray let i = index" class="mhq-overview-cat-cell mhq-cell-not-empty"
+                    [ngStyle]="{'background-color':cat.bgcolor,'color':cat.textcolor,'opacity':'0.65'}"
+                    (click)="showDailyCatDetails(cat.id,i+1)">
+                    {{getCatValue(i+1,cat.id)}}</div>
+                </div>
 
-          <div *ngIf="cat.active">
-            <div style="height: 40px;display: flex;margin-top:10px;">
-              <div *ngFor="let null of tempArray let i = index" class="mhq-overview-cat-cell mhq-cell-not-empty"
-                [ngStyle]="{'background-color':cat.bgcolor,'color':cat.textcolor,'opacity':'0.65'}"
-                (click)="showDailyCatDetails(cat.id,i+1)">
-                {{getCatValue(i+1,cat.id)}}</div>
-            </div>
-
-            <div *ngFor="let subcat of cat.subcats">
-              <div *ngIf="subcat.active" style="display: flex;">
-                <div *ngFor="let null of tempArray let i = index" class="mhq-overview-subcat-cell"
-                [ngClass]="getSubcatValue(i+1,subcat.id) !== 0 ? 'mhq-cell-not-empty' : 'mhq-empty-cell'"
-                [ngStyle]="getSubcatValue(i+1,subcat.id) === 0 ?
+                <div *ngFor="let subcat of cat.subcats">
+                  <div *ngIf="subcat.active" style="display:inline-flex">
+                    <div *ngFor="let null of tempArray let i = index" class="mhq-overview-subcat-cell"
+                      [ngClass]="getSubcatValue(i+1,subcat.id) !== 0 ? 'mhq-cell-not-empty' : 'mhq-empty-cell'"
+                      [ngStyle]="getSubcatValue(i+1,subcat.id) === 0 ?
                 {'background-color':cat.bgcolor,'color':'transparent','opacity':'0.25'}
                   :{'background-color':cat.bgcolor,'color':cat.textcolor,'opacity':'.9'}"
-                  (click)="showDailySubCatDetails(subcat.id,i+1)">
-                  {{getSubcatValue(i+1,subcat.id)}}</div>
+                      (click)="showDailySubCatDetails(subcat.id,i+1)">
+                      {{getSubcatValue(i+1,subcat.id)}}</div>
+                  </div>
+                </div>
+
               </div>
+
+            </div>
+
+          </div>
+
+          <!-- células expense -->
+          <div class="mhq-overview-expensecells-wrapper">
+
+            <div *ngFor="let cat of categoriesService.expenseCategories" class="mhq-overview-cat-loop">
+
+              <div *ngIf="cat.active" class="mhq-overview-cells-warpper">
+                <div style="display:inline-flex;margin-top:10px;">
+                  <div *ngFor="let null of tempArray let i = index" class="mhq-overview-cat-cell mhq-cell-not-empty"
+                    [ngStyle]="{'background-color':cat.bgcolor,'color':cat.textcolor,'opacity':'0.65'}"
+                    (click)="showDailyCatDetails(cat.id,i+1)">
+                    {{getCatValue(i+1,cat.id)}}</div>
+                </div>
+
+                <div *ngFor="let subcat of cat.subcats">
+                  <div *ngIf="subcat.active" style="display:inline-flex">
+                    <div *ngFor="let null of tempArray let i = index" class="mhq-overview-subcat-cell"
+                      [ngClass]="getSubcatValue(i+1,subcat.id) !== 0 ? 'mhq-cell-not-empty' : 'mhq-empty-cell'"
+                      [ngStyle]="getSubcatValue(i+1,subcat.id) === 0 ?
+                {'background-color':cat.bgcolor,'color':'transparent','opacity':'0.25'}
+                  :{'background-color':cat.bgcolor,'color':cat.textcolor,'opacity':'.9'}"
+                      (click)="showDailySubCatDetails(subcat.id,i+1)">
+                      {{getSubcatValue(i+1,subcat.id)}}</div>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- células totais -->
+          <div class="mhq-overview-totals-cells-wrapper">
+
+            <div style="display:inline-flex">
+              <div *ngFor="let null of tempArray let i = index" class="mhq-overview-cat-cell mhq-cell-not-empty"
+                (click)="showDailySumDetails(i+1)">
+                {{dailySumEvolution[i]}}</div>
+            </div>
+
+            <div style="display:inline-flex">
+              <div *ngFor="let null of tempArray let i = index" class="mhq-overview-cat-cell">
+                {{dailySumAcomEvolution[i]}}</div>
             </div>
 
           </div>
 
         </div>
-
-      </div>
-
-      <!-- células expense -->
-      <div class="mhq-overview-expensecells-wrapper">
-
-        <div *ngFor="let cat of categoriesService.expenseCategories" class="mhq-overview-cat-loop">
-
-          <div *ngIf="cat.active" class="mhq-overview-cells-warpper">
-            <div style="display:flex;margin-top:10px;">
-              <div *ngFor="let null of tempArray let i = index" class="mhq-overview-cat-cell mhq-cell-not-empty"
-                [ngStyle]="{'background-color':cat.bgcolor,'color':cat.textcolor,'opacity':'0.65'}"
-                (click)="showDailyCatDetails(cat.id,i+1)">
-                {{getCatValue(i+1,cat.id)}}</div>
-            </div>
-
-            <div *ngFor="let subcat of cat.subcats">
-              <div *ngIf="subcat.active" style="display: flex;">
-                <div *ngFor="let null of tempArray let i = index" class="mhq-overview-subcat-cell"
-                [ngClass]="getSubcatValue(i+1,subcat.id) !== 0 ? 'mhq-cell-not-empty' : 'mhq-empty-cell'"
-                [ngStyle]="getSubcatValue(i+1,subcat.id) === 0 ?
-                {'background-color':cat.bgcolor,'color':'transparent','opacity':'0.25'}
-                  :{'background-color':cat.bgcolor,'color':cat.textcolor,'opacity':'.9'}"
-                  (click)="showDailySubCatDetails(subcat.id,i+1)">
-                  {{getSubcatValue(i+1,subcat.id)}}</div>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-      <!-- células totais -->
-      <div class="mhq-overview-totals-cells-wrapper">
-
-        <div>
-          <div *ngFor="let null of tempArray let i = index" class="mhq-overview-cat-cell mhq-cell-not-empty"
-            (click)="showDailySumDetails(i+1)">
-            {{dailySumEvolution[i]}}</div>
-        </div>
-
-        <div>
-          <div *ngFor="let null of tempArray let i = index" class="mhq-overview-cat-cell">
-            {{dailySumAcomEvolution[i]}}</div>
-        </div>
-
-      </div>
-
-    <!--  fim celulas com valores -->
+      </ng-scrollbar>
+      <!--  fim celulas com valores -->
     </div>
 
   </div>

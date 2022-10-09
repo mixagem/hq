@@ -10,13 +10,13 @@ table.mhq-overview-modal-category {
 
       &:nth-child(2) {
         width: 50%;
-        padding-left:5px;
+        padding-left: 5px;
       }
 
       &:nth-child(3) {
         width: 15%;
-         text-align: right;
-        padding-right:5px;
+        text-align: right;
+        padding-right: 5px;
       }
       &:nth-child(4) {
         width: 10%;
@@ -39,7 +39,7 @@ table.mhq-overview-modal-category {
       &:nth-child(4) {
         width: 10%;
         text-align: right;
-        mat-icon{
+        mat-icon {
           vertical-align: middle;
         }
       }
@@ -60,7 +60,7 @@ table.mhq-overview-modal-subcategory {
       &:nth-child(2) {
         width: 20%;
         text-align: right;
-        padding-right:5px;
+        padding-right: 5px;
       }
 
       &:nth-child(3) {
@@ -82,7 +82,7 @@ table.mhq-overview-modal-subcategory {
       &:nth-child(3) {
         width: 10%;
         text-align: right;
-        mat-icon{
+        mat-icon {
           vertical-align: middle;
         }
       }
@@ -90,34 +90,30 @@ table.mhq-overview-modal-subcategory {
   }
 }
 
-
 table.mhq-overview-modal-daily {
   width: 100%;
 
   tr {
     th {
-
       &:nth-child(1) {
         width: 10%;
         text-align: center;
       }
 
-
-
       &:nth-child(2) {
         width: 20%;
-        padding-left:5px;
+        padding-left: 5px;
       }
 
       &:nth-child(3) {
         width: 25%;
-        padding-left:5px;
+        padding-left: 5px;
       }
 
       &:nth-child(4) {
         width: 15%;
         text-align: right;
-        padding-right:5px;
+        padding-right: 5px;
       }
 
       &:nth-child(5) {
@@ -128,17 +124,14 @@ table.mhq-overview-modal-daily {
     td {
       &:nth-child(1) {
         width: 10%;
-        text-align:center;
-        background-clip: content-box!important;
+        text-align: center;
+        background-clip: content-box !important;
         padding-left: 0px;
-        padding-right:20px;
-        mat-icon{
+        padding-right: 20px;
+        mat-icon {
           vertical-align: middle;
         }
-
       }
-
-
 
       &:nth-child(2) {
         width: 20%;
@@ -156,7 +149,7 @@ table.mhq-overview-modal-daily {
       &:nth-child(5) {
         width: 10%;
         text-align: right;
-        mat-icon{
+        mat-icon {
           vertical-align: middle;
         }
       }
@@ -164,6 +157,13 @@ table.mhq-overview-modal-daily {
   }
 }
 
-.mhq-overview-modal-link{
+.mhq-overview-modal-link {
   cursor: pointer;
 }
+
+.mhq-overview-cat-loop {
+  .rendered-cat:last-of-type {
+    border-bottom-left-radius: 15px;
+  }
+}
+

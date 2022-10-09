@@ -1,5 +1,5 @@
 .mhq-overview-calendar-days {
-  width: 45px;
+  width: 60px;
   height: 40px;
   border-radius: 5px;
   display: flex;
@@ -59,7 +59,7 @@
 
 .mhq-overview-cat-cell,
 .mhq-overview-subcat-cell {
-  width: 45px;
+  width: 60px;
   border-radius: 10px;
   box-sizing: border-box;
   background-clip: content-box;
@@ -125,4 +125,18 @@
 
 .mhq-empty-cell{
   pointer-events: none;
+}
+
+::ng-deep .overview-scrollbar {
+  background:var(--mhq-waikiki-color-1)!important;
+  padding: 2px 5px!important;
+
+
+  div {
+    background:#fff!important;
+  }
+}
+
+::ng-deep .scrollbar-control {
+  top: 40px!important;
 }
