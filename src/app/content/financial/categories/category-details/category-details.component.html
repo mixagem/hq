@@ -35,7 +35,9 @@
 
     <div class="mhq-wrapper-row" *ngIf="!editingMode">
       <h1>
-        <mat-icon>info_outline</mat-icon>Detalhes
+        <div>
+          <mat-icon>info_outline</mat-icon>Detalhes
+        </div>
       </h1>
       <div class="mhq-row">
         <div class="mhq-col-1">
@@ -85,10 +87,11 @@
       </div>
     </div>
 
-
     <div class="mhq-wrapper-row" *ngIf="editingMode">
       <h1>
-        <mat-icon>info_outline</mat-icon>Detalhes
+        <div>
+          <mat-icon>info_outline</mat-icon>Detalhes
+        </div>
       </h1>
       <div class="mhq-row">
         <div class="mhq-col-1">
@@ -129,8 +132,7 @@
             <mat-label>Cor etiqueta</mat-label>
             <input matInput [cpPosition]="'bottom'" [cpOutputFormat]="'rgba'" [cpAlphaChannel]="'disabled'"
               [cpPositionOffset]="'5%'" [cpPositionRelativeToArrow]="true" [cpCancelButton]="true" [cpOKButton]="true"
-              [cpSaveClickOutside]="true" [(colorPicker)]="tempFiCategory.bgcolor"
-              [(ngModel)]="tempFiCategory.bgcolor">
+              [cpSaveClickOutside]="true" [(colorPicker)]="tempFiCategory.bgcolor" [(ngModel)]="tempFiCategory.bgcolor">
           </mat-form-field>
         </div>
         <div class="mhq-col-4">
@@ -142,52 +144,59 @@
               [(ngModel)]="tempFiCategory.textcolor">
           </mat-form-field>
         </div>
-
       </div>
     </div>
 
-
     <div class="mhq-wrapper-row">
       <h1>
-        <mat-icon>low_priority</mat-icon>Sub-categorias
+        <div>
+          <mat-icon>low_priority</mat-icon>Sub-categorias
+        </div>
       </h1>
 
-      <div *ngIf="fiCategory.subcats.length===0 && !editingMode">no rows.</div>
+      <div *ngIf="fiCategory.subcats.length===0 && !editingMode" class="mhq-row mhq-no-subcategories">
+        <div>
+          <mat-icon>data_array</mat-icon>
+        </div>
+        <p>Não existem sub-categorias configuradas para a categoria
+          <span [style]="miscService.getCategoryStyles(fiCategory.id)">{{fiCategory.title}}</span>
+        </p>
+      </div>
 
-      <div *ngIf="fiCategory.subcats.length===0 && editingMode">no rows. <span (click)="attachSubcategory()">click to
-          add</span></div>
+      <div *ngIf="tempFiCategory.subcats.length===0 && editingMode" class="mhq-row mhq-no-subcategories">
+        <div (click)="attachSubcategory()" class="mhq-add-subcategory">
+          <mat-icon>add</mat-icon>
+        </div>
+        <p>Carrega para adicionar uma nova sub-categoria</p>
+      </div>
 
-          <table *ngIf="fiCategory.subcats.length>0 && !editingMode">
-            <thead>
-              <tr>
-                <th>Título</th>
-                <th>Orçamento</th>
-                <th>Ativa</th>
-                <th></th>
-              </tr>
-            </thead>
-          </table>
+      <table *ngIf="fiCategory.subcats.length>0 && !editingMode">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Orçamento</th>
+            <th>Ativa</th>
+
+          </tr>
+        </thead>
+      </table>
+
       <ng-scrollbar *ngIf="fiCategory.subcats.length>0 && !editingMode" style="height: 100%;width: 100%;">
         <table>
-
-
           <tbody>
             <tr *ngFor="let subcat of fiCategory.subcats">
               <td>
                 <div class="mhq-mat-inputs-margin">{{subcat.title}}</div>
               </td>
               <td>
-                <div class="mhq-mat-inputs-margin">{{subcat.budget}}</div>
+                <div class="mhq-mat-inputs-margin">{{subcat.budget | guitaSimplex}}</div>
               </td>
               <td>
                 <div class="mhq-mat-inputs-margin">
                   <mat-checkbox color="primary" disabled [checked]="subcat.active"></mat-checkbox>
                 </div>
               </td>
-              <td>
-              </td>
             </tr>
-
           </tbody>
         </table>
       </ng-scrollbar>
@@ -205,22 +214,15 @@
 
       <ng-scrollbar *ngIf="tempFiCategory.subcats.length>0 && editingMode" style="height: 100%;width: 100%;">
         <table>
-
-
           <tbody>
-
-            <!-- content -->
-
             <tr *ngFor="let tempsubcat of tempFiCategory.subcats">
               <td>
                 <mat-form-field appearance="fill">
-                  <mat-label>Título</mat-label>
                   <input matInput [(ngModel)]="tempsubcat.title">
                 </mat-form-field>
               </td>
               <td>
                 <mat-form-field appearance="fill">
-                  <mat-label>Orçamento</mat-label>
                   <input matInput [(ngModel)]="tempsubcat.budget">
                 </mat-form-field>
               </td>
@@ -240,11 +242,10 @@
             <tr>
               <td colspan="6" (click)="attachSubcategory()">add-shiet bro</td>
             </tr>
-
           </tbody>
-
         </table>
       </ng-scrollbar>
+
     </div>
 
   </div>

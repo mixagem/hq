@@ -6,10 +6,10 @@ a {
 }
 
 .mhq-menu-entry.toggle-menu-entry {
-  background-color: var(--mhq-waikiki-color-1);
+  background-color: var(--mhq-waikiki-pcolor-1);
 
   a {
-    background-color: var(--mhq-waikiki-color-3);
+    background-color: var(--mhq-waikiki-acolor-1);
     color: var(--mhq-light-text);
     border-top-right-radius: 15px;
     height: 56px !important;
@@ -17,7 +17,7 @@ a {
 }
 
 .mhq-menu-container-closed {
-  background-color: var(--mhq-waikiki-color-4);
+  background-color: var(--mhq-waikiki-acolor-2);
   flex-direction: column;
   box-sizing: border-box;
   display: flex;
@@ -42,7 +42,7 @@ a {
 
     .tooltiptext {
       color: var(--mhq-dark-text);
-      background-color: var(--mhq-waikiki-color-4);
+      background-color: var(--mhq-waikiki-acolor-2);
       top: 7px;
       left: 105%;
       visibility: hidden;
@@ -75,7 +75,7 @@ a {
 }
 
 .mhq-menu-container-open {
-  background-color: var(--mhq-waikiki-color-4);
+  background-color: var(--mhq-waikiki-acolor-2);
   flex-direction: column;
   box-sizing: border-box;
   display: flex;
@@ -113,7 +113,7 @@ a {
 
   .toggle-route-entry {
     a {
-      background-color: var(--mhq-waikiki-color-4);
+      background-color: var(--mhq-waikiki-acolor-2);
       color: var(--mhq-dark-text);
 
       &:hover {

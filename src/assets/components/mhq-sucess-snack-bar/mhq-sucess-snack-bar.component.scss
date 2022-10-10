@@ -1,6 +1,7 @@
 ::ng-deep .mat-snack-bar-container {
   background: var(--mhq-waikiki-sucess);
   color: var(--mhq-waikiki-dark-text);
+  
   .mhq-snackbar-wrapper {
     display: flex;
     align-items: center;
@@ -13,10 +14,8 @@
       margin: 0;
     }
 
-
     span {
       font-weight: 600;
-      color: var(--mhq-waikiki-color-0);
     }
   }
 }

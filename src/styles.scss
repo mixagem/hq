@@ -24,14 +24,13 @@ body {
   --mhq-dark-bg: #000;
   --mhq-light-text: #fff;
   --mhq-light-bg: #fff;
-  --mhq-waikiki-danger: #dd454d;
-  --mhq-waikiki-sucess: #6fd976;
-  --mhq-waikiki-color-0: #673ab7;
-  --mhq-waikiki-color-1: #6194f3;
-  --mhq-waikiki-color-2: #8caff0;
-  --mhq-waikiki-color-3: #ff8f00;
-  --mhq-waikiki-color-4: #ffc266;
-  --mhq-waikiki-color-5: #fce3bf;
+  --mhq-waikiki-danger: #D32F2F;
+  --mhq-waikiki-sucess: #9CCC65;
+  --mhq-waikiki-pcolor-1: #00B0FF;
+  --mhq-waikiki-acolor-1: #ff8f00;
+  --mhq-waikiki-acolor-2: #ffc266;
+  --mhq-waikiki-acolor-3: #fce3bf;
+  --mhq-waikiki-color-6: rgba(103, 58, 183,.50);
 }
 
 .hidden {
@@ -112,7 +111,7 @@ body {
     font-size: 36px;
   }
   h1 {
-    color: var(--mhq-waikiki-color-1);
+    color: var(--mhq-waikiki-pcolor-1);
 
   }
 }

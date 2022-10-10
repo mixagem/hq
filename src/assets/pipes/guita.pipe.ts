@@ -27,3 +27,29 @@ export class GuitaPipe implements PipeTransform {
   }
 
 }
+
+
+
+
+@Pipe({
+  name: 'guitaSimplex'
+})
+export class GuitaSimplexPipe implements PipeTransform {
+
+  transform(value:number): string {
+
+
+    // dividir o número no separador decimal
+    let transformedValue = value.toString().split('.');
+
+    // caso não exista parte decimal, default = .00
+    if (transformedValue[1] === undefined) { transformedValue[1] = '00'; }
+
+    // caso exista parte decimal, mas só tenha 1 número (por exemplo 23,3€)
+    if (transformedValue[1].length === 1) { transformedValue[1] = transformedValue[1] + '0'; }
+
+    return transformedValue[0] + ',' + transformedValue[1] + ' €';
+
+  }
+
+}

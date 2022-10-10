@@ -19,7 +19,11 @@
   <div class="mhq-categories-drawer-right">
 
     <div class="mhq-wrapper-row">
-      <h1><mat-icon>info_outline</mat-icon>Detalhes</h1>
+      <h1>
+        <div>
+          <mat-icon>info_outline</mat-icon>Detalhes
+        </div>
+      </h1>
       <div class="mhq-row">
         <div class="mhq-col-1">
           <mat-form-field appearance="fill">
@@ -64,7 +68,8 @@
             <mat-label>Cor texto etiqueta</mat-label>
             <input matInput [cpPosition]="'bottom'" [cpOutputFormat]="'rgba'" [cpAlphaChannel]="'disabled'"
               [cpPositionOffset]="'5%'" [cpPositionRelativeToArrow]="true" [cpCancelButton]="true" [cpOKButton]="true"
-              [cpSaveClickOutside]="true" [(colorPicker)]="tempFiCategory.textcolor" [(ngModel)]="tempFiCategory.textcolor">
+              [cpSaveClickOutside]="true" [(colorPicker)]="tempFiCategory.textcolor"
+              [(ngModel)]="tempFiCategory.textcolor">
           </mat-form-field>
         </div>
 
@@ -73,10 +78,24 @@
 
 
     <div class="mhq-wrapper-row">
-      <h1><mat-icon>low_priority</mat-icon>Sub-categorias</h1>
+      <h1>
+        <div>
+          <mat-icon>low_priority</mat-icon>Sub-categorias
+        </div>
+      </h1>
 
-      <div *ngIf="tempFiCategory.subcats.length===0">no rows. <span (click)="createSubcategory()">click to
-          add</span></div>
+      <div *ngIf="tempFiCategory.subcats.length===0" class="mhq-row mhq-no-subcategories">
+
+        <div (click)="createSubcategory()" class="mhq-add-subcategory">
+          <mat-icon>add</mat-icon>
+        </div>
+        <p>Carrega para adicionar uma nova sub-categoria</p>
+
+        <!-- o rows. <span (click)="createSubcategory()">click to
+          add</span> -->
+
+
+      </div>
 
       <table *ngIf="tempFiCategory.subcats.length>0">
         <thead>
@@ -87,33 +106,40 @@
             <th></th>
           </tr>
         </thead>
-        <tbody>
-          <tr *ngFor="let tempsubcat of tempFiCategory.subcats; let i = index;">
-            <td>
-              <mat-form-field appearance="fill">
-                <mat-label>Título</mat-label>
-                <input matInput [(ngModel)]="tempsubcat.title">
-              </mat-form-field>
-            </td>
-            <td>
-              <mat-form-field appearance="fill">
-                <mat-label>Orçamento</mat-label>
-                <input matInput [(ngModel)]="tempsubcat.budget">
-              </mat-form-field>
-            </td>
-            <td>
-              <div class="mhq-mat-inputs-margin"><mat-checkbox color="primary" [(ngModel)]="tempsubcat.active"></mat-checkbox></div>
-            </td>
-            <td (click)="deleteSubcategory(i)"><div class="mhq-mat-inputs-margin">
-              <button mat-icon-button><mat-icon>delete</mat-icon></button>
-            </div></td>
-          </tr>
-          <tr>
-            <td colspan="6" (click)="createSubcategory()">add-shiet bro</td>
-          </tr>
-        </tbody>
       </table>
-
+      <ng-scrollbar *ngIf="tempFiCategory.subcats.length>0" style="height: 100%;width: 100%;">
+        <table>
+          <tbody>
+            <tr *ngFor="let tempsubcat of tempFiCategory.subcats; let i = index;">
+              <td>
+                <mat-form-field appearance="fill">
+                  <input matInput [(ngModel)]="tempsubcat.title">
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field appearance="fill">
+                  <input matInput [(ngModel)]="tempsubcat.budget">
+                </mat-form-field>
+              </td>
+              <td>
+                <div class="mhq-mat-inputs-margin">
+                  <mat-checkbox color="primary" [(ngModel)]="tempsubcat.active"></mat-checkbox>
+                </div>
+              </td>
+              <td (click)="deleteSubcategory(i)">
+                <div class="mhq-mat-inputs-margin">
+                  <button mat-icon-button>
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="6" (click)="createSubcategory()">add-shiet bro</td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-scrollbar>
     </div>
   </div>
 

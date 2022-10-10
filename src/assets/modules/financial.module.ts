@@ -14,7 +14,7 @@ import { TreasuryLogComponent } from 'src/app/content/financial/treasury-log/tre
 import { TreasuryDetailsComponent, DeleteTreasuryLogConfirmationModal } from 'src/app/content/financial/treasury-log/treasury-details/treasury-details.component';
 import { NewTreasuryLogComponent } from 'src/app/content/financial/treasury-log/new-treasury-log/new-treasury-log.component';
 import { NgScrollbarModule } from 'ngx-scrollbar';
-import { GuitaPipe } from '../pipes/guita.pipe';
+import { GuitaPipe, GuitaSimplexPipe } from '../pipes/guita.pipe';
 import { MissingCategoriesSnackBarComponent } from 'src/app/content/financial/treasury-log/missing-categories-snack-bar/missing-categories-snack-bar.component';
 import { OverviewDailyDetailsModalComponent } from 'src/app/content/financial/overview/overview-daily-details-modal/overview-daily-details-modal.component';
 import { DeleteCategoryConfirmationModalComponent } from 'src/app/content/financial/categories/category-details/delete-category-confirmation-modal/delete-category-confirmation-modal.component';
@@ -33,6 +33,7 @@ import { MhqFailureSnackBarComponent } from '../components/mhq-failure-snack-bar
     DeleteTreasuryLogConfirmationModal,
     NewTreasuryLogComponent,
     GuitaPipe,
+    GuitaSimplexPipe,
     MissingCategoriesSnackBarComponent,
     OverviewDailyDetailsModalComponent,
     DeleteCategoryConfirmationModalComponent,
@@ -59,6 +60,7 @@ import { MhqFailureSnackBarComponent } from '../components/mhq-failure-snack-bar
     DeleteTreasuryLogConfirmationModal,
     NewTreasuryLogComponent,
     GuitaPipe,
+    GuitaSimplexPipe,
     MissingCategoriesSnackBarComponent,
     OverviewDailyDetailsModalComponent,
     DeleteCategoryConfirmationModalComponent,

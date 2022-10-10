@@ -57,7 +57,7 @@ export class MiscService {
 
   constructor(private _categoriesService: CategoriesService) { }
 
-  // utilizado: categories.component
+  // utilizado: categories.component / category-details.html
   getCategoryStyles(categoryID: number): CategoryStyles {
     const category = [...this._categoriesService.allCategories].filter(category => category.id === categoryID)[0];
     return { "background-color": category.bgcolor, "color": category.textcolor }

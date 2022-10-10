@@ -1,6 +1,7 @@
 ::ng-deep .mat-snack-bar-container {
   background: var(--mhq-waikiki-danger);
   color: var(--mhq-waikiki-light-text);
+
   .mhq-snackbar-wrapper {
     display: flex;
     align-items: center;
@@ -13,12 +14,8 @@
       margin: 0;
     }
 
-
     span {
       font-weight: 600;
-      color: var(--mhq-waikiki-color-5);
     }
   }
 }
-
-// criar 2 modals components no shared, 1 para cada tipo de modal (sucesso ou insucesso)

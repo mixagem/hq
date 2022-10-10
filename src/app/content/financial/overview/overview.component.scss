@@ -6,7 +6,7 @@
   align-items: flex-end;
   justify-content: center;
   font-size: 20px;
-  color: var(--mhq-waikiki-color-3);
+  color: var(--mhq-waikiki-acolor-1);
   font-weight: bold;
 }
 
@@ -119,28 +119,30 @@
 
 .mhq-cell-not-empty:hover {
   cursor: pointer;
-  border: solid 3px var(--mhq-waikiki-color-0);
+  border: solid 3px var(--mhq-waikiki-pcolor-1);
   padding: 0;
 }
 
-.mhq-empty-cell{
+.mhq-empty-cell {
   pointer-events: none;
 }
 
 ::ng-deep .overview-scrollbar {
-  background:var(--mhq-waikiki-color-0)!important;
-  padding: 2px 5px!important;
-  opacity: .75!important;
+  background: var(--mhq-waikiki-pcolor-1) !important;
+  padding: 2px 5px !important;
+  opacity: 0.75 !important;
 
   div {
-    background:#fff!important;
+    background: #fff !important;
+    padding-right: 10px !important;
+    background-clip: content-box !important;
   }
 }
 
 ::ng-deep .scrollbar-control {
-  top: 38px!important;
+  top: 38px !important;
 }
 
 .mhq-overview-cat-loop .mhq-active-cat:first-of-type {
-	margin-top:8px!important
+  margin-top: 8px !important;
 }

@@ -2,35 +2,72 @@
 
 
   <div style="width: 50%;overflow-y: auto;word-wrap: break-word;">
-    <h1>
-      todo
-    </h1>
-    ordem operações:<br>
-    1. mega code review (alterar nomes de variáveis e funções, adicionar tipo de retorno às funções, comentar código<br>
-    fix no casts dos dados [onde uso Number(), toString, "as" qualquer coisa e == ])<br>
-    refractor das funções do misc (uniformizar tudo)<br>
-    4 server review<br>
-    5. css review<br>
+    <ol>
+      <li>categorias<br>
+        <ul>
+          <li>tratar estilos inputs para a letra ficar mais legível</li>
+          <li>tratar estilos colunas cabeçalho tabelas de listagem (Categoria, Ativa, etc...) -> meter a cor de laranja)
+          </li>
+          <li>terminar modal remover categoria + regra para não apagar categoria caso existam movimentos de tesouraria
+          </li>
+          <li>refract html / css</li>
+          <li>review typescript</li>
+          <li>desenvolver ordenação</li>
+          <li>validators para os inputs:<br>
+            <ul>
+              <li>colorpicker (tem de ser do genero rgb(xxx,xxx,xxx)</li>
+              <li>valor (só número, apenas 1 separador decimal, pode ser virgula ou ponto)</li>
+              <li>icon (regex nao pode ter espaço, apenas underscore e alphanumericos. nao hifen)</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <br>
+      <li>movimentos<br>
+        <ul>
+          <li>passar loading para o serviço do loading próprio</li>
+          <li>tratar estilos inputs (cortar o contraste do select + largura selects) </li>
+          <li>tratar estilos colunas cabeçalho tabelas de listagem (Categoria, Ativa, etc...) -> meter a cor de laranja)
+          </li>
+          <li>terminar modal remover movimento</li>
+          <li>refract html / css</li>
+          <li>review typescript</li>
+          <li>desenvolver recorrência de movimentos</li>
+          <li>snackbar</li>
+          <li>fix input manual da data (quando é escrito á mão, só aceita a syntax americana)</li>
+          <li>cor icon calendario datepicker (cinza -> laranja)</li>
+        </ul>
+      </li>
+      <br>
+      <li>overview<br>
+        <ul>
+          <li>redo html/css (excel view + modal) + acabar UI (seletor vista + navegação vista + scrollbar)</li>
+          <li>refract typescript -> limpar misc.service</li>
+        </ul>
+      </li>
+      <br>
+      <li>outros<br>
+        <ul>
+          <li>fix no acesso direto aos registos</li>
+          <li>refract shared (estilos, serviços...)</li>
+          <li>verificar se todos os retornos de funções/construtores ficaram bem definidos (:void / _private)</li>
+          <li>substituir comparação ampla por comparação explícita (=== em vez de ==)</li>
+          <li>server code review</li>
+        </ul>
+      </li>
+    </ol>
+
+    <!--
     7. adicionar ação para novo movimento de tesouraria no ecrã do overview (gaveta igual ao ecra de movimentos de tesouraria)<br>
-    8. desenvolver picker mÊs/ano para a vista diária<br>
-    10. desenvolver ordenação de categorias<br>
-    11. desenvolver ordenação de subcategorias<br>
     12. orçamento sub-categoria -> só vai ser utilizado na altura das analises, graficos e alertas<br>
-    13. recorrencia movimentos tesouraria<br>
 
-
-
-todo:
-
-No rows bro
-no movs bro
 
 inputs valor
     -> fazer regex com validador quando são utilizados mais que 1 "," ou "." -> dá erro e informa que só deve só utilizado 1 caracter para separar decimais
 
 
 adicionar acesso direto aos registos
-testar mudança de página da tabela ao consultar o registo
+testar mudança de página da tabela ao consultar o registo -->
 
 
 

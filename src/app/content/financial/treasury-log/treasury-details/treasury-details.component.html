@@ -33,9 +33,9 @@
   <div class="mhq-categories-drawer-right">
     <div class="mhq-wrapper-row" *ngIf="!editingMode">
 
-      <h1>
+      <h1><div>
         <mat-icon>info_outline</mat-icon>Detalhes
-      </h1>
+      </div></h1>
 
       <div class="mhq-row">
 
@@ -107,9 +107,9 @@
 
     <div class="mhq-wrapper-row" *ngIf="editingMode">
 
-      <h1>
+      <h1><div>
         <mat-icon>info_outline</mat-icon>Detalhes
-      </h1>
+      </div></h1>
 
       <div class="mhq-row">
 
@@ -132,7 +132,6 @@
           <mat-form-field appearance="fill">
             <mat-label>Data</mat-label>
             <input matInput [matDatepicker]="treasuryLogDatepicker" [formControl]="treasuryLogDatepickerForm">
-            <mat-hint>DD/MM/YYYY</mat-hint>
             <mat-datepicker-toggle matSuffix [for]="treasuryLogDatepicker"></mat-datepicker-toggle>
             <mat-datepicker #treasuryLogDatepicker></mat-datepicker>
           </mat-form-field>
