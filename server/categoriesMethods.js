@@ -76,7 +76,7 @@ export function createNewCategory(req, res) {
 
   db.serialize(() => {
 
-    db.run(`INSERT INTO categories (title, icon, type, bgcolor, textcolor, active) VALUES ('${category.title}','${category.icon}','${category.type}','${category.bgcolor}','${category.textcolor}','${category.active}')`, (err, resp) => { err ? console.error(err.message) : console.log('Category sucessfully created.') })
+    db.run(`INSERT INTO categories (title, icon, type, bgcolor, textcolor, active, catorder) VALUES ('${category.title}','${category.icon}','${category.type}','${category.bgcolor}','${category.textcolor}','${category.active}', '9999')`, (err, resp) => { err ? console.error(err.message) : console.log('Category sucessfully created.') })
       // obter o id atribuído à categoria introduzida
       .all(`SELECT * from sqlite_sequence where name='categories'`, (err, resp) => { err ? console.error(err.message) : insertSubcategories(resp[0].seq) });
 
@@ -87,8 +87,8 @@ export function createNewCategory(req, res) {
     if (category.subcats.length > 0) {
       console.log('Creating sub-categories...');
 
-      category.subcats.forEach(subcat => {
-        db.run(`INSERT INTO subcategories (maincatid, title, budget, active) VALUES ('${assignedCategoryID}', '${subcat.title}', '${subcat.budget}', '${subcat.active}' )`, (err, resp) => { err ? console.error(err.message) : console.log('Sub-category sucessfully created ==> "' + subcat.title + '".'); });
+      category.subcats.forEach((subcat,i) => {
+        db.run(`INSERT INTO subcategories (maincatid, title, budget, active, subcatorder) VALUES ('${assignedCategoryID}', '${subcat.title}', '${subcat.budget}', '${subcat.active}', '${i+1}' )`, (err, resp) => { err ? console.error(err.message) : console.log('Sub-category sucessfully created ==> "' + subcat.title + '".'); });
       });
     }
 
@@ -132,17 +132,19 @@ export function updateCategory(req, res) {
   });
 
   const cat = JSON.parse(req.body.category);
-
+  console.log(cat)
 
   db.serialize(() => {
 
-    db.run(`UPDATE categories SET title='${cat.title}', type='${cat.type}', icon='${cat.icon}', bgcolor='${cat.bgcolor}', textcolor='${cat.textcolor}', active='${cat.active}' WHERE id='${cat.id}'`, (err, resp) => { err ? console.error(err.message) : console.log('Category sucessfully updated.'); });
+    // , order='${cat.order}'
+
+    db.run(`UPDATE categories SET title='${cat.title}', type='${cat.type}', icon='${cat.icon}', bgcolor='${cat.bgcolor}', textcolor='${cat.textcolor}', active='${cat.active}', catorder='${cat.catorder}' WHERE id='${cat.id}'`, (err, resp) => { err ? console.error(err.message) : console.log('Category sucessfully updated.'); });
     db.run(`DELETE FROM subcategories WHERE maincatid='${cat.id}'`, (err, resp) => { err ? console.error(err.message) : console.log('Updating sub-categories...'); });
 
     if (cat.subcats.length > 0) {
 
       cat.subcats.forEach((subcat, i) => {
-        db.run(`INSERT INTO subcategories (id, maincatid, title, budget, active) VALUES ('${subcat.id}', '${subcat.maincatid}', '${subcat.title}', '${subcat.budget}', '${subcat.active}' )`, (err, resp) => { err ? console.error(err.message) : console.log('Sub-category sucessfully updated (' + i + ') .'); });
+        db.run(`INSERT INTO subcategories (id, maincatid, title, budget, active, subcatorder) VALUES ('${subcat.id}', '${subcat.maincatid}', '${subcat.title}', '${subcat.budget}', '${subcat.active}', '${subcat.subcatorder}' )`, (err, resp) => { err ? console.error(err.message) : console.log('Sub-category sucessfully updated (' + i + ') .'); });
       });
     }
 

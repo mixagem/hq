@@ -4,5 +4,6 @@ export interface IFinancialSubCategory {
   title: string,
   budget: number,
   active: boolean
+  order: number
 }
 

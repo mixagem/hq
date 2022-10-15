@@ -35,6 +35,7 @@ export class CategoryDetailsComponent implements OnInit {
     this.fiCategory = this.miscService.getCategory(this.id);
     // clone da categoria para edição
     this.tempFiCategory = JSON.parse(JSON.stringify(this.fiCategory));
+    console.log(this.tempFiCategory)
     // clone da categoria enviado para o serviço -> utilizado para a duplicação (o componente de introdução vai ler ao servico o objeto da categoria)
     this.categoriesService.activePreviewCategory = JSON.parse(JSON.stringify(this.fiCategory));
 
@@ -92,7 +93,7 @@ export class CategoryDetailsComponent implements OnInit {
 
   // adicionar sub-categoria à categoria em edição
   attachSubcategory(): void {
-    const DEFAULT_FISUBCATEGORY: IFinancialSubCategory = { id: this.categoriesService.currentSubcategoryDBSequence + 1, maincatid: this.id, title: 'Nova Sub-Categoria', budget: 0, active: false }
+    const DEFAULT_FISUBCATEGORY: IFinancialSubCategory = { id: this.categoriesService.currentSubcategoryDBSequence + 1, maincatid: this.id, title: 'Nova Sub-Categoria', budget: 0, active: false, order:0 }
     this.tempFiCategory.subcats.push(DEFAULT_FISUBCATEGORY);
     this.categoriesService.currentSubcategoryDBSequence++;
   }

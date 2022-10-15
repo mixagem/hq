@@ -20,7 +20,8 @@ const DEFAULT_TLOG: ITreasuryLog = {
   cat: 0, // a ser definido pelo utilizador
   subcat: 0, // a ser definido pelo utilizador
   type: 'expense',
-  obs: ''
+  obs: '',
+  recurrencyid: 0
 }
 
 @Component({

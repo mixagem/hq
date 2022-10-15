@@ -9,8 +9,8 @@ import { CategorySnackBarsService } from '../../../../../assets/services/categor
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // objectos default para modo de introdução de nova categoria/subcategorias
-const DEFAULT_FICATEGORY: IFinancialCategory = { id: 0, type: 'expense', title: 'Nova categoria', icon: 'dns', bgcolor: 'rgb(0,0,0)', textcolor: 'rgb(255,255,255)', subcats: [], active: false };
-const DEFAULT_FISUBCATEGORY: IFinancialSubCategory = { id: Date.now(), maincatid: 0, title: 'Nova sub-categoria', budget: 0, active: false };
+const DEFAULT_FICATEGORY: IFinancialCategory = { id: 0, type: 'expense', title: 'Nova categoria', icon: 'dns', bgcolor: 'rgb(0,0,0)', textcolor: 'rgb(255,255,255)', subcats: [], active: false, order:0 };
+const DEFAULT_FISUBCATEGORY: IFinancialSubCategory = { id: Date.now(), maincatid: 0, title: 'Nova sub-categoria', budget: 0, active: false, order:0 };
 
 @Component({
   selector: 'mhq-new-category',

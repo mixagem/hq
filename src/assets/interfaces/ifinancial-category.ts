@@ -9,4 +9,5 @@ export interface IFinancialCategory {
   textcolor:string,
   subcats: IFinancialSubCategory[],
   active: boolean
+  order: number
 }

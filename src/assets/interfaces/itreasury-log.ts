@@ -6,5 +6,6 @@ export interface ITreasuryLog {
   cat:number,
   subcat:number,
   type: string,
-  obs:string
+  obs:string,
+  recurrencyid: number
 }
