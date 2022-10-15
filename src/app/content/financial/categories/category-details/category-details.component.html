@@ -213,7 +213,7 @@
       </table>
 
       <ng-scrollbar *ngIf="tempFiCategory.subcats.length>0 && editingMode" style="height: 100%;width: 100%;">
-        <table>
+        <table id="edit-table">
           <tbody>
             <tr *ngFor="let tempsubcat of tempFiCategory.subcats">
               <td>
@@ -223,7 +223,7 @@
               </td>
               <td>
                 <mat-form-field appearance="fill">
-                  <input matInput [(ngModel)]="tempsubcat.budget">
+                  <input class="mgh-budget-input" matInput [(ngModel)]="tempsubcat.budget">
                 </mat-form-field>
               </td>
               <td>
@@ -233,14 +233,16 @@
               </td>
               <td (click)="dettachSubcategory(tempsubcat.id)">
                 <div class="mhq-mat-inputs-margin">
-                  <button mat-icon-button>
+                  <button mat-icon-button color="warn">
                     <mat-icon>delete</mat-icon>
                   </button>
                 </div>
               </td>
             </tr>
             <tr>
-              <td colspan="6" (click)="attachSubcategory()">add-shiet bro</td>
+              <td class="mhg-add-subcat-cell" colspan="6" (click)="attachSubcategory()">
+                <div class="mhg-add-subcat"><mat-icon>add</mat-icon>adicionar sub-categoria</div>
+              </td>
             </tr>
           </tbody>
         </table>

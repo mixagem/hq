@@ -1,11 +1,11 @@
 <mat-progress-bar *ngIf="!isMatTableReady" mode="indeterminate"></mat-progress-bar>
 <div *ngIf="isMatTableReady" class="mhq-mainform-container">
 
-  <div class="mhq-row mhq-mainform-header">
+  <div class="mhq-row mhq-mainform-header" >
     <h1>
       <mat-icon>account_balance</mat-icon>Categorias de movimentos
     </h1>
-    <div class="mhq-mainform-actions"><button mat-flat-button color="primary"
+    <div class="mhq-mainform-actions"><button mat-flat-button color="accent"
         (click)="categoriesService.createNewRecord(false)">
         <mat-icon>add</mat-icon>Adicionar categoria
       </button>

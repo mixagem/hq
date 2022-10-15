@@ -1,25 +1,24 @@
 <div class="mhq-mainform-container" style="display: flex">
 
 
-  <div style="width: 50%;overflow-y: auto;word-wrap: break-word;">
-    <ol>
-      <li>categorias<br>
-        <ul>
-          <li>tratar estilos inputs para a letra ficar mais legível</li>
-          <li>tratar estilos colunas cabeçalho tabelas de listagem (Categoria, Ativa, etc...) -> meter a cor de laranja)
-          </li>
-          <li>terminar modal remover categoria + regra para não apagar categoria caso existam movimentos de tesouraria
-          </li>
-          <li>refract html / css</li>
-          <li>review typescript</li>
-          <li>desenvolver ordenação</li>
+  <div style="width: 50%;overflow-y: auto;word-wrap: break-word;" color="accent">
+    <ol color="accent">
+      <li color="accent">categorias<br>
+        <ul color="accent">
           <li>validators para os inputs:<br>
             <ul>
+              <li>bugdget só aceita numero (igual ao valor, ver embaixo)</li>
               <li>colorpicker (tem de ser do genero rgb(xxx,xxx,xxx)</li>
               <li>valor (só número, apenas 1 separador decimal, pode ser virgula ou ponto)</li>
               <li>icon (regex nao pode ter espaço, apenas underscore e alphanumericos. nao hifen)</li>
             </ul>
           </li>
+          <li>terminar modal remover categoria + regra para não apagar categoria caso existam movimentos de tesouraria
+          </li>
+          <li>desenvolver ordenação cats / subcats</li>
+          <li>review typescript</li>
+          <li>:hover ações registo</li>
+          <li>refract html / css</li>
         </ul>
       </li>
       <br>
@@ -43,12 +42,14 @@
         <ul>
           <li>redo html/css (excel view + modal) + acabar UI (seletor vista + navegação vista + scrollbar)</li>
           <li>refract typescript -> limpar misc.service</li>
+
         </ul>
       </li>
       <br>
       <li>outros<br>
         <ul>
           <li>fix no acesso direto aos registos</li>
+          <li>velocidade da gaveta</li>
           <li>refract shared (estilos, serviços...)</li>
           <li>verificar se todos os retornos de funções/construtores ficaram bem definidos (:void / _private)</li>
           <li>substituir comparação ampla por comparação explícita (=== em vez de ==)</li>
@@ -99,30 +100,28 @@ testar mudança de página da tabela ao consultar o registo -->
   <div style="width: 50%;overflow-y: auto;word-wrap: break-word;">
 
     <h1>thinkerbox</h1>
-    <h3>overview</h3>
-    -- mostrar categorias sem gastos/income, mostrar depsesas do tipo budget<br>
+
     <h3>orçamentos</h3>
     -- mainform igual aos movimentos de tesouraria, mas apenas para registos de orçamentos<br>
     -- ações do registo: tornar despesa de budget em despesa legit<br>
+    -- atualizar ovewview: adicionar categoria sumatório para despesas em orçamento (adicionar filtro para mostrar/ocultar)<br>
     <h3>efatura check</h3>
-    -- para os registos que sejam nif incluido, é adicionada á tabela e-fatura check a respetiva despesa<br>
-    -- ações do registo: marcar como validado<br>
+    -- criar 2 tabuladores: 1 modo listagem, 1 modo análises ()
+    -- modo listagem consiste num filtro de todos os movimentos, que tenham nif incluido<br>
+    -- modo análises consiste em snapshots das várias categorias do efatura (estes snapshots têm o valor da categoria, e o valor dedutivel para irs)<br>
+    -- ações do registo: marcar como validado (fazer select com base nas categorias do efatura)<br>
+    -- ações mainform: validar em massa (abre assistente para validar faturas em massa) <br>
+    -- atualizar tesouraria: adicionar campos "nif incluido" e "identificativo fatura"<br>
     <h3>Análise salarial</h3>
-    -- graficos snapshot (procurar biblioteca 🚀) a mostrar as varias cenas com alterações de salários <br>
+    -- graficos (procurar biblioteca 🚀) a mostrar as varias cenas com alterações de salários <br>
     -- tabela de referencia com taxas iva, e projecção para salários e tals.<br>
-
     <h3>Análise orçamental</h3>
     -- relatório de despesas identificadas como off-budget<br>
     -- sumatório de off-budgets mais diferença do orçamento para o real. no final, valor a ser enviado para poupança<br>
     -- gráfico snapshot a mostrar a evolução dos off-budget (0) vs realizado (poder ser positivo, ou negativo)<br><br>
-
-    (NOTA 1 - são necessários 2 arrays com os diferentes tipos de gastos: recorrentes e n recorrentes. no caso de ser n
-    recorrentes, certificar que todas as entradas sao eliminadas - quando fizer o foreach para os recorrentes, ter isto
-    em
-    conta)
     <br>
     <h3>poupanças</h3>
-    -- graficos snapshot a mostrar as varias poupanças e sua evolução (e projeção) <br>
+    -- graficos a mostrar as varias poupanças e sua evolução (e projeção) <br>
 
     <h1>fase 2 - agenda</h1>
     - remover submenu agenda (ficar apenas menu principal)<br>

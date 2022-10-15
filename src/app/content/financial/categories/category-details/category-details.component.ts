@@ -54,6 +54,51 @@ export class CategoryDetailsComponent implements OnInit {
         break;
 
       case 'save':
+        if(this.tempFiCategory.bgcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
+
+          this._categorySnackbarsService.snackBarSpecialText = 'Etiqueta fundo';
+          this._categorySnackbarsService.snackBarIcon = 'report'
+          this._categorySnackbarsService.snackBarText = ['O campo ',' encontra-se incorretamente definido.']
+          this._snackBar.openFromComponent(MhqFailureSnackBarComponent, { duration: 5000 });// dispara a snackbar
+
+          return;
+        }
+        if(this.tempFiCategory.textcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
+
+          this._categorySnackbarsService.snackBarSpecialText = 'Texto etiqueta';
+          this._categorySnackbarsService.snackBarIcon = 'report'
+          this._categorySnackbarsService.snackBarText = ['O campo ',' encontra-se incorretamente definido.']
+          this._snackBar.openFromComponent(MhqFailureSnackBarComponent, { duration: 5000 });// dispara a snackbar
+
+          return;
+        }
+
+        let areSubcatsBugdgetCorrect = true;
+        this.tempFiCategory.subcats.forEach(subcat => {
+          if(!subcat.budget.toString().match(/^[0-9]*$/g)) {
+            areSubcatsBugdgetCorrect = false;
+          }
+        });
+
+        if(!areSubcatsBugdgetCorrect){
+          this._categorySnackbarsService.snackBarSpecialText = 'Orçamento';
+          this._categorySnackbarsService.snackBarIcon = 'report'
+          this._categorySnackbarsService.snackBarText = ['Existem sub-categorias para as quais o campo ',' se encontra incorretamente definido.']
+          this._snackBar.openFromComponent(MhqFailureSnackBarComponent, { duration: 5000 });// dispara a snackbar
+
+          return;
+        }
+
+        if(this.tempFiCategory.icon.includes(' ')){
+          this._categorySnackbarsService.snackBarSpecialText = 'Icon';
+          this._categorySnackbarsService.snackBarIcon = 'report'
+          this._categorySnackbarsService.snackBarText = ['O campo  ',' encontra-se incorretamente definido.']
+          this._snackBar.openFromComponent(MhqFailureSnackBarComponent, { duration: 5000 });// dispara a snackbar
+
+          return;
+        }
+
+
         this.saveCategoryChanges();
         break;
 

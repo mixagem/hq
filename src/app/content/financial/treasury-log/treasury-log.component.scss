@@ -13,10 +13,14 @@ table {
     th {
       border:0;
       text-align: center;
+      vertical-align: bottom;
+      font-weight: 500;
+      padding-bottom: 5px;
+      color:var(--mhq-waikiki-acolor-1);
 
       &:nth-child(1) {
         width: 15%;
-        padding: 0;
+        padding-left: 0;
       }
 
       &:nth-child(2) {

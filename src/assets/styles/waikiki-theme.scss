@@ -6,4 +6,12 @@ $accent: mat-palette($mat-orange, 200);
 
 $theme: mat-light-theme($primary, $accent);
 
+// .color-primary {
+//   color: mat-color($primary);
+// }
+
+// .color-accent {
+//   color: mat-color($accent);
+// }
+
 @include angular-material-theme($theme);
