@@ -100,9 +100,12 @@ body {
   margin: 0;
 }
 
+
+
 .mhq-mainform-header {
   height: 60px;
   align-items: center;
+  justify-content: space-between;
   mat-icon {
     vertical-align: text-bottom;
     width: auto;
@@ -112,7 +115,16 @@ body {
   }
   h1 {
     color: var(--mhq-waikiki-pcolor-1);
-
+  }
+  .mhq-mainform-actions {
+    height: 36px;
+    padding-bottom: 5px;
+    mat-icon {
+      padding-right: 4px;
+      margin-bottom: 3px;
+      margin-left: -5px;
+      font-size:24px;
+    }
   }
 }
 

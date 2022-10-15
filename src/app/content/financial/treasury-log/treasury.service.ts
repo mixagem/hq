@@ -10,11 +10,21 @@ type RecordBorderStyle = {
   "background-color": string
 }
 
+type recurencyFrequency = {
+  "string": string,
+  "value": string
+}
+
+const REC_FREQ = [{'string':"Mensal","value":"m"},{'string':"Anual","value":"a"}]
+
+
 @Injectable({
   providedIn: 'root'
 })
 
 export class TreasuryService {
+
+  recurrencyFreq: recurencyFrequency[]
 
   // boolean com o estado do loading dos movimentos da bd
   loadingComplete: Boolean;
@@ -39,6 +49,7 @@ export class TreasuryService {
     this.loadingComplete = false;
     this.fetchTreasuryLog();
     this.onInitTrigger = new Subject<any>();
+    this.recurrencyFreq = REC_FREQ;
   }
 
   onInitTriggerCall(): void {

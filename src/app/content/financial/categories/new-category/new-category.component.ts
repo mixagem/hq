@@ -7,8 +7,6 @@ import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-cate
 import { ErrorHandlingService, MiscService, TimerService } from 'src/assets/services/misc.service';
 import { CategorySnackBarsService } from '../../../../../assets/services/category-snack-bars.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MhqFailureSnackBarComponent } from 'src/assets/components/mhq-failure-snack-bar/mhq-failure-snack-bar.component';
-import { MhqSucessSnackBarComponent } from 'src/assets/components/mhq-sucess-snack-bar/mhq-sucess-snack-bar.component';
 
 // objectos default para modo de introdução de nova categoria/subcategorias
 const DEFAULT_FICATEGORY: IFinancialCategory = { id: 0, type: 'expense', title: 'Nova categoria', icon: 'dns', bgcolor: 'rgb(0,0,0)', textcolor: 'rgb(255,255,255)', subcats: [], active: false };
@@ -40,50 +38,31 @@ export class NewCategoryComponent implements OnInit {
   newCategoryRecordActions(action: string): void {
     switch (action) {
       case 'save':
-        if(this.tempFiCategory.bgcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
-
-          this._categorySnackBarsService.snackBarSpecialText = 'Etiqueta fundo';
-          this._categorySnackBarsService.snackBarIcon = 'report'
-          this._categorySnackBarsService.snackBarText = ['O campo ',' encontra-se incorretamente definido.']
-          this._snackBar.openFromComponent(MhqFailureSnackBarComponent, { duration: 5000 });// dispara a snackbar
-
+        if (this.tempFiCategory.bgcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
+          this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', 'Etiqueta fundo', ['O campo ', ' encontra-se incorretamente definido.']);
           return;
         }
-        if(this.tempFiCategory.textcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
-
-          this._categorySnackBarsService.snackBarSpecialText = 'Texto etiqueta';
-          this._categorySnackBarsService.snackBarIcon = 'report'
-          this._categorySnackBarsService.snackBarText = ['O campo ',' encontra-se incorretamente definido.']
-          this._snackBar.openFromComponent(MhqFailureSnackBarComponent, { duration: 5000 });// dispara a snackbar
-
+        if (this.tempFiCategory.textcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
+          this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', 'Texto etiqueta', ['O campo ', ' encontra-se incorretamente definido.']);
           return;
         }
 
         let areSubcatsBugdgetCorrect = true;
         this.tempFiCategory.subcats.forEach(subcat => {
-          if(!subcat.budget.toString().match(/^[0-9]*$/g)) {
+          if (!subcat.budget.toString().match(/^[0-9]*$/g)) {
             areSubcatsBugdgetCorrect = false;
           }
         });
 
-        if(!areSubcatsBugdgetCorrect){
-          this._categorySnackBarsService.snackBarSpecialText = 'Orçamento';
-          this._categorySnackBarsService.snackBarIcon = 'report'
-          this._categorySnackBarsService.snackBarText = ['Existem sub-categorias para as quais o campo ',' se encontra incorretamente definido.']
-          this._snackBar.openFromComponent(MhqFailureSnackBarComponent, { duration: 5000 });// dispara a snackbar
-
+        if (!areSubcatsBugdgetCorrect) {
+          this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', 'Orçamento', ['Existem sub-categorias para as quais o campo ', ' se encontra incorretamente definido.']);
           return;
         }
 
-        if(this.tempFiCategory.icon.includes(' ')){
-          this._categorySnackBarsService.snackBarSpecialText = 'Icon';
-          this._categorySnackBarsService.snackBarIcon = 'report'
-          this._categorySnackBarsService.snackBarText = ['O campo  ',' encontra-se incorretamente definido.']
-          this._snackBar.openFromComponent(MhqFailureSnackBarComponent, { duration: 5000 });// dispara a snackbar
-
+        if (this.tempFiCategory.icon.includes(' ')) {
+          this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', 'Icon', ['O campo ', ' encontra-se incorretamente definido.']);
           return;
         }
-
         this.createNewCategory();
         break;
 
@@ -113,21 +92,13 @@ export class NewCategoryComponent implements OnInit {
 
     call.subscribe({
       next: codeReceived => {
-
-        this._categorySnackBarsService.snackBarSpecialText = this.tempFiCategory.title
-
         if (codeReceived !== 'MHQ_ERROR') {
-          this._categorySnackBarsService.snackBarIcon = 'playlist_add'
-          this._categorySnackBarsService.snackBarText = ['A categoria ', ' foi criada com sucesso.']
-          this.categoriesService.fetchCategories('saveCategory', Number(codeReceived));
-          this.categoriesService.recordBorderStyle['background-color'] = this.tempFiCategory.bgcolor; //atualiza a cor da gaveta com a nova seleção
-          this._snackBar.openFromComponent(MhqSucessSnackBarComponent, { duration: 5000 });// dispara a snackbar
+          this.categoriesService.fetchCategories('saveCategory', Number(codeReceived)); // atualiza o modo listagem / consulta
+          this.categoriesService.recordBorderStyle['background-color'] = this.tempFiCategory.bgcolor; // atualiza a cor do border da gaveta com da nova categoria
+          this._categorySnackBarsService.triggerCategoriesSnackbar(true, 'playlist_add', this.tempFiCategory.title, ['A categoria ', ' foi criada com sucesso.']); // dispara a snackbar
         } else {
-          this._categorySnackBarsService.snackBarIcon = 'report';
-          this._categorySnackBarsService.snackBarText = ['Ocurreu um erro ao guardar as alterações à categoria ','.'];
-          this._snackBar.openFromComponent(MhqFailureSnackBarComponent, { duration: 5000 });// dispara a snackbar
+          this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', this.tempFiCategory.title, ['Ocurreu um erro ao guardar as alterações à categoria ', '.']);
         }
-
       },
       error: err => this._errorHandlingService.handleError(err)
     })

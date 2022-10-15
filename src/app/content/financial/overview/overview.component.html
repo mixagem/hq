@@ -9,6 +9,10 @@
     <h1>
       <mat-icon>account_balance</mat-icon>Vista diária - {{selectedMonthLocale}} {{selectedYear}}
     </h1>
+    <div class="mhq-mainform-actions"><button mat-flat-button color="accent" disabled>
+        <mat-icon>add</mat-icon>Re-ordenar categorias
+      </button>
+    </div>
   </div>
 
   <h1 (click)="previousMonth()">previous</h1>
@@ -80,7 +84,8 @@
     <!-- celulas com valores -->
     <!-- <div class="mhq-col-10"> -->
     <div class="mhq-col-10">
-      <ng-scrollbar style="width: 100%;height:100%;" [track]="'horizontal'" [position]="'invertX'" [trackClass]="'overview-scrollbar'">
+      <ng-scrollbar style="width: 100%;height:100%;" [track]="'horizontal'" [position]="'invertX'"
+        [trackClass]="'overview-scrollbar'">
         <div style="width: auto;overflow-y: visible;">
           <!-- cabeçalho com dias do mês  -->
           <div style="display: inline-flex;">

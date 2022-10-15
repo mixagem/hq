@@ -19,7 +19,12 @@
 
     <div class="mhq-wrapper-row">
 
-      <h1>Detalhes</h1>
+
+      <h1>
+        <div>
+          <mat-icon>info_outline</mat-icon>Detalhes
+        </div>
+      </h1>
 
       <div class="mhq-row">
 
@@ -66,14 +71,15 @@
 
         <div class="mhq-col-4">
 
-          <form class="mhq-cats-form">
+          <form class="mhq-cats-form" style="width: 100%;">
             <mat-form-field>
               <mat-label>Categoria</mat-label>
-              <mat-select [formControl]="catForm" (selectionChange)="categorySelectChanged($event)" >
+              <mat-select [formControl]="catForm" (selectionChange)="categorySelectChanged($event)">
                 <mat-select-trigger>{{catForm.value}}</mat-select-trigger>
-                <mat-option *ngFor="let option of categoriesList" [value]="option"
-                  [style]="miscService.getCatStyle(miscService.getCategoryIDFromTitle(option))">
-                  <mat-icon>{{miscService.getCategoryIcon(miscService.getCategoryIDFromTitle(option))}}</mat-icon>
+                <mat-option *ngFor="let option of categoriesList" [value]="option">
+                  <mat-icon
+                    [style]="'background-color:'+miscService.getCatStyleSimplex(miscService.getCategoryIDFromTitle(option))[0]+';color:'+miscService.getCatStyleSimplex(miscService.getCategoryIDFromTitle(option))[1]">
+                    {{miscService.getCategoryIcon(miscService.getCategoryIDFromTitle(option))}}</mat-icon>
                   {{option}}
                 </mat-option>
               </mat-select>
@@ -85,11 +91,11 @@
         <div class="mhq-col-4">
 
 
-          <form class="mhq-subcats-form">
+          <form class="mhq-subcats-form" style="width: 100%;">
             <mat-form-field>
               <mat-label>Sub categoria</mat-label>
               <mat-select [formControl]="subcatForm">
-                <mat-option *ngFor="let option of subcategoriesList" [value]="option">
+                <mat-option *ngFor="let option of subcategoriesList" [value]="option" class="mhq-subcat-select">
                   {{option}}
                 </mat-option>
               </mat-select>
@@ -116,6 +122,40 @@
           </mat-form-field>
         </div>
       </div>
+
+      <div class="mhq-row">
+        <mat-slide-toggle [checked]="false">Recorrência</mat-slide-toggle>
+      </div>
+
+      <div class="mhq-row">
+        <!-- <div class="mhq-col-3">Frequência recorrência (mensal, anual) </div>
+        <div class="mhq-col-3">Número de recorrências (numero de vezes a repetir)</div>
+        <div class="mhq-col-3">Data da primeira incidência (dia a ser utilizado para recorrência)</div> -->
+        <div class="mhq-col-4">
+          <mat-form-field appearance="fill">
+            <mat-label>Frequência da recorrência</mat-label>
+            <mat-select>
+              <mat-option *ngFor="let freq of treasuryService.recurrencyFreq" [value]="freq.value">
+                {{freq.string}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="mhq-col-4">
+          <mat-form-field appearance="fill">
+            <mat-label>Número de recorrências</mat-label>
+            <input matInput>
+          </mat-form-field>
+        </div>
+        <div class="mhq-col-4">
+          <mat-form-field appearance="fill">
+            <mat-label>Data da primeira incidência</mat-label>
+            <input matInput>
+          </mat-form-field>
+        </div>
+
+      </div>
+
 
     </div>
   </div>

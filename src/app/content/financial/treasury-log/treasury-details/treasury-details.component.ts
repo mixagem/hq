@@ -142,8 +142,8 @@ export class TreasuryDetailsComponent implements OnInit {
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this._dialog.open(DeleteTreasuryLogConfirmationModal, {
-      width: '50vw',
-      height: '50vh',
+      width: '580px',
+      height: '220px',
       enterAnimationDuration,
       exitAnimationDuration,
     });

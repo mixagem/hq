@@ -9,8 +9,6 @@ import { DeleteCategoryConfirmationModalComponent } from './delete-category-conf
 import { ErrorHandlingService, MiscService } from 'src/assets/services/misc.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CategorySnackBarsService } from '../../../../../assets/services/category-snack-bars.service';
-import { MhqSucessSnackBarComponent } from 'src/assets/components/mhq-sucess-snack-bar/mhq-sucess-snack-bar.component';
-import { MhqFailureSnackBarComponent } from 'src/assets/components/mhq-failure-snack-bar/mhq-failure-snack-bar.component';
 
 @Component({
   selector: 'mhq-category-details',
@@ -54,51 +52,36 @@ export class CategoryDetailsComponent implements OnInit {
         break;
 
       case 'save':
-        if(this.tempFiCategory.bgcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
 
-          this._categorySnackbarsService.snackBarSpecialText = 'Etiqueta fundo';
-          this._categorySnackbarsService.snackBarIcon = 'report'
-          this._categorySnackbarsService.snackBarText = ['O campo ',' encontra-se incorretamente definido.']
-          this._snackBar.openFromComponent(MhqFailureSnackBarComponent, { duration: 5000 });// dispara a snackbar
-
+        // validações ao gravar
+        if (this.tempFiCategory.icon.includes(' ')) {
+          this._categorySnackbarsService.triggerCategoriesSnackbar(false, 'report', 'Icon', ['O campo ', ' encontra-se incorretamente definido.']);
           return;
         }
-        if(this.tempFiCategory.textcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
 
-          this._categorySnackbarsService.snackBarSpecialText = 'Texto etiqueta';
-          this._categorySnackbarsService.snackBarIcon = 'report'
-          this._categorySnackbarsService.snackBarText = ['O campo ',' encontra-se incorretamente definido.']
-          this._snackBar.openFromComponent(MhqFailureSnackBarComponent, { duration: 5000 });// dispara a snackbar
+        if (this.tempFiCategory.bgcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
+          this._categorySnackbarsService.triggerCategoriesSnackbar(false, 'report', 'Etiqueta fundo', ['O campo ', ' encontra-se incorretamente definido.']);
+          return;
+        }
 
+        if (this.tempFiCategory.textcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
+          this._categorySnackbarsService.triggerCategoriesSnackbar(false, 'report', 'Texto etiqueta', ['O campo ', ' encontra-se incorretamente definido.']);
           return;
         }
 
         let areSubcatsBugdgetCorrect = true;
         this.tempFiCategory.subcats.forEach(subcat => {
-          if(!subcat.budget.toString().match(/^[0-9]*$/g)) {
+          if (!subcat.budget.toString().match(/^[0-9]*$/g)) {
             areSubcatsBugdgetCorrect = false;
           }
         });
 
-        if(!areSubcatsBugdgetCorrect){
-          this._categorySnackbarsService.snackBarSpecialText = 'Orçamento';
-          this._categorySnackbarsService.snackBarIcon = 'report'
-          this._categorySnackbarsService.snackBarText = ['Existem sub-categorias para as quais o campo ',' se encontra incorretamente definido.']
-          this._snackBar.openFromComponent(MhqFailureSnackBarComponent, { duration: 5000 });// dispara a snackbar
-
+        if (!areSubcatsBugdgetCorrect) {
+          this._categorySnackbarsService.triggerCategoriesSnackbar(false, 'report', 'Orçamento', ['Existem sub-categorias para as quais o campo ', ' se encontra incorretamente definido.']);
           return;
         }
 
-        if(this.tempFiCategory.icon.includes(' ')){
-          this._categorySnackbarsService.snackBarSpecialText = 'Icon';
-          this._categorySnackbarsService.snackBarIcon = 'report'
-          this._categorySnackbarsService.snackBarText = ['O campo  ',' encontra-se incorretamente definido.']
-          this._snackBar.openFromComponent(MhqFailureSnackBarComponent, { duration: 5000 });// dispara a snackbar
-
-          return;
-        }
-
-
+        // validações ok, envia para bd
         this.saveCategoryChanges();
         break;
 
@@ -128,20 +111,14 @@ export class CategoryDetailsComponent implements OnInit {
     call.subscribe({
       next: codeReceived => {
 
-        this._categorySnackbarsService.snackBarSpecialText = this.tempFiCategory.title;
-
         if (Number(codeReceived) === 1) {
-          this.categoriesService.fetchCategories('saveCategory', this.id);
-          this.categoriesService.recordBorderStyle['background-color'] = this.tempFiCategory.bgcolor;
-          this.editingMode = false;
-          this._categorySnackbarsService.snackBarIcon = 'save_as'
-          this._categorySnackbarsService.snackBarText = ['A categoria ',' foi atualizada com sucesso.']
-          this._snackBar.openFromComponent(MhqSucessSnackBarComponent, { duration: 5000 });// dispara a snackbar
+          this.categoriesService.fetchCategories('saveCategory', this.id); // atualiza o modo listagem / consulta
+          this.categoriesService.recordBorderStyle['background-color'] = this.tempFiCategory.bgcolor; // atualiza a cor do border da gaveta com a nova cor da categoria
+          this.editingMode = false; // termina o modo de edição
+          this._categorySnackbarsService.triggerCategoriesSnackbar(true, 'save_as', this.tempFiCategory.title, ['A categoria ', ' foi atualizada com sucesso.']); // dispara a snackbar
         }
         else {
-          this._categorySnackbarsService.snackBarIcon = 'report'
-          this._categorySnackbarsService.snackBarText = ['Ocurreu um erro ao guardar as alterações à categoria ','.']
-          this._snackBar.openFromComponent(MhqFailureSnackBarComponent, { duration: 5000 });// dispara a snackbar
+          this._categorySnackbarsService.triggerCategoriesSnackbar(false, 'report', this.tempFiCategory.title, ['Ocurreu um erro ao guardar as alterações à categoria ', '.']);
         }
 
       },

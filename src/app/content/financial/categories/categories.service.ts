@@ -95,5 +95,4 @@ export class CategoriesService {
     function navi(router: Router): void { router.navigate(['/fi/cats']) }
   }
 
-
 }
