@@ -12,6 +12,7 @@ import { ErrorHandlingService, MiscService } from 'src/assets/services/misc.serv
 import { MatSelectChange } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MissingCategoriesSnackBarComponent } from '../missing-categories-snack-bar/missing-categories-snack-bar.component';
+import { CategorySnackBarsService } from 'src/assets/services/category-snack-bars.service';
 
 @Component({
   selector: 'mhq-treasury-details',
@@ -45,7 +46,7 @@ export class TreasuryDetailsComponent implements OnInit {
   // boolean com o estado do modo de edição
   editingMode: boolean;
 
-  constructor(private _errorHandlingService: ErrorHandlingService, private _snackBar: MatSnackBar, private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, private _categoriesService: CategoriesService, public miscService: MiscService) {
+  constructor(private _errorHandlingService: ErrorHandlingService, private _snackBar: MatSnackBar, private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, private _categoriesService: CategoriesService, public miscService: MiscService, private _categoriesSnackBarService: CategorySnackBarsService) {
     this.editingMode = false;
   }
 
@@ -91,12 +92,19 @@ export class TreasuryDetailsComponent implements OnInit {
     const call = this._http.post('http://localhost:16190/updatetreasurylog', httpParams, { responseType: 'text' })
 
     call.subscribe({
-      next: codeReceived => { this.treasuryService.fetchTreasuryLog('saveTreasuryLog', this.tempTreasuryLog.id); this.editingMode = false; },
-      error: err => this._errorHandlingService.handleError(err)
+      next: codeReceived => {
+        this.treasuryService.fetchTreasuryLog('saveTreasuryLog', this.tempTreasuryLog.id);
+        this.editingMode = false;
+        this._categoriesSnackBarService.triggerCategoriesSnackbar(true, 'save_as', this.tempTreasuryLog.title, ['O movimento ', ' foi atualizado com sucesso.']); // dispara a snackbar
+      },
+      error: err => {
+        this._errorHandlingService.handleError(err);
+        this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', this.tempTreasuryLog.title, ['Ocurreu algo inesperado ao atualizar o movimento ', '.']); // dispara a snackbar}
+      }
     })
   }
 
-  openMissingCategoriesSnackBar():void {
+  openMissingCategoriesSnackBar(): void {
     this._snackBar.openFromComponent(MissingCategoriesSnackBarComponent, {
       duration: 5000, //ms
     });
@@ -131,6 +139,12 @@ export class TreasuryDetailsComponent implements OnInit {
         this.treasuryService.recordBorderStyle['background-color'] = catBGColor!;
 
         this.tempTreasuryLog.value = Number(this.tempTreasuryLog.value.toString().replace(',', '.')) // conversão de vírgulas para pontos
+
+        if (!this.tempTreasuryLog.value.toString().match(/^[0-9]*\.{0,1}[0-9]{0,2}$/g)) {
+          this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
+          return;
+        }
+
         this.saveTreasurylog();
 
         break;

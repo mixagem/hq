@@ -11,6 +11,7 @@ import { ErrorHandlingService, MiscService, TimerService } from 'src/assets/serv
 import { MatSelectChange } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MissingCategoriesSnackBarComponent } from '../missing-categories-snack-bar/missing-categories-snack-bar.component';
+import { CategorySnackBarsService } from 'src/assets/services/category-snack-bars.service';
 
 const DEFAULT_TLOG: ITreasuryLog = {
   id: 0, //ignrado ao ser enviado para bd
@@ -48,7 +49,7 @@ export class NewTreasuryLogComponent implements OnInit {
   subcategoriesList: string[] = [];
 
 
-  constructor(private _errorHandlingService: ErrorHandlingService, private _snackBar:MatSnackBar, public miscService: MiscService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, private _route: ActivatedRoute, public _router: Router, public _http: HttpClient, private _timerService:TimerService) { }
+  constructor(private _errorHandlingService: ErrorHandlingService, private _snackBar:MatSnackBar, public miscService: MiscService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, private _route: ActivatedRoute, public _router: Router, public _http: HttpClient, private _timerService:TimerService, private _categoriesSnackBarService: CategorySnackBarsService) { }
 
   ngOnInit(): void {
 
@@ -124,6 +125,11 @@ export class NewTreasuryLogComponent implements OnInit {
         this.tempTreasuryLog.subcat = subCatID!;
 
         this.treasuryService.recordBorderStyle['background-color'] = catBGColor!;
+
+        if (!this.tempTreasuryLog.value.toString().match(/^[0-9]*\.{0,1}[0-9]{0,2}$/g)) {
+          this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
+          return;
+        }
         this.saveTreasurylog();
 
         break;
@@ -144,8 +150,14 @@ export class NewTreasuryLogComponent implements OnInit {
     const call = this._http.post('http://localhost:16190/createtreasurylog', httpParams, { responseType: 'text' });
 
     call.subscribe({
-      next: codeReceived => { this.treasuryService.fetchTreasuryLog('saveTreasuryLog', Number(codeReceived)); },
-      error: err => this._errorHandlingService.handleError(err)
+      next: codeReceived => {
+        this.treasuryService.fetchTreasuryLog('saveTreasuryLog', Number(codeReceived));
+        this._categoriesSnackBarService.triggerCategoriesSnackbar(true, 'playlist_add', this.tempTreasuryLog.title, ['O movimento ', ' foi criado com sucesso.']); // dispara a snackbar
+      },
+      error: err => {
+        this._errorHandlingService.handleError(err);
+        this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', this.tempTreasuryLog.title, ['Ocurreu algo inesperado ao criar o movimento ', '.']); // dispara a snackbar
+      }
     })
   }
 

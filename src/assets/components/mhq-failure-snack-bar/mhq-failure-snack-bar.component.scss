@@ -1,8 +1,8 @@
-::ng-deep .mat-snack-bar-container {
+::ng-deep .failure {
   background: var(--mhq-waikiki-danger);
-  color: var(--mhq-waikiki-light-text);
+  color: var(--mhq-light-text);
 
-  .mhq-snackbar-wrapper {
+  .mhq-failure-snackbar-wrapper {
     display: flex;
     align-items: center;
 

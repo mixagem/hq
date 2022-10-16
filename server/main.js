@@ -2,6 +2,7 @@ import { genDailySumAcomEvo, genDailyCategoriesEvo, getDailyCatDetails, getDaily
 import { addNewTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog } from './treasuryMethods.js';
 import { fetchCategories, createNewCategory, deleteCategory, updateCategory, getSubcategorySequence } from './categoriesMethods.js'
 import express from 'express';
+import cors from 'cors';
 
 const app = express();
 const port = 16190;
@@ -9,6 +10,7 @@ const port = 16190;
 app.listen(port, () => console.log(".: MI HQ - Listening on port 16190 :."));
 
 app.use(express.json());
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
 
