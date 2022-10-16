@@ -38,9 +38,12 @@ export class NewTreasuryLogComponent implements OnInit {
   recurrency: boolean   // recorrencia
   recurrencyType: string;
   recurrencyFrequency: FormControl<any>;
+  saveComplete: boolean;
 
 
-  constructor(private _errorHandlingService: ErrorHandlingService, public miscService: MiscService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, public _router: Router, public _http: HttpClient, private _timerService: TimerService, private _categoriesSnackBarService: CategorySnackBarsService) { }
+  constructor(private _errorHandlingService: ErrorHandlingService, public miscService: MiscService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, public _router: Router, public _http: HttpClient, private _timerService: TimerService, private _categoriesSnackBarService: CategorySnackBarsService) {
+    this.saveComplete = true;
+  }
 
   ngOnInit(): void {
     if (this.treasuryService.cloningTreasuryLog) {
@@ -70,11 +73,11 @@ export class NewTreasuryLogComponent implements OnInit {
     switch (action) {
       case 'save':
         if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this.openMissingCategoriesSnackBar() }
+        if (!this.recurrencyFrequency.disabled && !this.recurrencyFrequency.valid) { return this.openMissingCategoriesSnackBar() }
         const CAT = this.miscService.getCategoryFromTitle(this.catForm.value);
         this.tempTreasuryLog.date = this.treasuryLogDatepickerForm.value.getTime();
         this.tempTreasuryLog.cat = CAT.id;
         this.tempTreasuryLog.subcat = this.miscService.getSubcategoryFromTitle(CAT.subcats, this.subcatForm.value).id;
-        this.treasuryService.recordBorderStyle['background-color'] = CAT.bgcolor;
         this.tempTreasuryLog.value = Number(this.tempTreasuryLog.value.toString().replace(',', '.'))
         if (!this.tempTreasuryLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) {
           return this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
@@ -92,7 +95,7 @@ export class NewTreasuryLogComponent implements OnInit {
   }
 
   createTreasurylog(): void {
-    const RECURRENCY_OPTIONS : RecurrencyOptions = {
+    const RECURRENCY_OPTIONS: RecurrencyOptions = {
       active: this.recurrency,
       type: this.recurrencyType,
       freq: this.recurrencyFrequency.value,
@@ -101,14 +104,19 @@ export class NewTreasuryLogComponent implements OnInit {
     const HTTP_PARAMS = new HttpParams().set('tlog', JSON.stringify(this.tempTreasuryLog)).set('recurrency', JSON.stringify(RECURRENCY_OPTIONS));
     const CALL = this._http.post('http://localhost:16190/createtreasurylog', HTTP_PARAMS, { responseType: 'text' });
 
+    this.saveComplete = false;
+
     CALL.subscribe({
       next: codeReceived => {
+        this.treasuryService.recordBorderStyle['background-color'] = this.miscService.getCategoryStyles(this.tempTreasuryLog.cat)['background-color'];
         this.treasuryService.fetchTreasuryLog('saveTreasuryLog', Number(codeReceived));
-        this._categoriesSnackBarService.triggerCategoriesSnackbar(true, 'playlist_add', this.tempTreasuryLog.title, ['O movimento ', ' foi criado com sucesso.']); // dispara a snackbar
+        RECURRENCY_OPTIONS.active ? this._categoriesSnackBarService.triggerCategoriesSnackbar(true, 'playlist_add', this.tempTreasuryLog.title, ['Os movimentos ', ' foram criados com sucesso.']) : this._categoriesSnackBarService.triggerCategoriesSnackbar(true, 'playlist_add', this.tempTreasuryLog.title, ['O movimento ', ' foi criado com sucesso.']); // dispara a snackbar
+        this.saveComplete = true;
       },
       error: err => {
         this._errorHandlingService.handleError(err);
-        this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', this.tempTreasuryLog.title, ['Ocurreu algo inesperado ao criar o movimento ', '.']); // dispara a snackbar
+        RECURRENCY_OPTIONS.active ? this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', this.tempTreasuryLog.title, ['Ocurreu algo inesperado ao criar os movimentos ', '.']) : this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', this.tempTreasuryLog.title, ['Ocurreu algo inesperado ao criar o movimento ', '.']); // dispara a snackbar
+        this.saveComplete = true;
       }
     })
   }

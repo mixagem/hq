@@ -113,7 +113,7 @@
 
       <h1>
         <div>
-          <mat-icon>info_outline</mat-icon>Recorrência
+          <mat-icon>info_outline</mat-icon>Recorrências
         </div>
       </h1>
 
@@ -121,7 +121,7 @@
 
       <div class="mhq-row">
 
-        wip
+        SELECT * FROM treasurylog WHERE recurrencyid = ""
 
       </div>
 
@@ -182,7 +182,7 @@
                 <mat-select-trigger>{{catForm.value}}</mat-select-trigger>
                 <mat-option *ngFor="let option of categoriesList" [value]="option">
                   <mat-icon
-                    [ngStyle]="miscService.getCategoryStyles">
+                  [ngStyle]="miscService.getCategoryStyles(miscService.getCategoryFromTitle(option).id)">
                     {{miscService.getCategory(miscService.getCategoryFromTitle(option).id).icon}}</mat-icon>
                   {{option}}
                 </mat-option>

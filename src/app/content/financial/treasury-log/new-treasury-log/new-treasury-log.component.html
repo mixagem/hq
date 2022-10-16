@@ -19,7 +19,7 @@
   </div>
 
   <div class="mhq-categories-drawer-right">
-
+    <mat-progress-bar *ngIf="!saveComplete" mode="indeterminate" color="accent"></mat-progress-bar>
     <div class="mhq-wrapper-row">
 
       <h1>
@@ -73,7 +73,7 @@
                 <mat-select-trigger>{{catForm.value}}</mat-select-trigger>
                 <mat-option *ngFor="let option of categoriesList" [value]="option">
                   <mat-icon
-                    [ngStyle]="miscService.getCategoryStyles">
+                    [ngStyle]="miscService.getCategoryStyles(miscService.getCategoryFromTitle(option).id)">
                     {{miscService.getCategory(miscService.getCategoryFromTitle(option).id).icon}}</mat-icon>
                   {{option}}
                 </mat-option>
