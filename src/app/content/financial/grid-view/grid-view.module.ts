@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MonthlyViewComponent } from './monthly-view/monthly-view.component';
 import { AnualViewComponent } from './anual-view/anual-view.component';
 import { DecadeViewComponent } from './decade-view/decade-view.component';
+import { MaterialImportsModule } from 'src/assets/modules/material-imports.module';
 
 @NgModule({
   declarations: [
@@ -10,7 +11,8 @@ import { DecadeViewComponent } from './decade-view/decade-view.component';
     AnualViewComponent,
     DecadeViewComponent,],
   imports: [
-    CommonModule
+    CommonModule,
+    MaterialImportsModule
   ],
   exports: [
     MonthlyViewComponent,

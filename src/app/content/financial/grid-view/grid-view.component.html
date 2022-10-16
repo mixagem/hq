@@ -1,7 +1,20 @@
-aki menus
 
-<a routerLink="month" (click)="changeView('month')">mes</a><br>
-<a routerLink="anual" (click)="changeView('anual')">ano</a><br>
+
+
+<div class="mhq-mainform-container">
+
+  <div class="mhq-mainform-header">
+
+    <a routerLink="month" (click)="changeView('month')">mes</a>
+<a routerLink="anual" (click)="changeView('anual')">ano</a>
 <a routerLink="decade" (click)="changeView('decade')">decada</a>
 
-<router-outlet></router-outlet>
+  </div>
+
+
+  <div class="mhq-row">
+    <router-outlet></router-outlet>
+
+  </div>
+
+</div>

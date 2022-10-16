@@ -76,9 +76,7 @@ export function getDailyCatDetails(req, res) {
 
 
   const dataIni = new Date('2022-01-01T00:00:00.000Z')
-  dataIni.setDate(req.body.day)
-  dataIni.setMonth(req.body.month - 1)
-  dataIni.setFullYear(req.body.year)
+  dataIni.setFullYear(req.body.year,req.body.month - 1,req.body.day)
 
   const dataFi = new Date(dataIni.getTime())
   dataFi.setDate(Number(req.body.day)+1)
@@ -110,13 +108,11 @@ export function genDailyCategoriesEvo(req, res) {
     console.log('Generating categories snapshots...');
   });
 
-  const dataIni = new Date('2022-01-01T00:00:00.000Z')
-  dataIni.setMonth(req.body.month - 1)
-  dataIni.setFullYear(req.body.year)
+  const dataIni = new Date('2022-01-01T00:00:00.000Z');
+  dataIni.setFullYear(req.body.year,req.body.month - 1)
 
-  const dataFi = new Date('2022-01-01T00:00:00.000Z')
-  dataFi.setMonth(req.body.month)
-  dataFi.setFullYear(req.body.year)
+  const dataFi = new Date('2022-01-01T00:00:00.000Z');
+  dataFi.setFullYear(req.body.year,req.body.month)
 
   const dataIniMilli = dataIni.getTime();
   const dataFiMilli = dataFi.getTime();
@@ -146,7 +142,7 @@ export function genDailyCategoriesEvo(req, res) {
 
       let categorySnapshot = [];
 
-      for (let i = 0; i < req.body.days; i++) {
+      for (let i = 0; i < req.body.monthdays; i++) {
 
         let value = 0;
         monthlyMovments.forEach(movement => {
@@ -172,7 +168,7 @@ export function genDailyCategoriesEvo(req, res) {
 
       let subCategorySnapshot = [];
 
-      for (let i = 0; i < req.body.days; i++) {
+      for (let i = 0; i < req.body.monthdays; i++) {
 
         let value = 0;
         monthlyMovments.forEach(movement => {
@@ -193,7 +189,7 @@ export function genDailyCategoriesEvo(req, res) {
     console.log('Subcategories snapshots sucessfully generated.');
     console.log('Generating dailysum snapshot...');
 
-    let dailySumEvo = Array(Number(req.body.days)).fill(0)
+    let dailySumEvo = Array(Number(req.body.monthdays)).fill(0)
     monthlyMovments.forEach(movement => {
       movement.type === 'expense' ? dailySumEvo[(new Date(movement.date).getDate()) - 1] -= movement.value : dailySumEvo[(new Date(movement.date).getDate()) - 1] += movement.value
     });
