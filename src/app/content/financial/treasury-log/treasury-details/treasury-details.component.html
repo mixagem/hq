@@ -1,17 +1,21 @@
 <div class="mhq-row full-height mhq-category-details-wrapper">
 
   <div class="mhq-categories-drawer-left">
+
     <div class="mhq-quickaction-close" (click)="treasuryService.closeDetails()">
       <mat-icon>close</mat-icon>
     </div>
+
     <div *ngIf="!editingMode" class="mhq-quickaction-default" (click)="editingTreasuryLogRecordActions('start')"><button
         mat-icon-button>
         <mat-icon>edit</mat-icon>
       </button></div>
+
     <div *ngIf="editingMode" class="mhq-quickaction-save" (click)="editingTreasuryLogRecordActions('save')"><button
         mat-icon-button>
         <mat-icon>save</mat-icon>
       </button></div>
+
     <div *ngIf="editingMode" class="mhq-quickaction-delete" (click)="editingTreasuryLogRecordActions('end')"><button
         mat-icon-button>
         <mat-icon>not_interested</mat-icon>
@@ -28,14 +32,18 @@
       </button></div>
 
     <div [ngStyle]="treasuryService.recordBorderStyle"></div>
+
   </div>
 
   <div class="mhq-categories-drawer-right">
+
     <div class="mhq-wrapper-row" *ngIf="!editingMode">
 
-      <h1><div>
-        <mat-icon>info_outline</mat-icon>Detalhes
-      </div></h1>
+      <h1>
+        <div>
+          <mat-icon>info_outline</mat-icon>Detalhes
+        </div>
+      </h1>
 
       <div class="mhq-row">
 
@@ -103,9 +111,11 @@
         </div>
       </div>
 
-      <h1><div>
-        <mat-icon>info_outline</mat-icon>Recorrências
-      </div></h1>
+      <h1>
+        <div>
+          <mat-icon>info_outline</mat-icon>Recorrências
+        </div>
+      </h1>
 
       sigurate
 
@@ -113,9 +123,11 @@
 
     <div class="mhq-wrapper-row" *ngIf="editingMode">
 
-      <h1><div>
-        <mat-icon>info_outline</mat-icon>Detalhes
-      </div></h1>
+      <h1>
+        <div>
+          <mat-icon>info_outline</mat-icon>Detalhes
+        </div>
+      </h1>
 
       <div class="mhq-row">
 
@@ -142,8 +154,6 @@
             <mat-datepicker #treasuryLogDatepicker></mat-datepicker>
           </mat-form-field>
 
-
-
         </div>
 
       </div>
@@ -169,7 +179,7 @@
                     [style]="'background-color:'+miscService.getCatStyleSimplex(miscService.getCategoryIDFromTitle(option))[0]+';color:'+miscService.getCatStyleSimplex(miscService.getCategoryIDFromTitle(option))[1]">
                     {{miscService.getCategoryIcon(miscService.getCategoryIDFromTitle(option))}}</mat-icon>
                   {{option}}
-                  </mat-option>
+                </mat-option>
               </mat-select>
             </mat-form-field>
           </form>
@@ -212,6 +222,7 @@
       </div>
 
     </div>
+
   </div>
-  <!-- <div class="mhq-wrapper-row" *ngIf="editingMode"></div> -->
+  
 </div>

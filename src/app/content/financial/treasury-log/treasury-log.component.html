@@ -1,6 +1,6 @@
-<mat-progress-bar *ngIf="!treasuryService.loadingComplete" mode="indeterminate"></mat-progress-bar>
+<mat-progress-bar *ngIf="!isMatTableReady" mode="indeterminate"></mat-progress-bar>
 
-<div *ngIf="treasuryService.loadingComplete" class="mhq-mainform-container">
+<div *ngIf="isMatTableReady" class="mhq-mainform-container">
 
   <div class="mhq-row mhq-mainform-header">
     <h1>
@@ -43,9 +43,8 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="viewMode(row.id,row.cat)"></tr>
   </table>
+  <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
 
-  <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons>
-  </mat-paginator>
 </div>
 
 <div *ngIf="router.url !== '/fi/tlogs'" id="mhq-category-details"

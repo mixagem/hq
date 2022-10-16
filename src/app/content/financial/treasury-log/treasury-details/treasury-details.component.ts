@@ -30,7 +30,6 @@ export class TreasuryDetailsComponent implements OnInit {
   catForm: FormControl
   categoriesList: string[] = [];
 
-
   // autocomplete sub categoria
   subcatForm: FormControl
   subcategoriesList: string[] = [];
@@ -56,7 +55,7 @@ export class TreasuryDetailsComponent implements OnInit {
     this.id = Number(this._route.snapshot.paramMap.get('id')!);
 
     // obter snapshot do movimento
-    this.treasuryLog = [...this.treasuryService.treasuryLog].filter(treasurylog => treasurylog.id === this.id)[0];
+    this.treasuryLog = this.miscService.getTreasuryLog(this.id)
 
     // clone do movimento para modo de edição
     this.tempTreasuryLog = JSON.parse(JSON.stringify(this.treasuryLog));
@@ -68,22 +67,13 @@ export class TreasuryDetailsComponent implements OnInit {
     this.treasuryLogDatepickerForm = new FormControl(new Date(this.treasuryLog.date), [Validators.required]);
 
     // forms para inputs autocomplete
-
     this.catForm = new FormControl(this.miscService.getCategoryTitle(this.tempTreasuryLog.cat), [Validators.required]);
     this.subcatForm = new FormControl({ value: this.miscService.getSubcategoryTitle(this.tempTreasuryLog.cat, this.tempTreasuryLog.subcat), disabled: true }, [Validators.required]);
-
-    this.miscService.getCategoryObjectFromID(this.tempTreasuryLog.cat).subcats.forEach(subcat => {
-      this.subcategoriesList.push(subcat.title)
-    });
+    this.miscService.getCategoryObjectFromID(this.tempTreasuryLog.cat).subcats.forEach(subcat => { this.subcategoriesList.push(subcat.title) });
     this.subcatForm.enable();
 
-
     // opções para select
-    this._categoriesService.allCategories.forEach(cat => {
-      this.categoriesList.push(cat.title)
-    });
-
-
+    this._categoriesService.allCategories.forEach(cat => { this.categoriesList.push(cat.title) });
   }
 
   saveTreasurylog(): void {
@@ -105,9 +95,7 @@ export class TreasuryDetailsComponent implements OnInit {
   }
 
   openMissingCategoriesSnackBar(): void {
-    this._snackBar.openFromComponent(MissingCategoriesSnackBarComponent, {
-      duration: 5000, //ms
-    });
+    this._snackBar.openFromComponent(MissingCategoriesSnackBarComponent, { duration: 5000 });
   }
 
   editingTreasuryLogRecordActions(action: string): void {
@@ -124,25 +112,16 @@ export class TreasuryDetailsComponent implements OnInit {
 
         if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this.openMissingCategoriesSnackBar() }
 
+        const cat = this.miscService.getCategoryFromTitle(this.catForm.value);
+
         this.tempTreasuryLog.date = this.treasuryLogDatepickerForm.value.getTime();
-
-        const cat = [...this._categoriesService.allCategories].filter(cat => cat.title === this.catForm.value)[0]
-        const catBGColor: string = cat.bgcolor;
-        const subcats: IFinancialSubCategory[] = cat.subcats;
-        const catID: number = cat.id;
-        // obter o ID da sub-categoria selecionada
-        const subCatID: number = subcats.filter(subcat => subcat.title === this.subcatForm.value)[0].id
-
-        // converter de títilo para o id das catgorias
-        this.tempTreasuryLog.cat = catID;
-        this.tempTreasuryLog.subcat = subCatID;
-        this.treasuryService.recordBorderStyle['background-color'] = catBGColor!;
-
+        this.tempTreasuryLog.cat = cat.id;
+        this.tempTreasuryLog.subcat = this.miscService.getSubcategoryIDFromTitle(cat.subcats, this.subcatForm.value)
+        this.treasuryService.recordBorderStyle['background-color'] = cat.bgcolor;
         this.tempTreasuryLog.value = Number(this.tempTreasuryLog.value.toString().replace(',', '.')) // conversão de vírgulas para pontos
 
-        if (!this.tempTreasuryLog.value.toString().match(/^[0-9]*\.{0,1}[0-9]{0,2}$/g)) {
-          this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
-          return;
+        if (!this.tempTreasuryLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) {
+          return this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
         }
 
         this.saveTreasurylog();
@@ -164,14 +143,9 @@ export class TreasuryDetailsComponent implements OnInit {
   }
 
   categorySelectChanged(event: MatSelectChange): void {
-    const categoryID = this.miscService.getCategoryIDFromTitle(event.value);
-    const category = this._categoriesService.allCategories.filter(cat => cat.id === categoryID)[0];
-
+    const category = this.miscService.getCategoryFromTitle(event.value);
     this.subcategoriesList = [];
-    category.subcats.forEach(subcat => {
-      this.subcategoriesList.push(subcat.title)
-    });
-
+    category.subcats.forEach(subcat => { this.subcategoriesList.push(subcat.title) });
     this.subcatForm.setValue('')
     this.subcategoriesList.length > 0 ? this.subcatForm.enable() : this.subcatForm.disable();
   }
@@ -188,7 +162,7 @@ export class DeleteTreasuryLogConfirmationModal {
 
   constructor(public treasuryService: TreasuryService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService) { }
 
-  deleteTreasuryLog() {
+  deleteTreasuryLog(): void {
 
     const httpParams = new HttpParams().set('tlog', this.treasuryService.activeTreasuryLog.id)
     const call = this._http.post('http://localhost:16190/deletetreasurylog', httpParams, { responseType: 'text' })

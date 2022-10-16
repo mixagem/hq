@@ -23,7 +23,10 @@ export class CategoriesComponent implements OnInit {
   }
 
   // paginador da tabela
-  @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) { this.dataSource.paginator = paginator; }
+  @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
+    if (!this._loadingService.categoriesLoadingComplete) { return }
+    this.dataSource.paginator = paginator;
+  }
 
   ngOnInit(): void {
     // trigger remoto do OnInit

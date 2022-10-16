@@ -1,9 +1,9 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
-import { MiscService } from 'src/assets/services/misc.service';
+import { LoadingService, MiscService } from 'src/assets/services/misc.service';
 import { CategoriesService } from '../categories/categories.service';
 import { TreasuryService } from './treasury.service';
 
@@ -15,45 +15,36 @@ import { TreasuryService } from './treasury.service';
 
 export class TreasuryLogComponent implements OnInit {
 
-  // datasource para tabela
-  dataSource: MatTableDataSource<ITreasuryLog>;
-  // array com as colunas da tabela
-  displayedColumns: string[];
-  // paginador da tabela
-   // paginador da tabela
-   @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
-    this.dataSource.paginator = paginator;
+  isMatTableReady: Boolean; // estado da construção da tabela (vem depois da comunicação à bd)
+  dataSource: MatTableDataSource<ITreasuryLog>;  // datasource para tabela
+  displayedColumns: string[];   // array com as colunas da tabela
+
+  constructor(public treasuryService: TreasuryService, public categoriesService: CategoriesService, public router: Router, public miscService: MiscService, private _loadingService: LoadingService) {
+    this.isMatTableReady = false;
   }
 
-  constructor(public treasuryService: TreasuryService, public categoriesService: CategoriesService, public router: Router, public miscService:MiscService) { }
+  @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
+    if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.treasuryLoadingComplete) { return }
+    this.dataSource.paginator = paginator;
+  }   // paginador da tabela
 
   ngOnInit(): void {
-
     // trigger remoto do OnInit
-    this.treasuryService.onInitTrigger.subscribe(myCustomParam => {
-      this.ngOnInit();
-    });
-
+    this.treasuryService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
+    this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     // se o loading ainda não estiver pronto, interrompe o ngOnInit
-    if (!this.treasuryService.loadingComplete) { return }
-
+    if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.treasuryLoadingComplete) { return }
     // incializar tabela
     this.dataSource = new MatTableDataSource<ITreasuryLog>(this.treasuryService.treasuryLog);
     this.displayedColumns = ['cat', 'title', 'date', 'value'];
-
+    this.isMatTableReady = true;
   }
-
-
 
   // navegação para modo de consulta de registo
   viewMode(logID: number, catID: number): void {
+    this.treasuryService.recordBorderStyle = { "background-color": this.miscService.getCategoryStyles(catID)['background-color'] };
 
-    const categoryBGColor = this.categoriesService.allCategories.filter(cat => cat.id == catID)[0].bgcolor;
-    this.treasuryService.recordBorderStyle = { "background-color": categoryBGColor };
-
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate(['/fi/tlogs', logID]);
-    });
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this.router.navigate(['/fi/tlogs', logID]); });
   }
 
 }

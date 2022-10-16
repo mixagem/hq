@@ -171,7 +171,6 @@ export class OverviewComponent implements OnInit {
 
   // modal
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string, source: string, day: number, catOrSubcat?: number): void {
-    console.log(source)
     switch (source) {
 
       case 'category':
