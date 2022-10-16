@@ -14,7 +14,7 @@ import { NewTreasuryLogComponent } from './content/financial/treasury-log/new-tr
 import { TreasuryDetailsComponent } from './content/financial/treasury-log/treasury-details/treasury-details.component';
 import { TreasuryLogComponent } from './content/financial/treasury-log/treasury-log.component';
 
-const routes: Routes = [
+const ROUTES: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent, pathMatch: 'full' },
   { path: 'agenda', component: AgendaComponent, pathMatch: 'full' },
@@ -40,7 +40,7 @@ const routes: Routes = [
   }];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(ROUTES)],
   exports: [RouterModule]
 })
 

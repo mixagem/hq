@@ -14,26 +14,16 @@ import { OverviewService } from '../overview.service';
   styleUrls: ['./overview-daily-details-modal.component.scss', '../../../../../assets/styles/mhq-large-modal.scss']
 })
 export class OverviewDailyDetailsModalComponent implements OnInit {
-
-  // datasource para tabela
   dataSource: MatTableDataSource<ITreasuryLog>;
   isDataSourceEmpty: Boolean;
-
-  // array com as colunas da tabela
   displayedColumns: string[];
 
-  constructor(public categoriesService: CategoriesService, public overviewService: OverviewService, public miscService: MiscService, private _router: Router, private _treasuryService: TreasuryService) {
-    // this.tablesReady = false;
-  }
+  constructor(public categoriesService: CategoriesService, public overviewService: OverviewService, public miscService: MiscService, private _router: Router, private _treasuryService: TreasuryService) { }
 
   ngOnInit(): void {
-
     this.dataSource = new MatTableDataSource<ITreasuryLog>([...this.overviewService.treasuryLogsForDetails]);
-
     this.overviewService.treasuryLogsForDetails.length === 0 ? this.isDataSourceEmpty = true : this.isDataSourceEmpty = false;
-
     switch (this.overviewService.source) {
-
       case 'category':
         this.displayedColumns = ['subcat', 'title', 'value', 'link'];
         break;
@@ -46,21 +36,17 @@ export class OverviewDailyDetailsModalComponent implements OnInit {
         this.displayedColumns = ['icon', 'subcat', 'title', 'value', 'link'];
         break;
     }
-
   }
 
-  // paginador da tabela
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  // afterViewInit para tabela
+
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
   }
 
   goToTreasuryLog(treasuryLogID: number, categoryID: number) {
-    const ele = document.querySelector('.cdk-overlay-backdrop') as HTMLElement;
-    ele.click();
+    const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
     this._treasuryService.recordBorderStyle = { 'background-color': this.miscService.getCatStyleSimplex(categoryID)[0] }
     this._router.navigate(['/fi/tlogs', treasuryLogID]);
   }
-
 }

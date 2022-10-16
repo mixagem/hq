@@ -52,10 +52,10 @@ export class TreasuryDetailsComponent implements OnInit {
   }
 
   saveTreasurylog(): void {
-    const httpParams = new HttpParams().set('tlog', JSON.stringify(this.tempTreasuryLog))
-    const call = this._http.post('http://localhost:16190/updatetreasurylog', httpParams, { responseType: 'text' })
+    const HTTP_PARAMS = new HttpParams().set('tlog', JSON.stringify(this.tempTreasuryLog))
+    const CALL = this._http.post('http://localhost:16190/updatetreasurylog', HTTP_PARAMS, { responseType: 'text' })
 
-    call.subscribe({
+    CALL.subscribe({
       next: codeReceived => {
         this.treasuryService.fetchTreasuryLog('saveTreasuryLog', this.tempTreasuryLog.id);
         this.editingMode = false;
@@ -85,11 +85,11 @@ export class TreasuryDetailsComponent implements OnInit {
 
       case 'save':
         if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this.openMissingCategoriesSnackBar(); }
-        const cat = this.miscService.getCategoryFromTitle(this.catForm.value);
+        const CATEGORY = this.miscService.getCategoryFromTitle(this.catForm.value);
         this.tempTreasuryLog.date = this.treasuryLogDatepickerForm.value.getTime();
-        this.tempTreasuryLog.cat = cat.id;
-        this.tempTreasuryLog.subcat = this.miscService.getSubcategoryFromTitle(cat.subcats, this.subcatForm.value).id;
-        this.treasuryService.recordBorderStyle['background-color'] = cat.bgcolor;
+        this.tempTreasuryLog.cat = CATEGORY.id;
+        this.tempTreasuryLog.subcat = this.miscService.getSubcategoryFromTitle(CATEGORY.subcats, this.subcatForm.value).id;
+        this.treasuryService.recordBorderStyle['background-color'] = CATEGORY.bgcolor;
         this.tempTreasuryLog.value = Number(this.tempTreasuryLog.value.toString().replace(',', '.')); // conversão de vírgulas para pontos
         if (!this.tempTreasuryLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) {
           return this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
@@ -147,10 +147,10 @@ export class DeleteTreasuryLogConfirmationModal {
   constructor(public treasuryService: TreasuryService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService) { }
 
   deleteTreasuryLog(): void {
-    const httpParams = new HttpParams().set('tlog', this.treasuryService.activeTreasuryLog.id)
-    const call = this._http.post('http://localhost:16190/deletetreasurylog', httpParams, { responseType: 'text' })
+    const HTTP_PARAMS = new HttpParams().set('tlog', this.treasuryService.activeTreasuryLog.id)
+    const CALL = this._http.post('http://localhost:16190/deletetreasurylog', HTTP_PARAMS, { responseType: 'text' })
 
-    call.subscribe({
+    CALL.subscribe({
       next: codeReceived => { this.treasuryService.fetchTreasuryLog('deleteTreasuryLog'); },
       error: err => this._errorHandlingService.handleError(err)
     })

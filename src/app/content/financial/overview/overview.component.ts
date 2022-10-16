@@ -100,12 +100,12 @@ export class OverviewComponent implements OnInit {
   getDailySumAcomEvolution(): void { // total acomulado
     this.dailySumAcomEvolution = [];
 
-    const httpParams = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear).set('days', this.monthDays)
-    const call = this._http.post('http://localhost:16190/dailysumevo', httpParams, { responseType: 'json' })
+    const HTTP_PARAMS = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear).set('days', this.monthDays)
+    const CALL = this._http.post('http://localhost:16190/dailysumevo', HTTP_PARAMS, { responseType: 'json' })
 
-    call.subscribe({
+    CALL.subscribe({
       next: codeReceived => {
-        const resp = codeReceived as number[]; this.dailySumAcomEvolution = resp;
+        const RESP = codeReceived as number[]; this.dailySumAcomEvolution = RESP;
       },
       error: err => this._errorHandlingService.handleError(err)
     })
@@ -115,12 +115,12 @@ export class OverviewComponent implements OnInit {
     this.dailyCatEvolution = [];
     this.dailySubCatEvolution = [];
 
-    const httpParams = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear).set('days', this.monthDays)
-    const call = this._http.post('http://localhost:16190/dailycatsevo', httpParams, { responseType: 'json' })
+    const HTTP_PARAMS = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear).set('days', this.monthDays)
+    const CALL = this._http.post('http://localhost:16190/dailycatsevo', HTTP_PARAMS, { responseType: 'json' })
 
-    call.subscribe({
+    CALL.subscribe({
       next: codeReceived => {
-        const resp = codeReceived as object[]; this.dailyCatEvolution = resp[0]; this.dailySubCatEvolution = resp[1];
+        const RESP = codeReceived as object[]; this.dailyCatEvolution = RESP[0]; this.dailySubCatEvolution = RESP[1];
         this.evoReady = true;
       },
       error: err => this._errorHandlingService.handleError(err)
@@ -128,13 +128,13 @@ export class OverviewComponent implements OnInit {
   }
 
   showDailySumDetails(day: number): void {
-    const httpParams = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear).set('day', day);
-    const call = this._http.post('http://localhost:16190/getdailydetails', httpParams, { responseType: 'json' })
+    const HTTP_PARAMS = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear).set('day', day);
+    const CALL = this._http.post('http://localhost:16190/getdailydetails', HTTP_PARAMS, { responseType: 'json' })
 
-    call.subscribe({
+    CALL.subscribe({
       next: codeReceived => {
-        const resp = codeReceived as ITreasuryLog[]
-        this._overviewService.treasuryLogsForDetails = resp
+        const RESP = codeReceived as ITreasuryLog[]
+        this._overviewService.treasuryLogsForDetails = RESP
         this.openDialog('300ms', '150ms', 'daily', day)
       },
       error: err => this._errorHandlingService.handleError(err)
@@ -142,13 +142,13 @@ export class OverviewComponent implements OnInit {
   }
 
   showDailySubCatDetails(subcatID: number, day: number): void {
-    const httpParams = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear).set('day', day).set('subcat', subcatID);
-    const call = this._http.post('http://localhost:16190/getdailysubcatdetails', httpParams, { responseType: 'json' })
+    const HTTP_PARAMS = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear).set('day', day).set('subcat', subcatID);
+    const CALL = this._http.post('http://localhost:16190/getdailysubcatdetails', HTTP_PARAMS, { responseType: 'json' })
 
-    call.subscribe({
+    CALL.subscribe({
       next: codeReceived => {
-        const resp = codeReceived as ITreasuryLog[]
-        this._overviewService.treasuryLogsForDetails = resp
+        const RESP = codeReceived as ITreasuryLog[]
+        this._overviewService.treasuryLogsForDetails = RESP
         this.openDialog('300ms', '150ms', 'subcategory', day, subcatID)
       },
       error: err => this._errorHandlingService.handleError(err)
@@ -156,13 +156,13 @@ export class OverviewComponent implements OnInit {
   }
 
   showDailyCatDetails(catID: number, day: number): void {
-    const httpParams = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear).set('day', day).set('cat', catID);
-    const call = this._http.post('http://localhost:16190/getdailycatdetails', httpParams, { responseType: 'json' })
+    const HTTP_PARAMS = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear).set('day', day).set('cat', catID);
+    const CALL = this._http.post('http://localhost:16190/getdailycatdetails', HTTP_PARAMS, { responseType: 'json' })
 
-    call.subscribe({
+    CALL.subscribe({
       next: codeReceived => {
-        const resp = codeReceived as ITreasuryLog[]
-        this._overviewService.treasuryLogsForDetails = resp
+        const RESP = codeReceived as ITreasuryLog[]
+        this._overviewService.treasuryLogsForDetails = RESP
         this.openDialog('300ms', '150ms', 'category', day, catID)
       },
       error: err => this._errorHandlingService.handleError(err)

@@ -13,7 +13,6 @@ import { LoadingService, MiscService } from 'src/assets/services/misc.service';
 })
 
 export class CategoriesComponent implements OnInit {
-
   isMatTableReady: Boolean; // estado da construção da tabela (vem depois da comunicação à bd)
   dataSource: MatTableDataSource<IFinancialCategory>;  // datasource para tabela
   displayedColumns: string[];  // colunas da tabela
@@ -22,20 +21,14 @@ export class CategoriesComponent implements OnInit {
     this.isMatTableReady = false;
   }
 
-  // paginador da tabela
   @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
     if (!this._loadingService.categoriesLoadingComplete) { return }
     this.dataSource.paginator = paginator;
   }
 
   ngOnInit(): void {
-    // trigger remoto do OnInit
     this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
-
-    // interrompe o ngOnInit caso o loading ainda não tenha concluído
     if (!this._loadingService.categoriesLoadingComplete) { return }
-
-    // incializar tabela
     this.dataSource = new MatTableDataSource<IFinancialCategory>([...this.categoriesService.allCategories]);
     this.displayedColumns = ['icon', 'title', 'type', 'active'];
     this.isMatTableReady = true;
@@ -43,10 +36,7 @@ export class CategoriesComponent implements OnInit {
 
   // (onclick) nos registos de categoria
   viewRecordDetails(categoryID: number): void {
-    // atualizar o estilo da gaveta
     this.categoriesService.recordBorderStyle = { "background-color": this._miscService.getCategoryStyles(categoryID)['background-color'] };
-    // navegação para modo de consulta de registo
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this.router.navigate(['/fi/cats', categoryID]); });
   }
-
 }

@@ -62,11 +62,11 @@ export class NewTreasuryLogComponent implements OnInit {
     switch (action) {
       case 'save':
         if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this.openMissingCategoriesSnackBar() }
-        const cat = this.miscService.getCategoryFromTitle(this.catForm.value);
+        const CAT = this.miscService.getCategoryFromTitle(this.catForm.value);
         this.tempTreasuryLog.date = this.treasuryLogDatepickerForm.value.getTime();
-        this.tempTreasuryLog.cat = cat.id;
-        this.tempTreasuryLog.subcat = this.miscService.getSubcategoryFromTitle(cat.subcats, this.subcatForm.value).id;
-        this.treasuryService.recordBorderStyle['background-color'] = cat.bgcolor;
+        this.tempTreasuryLog.cat = CAT.id;
+        this.tempTreasuryLog.subcat = this.miscService.getSubcategoryFromTitle(CAT.subcats, this.subcatForm.value).id;
+        this.treasuryService.recordBorderStyle['background-color'] = CAT.bgcolor;
         this.tempTreasuryLog.value = Number(this.tempTreasuryLog.value.toString().replace(',', '.'))
         if (!this.tempTreasuryLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) {
           return this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
@@ -84,10 +84,10 @@ export class NewTreasuryLogComponent implements OnInit {
   }
 
   saveTreasurylog(): void {
-    const httpParams = new HttpParams().set('tlog', JSON.stringify(this.tempTreasuryLog)).set('recurrency', this.recurrency);
-    const call = this._http.post('http://localhost:16190/createtreasurylog', httpParams, { responseType: 'text' });
+    const HTTP_PARAMS = new HttpParams().set('tlog', JSON.stringify(this.tempTreasuryLog)).set('recurrency', this.recurrency);
+    const CALL = this._http.post('http://localhost:16190/createtreasurylog', HTTP_PARAMS, { responseType: 'text' });
 
-    call.subscribe({
+    CALL.subscribe({
       next: codeReceived => {
         this.treasuryService.fetchTreasuryLog('saveTreasuryLog', Number(codeReceived));
         this._categoriesSnackBarService.triggerCategoriesSnackbar(true, 'playlist_add', this.tempTreasuryLog.title, ['O movimento ', ' foi criado com sucesso.']); // dispara a snackbar

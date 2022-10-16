@@ -17,7 +17,6 @@ import { CategorySnackBarsService } from '../../../../../assets/services/snack-b
 })
 
 export class CategoryDetailsComponent implements OnInit {
-
   id: number; // id da categoria em consulta
   fiCategory: IFinancialCategory;  // clone da categoria utilizada em consulta
   tempFiCategory: IFinancialCategory; // clone da categoria utilizada no modo  edição
@@ -28,36 +27,24 @@ export class CategoryDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //obter o id da categoria em consulta
     this.id = Number(this._route.snapshot.paramMap.get('id'));
-
-    // obter a categoria
     this.fiCategory = this.miscService.getCategory(this.id);
-    // clone da categoria para edição
     this.tempFiCategory = JSON.parse(JSON.stringify(this.fiCategory));
-    // clone da categoria enviado para o serviço -> utilizado para a duplicação (o componente de introdução vai ler ao servico o objeto da categoria)
     this.categoriesService.activePreviewCategory = JSON.parse(JSON.stringify(this.fiCategory));
-
-    // trigger remoto do OnInit
     this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
   }
 
   // Ações de registo do modo de edição
   editingCategoryRecordActions(action: string): void {
     switch (action) {
-
       case 'edit':
-
         this.categoriesService.getCurrentSubcategoriesSequence(); // obter o valor da sequencia de subcategorias
         this.tempFiCategory = JSON.parse(JSON.stringify(this.fiCategory));// refrescar o tempFi
         this.editingMode = true;
-
         break;
 
       case 'save':
-
         if (this.categoriesService.headerInputsValidation(this.tempFiCategory)) { this.saveCategoryChanges(); }
-
         break;
 
       case 'end': default:
@@ -79,13 +66,11 @@ export class CategoryDetailsComponent implements OnInit {
 
   // Ação para guardar as alterações ao registo
   saveCategoryChanges(): void {
+    const HTTP_PARAMS = new HttpParams().set('category', JSON.stringify(this.tempFiCategory))
+    const CALL = this._http.post('http://localhost:16190/updatecategory', HTTP_PARAMS, { responseType: 'text' })
 
-    const httpParams = new HttpParams().set('category', JSON.stringify(this.tempFiCategory))
-    const call = this._http.post('http://localhost:16190/updatecategory', httpParams, { responseType: 'text' })
-
-    call.subscribe({
+    CALL.subscribe({
       next: codeReceived => {
-
         if (Number(codeReceived) === 1) {
           this.categoriesService.fetchCategories('saveCategory', this.id); // atualiza o modo listagem / consulta
           this.categoriesService.recordBorderStyle['background-color'] = this.tempFiCategory.bgcolor; // atualiza a cor do border da gaveta com a nova cor da categoria
@@ -95,16 +80,13 @@ export class CategoryDetailsComponent implements OnInit {
         else {
           this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', this.tempFiCategory.title, ['Ocurreu um erro ao guardar as alterações à categoria ', '.']);
         }
-
       },
       error: err => this._errorHandlingService.handleError(err)
     })
-
   }
 
   // modal para apagar a categoria
   deleteCategoryModal(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this._dialog.open(DeleteCategoryConfirmationModalComponent, { width: '50vw', height: '50vh', enterAnimationDuration, exitAnimationDuration });
   }
-
 }

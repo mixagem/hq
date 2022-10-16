@@ -10,7 +10,7 @@
 
     <ng-container matColumnDef="icon" *ngIf="overviewService.source === 'daily'">
       <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let element" [style]="miscService.getCatStyle(element.cat)">
+      <td mat-cell *matCellDef="let element" [ngStyle]="miscService.getCategoryStyles(element.cat)">
         <mat-icon>{{miscService.getCategoryIconFromSubcategoryID(element.subcat)}}</mat-icon>
       </td>
     </ng-container>

@@ -36,12 +36,12 @@ export class TreasuryService {
 
   // vai á bd buscar os movimentos
   fetchTreasuryLog(source: string = '', LogID?: number): void {
-    const call = this._http.get('http://localhost:16190/fetchtreasurylogs');
+    const CALL = this._http.get('http://localhost:16190/fetchtreasurylogs');
 
-    call.subscribe({
+    CALL.subscribe({
       next: (codeReceived) => {
-        const resp = codeReceived as ITreasuryLog[];
-        this.treasuryLog = resp;
+        const RESP = codeReceived as ITreasuryLog[];
+        this.treasuryLog = RESP;
         this._loadingService.treasuryLoadingComplete = true;
 
         if (source === 'saveTreasuryLog') { this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs', LogID]); }); }
@@ -50,7 +50,7 @@ export class TreasuryService {
           document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
           this._timerService.timer = setTimeout(navi.bind(null, this._router), 1000);
           function navi(router: Router): void {
-            const ele = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ele.click();
+            const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
             router.navigateByUrl('/', { skipLocationChange: true }).then(() => { router.navigate(['/fi/tlogs']); });
           }
         }

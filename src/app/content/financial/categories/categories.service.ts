@@ -11,7 +11,6 @@ type RecordBorderStyle = { "background-color": string }
 @Injectable({ providedIn: 'root' })
 
 export class CategoriesService {
-
   currentSubcategoryDBSequence: number; //valor da sequencia de subcategorias da BD
   onInitTrigger: Subject<any>; // trigger para onInit
   recordBorderStyle: RecordBorderStyle;// estilo a ser aplicado na gaveta do registo
@@ -34,9 +33,8 @@ export class CategoriesService {
 
   // método para obter o último id utilizado nas categorias em bd
   getCurrentSubcategoriesSequence(): void {
-    const call = this._http.get('http://localhost:16190/currentsubcategorysequence');
-
-    call.subscribe({
+    const CALL = this._http.get('http://localhost:16190/currentsubcategorysequence');
+    CALL.subscribe({
       next: (codeReceived) => { this.currentSubcategoryDBSequence = Number(codeReceived) },
       error: err => this._errorHandlingService.handleError(err)
     });
@@ -44,15 +42,14 @@ export class CategoriesService {
 
   // vai á bd buscar as categorias
   fetchCategories(source: string = '', catID?: number): void {
-    const call = this._http.get('http://localhost:16190/fetchcats');
-
-    call.subscribe({
+    const CALL = this._http.get('http://localhost:16190/fetchcats');
+    CALL.subscribe({
       next: (codeReceived) => {
-        const resp = codeReceived as IFinancialCategory[];
+        const RESP = codeReceived as IFinancialCategory[];
         // guardar no serviço a resposta da bd
-        this.allCategories = resp;
-        this.expenseCategories = resp.filter(cat => cat.type === 'expense'); //split para re-ordenação
-        this.incomeCategories = resp.filter(cat => cat.type === 'income'); //split para re-ordenação
+        this.allCategories = RESP;
+        this.expenseCategories = RESP.filter(cat => cat.type === 'expense'); //split para re-ordenação
+        this.incomeCategories = RESP.filter(cat => cat.type === 'income'); //split para re-ordenação
         this._loadingService.categoriesLoadingComplete = true; // loading das categorias pronto
 
         // faz refresh da listagem e do registo em consulta
@@ -60,17 +57,13 @@ export class CategoriesService {
 
         // fecha a gaveta do registo, fecha a modal e faz refresh da listagem
         if (source === 'deleteCategory') {
-
           document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
-
           this._timerService.timer = setTimeout(navi.bind(null, this._router), 1000);
           function navi(router: Router): void {
-            const ele = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ele.click();
+            const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
             router.navigateByUrl('/', { skipLocationChange: true }).then(() => { router.navigate(['/fi/cats']); });
           }
         }
-
-        // trigger do OnInit
         this.onInitTriggerCall();
       },
       error: err => this._errorHandlingService.handleError(err)
@@ -93,7 +86,6 @@ export class CategoriesService {
   }
 
   headerInputsValidation(tempFiCategory: IFinancialCategory): boolean {
-
     if (tempFiCategory.icon.includes(' ')) {
       this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', 'Icon', ['O ', ' encontra-se incorretamente definido.']);
       return false;
@@ -119,10 +111,6 @@ export class CategoriesService {
       this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', 'Orçamento', ['Existem sub-categorias para as quais o ', ' se encontra incorretamente definido.']);
       return false;
     }
-
     return true;
-
   }
-
-
 }

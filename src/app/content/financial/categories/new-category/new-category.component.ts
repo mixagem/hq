@@ -19,9 +19,7 @@ const DEFAULT_FISUBCATEGORY: IFinancialSubCategory = { id: Date.now(), maincatid
 })
 
 export class NewCategoryComponent implements OnInit {
-
   tempFiCategory: IFinancialCategory; // categoria utilizada no modo de introdução
-
   constructor(public miscService: MiscService, public categoriesService: CategoriesService, private _http: HttpClient, private _router: Router, private _timerService: TimerService, private _categorySnackBarsService: CategorySnackBarsService, private _snackBar: MatSnackBar, private _errorHandlingService: ErrorHandlingService) { }
 
   ngOnInit(): void {
@@ -37,15 +35,11 @@ export class NewCategoryComponent implements OnInit {
   // ações de registo
   newCategoryRecordActions(action: string): void {
     switch (action) {
-
       case 'save':
-
         if (this.categoriesService.headerInputsValidation(this.tempFiCategory)) { this.createNewCategory(); }
-
         break;
 
       case 'end': default:
-
         document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
         this._timerService.timer = setTimeout(navi.bind(null, this._router), 1000);
         function navi(router: Router): void { router.navigate(['/fi/cats']) };
@@ -64,10 +58,9 @@ export class NewCategoryComponent implements OnInit {
 
   // concluí o modo de introdução (manda para bd, faz fresh à listagem e à gaveta)
   createNewCategory(): void {
-    const httpParams = new HttpParams().set('category', JSON.stringify(this.tempFiCategory));
-    const call = this._http.post('http://localhost:16190/createnewcategory', httpParams, { responseType: 'text' });
-
-    call.subscribe({
+    const HTTP_PARAMS = new HttpParams().set('category', JSON.stringify(this.tempFiCategory));
+    const CALL = this._http.post('http://localhost:16190/createnewcategory', HTTP_PARAMS, { responseType: 'text' });
+    CALL.subscribe({
       next: codeReceived => {
         if (codeReceived !== 'MHQ_ERROR') {
           this.categoriesService.fetchCategories('saveCategory', Number(codeReceived)); // atualiza o modo listagem / consulta
