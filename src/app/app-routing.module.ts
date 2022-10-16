@@ -14,44 +14,34 @@ import { NewTreasuryLogComponent } from './content/financial/treasury-log/new-tr
 import { TreasuryDetailsComponent } from './content/financial/treasury-log/treasury-details/treasury-details.component';
 import { TreasuryLogComponent } from './content/financial/treasury-log/treasury-log.component';
 
-const routes: Routes = [{
-  path: '', redirectTo: 'dashboard', pathMatch: 'full'
-}, {
-  path: 'dashboard', component: DashboardComponent, pathMatch: 'full'
-}, {
-  path: 'agenda', component: AgendaComponent, pathMatch: 'full'
-}, {
-  path: 'fi', component: FinancialComponent, children: [
-    {
-      path: 'grid', component: GridViewComponent, children: [
-        { path: 'month', component: MonthlyViewComponent },
-        { path: 'anual', component: AnualViewComponent },
-        { path: 'decade', component: DecadeViewComponent }
-      ]
-    }, {
-      path: 'tlogs', component: TreasuryLogComponent, children: [
-        {
-          path: 'add', component: NewTreasuryLogComponent
-        },
-        {
-          path: ':id', component: TreasuryDetailsComponent
-        }
-      ]
-    }, {
-      path: 'cats', component: CategoriesComponent, children: [
-        {
-          path: 'add', component: NewCategoryComponent
-        },
-        {
-          path: ':id', component: CategoryDetailsComponent
-        }]
-    }
-  ]
-}
-];
+const routes: Routes = [
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: 'dashboard', component: DashboardComponent, pathMatch: 'full' },
+  { path: 'agenda', component: AgendaComponent, pathMatch: 'full' },
+  {
+    path: 'fi', component: FinancialComponent, children: [
+      {
+        path: 'grid', component: GridViewComponent, children: [
+          { path: 'month', component: MonthlyViewComponent },
+          { path: 'anual', component: AnualViewComponent },
+          { path: 'decade', component: DecadeViewComponent }
+        ]
+      }, {
+        path: 'tlogs', component: TreasuryLogComponent, children: [
+          { path: 'add', component: NewTreasuryLogComponent },
+          { path: ':id', component: TreasuryDetailsComponent }
+        ]
+      }, {
+        path: 'cats', component: CategoriesComponent, children: [
+          { path: 'add', component: NewCategoryComponent },
+          { path: ':id', component: CategoryDetailsComponent }]
+      }
+    ]
+  }];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
+
 export class AppRoutingModule { }

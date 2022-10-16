@@ -9,14 +9,13 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 
-
 registerLocaleData(localePt);
 
 @NgModule({
   declarations: [
     AppComponent,
-
   ],
+
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -24,10 +23,11 @@ registerLocaleData(localePt);
     NavModule,
     AppContentModule
   ],
+
   providers:
-    [
-      { provide: MAT_DATE_LOCALE, useValue: 'pt-PT' },
-    ],
+    [{ provide: MAT_DATE_LOCALE, useValue: 'pt-PT' }],
+
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }

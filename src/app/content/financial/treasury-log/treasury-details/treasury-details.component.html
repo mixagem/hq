@@ -82,14 +82,14 @@
         <div class="mhq-col-4">
           <mat-form-field appearance="fill">
             <mat-label>Categoria</mat-label>
-            <input matInput disabled [value]="miscService.getCategoryTitle(treasuryLog.cat)">
+            <input matInput disabled [value]="miscService.getCategory(treasuryLog.cat).title">
           </mat-form-field>
         </div>
 
         <div class="mhq-col-4">
           <mat-form-field appearance="fill">
             <mat-label>Sub-categoria</mat-label>
-            <input matInput disabled [value]="miscService.getSubcategoryTitle(treasuryLog.cat,treasuryLog.subcat)">
+            <input matInput disabled [value]="miscService.getSubcategory(treasuryLog.cat,treasuryLog.subcat).title">
           </mat-form-field>
         </div>
 
@@ -182,8 +182,8 @@
                 <mat-select-trigger>{{catForm.value}}</mat-select-trigger>
                 <mat-option *ngFor="let option of categoriesList" [value]="option">
                   <mat-icon
-                    [style]="'background-color:'+miscService.getCatStyleSimplex(miscService.getCategoryIDFromTitle(option))[0]+';color:'+miscService.getCatStyleSimplex(miscService.getCategoryIDFromTitle(option))[1]">
-                    {{miscService.getCategoryIcon(miscService.getCategoryIDFromTitle(option))}}</mat-icon>
+                    [style]="miscService.getCategoryStyles">
+                    {{miscService.getCategory(miscService.getCategoryFromTitle(option).id).icon}}</mat-icon>
                   {{option}}
                 </mat-option>
               </mat-select>

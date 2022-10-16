@@ -21,59 +21,37 @@ const DEFAULT_TLOG: ITreasuryLog = { id: 0, title: 'Novo movimento de tesouraria
 })
 
 export class NewTreasuryLogComponent implements OnInit {
-
-  // datepicker
-  treasuryLogDatepicker: MatDatepicker<any>;
-  treasuryLogDatepickerForm: FormControl<any>;
-
   tempTreasuryLog: ITreasuryLog;
-
-  // autocomplete categoria
-  catForm: FormControl
+  treasuryLogDatepicker: MatDatepicker<any>;   // datepicker
+  treasuryLogDatepickerForm: FormControl<any>;
+  catForm: FormControl   // autocomplete categoria
   categoriesList: string[] = [];
-
-  // autocomplete sub categoria
-  subcatForm: FormControl
+  subcatForm: FormControl  // autocomplete sub categoria
   subcategoriesList: string[] = [];
-
-  // recorrencia
-  recurrency: boolean
+  recurrency: boolean   // recorrencia
   recurrencyType: string;
   recurrencyFrequency: FormControl<any>;
-
 
   constructor(private _errorHandlingService: ErrorHandlingService, public miscService: MiscService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, public _router: Router, public _http: HttpClient, private _timerService: TimerService, private _categoriesSnackBarService: CategorySnackBarsService) { }
 
   ngOnInit(): void {
-
-    // clone inicial
     if (this.treasuryService.cloningTreasuryLog) {
       this.tempTreasuryLog = this.treasuryService.activeTreasuryLog;
       this.tempTreasuryLog.id = 0;
     } else {
       this.tempTreasuryLog = JSON.parse(JSON.stringify(DEFAULT_TLOG));
     }
-
-    // datepicker
     this.treasuryLogDatepickerForm = new FormControl(new Date(this.tempTreasuryLog.date), [Validators.required]);
-
-    // forms para inputs autocomplete
     if (this.treasuryService.cloningTreasuryLog) {
       this.refreshSubcategoryList(this.tempTreasuryLog.cat);
-      this.catForm = new FormControl(this.miscService.getCategoryTitle(this.tempTreasuryLog.cat), [Validators.required]);
-      this.subcatForm = new FormControl(this.miscService.getSubcategoryTitle(this.tempTreasuryLog.cat, this.tempTreasuryLog.subcat), [Validators.required]);
+      this.catForm = new FormControl(this.miscService.getCategory(this.tempTreasuryLog.cat).title, [Validators.required]);
+      this.subcatForm = new FormControl(this.miscService.getSubcategory(this.tempTreasuryLog.cat, this.tempTreasuryLog.subcat).title, [Validators.required]);
     } else {
       this.catForm = new FormControl('', [Validators.required]);
       this.subcatForm = new FormControl({ value: '', disabled: true }, [Validators.required]);
     }
-
-    // opções para select
     this.categoriesService.allCategories.forEach(cat => { this.categoriesList.push(cat.title) });
-
-    // recurrency
     this.recurrencyFrequency = new FormControl({ value: '', disabled: true }, [Validators.required, Validators.min(2)]);
-
-
   }
 
   openMissingCategoriesSnackBar(): void {
@@ -82,30 +60,23 @@ export class NewTreasuryLogComponent implements OnInit {
 
   newTreasuryLogRecordActions(action: string): void {
     switch (action) {
-
       case 'save':
         if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this.openMissingCategoriesSnackBar() }
-
         const cat = this.miscService.getCategoryFromTitle(this.catForm.value);
-
         this.tempTreasuryLog.date = this.treasuryLogDatepickerForm.value.getTime();
         this.tempTreasuryLog.cat = cat.id;
-        this.tempTreasuryLog.subcat = this.miscService.getSubcategoryIDFromTitle(cat.subcats, this.subcatForm.value);
+        this.tempTreasuryLog.subcat = this.miscService.getSubcategoryFromTitle(cat.subcats, this.subcatForm.value).id;
         this.treasuryService.recordBorderStyle['background-color'] = cat.bgcolor;
         this.tempTreasuryLog.value = Number(this.tempTreasuryLog.value.toString().replace(',', '.'))
-
         if (!this.tempTreasuryLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) {
           return this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
         }
-
         this.saveTreasurylog();
-
         break;
 
       case 'end': default:
         document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
-        // clearTimeout(this._timerService.timer);
-        this._timerService.timer = setTimeout(navi.bind(null, this._router), 1000) // tempo da animação antes de redirecionar
+        this._timerService.timer = setTimeout(navi.bind(null, this._router), 1000)
         function navi(router: Router): void {
           router.navigate(['/fi/tlogs'])
         }
@@ -113,9 +84,6 @@ export class NewTreasuryLogComponent implements OnInit {
   }
 
   saveTreasurylog(): void {
-
-    // fiquei aqui, tenho de fazer um objeto com as propriedadas da recurrencia
-
     const httpParams = new HttpParams().set('tlog', JSON.stringify(this.tempTreasuryLog)).set('recurrency', this.recurrency);
     const call = this._http.post('http://localhost:16190/createtreasurylog', httpParams, { responseType: 'text' });
 
@@ -148,6 +116,4 @@ export class NewTreasuryLogComponent implements OnInit {
   recurrencyToggle(event: MatSlideToggleChange) {
     event.checked ? this.recurrencyFrequency.enable() : this.recurrencyFrequency.disable();
   }
-
-
 }

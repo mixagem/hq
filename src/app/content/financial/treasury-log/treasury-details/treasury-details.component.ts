@@ -20,32 +20,17 @@ import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 })
 
 export class TreasuryDetailsComponent implements OnInit {
-
-  // datepicker
-  treasuryLogDatepicker: MatDatepicker<any>;
+  treasuryLogDatepicker: MatDatepicker<any>;   // datepickers
   treasuryLogDatepickerForm: FormControl<any>;
-
-  // autocomplete categoria
-  catForm: FormControl
+  catForm: FormControl   // autocomplete categoria
   categoriesList: string[] = [];
-
-  // autocomplete sub categoria
-  subcatForm: FormControl
+  subcatForm: FormControl  // autocomplete sub categoria
   subcategoriesList: string[] = [];
-
-  // id do movimento em consulta
-  id: number;
-
-  // clone do movimento utilizada em consulta
-  treasuryLog: ITreasuryLog;
-  // clone do moviment utilizada no modo edição
-  tempTreasuryLog: ITreasuryLog;
-
-  // boolean com o estado do modo de edição
-  editingMode: boolean;
-
-  // recorrencia
-  recurrency: boolean
+  id: number;   // id do movimento em consulta
+  treasuryLog: ITreasuryLog;   // clone do movimento utilizada em consulta
+  tempTreasuryLog: ITreasuryLog;  // clone do moviment utilizada no modo edição
+  editingMode: boolean;  // boolean com o estado do modo de edição
+  recurrency: boolean  // recorrencia
   recurrencyType: string;
   recurrencyFrequency: FormControl<any>;
 
@@ -54,34 +39,19 @@ export class TreasuryDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    // obter id
     this.id = Number(this._route.snapshot.paramMap.get('id')!);
-
-    // obter snapshot do movimento
     this.treasuryLog = this.miscService.getTreasuryLog(this.id)
-
-    // clone do movimento para modo de edição
     this.tempTreasuryLog = JSON.parse(JSON.stringify(this.treasuryLog));
-
-    // clone do movimento enviado para o serviço
     this.treasuryService.activeTreasuryLog = JSON.parse(JSON.stringify(this.treasuryLog));
-
-    // datepicker
     this.treasuryLogDatepickerForm = new FormControl(new Date(this.treasuryLog.date), [Validators.required]);
-
-    // forms para inputs autocomplete
-    this.catForm = new FormControl(this.miscService.getCategoryTitle(this.tempTreasuryLog.cat), [Validators.required]);
-    this.subcatForm = new FormControl({ value: this.miscService.getSubcategoryTitle(this.tempTreasuryLog.cat, this.tempTreasuryLog.subcat), disabled: true }, [Validators.required]);
-    this.miscService.getCategoryObjectFromID(this.tempTreasuryLog.cat).subcats.forEach(subcat => { this.subcategoriesList.push(subcat.title) });
+    this.catForm = new FormControl(this.miscService.getCategory(this.tempTreasuryLog.cat).title, [Validators.required]);
+    this.subcatForm = new FormControl({ value: this.miscService.getSubcategory(this.tempTreasuryLog.cat, this.tempTreasuryLog.subcat).title, disabled: true }, [Validators.required]);
+    this.miscService.getCategory(this.tempTreasuryLog.cat).subcats.forEach(subcat => { this.subcategoriesList.push(subcat.title) });
     this.subcatForm.enable();
-
-    // opções para select
     this._categoriesService.allCategories.forEach(cat => { this.categoriesList.push(cat.title) });
   }
 
   saveTreasurylog(): void {
-
     const httpParams = new HttpParams().set('tlog', JSON.stringify(this.tempTreasuryLog))
     const call = this._http.post('http://localhost:16190/updatetreasurylog', httpParams, { responseType: 'text' })
 
@@ -89,11 +59,11 @@ export class TreasuryDetailsComponent implements OnInit {
       next: codeReceived => {
         this.treasuryService.fetchTreasuryLog('saveTreasuryLog', this.tempTreasuryLog.id);
         this.editingMode = false;
-        this._categoriesSnackBarService.triggerCategoriesSnackbar(true, 'save_as', this.tempTreasuryLog.title, ['O movimento ', ' foi atualizado com sucesso.']); // dispara a snackbar
+        this._categoriesSnackBarService.triggerCategoriesSnackbar(true, 'save_as', this.tempTreasuryLog.title, ['O movimento ', ' foi atualizado com sucesso.']);
       },
       error: err => {
         this._errorHandlingService.handleError(err);
-        this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', this.tempTreasuryLog.title, ['Ocurreu algo inesperado ao atualizar o movimento ', '.']); // dispara a snackbar}
+        this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', this.tempTreasuryLog.title, ['Ocurreu algo inesperado ao atualizar o movimento ', '.']);
       }
     })
   }
@@ -103,40 +73,28 @@ export class TreasuryDetailsComponent implements OnInit {
   }
 
   editingTreasuryLogRecordActions(action: string): void {
-
     switch (action) {
-
       case 'start':
-
         this.tempTreasuryLog = JSON.parse(JSON.stringify(this.treasuryLog));
-
         this.refreshSubcategoryList(this.tempTreasuryLog.cat);
-
-        this.catForm = new FormControl(this.miscService.getCategoryTitle(this.tempTreasuryLog.cat), [Validators.required]);
-        this.subcatForm = new FormControl(this.miscService.getSubcategoryTitle(this.tempTreasuryLog.cat, this.tempTreasuryLog.subcat), [Validators.required]);
+        this.catForm = new FormControl(this.miscService.getCategory(this.tempTreasuryLog.cat).title, [Validators.required]);
+        this.subcatForm = new FormControl(this.miscService.getSubcategory(this.tempTreasuryLog.cat, this.tempTreasuryLog.subcat).title, [Validators.required]);
         this.subcategoriesList.length > 0 ? this.subcatForm.enable() : this.subcatForm.disable();
-
         this.editingMode = true;
         break;
 
       case 'save':
-
         if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this.openMissingCategoriesSnackBar(); }
-
         const cat = this.miscService.getCategoryFromTitle(this.catForm.value);
-
         this.tempTreasuryLog.date = this.treasuryLogDatepickerForm.value.getTime();
         this.tempTreasuryLog.cat = cat.id;
-        this.tempTreasuryLog.subcat = this.miscService.getSubcategoryIDFromTitle(cat.subcats, this.subcatForm.value);
+        this.tempTreasuryLog.subcat = this.miscService.getSubcategoryFromTitle(cat.subcats, this.subcatForm.value).id;
         this.treasuryService.recordBorderStyle['background-color'] = cat.bgcolor;
         this.tempTreasuryLog.value = Number(this.tempTreasuryLog.value.toString().replace(',', '.')); // conversão de vírgulas para pontos
-
         if (!this.tempTreasuryLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) {
           return this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
         }
-
         this.saveTreasurylog();
-
         break;
 
       case 'end': default:
@@ -173,6 +131,11 @@ export class TreasuryDetailsComponent implements OnInit {
 
 }
 
+
+////////////////////////////////////////
+
+
+
 @Component({
   selector: 'delete-tlog-confirmation-modal',
   templateUrl: './delete-tlog-confirmation-modal.html',
@@ -184,7 +147,6 @@ export class DeleteTreasuryLogConfirmationModal {
   constructor(public treasuryService: TreasuryService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService) { }
 
   deleteTreasuryLog(): void {
-
     const httpParams = new HttpParams().set('tlog', this.treasuryService.activeTreasuryLog.id)
     const call = this._http.post('http://localhost:16190/deletetreasurylog', httpParams, { responseType: 'text' })
 

@@ -8,9 +8,7 @@ import { ErrorHandlingService, LoadingService, TimerService } from 'src/assets/s
 
 type RecordBorderStyle = { "background-color": string }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 
 export class CategoriesService {
 
