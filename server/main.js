@@ -1,5 +1,5 @@
 import { genDailySumAcomEvo, genDailyCategoriesEvo, getDailyCatDetails, getDailySubCatDetails, getDailyDetails} from './overviewMethods.js';
-import { addNewTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog } from './treasuryMethods.js';
+import { createTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog } from './treasuryMethods.js';
 import { fetchCategories, createNewCategory, deleteCategory, updateCategory, getSubcategorySequence } from './categoriesMethods.js'
 import express from 'express';
 import cors from 'cors';
@@ -33,7 +33,7 @@ APP.post('/updatecategory', function (req, res) { return updateCategory(req, res
 APP.get('/fetchtreasurylogs', function (req, res) { return fetchTreasuryLogs(req, res); });
 APP.post('/deletetreasurylog', function (req, res) { return deleteTreasuryLog(req, res); });
 APP.post('/updatetreasurylog', function (req, res) { return updateTreasuryLog(req, res); });
-APP.post('/createtreasurylog', function (req, res) { return addNewTreasurylog(req, res); });
+APP.post('/createtreasurylog', function (req, res) { return createTreasurylog(req, res); });
 
 
 // TODO SNAPSHOT PARA TODOS REDO

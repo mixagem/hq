@@ -12,6 +12,13 @@ import { CategorySnackBarsService } from 'src/assets/services/snack-bars.service
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 
+export type RecurrencyOptions = {
+  active: boolean,
+  type: string,
+  freq: number,
+  date: number
+}
+
 const DEFAULT_TLOG: ITreasuryLog = { id: 0, title: 'Novo movimento de tesouraria', date: Date.now(), value: 0, cat: 0, subcat: 0, type: 'expense', obs: '', recurrencyid: 0 }
 
 @Component({
@@ -31,6 +38,7 @@ export class NewTreasuryLogComponent implements OnInit {
   recurrency: boolean   // recorrencia
   recurrencyType: string;
   recurrencyFrequency: FormControl<any>;
+
 
   constructor(private _errorHandlingService: ErrorHandlingService, public miscService: MiscService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, public _router: Router, public _http: HttpClient, private _timerService: TimerService, private _categoriesSnackBarService: CategorySnackBarsService) { }
 
@@ -71,7 +79,7 @@ export class NewTreasuryLogComponent implements OnInit {
         if (!this.tempTreasuryLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) {
           return this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
         }
-        this.saveTreasurylog();
+        this.createTreasurylog();
         break;
 
       case 'end': default:
@@ -83,8 +91,14 @@ export class NewTreasuryLogComponent implements OnInit {
     }
   }
 
-  saveTreasurylog(): void {
-    const HTTP_PARAMS = new HttpParams().set('tlog', JSON.stringify(this.tempTreasuryLog)).set('recurrency', this.recurrency);
+  createTreasurylog(): void {
+    const RECURRENCY_OPTIONS : RecurrencyOptions = {
+      active: this.recurrency,
+      type: this.recurrencyType,
+      freq: this.recurrencyFrequency.value,
+      date: new Date(this.tempTreasuryLog.date).getDate()
+    }
+    const HTTP_PARAMS = new HttpParams().set('tlog', JSON.stringify(this.tempTreasuryLog)).set('recurrency', JSON.stringify(RECURRENCY_OPTIONS));
     const CALL = this._http.post('http://localhost:16190/createtreasurylog', HTTP_PARAMS, { responseType: 'text' });
 
     CALL.subscribe({

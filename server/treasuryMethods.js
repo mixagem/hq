@@ -54,7 +54,7 @@ export function updateTreasuryLog(req, res) {
 }
 
 // ######> adicionar um novo movimento
-export function addNewTreasurylog(req, res) {
+export function createTreasurylog(req, res) {
   const TREASURY_LOG = JSON.parse(req.body.tlog);
 
   let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
@@ -62,23 +62,30 @@ export function addNewTreasurylog(req, res) {
     console.log(`[C4] Creating new treasury log => "${TREASURY_LOG.title}"`);
   });
 
+
   const RECURRENCY_OPTIONS = JSON.parse(req.body.recurrency); // active, type, freq, day
-  let rMonth = TREASURY_LOG.date.getMonth();
-  let rYear = TREASURY_LOG.date.getYear();
+
+  let rMonth = new Date(TREASURY_LOG.date).getMonth();
+  let rYear = new Date(TREASURY_LOG.date).getFullYear();
+  console.log('mes/ano inicial: ', rMonth, rYear,RECURRENCY_OPTIONS.date)
 
   if (RECURRENCY_OPTIONS.active) {
-    db.all(`SELECT MAX (recurrencyid) from treasurylog`, (err, resp) => { err ? console.error(err.message) : switcheroo(resp[0].seq) });
+    db.all(`SELECT MAX (recurrencyid) as recurrencyid from treasurylog`, (err, resp) => { err ? console.error(err.message) : switcheroo(resp[0].recurrencyid) });
     function switcheroo(currentRecurrencyID) {
       let recurrencyID = currentRecurrencyID + 1
-      let date; date.setDate(RECURRENCY_OPTIONS.day);
+      let date = new Date();
+      date.setFullYear(rYear, rMonth, RECURRENCY_OPTIONS.date);
 
       switch (RECURRENCY_OPTIONS.type) {
         case 'm':
-          for (i = 0; i < RECURRENCY_OPTIONS.freq; i++) {
-            if (rMonth + i === 12) { rMonth = 0; rYear++; } else { rMonth++; }
-            date.setFullYear(rYear); date.setMonth(rMonth);
+          for (let i = 0; i < RECURRENCY_OPTIONS.freq; i++) {
+            if (i !== 0) {
+              if (rMonth + i === 12) { rMonth = 0; rYear++; } else { rMonth++; }
+              date.setFullYear(rYear, rMonth, RECURRENCY_OPTIONS.date);
+            }
+
             db.serialize(() => {
-              db.run(`INSERT INTO treasurylog (title, date, value, cat, subcat, type, obs, recurrencyid) VALUES ('${TREASURY_LOG.title}', '${date}', '${TREASURY_LOG.value}', '${TREASURY_LOG.cat}', '${TREASURY_LOG.subcat}', '${TREASURY_LOG.type}', '${TREASURY_LOG.obs}', '${recurrencyID}')`, (err, resp) => { err ? console.error(err.message) : console.log('[C4 monthly] treasury log created') });
+              db.run(`INSERT INTO treasurylog (title, date, value, cat, subcat, type, obs, recurrencyid) VALUES ('${TREASURY_LOG.title}', '${date.getTime()}', '${TREASURY_LOG.value}', '${TREASURY_LOG.cat}', '${TREASURY_LOG.subcat}', '${TREASURY_LOG.type}', '${TREASURY_LOG.obs}', '${recurrencyID}')`, (err, resp) => { err ? console.error(err.message) : console.log('[C4 monthly] treasury log created') });
 
               if (i === RECURRENCY_OPTIONS.freq - 1) {
                 db.all(`SELECT * from sqlite_sequence where name='treasurylog'`, (err, resp) => { err ? console.error(err.message) : close(resp[0].seq) });
@@ -88,11 +95,10 @@ export function addNewTreasurylog(req, res) {
           break;
 
         case 'a':
-          date.setMonth(rMonth)
-          for (i = 0; i < RECURRENCY_OPTIONS.freq; i++) {
-            date.setFullYear(rYear + i);
+          for (let i = 0; i < RECURRENCY_OPTIONS.freq; i++) {
+            date.setFullYear((rYear+i), rMonth, RECURRENCY_OPTIONS.date);
             db.serialize(() => {
-              db.run(`INSERT INTO treasurylog (title, date, value, cat, subcat, type, obs, recurrencyid) VALUES ('${TREASURY_LOG.title}', '${date}', '${TREASURY_LOG.value}', '${TREASURY_LOG.cat}', '${TREASURY_LOG.subcat}', '${TREASURY_LOG.type}', '${TREASURY_LOG.obs}', '0')`, (err, resp) => { err ? console.error(err.message) : console.log('[C4 yearly] treasury log created') });
+              db.run(`INSERT INTO treasurylog (title, date, value, cat, subcat, type, obs, recurrencyid) VALUES ('${TREASURY_LOG.title}', '${date.getTime()}', '${TREASURY_LOG.value}', '${TREASURY_LOG.cat}', '${TREASURY_LOG.subcat}', '${TREASURY_LOG.type}', '${TREASURY_LOG.obs}', '0')`, (err, resp) => { err ? console.error(err.message) : console.log('[C4 yearly] treasury log created') });
 
               if (i === RECURRENCY_OPTIONS.freq - 1) {
                 db.all(`SELECT * from sqlite_sequence where name='treasurylog'`, (err, resp) => { err ? console.error(err.message) : close(resp[0].seq) });
