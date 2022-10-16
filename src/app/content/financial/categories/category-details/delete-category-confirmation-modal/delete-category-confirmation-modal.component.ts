@@ -18,7 +18,7 @@ export class DeleteCategoryConfirmationModalComponent {
   deleteCategory(): void {
 
     for (let i = 0; i < this._treasuryService.treasuryLog.length; i++) {
-      if(this._treasuryService.treasuryLog[i].cat === this.categoriesService.activePreviewCategory.id) {return this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', this.categoriesService.activePreviewCategory.title, ['Não é possível remover a categoria ', ', devido à existência de movimentos associados.']);}
+      if(this._treasuryService.treasuryLog[i].cat === this.categoriesService.activePreviewCategory.id) {return this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', this.categoriesService.activePreviewCategory.title, ['Não é possível remover a categoria ', ', devido à existência de movimentos associados a esta.']);}
     }
 
     const httpParams = new HttpParams().set('cat', this.categoriesService.activePreviewCategory.id)

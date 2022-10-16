@@ -5,7 +5,7 @@ export function fetchCategories(req, res) {
 
   let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
     if (err) { console.error(err.message); }
-    console.log('Fetching categories...');
+    console.log('[C1] categories fetch');
   });
 
   let categories = [];
@@ -29,7 +29,7 @@ export function fetchCategories(req, res) {
   db.close((err) => {
     err ? console.error(err.message) : res.send(categories);
 
-    console.log('Fetch complete.');
+    console.log('[C1] categories fetch complete');
   });
 
 
@@ -50,7 +50,7 @@ export function getSubcategorySequence(req, res) {
 
   let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
     if (err) { console.error(err.message); }
-    console.log('Getting subcategory sequence...');
+    console.log('[C2] subcategory sequence');
   });
 
   let currentSequence;
@@ -61,7 +61,7 @@ export function getSubcategorySequence(req, res) {
 
   db.close((err) => {
     err ? console.error(err.message) : res.send(currentSequence.toString()); // desenvolver tratamento de erro do lado do front end
-    console.log('Current subcategory sequence => '+currentSequence);
+    console.log('[C2] Current subcategory sequence => {'+currentSequence)+'}';
   });
 
 }
@@ -69,16 +69,16 @@ export function getSubcategorySequence(req, res) {
 // ######>  adiciona uma nova categoria (e respetivas sub-categorias)
 export function createNewCategory(req, res) {
 
+  const category = JSON.parse(req.body.category);
+
   let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
     if (err) { console.error(err.message); }
-    console.log('Creating category...');
+    console.log('[C3] creating category => "'+category.title+'"');
   });
-
-  const category = JSON.parse(req.body.category);
 
   db.serialize(() => {
 
-    db.run(`INSERT INTO categories (title, icon, type, bgcolor, textcolor, active, catorder) VALUES ('${category.title}','${category.icon}','${category.type}','${category.bgcolor}','${category.textcolor}','${category.active}', '9999')`, (err, resp) => { err ? console.error(err.message) : console.log('Category sucessfully created.') })
+    db.run(`INSERT INTO categories (title, icon, type, bgcolor, textcolor, active, catorder) VALUES ('${category.title}','${category.icon}','${category.type}','${category.bgcolor}','${category.textcolor}','${category.active}', '9999')`, (err, resp) => { err ? console.error(err.message) : console.log('[C3] category "'+category.title+'" created') })
       // obter o id atribuído à categoria introduzida
       .all(`SELECT * from sqlite_sequence where name='categories'`, (err, resp) => { err ? console.error(err.message) : insertSubcategories(resp[0].seq) });
 
@@ -87,10 +87,10 @@ export function createNewCategory(req, res) {
   function insertSubcategories(assignedCategoryID) {
 
     if (category.subcats.length > 0) {
-      console.log('Creating sub-categories...');
+      console.log('[C4] creating sub-categories');
 
       category.subcats.forEach((subcat,i) => {
-        db.run(`INSERT INTO subcategories (maincatid, title, budget, active, subcatorder) VALUES ('${assignedCategoryID}', '${subcat.title}', '${subcat.budget}', '${subcat.active}', '${i+1}' )`, (err, resp) => { err ? console.error(err.message) : console.log('Sub-category sucessfully created ==> "' + subcat.title + '".'); });
+        db.run(`INSERT INTO subcategories (maincatid, title, budget, active, subcatorder) VALUES ('${assignedCategoryID}', '${subcat.title}', '${subcat.budget}', '${subcat.active}', '${i+1}' )`, (err, resp) => { err ? console.error(err.message) : console.log('[C4b] sub-category "'+subcat.title+'" created'); });
       });
     }
 
@@ -110,7 +110,7 @@ export function deleteCategory(req, res) {
 
   let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
     if (err) { console.error(err.message); }
-    console.log('Deleting category...');
+    console.log('[C5] deleting category nº. {'+req.body.cat+'}');
   });
 
   db.serialize(() => {
@@ -120,7 +120,7 @@ export function deleteCategory(req, res) {
 
   db.close((err) => {
     err ? console.error(err.message) : res.send('gucci'); // desenvolver tratamento de erro do lado do front end
-    console.log('Category sucessfully deleted.');
+    console.log('[C5] category nº. {'+req.body.cat+'} deleted');
   });
 
 }
@@ -128,25 +128,22 @@ export function deleteCategory(req, res) {
 // ######> guardar alterações efetuadas à categoria
 export function updateCategory(req, res) {
 
+  const cat = JSON.parse(req.body.category);
+
   let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
     if (err) { console.error(err.message); }
-    console.log('Updating category...');
+    console.log('[C6] updating category "'+cat.title+'"');
   });
-
-  const cat = JSON.parse(req.body.category);
-  console.log(cat)
 
   db.serialize(() => {
 
-    // , order='${cat.order}'
-
     db.run(`UPDATE categories SET title='${cat.title}', type='${cat.type}', icon='${cat.icon}', bgcolor='${cat.bgcolor}', textcolor='${cat.textcolor}', active='${cat.active}', catorder='${cat.catorder}' WHERE id='${cat.id}'`, (err, resp) => { err ? console.error(err.message) : console.log('Category sucessfully updated.'); });
-    db.run(`DELETE FROM subcategories WHERE maincatid='${cat.id}'`, (err, resp) => { err ? console.error(err.message) : console.log('Updating sub-categories...'); });
+    db.run(`DELETE FROM subcategories WHERE maincatid='${cat.id}'`, (err, resp) => { err ? console.error(err.message) : console.log('[C6b] updating "'+cat.title+'" sub-categories'); });
 
     if (cat.subcats.length > 0) {
 
       cat.subcats.forEach((subcat, i) => {
-        db.run(`INSERT INTO subcategories (id, maincatid, title, budget, active, subcatorder) VALUES ('${subcat.id}', '${subcat.maincatid}', '${subcat.title}', '${subcat.budget}', '${subcat.active}', '${subcat.subcatorder}' )`, (err, resp) => { err ? console.error(err.message) : console.log('Sub-category sucessfully updated (' + i + ') .'); });
+        db.run(`INSERT INTO subcategories (id, maincatid, title, budget, active, subcatorder) VALUES ('${subcat.id}', '${subcat.maincatid}', '${subcat.title}', '${subcat.budget}', '${subcat.active}', '${subcat.subcatorder}' )`, (err, resp) => { err ? console.error(err.message) : console.log('[C6b] sub-category "'+subcat.title+'" updated'); });
       });
     }
 

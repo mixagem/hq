@@ -9,8 +9,8 @@ import { CategorySnackBarsService } from '../../../../../assets/services/categor
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // objectos default para modo de introdução de nova categoria/subcategorias
-const DEFAULT_FICATEGORY: IFinancialCategory = { id: 0, type: 'expense', title: 'Nova categoria', icon: 'dns', bgcolor: 'rgb(0,0,0)', textcolor: 'rgb(255,255,255)', subcats: [], active: false, order:0 };
-const DEFAULT_FISUBCATEGORY: IFinancialSubCategory = { id: Date.now(), maincatid: 0, title: 'Nova sub-categoria', budget: 0, active: false, order:0 };
+const DEFAULT_FICATEGORY: IFinancialCategory = { id: 0, type: 'expense', title: 'Nova categoria', icon: 'dns', bgcolor: 'rgb(0,0,0)', textcolor: 'rgb(255,255,255)', subcats: [], active: false, order: 0 };
+const DEFAULT_FISUBCATEGORY: IFinancialSubCategory = { id: Date.now(), maincatid: 0, title: 'Nova sub-categoria', budget: 0, active: false, order: 0 };
 
 @Component({
   selector: 'mhq-new-category',
@@ -22,7 +22,7 @@ export class NewCategoryComponent implements OnInit {
 
   tempFiCategory: IFinancialCategory; // categoria utilizada no modo de introdução
 
-  constructor(public miscService:MiscService, public categoriesService: CategoriesService, private _http: HttpClient, private _router: Router, private _timerService: TimerService, private _categorySnackBarsService: CategorySnackBarsService, private _snackBar: MatSnackBar, private _errorHandlingService: ErrorHandlingService) { }
+  constructor(public miscService: MiscService, public categoriesService: CategoriesService, private _http: HttpClient, private _router: Router, private _timerService: TimerService, private _categorySnackBarsService: CategorySnackBarsService, private _snackBar: MatSnackBar, private _errorHandlingService: ErrorHandlingService) { }
 
   ngOnInit(): void {
     // cria a categoria temporária de acordo com o tipo de introdução
@@ -40,33 +40,7 @@ export class NewCategoryComponent implements OnInit {
 
       case 'save':
 
-        if (this.tempFiCategory.icon.includes(' ')) {
-          this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', 'Icon', ['O campo ', ' encontra-se incorretamente definido.']);
-          return;
-        }
-        // não consegui utilizar o formControl com o ColorPicker
-        if (this.tempFiCategory.bgcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
-          this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', 'Etiqueta fundo', ['O campo ', ' encontra-se incorretamente definido.']);
-          return;
-        }
-        // não consegui utilizar o formControl com o ColorPicker
-        if (this.tempFiCategory.textcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
-          this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', 'Texto etiqueta', ['O campo ', ' encontra-se incorretamente definido.']);
-          return;
-        }
-        // não consegui utilizar o formControl para números indeterminados de inputs
-        let areSubcatsBugdgetCorrect = true;
-        this.tempFiCategory.subcats.forEach(subcat => {
-          if (!subcat.budget.toString().match(/^[0-9]*$/g)) {
-            areSubcatsBugdgetCorrect = false;
-          }
-        });
-        if (!areSubcatsBugdgetCorrect) {
-          this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', 'Orçamento', ['Existem sub-categorias para as quais o campo ', ' se encontra incorretamente definido.']);
-          return;
-        }
-
-        this.createNewCategory();
+        if (this.categoriesService.headerInputsValidation(this.tempFiCategory)) { this.createNewCategory(); }
 
         break;
 
