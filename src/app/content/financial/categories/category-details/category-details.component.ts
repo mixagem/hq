@@ -8,7 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DeleteCategoryConfirmationModalComponent } from './delete-category-confirmation-modal/delete-category-confirmation-modal.component';
 import { ErrorHandlingService, MiscService } from 'src/assets/services/misc.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CategorySnackBarsService } from '../../../../../assets/services/category-snack-bars.service';
+import { CategorySnackBarsService } from '../../../../../assets/services/snack-bars.service';
 
 @Component({
   selector: 'mhq-category-details',

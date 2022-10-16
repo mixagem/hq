@@ -90,7 +90,7 @@ export class MiscService {
     return category;
   }
 
-  // utilizado: treasury-details.ts x2
+  // utilizado: treasury-details.ts x2 / new-treaury-log.ts
   getCategoryFromTitle(catTitle: string): IFinancialCategory {
 
     let category: IFinancialCategory = { id: 0, type: '', title: '', icon: '', bgcolor: '', textcolor: '', subcats: [], active: false, order: 0 };
@@ -102,7 +102,7 @@ export class MiscService {
     return category;
   }
 
-  // utilizado: treasury-details.ts
+  // utilizado: treasury-details.ts / new-treaury-log.ts
   getSubcategoryIDFromTitle(subcats: IFinancialSubCategory[], subcatTitle: string): number {
 
     let id = 0;

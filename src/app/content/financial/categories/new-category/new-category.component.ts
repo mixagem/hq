@@ -5,7 +5,7 @@ import { CategoriesService } from '../categories.service';
 import { Router } from '@angular/router';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
 import { ErrorHandlingService, MiscService, TimerService } from 'src/assets/services/misc.service';
-import { CategorySnackBarsService } from '../../../../../assets/services/category-snack-bars.service';
+import { CategorySnackBarsService } from '../../../../../assets/services/snack-bars.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // objectos default para modo de introdução de nova categoria/subcategorias

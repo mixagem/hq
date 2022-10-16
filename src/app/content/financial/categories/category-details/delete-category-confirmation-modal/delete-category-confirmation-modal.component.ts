@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { CategorySnackBarsService } from 'src/assets/services/category-snack-bars.service';
+import { CategorySnackBarsService } from 'src/assets/services/snack-bars.service';
 import { ErrorHandlingService } from 'src/assets/services/misc.service';
 import { TreasuryService } from '../../../treasury-log/treasury.service';
 import { CategoriesService } from '../../categories.service';

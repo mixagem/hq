@@ -7,12 +7,11 @@ import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
 import { CategoriesService } from '../../categories/categories.service';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { TreasuryService } from '../treasury.service';
-import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
 import { ErrorHandlingService, MiscService } from 'src/assets/services/misc.service';
 import { MatSelectChange } from '@angular/material/select';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MissingCategoriesSnackBarComponent } from '../missing-categories-snack-bar/missing-categories-snack-bar.component';
-import { CategorySnackBarsService } from 'src/assets/services/category-snack-bars.service';
+import { CategorySnackBarsService } from 'src/assets/services/snack-bars.service';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 
 @Component({
   selector: 'mhq-treasury-details',
@@ -45,7 +44,12 @@ export class TreasuryDetailsComponent implements OnInit {
   // boolean com o estado do modo de edição
   editingMode: boolean;
 
-  constructor(private _errorHandlingService: ErrorHandlingService, private _snackBar: MatSnackBar, private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, private _categoriesService: CategoriesService, public miscService: MiscService, private _categoriesSnackBarService: CategorySnackBarsService) {
+  // recorrencia
+  recurrency: boolean
+  recurrencyType: string;
+  recurrencyFrequency: FormControl<any>;
+
+  constructor(private _errorHandlingService: ErrorHandlingService, private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, private _categoriesService: CategoriesService, public miscService: MiscService, private _categoriesSnackBarService: CategorySnackBarsService) {
     this.editingMode = false;
   }
 
@@ -95,7 +99,7 @@ export class TreasuryDetailsComponent implements OnInit {
   }
 
   openMissingCategoriesSnackBar(): void {
-    this._snackBar.openFromComponent(MissingCategoriesSnackBarComponent, { duration: 5000 });
+    this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', 'categoria/sub-categoria', ['O par ', 'não se encontra definido.'])
   }
 
   editingTreasuryLogRecordActions(action: string): void {
@@ -105,20 +109,27 @@ export class TreasuryDetailsComponent implements OnInit {
       case 'start':
 
         this.tempTreasuryLog = JSON.parse(JSON.stringify(this.treasuryLog));
+
+        this.refreshSubcategoryList(this.tempTreasuryLog.cat);
+
+        this.catForm = new FormControl(this.miscService.getCategoryTitle(this.tempTreasuryLog.cat), [Validators.required]);
+        this.subcatForm = new FormControl(this.miscService.getSubcategoryTitle(this.tempTreasuryLog.cat, this.tempTreasuryLog.subcat), [Validators.required]);
+        this.subcategoriesList.length > 0 ? this.subcatForm.enable() : this.subcatForm.disable();
+
         this.editingMode = true;
         break;
 
       case 'save':
 
-        if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this.openMissingCategoriesSnackBar() }
+        if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this.openMissingCategoriesSnackBar(); }
 
         const cat = this.miscService.getCategoryFromTitle(this.catForm.value);
 
         this.tempTreasuryLog.date = this.treasuryLogDatepickerForm.value.getTime();
         this.tempTreasuryLog.cat = cat.id;
-        this.tempTreasuryLog.subcat = this.miscService.getSubcategoryIDFromTitle(cat.subcats, this.subcatForm.value)
+        this.tempTreasuryLog.subcat = this.miscService.getSubcategoryIDFromTitle(cat.subcats, this.subcatForm.value);
         this.treasuryService.recordBorderStyle['background-color'] = cat.bgcolor;
-        this.tempTreasuryLog.value = Number(this.tempTreasuryLog.value.toString().replace(',', '.')) // conversão de vírgulas para pontos
+        this.tempTreasuryLog.value = Number(this.tempTreasuryLog.value.toString().replace(',', '.')); // conversão de vírgulas para pontos
 
         if (!this.tempTreasuryLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) {
           return this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
@@ -142,12 +153,22 @@ export class TreasuryDetailsComponent implements OnInit {
     });
   }
 
-  categorySelectChanged(event: MatSelectChange): void {
-    const category = this.miscService.getCategoryFromTitle(event.value);
+  refreshSubcategoryList(catID: number = 0, catTitle: string = ''): void {
+    let category: IFinancialCategory;
+    if (catID !== 0) { category = this.miscService.getCategory(catID); }
+    if (catTitle !== '') { category = this.miscService.getCategoryFromTitle(catTitle); }
     this.subcategoriesList = [];
-    category.subcats.forEach(subcat => { this.subcategoriesList.push(subcat.title) });
-    this.subcatForm.setValue('')
+    category!.subcats.forEach(subcat => { this.subcategoriesList.push(subcat.title) });
+  }
+
+  categorySelectChanged(event: MatSelectChange): void {
+    this.refreshSubcategoryList(0, event.value);
+    this.subcatForm.setValue('');
     this.subcategoriesList.length > 0 ? this.subcatForm.enable() : this.subcatForm.disable();
+  }
+
+  recurrencyToggle(event: MatSlideToggleChange): void {
+    event.checked ? this.recurrencyFrequency.enable() : this.recurrencyFrequency.disable();
   }
 
 }
@@ -173,6 +194,3 @@ export class DeleteTreasuryLogConfirmationModal {
     })
   }
 }
-
-
-

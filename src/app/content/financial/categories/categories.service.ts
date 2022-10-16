@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
-import { CategorySnackBarsService } from 'src/assets/services/category-snack-bars.service';
+import { CategorySnackBarsService } from 'src/assets/services/snack-bars.service';
 import { ErrorHandlingService, LoadingService, TimerService } from 'src/assets/services/misc.service';
 
 type RecordBorderStyle = { "background-color": string }

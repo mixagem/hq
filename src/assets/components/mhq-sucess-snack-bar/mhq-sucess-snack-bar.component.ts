@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CategorySnackBarsService } from 'src/assets/services/category-snack-bars.service';
+import { CategorySnackBarsService } from 'src/assets/services/snack-bars.service';
 
 @Component({
   selector: 'mhq-mhq-sucess-snack-bar',

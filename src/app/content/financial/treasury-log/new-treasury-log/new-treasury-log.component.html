@@ -1,5 +1,7 @@
 <div class="mhq-row full-height mhq-category-details-wrapper">
+
   <div class="mhq-categories-drawer-left">
+
     <div class="mhq-quickaction-close" (click)="treasuryService.closeDetails()">
       <mat-icon>close</mat-icon>
     </div>
@@ -7,18 +9,18 @@
     <div class="mhq-quickaction-save" (click)="newTreasuryLogRecordActions('save')"><button mat-icon-button>
         <mat-icon>save</mat-icon>
       </button></div>
+
     <div class="mhq-quickaction-delete" (click)="newTreasuryLogRecordActions('end')"><button mat-icon-button>
         <mat-icon>not_interested</mat-icon>
       </button></div>
 
-
     <div [ngStyle]="treasuryService.recordBorderStyle"></div>
+
   </div>
 
   <div class="mhq-categories-drawer-right">
 
     <div class="mhq-wrapper-row">
-
 
       <h1>
         <div>
@@ -43,19 +45,12 @@
         </div>
 
         <div class="mhq-col-3">
-          <!-- <mat-form-field appearance="fill">
-          <mat-label>Data</mat-label>
-          <input matInput [(ngModel)]="tempTreasuryLog.date">
-        </mat-form-field> -->
           <mat-form-field appearance="fill">
             <mat-label>Data</mat-label>
             <input matInput [matDatepicker]="treasuryLogDatepicker" [formControl]="treasuryLogDatepickerForm">
             <mat-datepicker-toggle matSuffix [for]="treasuryLogDatepicker"></mat-datepicker-toggle>
             <mat-datepicker #treasuryLogDatepicker></mat-datepicker>
           </mat-form-field>
-
-
-
         </div>
 
       </div>
@@ -90,7 +85,6 @@
 
         <div class="mhq-col-4">
 
-
           <form class="mhq-subcats-form" style="width: 100%;">
             <mat-form-field>
               <mat-label>Sub categoria</mat-label>
@@ -101,7 +95,6 @@
               </mat-select>
             </mat-form-field>
           </form>
-
 
         </div>
 
@@ -121,9 +114,8 @@
             <input matInput [(ngModel)]="tempTreasuryLog.value">
           </mat-form-field>
         </div>
+
       </div>
-
-
 
       <h1>
         <div>
@@ -132,15 +124,10 @@
       </h1>
 
       <div class="mhq-row">
-
-        <div class="mhq-row">
-          <mat-slide-toggle [(ngModel)]="recurrency" (change)="recurrencyToggle($event)">Recorrência</mat-slide-toggle>
-        </div>
+        <mat-slide-toggle [(ngModel)]="recurrency" (change)="recurrencyToggle($event)">Recorrência</mat-slide-toggle>
       </div>
+
       <div class="mhq-row">
-        <!-- <div class="mhq-col-3">Frequência recorrência (mensal, anual) </div>
-        <div class="mhq-col-3">Número de recorrências (numero de vezes a repetir)</div>
-        <div class="mhq-col-3">Data da primeira incidência (dia a ser utilizado para recorrência)</div> -->
 
         <div class="mhq-col-4">
           <mat-form-field appearance="fill">
@@ -152,18 +139,18 @@
             </mat-select>
           </mat-form-field>
         </div>
+
         <div class="mhq-col-4">
           <mat-form-field appearance="fill">
             <mat-label>Número de ocorrências</mat-label>
-            <input matInput [disabled]="!recurrency" type="number" [formControl]="recurrencyFrequency">
+            <input matInput type="number" [formControl]="recurrencyFrequency">
           </mat-form-field>
         </div>
 
-
       </div>
 
-
     </div>
+
   </div>
 
 </div>
