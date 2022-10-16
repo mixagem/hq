@@ -34,7 +34,7 @@ app.post('/updatecategory', function (req, res) { return updateCategory(req, res
 app.get('/fetchtreasurylogs', function (req, res) { return fetchTreasuryLogs(req, res); });
 app.post('/deletetreasurylog', function (req, res) { return deleteTreasuryLog(req, res); });
 app.post('/updatetreasurylog', function (req, res) { return updateTreasuryLog(req, res); });
-app.post('/createtreasurylog', function (req, res) { return addNewTreasurylog(req, res); });
+// app.post('/createtreasurylog', function (req, res) { return addNewTreasurylog(req, res); });
 
 
 // TODO SNAPSHOT PARA TODOS REDO

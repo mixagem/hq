@@ -11,14 +11,30 @@ table {
 
   tr {
 
+    &:first-child {
+      td {
+        border-top: 1px solid rgba(0, 0, 0, 0.12);
+      }
+
+      td:nth-child(1) {
+        border-top-left-radius: 15px;
+      }
+    }
+
+    &:last-child {
+      td:nth-child(1) {
+        border-bottom-left-radius: 15px;
+      }
+    }
+
     th {
       text-align: center;
       border: 0;
-      color:var(--mhq-waikiki-acolor-1);
+      color: var(--mhq-waikiki-acolor-1);
       vertical-align: bottom;
       font-weight: 500;
       padding-bottom: 5px;
-    
+
       &:nth-child(1) {
         width: 50px;
       }
@@ -64,23 +80,6 @@ table {
       }
     }
 
-    &:first-child {
-
-      td {
-        border-top: 1px solid rgba(0, 0, 0, 0.12);
-      }
-
-      td:nth-child(1) {
-        border-top-left-radius: 15px;
-      }
-    }
-
-    &:last-child {
-
-      td:nth-child(1) {
-        border-bottom-left-radius: 15px;
-      }
-
-    }
   }
+  
 }

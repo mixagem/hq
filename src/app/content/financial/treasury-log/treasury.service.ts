@@ -72,7 +72,6 @@ export class TreasuryService {
         // guardar no serviço a resposta da bd
         this.treasuryLog = resp;
         this.loadingComplete = true;
-        console.log('we donze')
 
         // faz refresh ao modo listagem e à gaveta do registo em edição/introdução
         if (source === 'saveTreasuryLog') {

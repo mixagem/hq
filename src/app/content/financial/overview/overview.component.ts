@@ -46,7 +46,6 @@ export class OverviewComponent implements OnInit {
     });
     if (!this._loadingService.categoriesLoadingComplete) { return }
     this.selectedMonth = this.currentDate.getMonth() + 1
-    console.log(this.selectedMonth)
     switch (this.selectedMonth) {
 
       case 1: case 3: case 5: case 7: case 8: case 10: case 12:
@@ -121,9 +120,8 @@ export class OverviewComponent implements OnInit {
 
     call.subscribe({
       next: codeReceived => {
-        const resp = codeReceived as object[]; this.dailyCatEvolution = resp[0]; this.dailySubCatEvolution = resp[1]; console.log(this.dailySumEvolution = resp[2] as number[]);
+        const resp = codeReceived as object[]; this.dailyCatEvolution = resp[0]; this.dailySubCatEvolution = resp[1];
         this.evoReady = true;
-        console.log(this.dailyCatEvolution[1 as keyof typeof this.dailyCatEvolution][9]) // fuck yes bro
       },
       error: err => this._errorHandlingService.handleError(err)
     })

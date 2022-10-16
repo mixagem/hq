@@ -23,7 +23,7 @@ export class CategoryDetailsComponent implements OnInit {
   tempFiCategory: IFinancialCategory; // clone da categoria utilizada no modo  edição
   editingMode: boolean; // boolean com o estado do modo de edição
 
-  constructor(private _categorySnackbarsService: CategorySnackBarsService, private _snackBar: MatSnackBar, private _route: ActivatedRoute, public categoriesService: CategoriesService, private _http: HttpClient, private _dialog: MatDialog, public miscService: MiscService, private _errorHandlingService: ErrorHandlingService) {
+  constructor(private _categorySnackBarsService: CategorySnackBarsService, private _snackBar: MatSnackBar, private _route: ActivatedRoute, public categoriesService: CategoriesService, private _http: HttpClient, private _dialog: MatDialog, public miscService: MiscService, private _errorHandlingService: ErrorHandlingService) {
     this.editingMode = false;
   }
 
@@ -35,7 +35,6 @@ export class CategoryDetailsComponent implements OnInit {
     this.fiCategory = this.miscService.getCategory(this.id);
     // clone da categoria para edição
     this.tempFiCategory = JSON.parse(JSON.stringify(this.fiCategory));
-    console.log(this.tempFiCategory)
     // clone da categoria enviado para o serviço -> utilizado para a duplicação (o componente de introdução vai ler ao servico o objeto da categoria)
     this.categoriesService.activePreviewCategory = JSON.parse(JSON.stringify(this.fiCategory));
 
@@ -46,44 +45,45 @@ export class CategoryDetailsComponent implements OnInit {
   // Ações de registo do modo de edição
   editingCategoryRecordActions(action: string): void {
     switch (action) {
+
       case 'edit':
+
         this.categoriesService.getCurrentSubcategoriesSequence(); // obter o valor da sequencia de subcategorias
         this.tempFiCategory = JSON.parse(JSON.stringify(this.fiCategory));// refrescar o tempFi
         this.editingMode = true;
+
         break;
 
       case 'save':
 
-        // validações ao gravar
         if (this.tempFiCategory.icon.includes(' ')) {
-          this._categorySnackbarsService.triggerCategoriesSnackbar(false, 'report', 'Icon', ['O campo ', ' encontra-se incorretamente definido.']);
+          this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', 'Icon', ['O campo ', ' encontra-se incorretamente definido.']);
           return;
         }
-
+        // não consegui utilizar o formControl com o ColorPicker
         if (this.tempFiCategory.bgcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
-          this._categorySnackbarsService.triggerCategoriesSnackbar(false, 'report', 'Etiqueta fundo', ['O campo ', ' encontra-se incorretamente definido.']);
+          this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', 'Etiqueta fundo', ['O campo ', ' encontra-se incorretamente definido.']);
           return;
         }
-
+        // não consegui utilizar o formControl com o ColorPicker
         if (this.tempFiCategory.textcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
-          this._categorySnackbarsService.triggerCategoriesSnackbar(false, 'report', 'Texto etiqueta', ['O campo ', ' encontra-se incorretamente definido.']);
+          this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', 'Texto etiqueta', ['O campo ', ' encontra-se incorretamente definido.']);
           return;
         }
-
+        // não consegui utilizar o formControl para números indeterminados de inputs
         let areSubcatsBugdgetCorrect = true;
         this.tempFiCategory.subcats.forEach(subcat => {
           if (!subcat.budget.toString().match(/^[0-9]*$/g)) {
             areSubcatsBugdgetCorrect = false;
           }
         });
-
         if (!areSubcatsBugdgetCorrect) {
-          this._categorySnackbarsService.triggerCategoriesSnackbar(false, 'report', 'Orçamento', ['Existem sub-categorias para as quais o campo ', ' se encontra incorretamente definido.']);
+          this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', 'Orçamento', ['Existem sub-categorias para as quais o campo ', ' se encontra incorretamente definido.']);
           return;
         }
 
-        // validações ok, envia para bd
         this.saveCategoryChanges();
+
         break;
 
       case 'end': default:
@@ -93,7 +93,7 @@ export class CategoryDetailsComponent implements OnInit {
 
   // adicionar sub-categoria à categoria em edição
   attachSubcategory(): void {
-    const DEFAULT_FISUBCATEGORY: IFinancialSubCategory = { id: this.categoriesService.currentSubcategoryDBSequence + 1, maincatid: this.id, title: 'Nova Sub-Categoria', budget: 0, active: false, order:0 }
+    const DEFAULT_FISUBCATEGORY: IFinancialSubCategory = { id: this.categoriesService.currentSubcategoryDBSequence + 1, maincatid: this.id, title: 'Nova Sub-Categoria', budget: 0, active: false, order: 0 }
     this.tempFiCategory.subcats.push(DEFAULT_FISUBCATEGORY);
     this.categoriesService.currentSubcategoryDBSequence++;
   }
@@ -116,10 +116,10 @@ export class CategoryDetailsComponent implements OnInit {
           this.categoriesService.fetchCategories('saveCategory', this.id); // atualiza o modo listagem / consulta
           this.categoriesService.recordBorderStyle['background-color'] = this.tempFiCategory.bgcolor; // atualiza a cor do border da gaveta com a nova cor da categoria
           this.editingMode = false; // termina o modo de edição
-          this._categorySnackbarsService.triggerCategoriesSnackbar(true, 'save_as', this.tempFiCategory.title, ['A categoria ', ' foi atualizada com sucesso.']); // dispara a snackbar
+          this._categorySnackBarsService.triggerCategoriesSnackbar(true, 'save_as', this.tempFiCategory.title, ['A categoria ', ' foi atualizada com sucesso.']); // dispara a snackbar
         }
         else {
-          this._categorySnackbarsService.triggerCategoriesSnackbar(false, 'report', this.tempFiCategory.title, ['Ocurreu um erro ao guardar as alterações à categoria ', '.']);
+          this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', this.tempFiCategory.title, ['Ocurreu um erro ao guardar as alterações à categoria ', '.']);
         }
 
       },

@@ -37,39 +37,42 @@ export class NewCategoryComponent implements OnInit {
   // ações de registo
   newCategoryRecordActions(action: string): void {
     switch (action) {
+
       case 'save':
+
+        if (this.tempFiCategory.icon.includes(' ')) {
+          this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', 'Icon', ['O campo ', ' encontra-se incorretamente definido.']);
+          return;
+        }
+        // não consegui utilizar o formControl com o ColorPicker
         if (this.tempFiCategory.bgcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
           this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', 'Etiqueta fundo', ['O campo ', ' encontra-se incorretamente definido.']);
           return;
         }
+        // não consegui utilizar o formControl com o ColorPicker
         if (this.tempFiCategory.textcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
           this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', 'Texto etiqueta', ['O campo ', ' encontra-se incorretamente definido.']);
           return;
         }
-
+        // não consegui utilizar o formControl para números indeterminados de inputs
         let areSubcatsBugdgetCorrect = true;
         this.tempFiCategory.subcats.forEach(subcat => {
           if (!subcat.budget.toString().match(/^[0-9]*$/g)) {
             areSubcatsBugdgetCorrect = false;
           }
         });
-
         if (!areSubcatsBugdgetCorrect) {
           this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', 'Orçamento', ['Existem sub-categorias para as quais o campo ', ' se encontra incorretamente definido.']);
           return;
         }
 
-        if (this.tempFiCategory.icon.includes(' ')) {
-          this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', 'Icon', ['O campo ', ' encontra-se incorretamente definido.']);
-          return;
-        }
         this.createNewCategory();
+
         break;
 
       case 'end': default:
-        // fechar a gaveta
+
         document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
-        // timer até ativar a route
         this._timerService.timer = setTimeout(navi.bind(null, this._router), 1000);
         function navi(router: Router): void { router.navigate(['/fi/cats']) };
     }

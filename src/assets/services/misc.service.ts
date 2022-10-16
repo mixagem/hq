@@ -73,7 +73,7 @@ export class MiscService {
   // novos -^     v- velhos
 
 
-  // utilizado: overview.component / misc.service
+  // utilizado: overview.component
   getCategoryIDFromSubcategoryID(subcatID: number): number {
     let category: IFinancialCategory;
 
@@ -86,7 +86,7 @@ export class MiscService {
     return category!.id;
   }
 
-  // utilizado: overview-daily-details-modal.html / misc.service
+  // utilizado: overview-daily-details-modal.html
   getCategoryIconFromSubcategoryID(subcatID: number): string {
     let category: IFinancialCategory;
 
@@ -99,33 +99,33 @@ export class MiscService {
     return category!.icon;
   }
 
-  // utilizado: overview.component  / new-treasury-log.component / treasury-details.html / treasury-details.component  / misc.service
+  // utilizado: overview.component  / new-treasury-log.component / treasury-details.html / treasury-details.component
   getCategoryTitle(catID: number): string {
     const filteredCategoryTitle = [...this._categoriesService.allCategories].filter(cat => cat.id == catID)[0].title;
     return filteredCategoryTitle;
   }
 
 
-  // utilizado: overview-daily-details-modal.component / overview-daily-details-modal.html / treasury-log.html / new-treasury-log.html / treasury-details.html  / misc.service
+  // utilizado: overview-daily-details-modal.component / overview-daily-details-modal.html / treasury-log.html / new-treasury-log.html / treasury-details.html
   getCatStyle(catID: number): string {
     const filteredCategory = [...this._categoriesService.allCategories].filter(cat => cat.id == catID)[0];
     return `background:${filteredCategory.bgcolor};color:${filteredCategory.textcolor};`;
   }
 
-  // utilizao: overview-daily-details-modal.component / misc.service
+  // utilizao: overview-daily-details-modal.component
   getCatStyleSimplex(catID: number): string[] {
     const filteredCategory = [...this._categoriesService.allCategories].filter(cat => cat.id == catID)[0];
     return [filteredCategory.bgcolor, filteredCategory.textcolor]
   }
 
-  // utilizado:  overview.component  / overview-daily-details-modal.html / treasury-log.html / new-treasury-log.component / treasury-details.html / treasury-details.component  / misc.service
+  // utilizado:  overview.component  / overview-daily-details-modal.html / treasury-log.html / new-treasury-log.component / treasury-details.html / treasury-details.component
   getSubcategoryTitle(catID: number, subcatID: number): string {
     const filteredCategory = [...this._categoriesService.allCategories].filter(cat => cat.id == catID)[0];
     const filteredSubcategoryTitle = [...filteredCategory.subcats].filter(subcat => subcat.id == subcatID)[0].title;
     return filteredSubcategoryTitle;
   }
 
-   // utilizado:  overview-daily-details-modal.html  / misc.service
+   // utilizado:  overview-daily-details-modal.html
   getSubcategoryTitleSimplex(subcatID: number): string {
     let subcategory: IFinancialSubCategory;
 
@@ -137,18 +137,18 @@ export class MiscService {
 
     return subcategory!.title;
   }
- // utilizado:  overview-daily-details-modal.html  / treasury-log.html  / new-treasury-log.html  / treasury-details.html   / misc.service
+ // utilizado:  overview-daily-details-modal.html  / treasury-log.html  / new-treasury-log.html  / treasury-details.html
   getCategoryIcon(catID: number): string {
     const filteredCategoryIcon = [...this._categoriesService.allCategories].filter(cat => cat.id == catID)[0].icon;
     return filteredCategoryIcon;
   }
 
- // utilizado:  treasury-details.component   / new-treasury-log.component  / new-treasury-log.html  / treasury-details.html   / misc.service
+ // utilizado:  treasury-details.component   / new-treasury-log.component  / new-treasury-log.html  / treasury-details.html
   getCategoryIDFromTitle(catTitle: string): number {
     const filteredCategoryID = [...this._categoriesService.allCategories].filter(cat => cat.title === catTitle)[0].id;
     return filteredCategoryID;
   }
-// utilizado:  treasury-details.component   / new-treasury-log.component  /  misc.service
+// utilizado:  treasury-details.component   / new-treasury-log.component  
   getCategoryObjectFromID(catID: number): IFinancialCategory {
     const filteredCategory = [...this._categoriesService.allCategories].filter(cat => cat.id == catID)[0];
     return filteredCategory;

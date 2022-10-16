@@ -13,6 +13,7 @@ export function fetchCategories(req, res) {
   db.serialize(() => {
 
     db.each(`SELECT * FROM categories ORDER BY id DESC`, (err, cat) => {
+
       if (err) { console.error(err.message) }
       else {
         cat.subcats = []; // na tabela da bd, não existe a coluna subcats, tenho que a declarar aqui
@@ -27,6 +28,7 @@ export function fetchCategories(req, res) {
 
   db.close((err) => {
     err ? console.error(err.message) : res.send(categories);
+
     console.log('Fetch complete.');
   });
 

@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { CategorySnackBarsService } from 'src/assets/services/category-snack-bars.service';
 import { ErrorHandlingService } from 'src/assets/services/misc.service';
 import { TreasuryService } from '../../../treasury-log/treasury.service';
 import { CategoriesService } from '../../categories.service';
@@ -12,13 +13,13 @@ import { CategoriesService } from '../../categories.service';
 
 export class DeleteCategoryConfirmationModalComponent {
 
-  constructor(public categoriesService: CategoriesService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, private _treasuryService: TreasuryService) { }
+  constructor(private _categorySnackBarsService: CategorySnackBarsService, public categoriesService: CategoriesService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, private _treasuryService: TreasuryService) { }
 
   deleteCategory(): void {
 
-    // debugger;
-    const categoryTLogs = this._treasuryService.treasuryLog.filter(tlog => tlog.cat == this.categoriesService.activePreviewCategory.id);
-    if (categoryTLogs.length !== 0) { return alert('tens registos associados, that\'s illegal') }
+    for (let i = 0; i < this._treasuryService.treasuryLog.length; i++) {
+      if(this._treasuryService.treasuryLog[i].cat === this.categoriesService.activePreviewCategory.id) {return this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', this.categoriesService.activePreviewCategory.title, ['Não é possível remover a categoria ', ', devido à existência de movimentos associados.']);}
+    }
 
     const httpParams = new HttpParams().set('cat', this.categoriesService.activePreviewCategory.id)
     const call = this._http.post('http://localhost:16190/deletecategory', httpParams, { responseType: 'text' })

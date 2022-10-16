@@ -1,6 +1,7 @@
 <div class="mhq-row full-height mhq-category-details-wrapper">
 
   <div class="mhq-categories-drawer-left">
+
     <div class="mhq-quickaction-close" (click)="categoriesService.closeDetails()">
       <mat-icon>close</mat-icon>
     </div>
@@ -12,42 +13,51 @@
         <mat-icon>not_interested</mat-icon>
       </button></div>
 
-
     <div [ngStyle]="categoriesService.recordBorderStyle"></div>
   </div>
+
 
   <div class="mhq-categories-drawer-right">
 
     <div class="mhq-wrapper-row">
+
       <h1>
         <div>
           <mat-icon>info_outline</mat-icon>Detalhes
         </div>
       </h1>
+
       <div class="mhq-row">
+
         <div class="mhq-col-1">
           <mat-form-field appearance="fill">
             <mat-label>ID</mat-label>
             <input matInput disabled [value]="tempFiCategory.id">
           </mat-form-field>
         </div>
+
         <div class="mhq-col-8">
           <mat-form-field appearance="fill">
             <mat-label>Título</mat-label>
             <input matInput [(ngModel)]="tempFiCategory.title">
           </mat-form-field>
         </div>
+
         <div class="mhq-col-1">
           <mat-form-field appearance="fill">
             <mat-label>Icon</mat-label>
             <input matInput [(ngModel)]="tempFiCategory.icon">
           </mat-form-field>
         </div>
+
         <div class="mhq-col-2 mhq-checkbox-wrapper">
           <mat-checkbox color="primary" [(ngModel)]="tempFiCategory.active">Ativa</mat-checkbox>
         </div>
+
       </div>
+
       <div class="mhq-row">
+
         <div class="mhq-col-4 radio-group">
           <p>Tipo:</p>
           <mat-radio-group color="primary" [(ngModel)]="tempFiCategory.type">
@@ -55,6 +65,7 @@
             <mat-radio-button value="income">Rendimento</mat-radio-button>
           </mat-radio-group>
         </div>
+
         <div class="mhq-col-4">
           <mat-form-field appearance="fill">
             <mat-label>Cor fundo etiqueta</mat-label>
@@ -63,6 +74,7 @@
               [cpSaveClickOutside]="true" [(colorPicker)]="tempFiCategory.bgcolor" [(ngModel)]="tempFiCategory.bgcolor">
           </mat-form-field>
         </div>
+
         <div class="mhq-col-4">
           <mat-form-field appearance="fill">
             <mat-label>Cor texto etiqueta</mat-label>
@@ -74,10 +86,11 @@
         </div>
 
       </div>
+
     </div>
 
-
     <div class="mhq-wrapper-row">
+
       <h1>
         <div>
           <mat-icon>low_priority</mat-icon>Sub-categorias
@@ -90,10 +103,6 @@
           <mat-icon>add</mat-icon>
         </div>
         <p>Carrega para adicionar uma nova sub-categoria</p>
-
-        <!-- o rows. <span (click)="createSubcategory()">click to
-          add</span> -->
-
 
       </div>
 
@@ -142,7 +151,9 @@
           </tbody>
         </table>
       </ng-scrollbar>
+
     </div>
+
   </div>
 
 </div>

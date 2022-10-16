@@ -69,7 +69,7 @@ export function addNewTreasurylog(req, res) {
   });
 
   const tlog = JSON.parse(req.body.tlog);
-  const recurrency = JSON.parse(req.body.recurrency); //active, type, freq
+  const recurrency = JSON.parse(req.body.recurrency); 
   let rMonth = tlog.date.getMonth();
   let rYear = tlog.date.getYear();
   const rDay = tlog.date.getDate();

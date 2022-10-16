@@ -17,8 +17,8 @@ export class CategoriesService {
   onInitTrigger: Subject<any>; // trigger para onInit
   recordBorderStyle: RecordBorderStyle;// estilo a ser aplicado na gaveta do registo
   allCategories: IFinancialCategory[];  // categorias existentes em bd
-  expenseCategories: IFinancialCategory[];
-  incomeCategories: IFinancialCategory[];
+  expenseCategories: IFinancialCategory[]; // split para re-ordenação das categorias
+  incomeCategories: IFinancialCategory[]; // split para re-ordenação das categorias
   cloningCategory: Boolean;  // boolean para verificar se é duplicada ou é criada nova categoria
   activePreviewCategory: IFinancialCategory; // clone da categoria atualmente em consulta utilizado para a duplicação
 
@@ -33,7 +33,8 @@ export class CategoriesService {
     this.onInitTrigger.next('');
   }
 
-  getCurrentSubcategoriesSequence() {
+  // método para obter o último id utilizado nas categorias em bd
+  getCurrentSubcategoriesSequence(): void {
     const call = this._http.get('http://localhost:16190/currentsubcategorysequence');
 
     call.subscribe({
@@ -42,21 +43,20 @@ export class CategoriesService {
     });
   }
 
-  //vai á bd buscar as categorias
+  // vai á bd buscar as categorias
   fetchCategories(source: string = '', catID?: number): void {
     const call = this._http.get('http://localhost:16190/fetchcats');
 
     call.subscribe({
       next: (codeReceived) => {
         const resp = codeReceived as IFinancialCategory[];
-
         // guardar no serviço a resposta da bd
         this.allCategories = resp;
-        this.expenseCategories = resp.filter(cat => cat.type === 'expense');
-        this.incomeCategories = resp.filter(cat => cat.type === 'income');
-        this._loadingService.categoriesLoadingComplete = true;
+        this.expenseCategories = resp.filter(cat => cat.type === 'expense'); //split para re-ordenação
+        this.incomeCategories = resp.filter(cat => cat.type === 'income'); //split para re-ordenação
+        this._loadingService.categoriesLoadingComplete = true; // loading das categorias pronto
 
-        // faz refresh da listagem e da gaveta
+        // faz refresh da listagem e do registo em consulta
         if (source === 'saveCategory') { this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/cats', catID]); }); }
 
         // fecha a gaveta do registo, fecha a modal e faz refresh da listagem
@@ -66,8 +66,7 @@ export class CategoriesService {
 
           this._timerService.timer = setTimeout(navi.bind(null, this._router), 1000);
           function navi(router: Router): void {
-            const ele = document.querySelector('.cdk-overlay-backdrop') as HTMLElement;
-            ele.click(); // fechar a modal
+            const ele = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ele.click();
             router.navigateByUrl('/', { skipLocationChange: true }).then(() => { router.navigate(['/fi/cats']); });
           }
         }
@@ -90,7 +89,6 @@ export class CategoriesService {
   // fecha a gaveta do registo
   closeDetails(): void {
     document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight')
-
     this._timerService.timer = setTimeout(navi.bind(null, this._router), 1000)
     function navi(router: Router): void { router.navigate(['/fi/cats']) }
   }
