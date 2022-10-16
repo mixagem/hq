@@ -123,18 +123,29 @@
         </div>
       </div>
 
-      <div class="mhq-row">
-        <mat-slide-toggle [checked]="false">Recorrência</mat-slide-toggle>
-      </div>
 
+
+      <h1>
+        <div>
+          <mat-icon>info_outline</mat-icon>Recorrência
+        </div>
+      </h1>
+
+      <div class="mhq-row">
+
+        <div class="mhq-row">
+          <mat-slide-toggle [(ngModel)]="recurrency" (change)="recurrencyToggle($event)">Recorrência</mat-slide-toggle>
+        </div>
+      </div>
       <div class="mhq-row">
         <!-- <div class="mhq-col-3">Frequência recorrência (mensal, anual) </div>
         <div class="mhq-col-3">Número de recorrências (numero de vezes a repetir)</div>
         <div class="mhq-col-3">Data da primeira incidência (dia a ser utilizado para recorrência)</div> -->
+
         <div class="mhq-col-4">
           <mat-form-field appearance="fill">
             <mat-label>Frequência da recorrência</mat-label>
-            <mat-select>
+            <mat-select [disabled]="!recurrency" [(ngModel)]="recurrencyType">
               <mat-option *ngFor="let freq of treasuryService.recurrencyFreq" [value]="freq.value">
                 {{freq.string}}
               </mat-option>
@@ -143,16 +154,11 @@
         </div>
         <div class="mhq-col-4">
           <mat-form-field appearance="fill">
-            <mat-label>Número de recorrências</mat-label>
-            <input matInput>
+            <mat-label>Número de ocorrências</mat-label>
+            <input matInput [disabled]="!recurrency" type="number" [formControl]="recurrencyFrequency">
           </mat-form-field>
         </div>
-        <div class="mhq-col-4">
-          <mat-form-field appearance="fill">
-            <mat-label>Data da primeira incidência</mat-label>
-            <input matInput>
-          </mat-form-field>
-        </div>
+
 
       </div>
 

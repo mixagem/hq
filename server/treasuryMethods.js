@@ -69,15 +69,74 @@ export function addNewTreasurylog(req, res) {
   });
 
   const tlog = JSON.parse(req.body.tlog);
+  const recurrency = JSON.parse(req.body.recurrency); //active, type, freq
+  let rMonth = tlog.date.getMonth();
+  let rYear = tlog.date.getYear();
+  const rDay = tlog.date.getDate();
+
+  if (recurrency) {
+
+    db.all(`SELECT MAX (recurrencyid) from treasurylog`, (err, resp) => { err ? console.error(err.message) : switcheroo(resp[0].seq) });
+
+    function switcheroo(currentRecurrencyID) {
+
+      let recurrencyID = currentRecurrencyID + 1
+
+      let date; date.setDate(rDay);
+
+      switch (recurrency.type) {
+
+        case 'm':
+          for (i = 0; i < recurrency.freq; i++) {
+            if (rMonth + i === 12) { rMonth = 0; rYear++; } else { rMonth++; }
+            date.setFullYear(rYear); date.setMonth(rMonth);
+
+            db.serialize(() => {
+
+              db.run(`INSERT INTO treasurylog (title, date, value, cat, subcat, type, obs, recurrencyid) VALUES ('${tlog.title}', '${date}', '${tlog.value}', '${tlog.cat}', '${tlog.subcat}', '${tlog.type}', '${tlog.obs}', '${recurrencyID}')`, (err, resp) => { err ? console.error(err.message) : console.log('Treasury log sucessfully created.') });
+
+              if (i === recurrency.freq - 1) {
+                db.all(`SELECT * from sqlite_sequence where name='treasurylog'`, (err, resp) => { err ? console.error(err.message) : close(resp[0].seq) });
+              }
+
+            });
+
+          }
+          break;
+
+        case 'a':
+          date.setMonth(rMonth)
+          for (i = 0; i < recurrency.freq; i++) {
+            date.setFullYear(rYear + i);
+
+            db.serialize(() => {
+
+              db.run(`INSERT INTO treasurylog (title, date, value, cat, subcat, type, obs, recurrencyid) VALUES ('${tlog.title}', '${date}', '${tlog.value}', '${tlog.cat}', '${tlog.subcat}', '${tlog.type}', '${tlog.obs}', '0')`, (err, resp) => { err ? console.error(err.message) : console.log('Treasury log sucessfully created.') });
+
+              if (i === recurrency.freq - 1) {
+                db.all(`SELECT * from sqlite_sequence where name='treasurylog'`, (err, resp) => { err ? console.error(err.message) : close(resp[0].seq) });
+              }
+
+            });
+          }
 
 
+          break;
+      }
+    }
 
-  db.serialize(() => {
+  }
 
-    db.run(`INSERT INTO treasurylog (title, date, value, cat, subcat, type, obs) VALUES ('${tlog.title}', '${tlog.date}', '${tlog.value}', '${tlog.cat}', '${tlog.subcat}', '${tlog.type}', '${tlog.obs}')`, (err, resp) => { err ? console.error(err.message) : console.log('Treasury log sucessfully created.') });
-    db.all(`SELECT * from sqlite_sequence where name='treasurylog'`, (err, resp) => { err ? console.error(err.message) : close(resp[0].seq) });
+  if (!recurrency) {
+    db.serialize(() => {
 
-  });
+      db.run(`INSERT INTO treasurylog (title, date, value, cat, subcat, type, obs, recurrencyid) VALUES ('${tlog.title}', '${tlog.date}', '${tlog.value}', '${tlog.cat}', '${tlog.subcat}', '${tlog.type}', '${tlog.obs}', '0')`, (err, resp) => { err ? console.error(err.message) : console.log('Treasury log sucessfully created.') });
+      db.all(`SELECT * from sqlite_sequence where name='treasurylog'`, (err, resp) => { err ? console.error(err.message) : close(resp[0].seq) });
+
+    });
+  }
+
+
 
   function close(newTlogID) {
     console.log(newTlogID)

@@ -12,6 +12,8 @@ import { MatSelectChange } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MissingCategoriesSnackBarComponent } from '../missing-categories-snack-bar/missing-categories-snack-bar.component';
 import { CategorySnackBarsService } from 'src/assets/services/category-snack-bars.service';
+import { MatButtonToggleChange } from '@angular/material/button-toggle';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 const DEFAULT_TLOG: ITreasuryLog = {
   id: 0, //ignrado ao ser enviado para bd
@@ -48,6 +50,11 @@ export class NewTreasuryLogComponent implements OnInit {
   subcatForm: FormControl
   subcategoriesList: string[] = [];
 
+  // recorrencia
+  recurrency: boolean
+  recurrencyType: string;
+  recurrencyFrequency:  FormControl<any>;
+
 
   constructor(private _errorHandlingService: ErrorHandlingService, private _snackBar:MatSnackBar, public miscService: MiscService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, private _route: ActivatedRoute, public _router: Router, public _http: HttpClient, private _timerService:TimerService, private _categoriesSnackBarService: CategorySnackBarsService) { }
 
@@ -76,9 +83,6 @@ export class NewTreasuryLogComponent implements OnInit {
     } else {
       this.catForm = new FormControl('', [Validators.required]);
       this.subcatForm = new FormControl({ value: '', disabled: true }, [Validators.required]);
-
-
-
     }
 
     // opções para select
@@ -86,6 +90,8 @@ export class NewTreasuryLogComponent implements OnInit {
       this.categoriesList.push(cat.title)
     });
 
+    // recurrency
+    this.recurrencyFrequency = new FormControl({value:'', disabled: true}, [Validators.required, Validators.min(2)]);
 
 
   }
@@ -146,7 +152,9 @@ export class NewTreasuryLogComponent implements OnInit {
 
   saveTreasurylog(): void {
 
-    const httpParams = new HttpParams().set('tlog', JSON.stringify(this.tempTreasuryLog));
+    // fiquei aqui, tenho de fazer um objeto com as propriedadas da recurrencia
+
+    const httpParams = new HttpParams().set('tlog', JSON.stringify(this.tempTreasuryLog)).set('recurrency', this.recurrency);
     const call = this._http.post('http://localhost:16190/createtreasurylog', httpParams, { responseType: 'text' });
 
     call.subscribe({
@@ -172,6 +180,15 @@ export class NewTreasuryLogComponent implements OnInit {
 
     this.subcatForm.setValue('')
     this.subcategoriesList.length > 0 ? this.subcatForm.enable() : this.subcatForm.disable();
+  }
+
+  recurrencyToggle(event: MatSlideToggleChange){
+    if(event.checked){
+      // fazer disable ao grupo todo next time
+      this.recurrencyFrequency.enable()
+    } else {
+      this.recurrencyFrequency.disable()
+    }
   }
 
 
