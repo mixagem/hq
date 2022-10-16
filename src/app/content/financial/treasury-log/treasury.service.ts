@@ -16,7 +16,6 @@ type recurencyFrequency = {
 
 const REC_FREQ: recurencyFrequency[] = [{ string: "Mensal", value: "m" }, { string: "Anual", value: "a" }]
 
-
 @Injectable({
   providedIn: 'root'
 })

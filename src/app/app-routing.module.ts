@@ -6,7 +6,10 @@ import { CategoriesComponent } from './content/financial/categories/categories.c
 import { CategoryDetailsComponent } from './content/financial/categories/category-details/category-details.component';
 import { NewCategoryComponent } from './content/financial/categories/new-category/new-category.component';
 import { FinancialComponent } from './content/financial/financial.component';
-import { OverviewComponent } from './content/financial/overview/overview.component';
+import { AnualViewComponent } from './content/financial/grid-view/anual-view/anual-view.component';
+import { DecadeViewComponent } from './content/financial/grid-view/decade-view/decade-view.component';
+import { GridViewComponent } from './content/financial/grid-view/grid-view.component';
+import { MonthlyViewComponent } from './content/financial/grid-view/monthly-view/monthly-view.component';
 import { NewTreasuryLogComponent } from './content/financial/treasury-log/new-treasury-log/new-treasury-log.component';
 import { TreasuryDetailsComponent } from './content/financial/treasury-log/treasury-details/treasury-details.component';
 import { TreasuryLogComponent } from './content/financial/treasury-log/treasury-log.component';
@@ -20,7 +23,11 @@ const routes: Routes = [{
 }, {
   path: 'fi', component: FinancialComponent, children: [
     {
-      path: 'overview', component: OverviewComponent
+      path: 'grid', component: GridViewComponent, children: [
+        { path: 'month', component: MonthlyViewComponent },
+        { path: 'anual', component: AnualViewComponent },
+        { path: 'decade', component: DecadeViewComponent }
+      ]
     }, {
       path: 'tlogs', component: TreasuryLogComponent, children: [
         {

@@ -19,6 +19,8 @@ import { OverviewDailyDetailsModalComponent } from 'src/app/content/financial/ov
 import { DeleteCategoryConfirmationModalComponent } from 'src/app/content/financial/categories/category-details/delete-category-confirmation-modal/delete-category-confirmation-modal.component';
 import { MhqSucessSnackBarComponent } from '../components/mhq-sucess-snack-bar/mhq-sucess-snack-bar.component';
 import { MhqFailureSnackBarComponent } from '../components/mhq-failure-snack-bar/mhq-failure-snack-bar.component';
+import { GridViewComponent } from 'src/app/content/financial/grid-view/grid-view.component';
+import { GridViewModule } from 'src/app/content/financial/grid-view/grid-view.module';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,8 @@ import { MhqFailureSnackBarComponent } from '../components/mhq-failure-snack-bar
     OverviewDailyDetailsModalComponent,
     DeleteCategoryConfirmationModalComponent,
     MhqSucessSnackBarComponent,
-    MhqFailureSnackBarComponent
+    MhqFailureSnackBarComponent,
+    GridViewComponent
 
   ],
   imports: [
@@ -46,7 +49,8 @@ import { MhqFailureSnackBarComponent } from '../components/mhq-failure-snack-bar
     MaterialImportsModule,
     HttpClientModule,
     ColorPickerModule,
-    NgScrollbarModule
+    NgScrollbarModule,
+    GridViewModule
   ],
   exports: [
     FinancialComponent,
@@ -62,7 +66,8 @@ import { MhqFailureSnackBarComponent } from '../components/mhq-failure-snack-bar
     OverviewDailyDetailsModalComponent,
     DeleteCategoryConfirmationModalComponent,
     MhqSucessSnackBarComponent,
-    MhqFailureSnackBarComponent
+    MhqFailureSnackBarComponent,
+    GridViewComponent
 
   ]
 })
