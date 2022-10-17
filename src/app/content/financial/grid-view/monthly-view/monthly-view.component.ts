@@ -24,7 +24,7 @@ export type MonthlySnapshots = {
 export class MonthlyViewComponent implements OnInit {
 
   gridSubtitle:string;
-  currentDate: Date; // data utilizada para navegação
+  // currentDate: Date; // data utilizada para navegação
   gridReady: boolean; // variável com o estado de recepção do snapshot
   monthlySnapshots: MonthlySnapshots // objetos com snapshots recebidos
   placeholder: Array<number>; //utilizado no ngFor com o número de dias do mês
@@ -34,9 +34,8 @@ export class MonthlyViewComponent implements OnInit {
   constructor(private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, private _categoriesService: CategoriesService, private _treasuryService: TreasuryService, private _loadingService: LoadingService, public miscService: MiscService, private _gridviewService: GridViewService, private _dialog: MatDialog) {
     this.gridReady = false;
     this.areCategoriesReady = false;
-    this.currentDate = new Date(); // inicializa a data com a data atual
-    this.getCategoriesMonthlySnapshots((new Date().getFullYear()), (new Date().getMonth())); // vai buscar os snapshots à bd
     this.monthlySnapshots = { categories: {}, subcategories: {}, daily: [] } // inicializar a var
+    this.getCategoriesMonthlySnapshots(this._gridviewService.monthlyCurrentDate.getFullYear(), this._gridviewService.monthlyCurrentDate.getMonth()); // vai buscar os snapshots à bd
     this.gridSubtitle = '';
   }
 
@@ -44,7 +43,7 @@ export class MonthlyViewComponent implements OnInit {
     this._treasuryService.onInitTrigger.subscribe(x => { this.ngOnInit(); });     // triggers remoto do OnInit
     this._categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.treasuryLoadingComplete) { return }
-    this.placeholder = new Array(this._gridviewService.getMonthDays(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1)).fill(0);
+    this.placeholder = new Array(this._gridviewService.getMonthDays(this._gridviewService.monthlyCurrentDate.getFullYear(), this._gridviewService.monthlyCurrentDate.getMonth() + 1)).fill(0);
     this.activeCategories = [...this._categoriesService.incomeCategories, ...this._categoriesService.expenseCategories].filter(category => category.active);
     this.monthlyGridSubtitleGenerator()
     this.areCategoriesReady = true;
@@ -53,26 +52,26 @@ export class MonthlyViewComponent implements OnInit {
   changeMonth(target: number): void {
     switch (target) {
       case -1:
-        if (this.currentDate.getMonth() === 0) {
-          this.currentDate.setFullYear(this.currentDate.getFullYear() - 1, 11);
+        if (this._gridviewService.monthlyCurrentDate.getMonth() === 0) {
+          this._gridviewService.monthlyCurrentDate.setFullYear(this._gridviewService.monthlyCurrentDate.getFullYear() - 1, 11);
         } else {
-          this.currentDate.setMonth(this.currentDate.getMonth() - 1)
+          this._gridviewService.monthlyCurrentDate.setMonth(this._gridviewService.monthlyCurrentDate.getMonth() - 1)
         }
         break;
 
       case 1:
-        if (this.currentDate.getMonth() === 11) {
-          this.currentDate.setFullYear(this.currentDate.getFullYear() + 1, 0);
+        if (this._gridviewService.monthlyCurrentDate.getMonth() === 11) {
+          this._gridviewService.monthlyCurrentDate.setFullYear(this._gridviewService.monthlyCurrentDate.getFullYear() + 1, 0);
         } else {
-          this.currentDate.setMonth(this.currentDate.getMonth() + 1)
+          this._gridviewService.monthlyCurrentDate.setMonth(this._gridviewService.monthlyCurrentDate.getMonth() + 1)
         }
         break;
 
       case 0: default:
-        this.currentDate = new Date();
+        this._gridviewService.monthlyCurrentDate = new Date();
     }
 
-    this.getCategoriesMonthlySnapshots(this.currentDate.getFullYear(), this.currentDate.getMonth())
+    this.getCategoriesMonthlySnapshots(this._gridviewService.monthlyCurrentDate.getFullYear(), this._gridviewService.monthlyCurrentDate.getMonth())
     this.monthlyGridSubtitleGenerator()
   }
 
@@ -96,7 +95,11 @@ export class MonthlyViewComponent implements OnInit {
   }
 
   monthlyGridSubtitleGenerator() {
-    this.gridSubtitle = this.currentDate.toLocaleString('default', { year: 'numeric', month: 'long' });
+    this.gridSubtitle = this._gridviewService.monthlyCurrentDate.toLocaleString('default', { year: 'numeric', month: 'long' });
+  }
+
+  isSubcatCellEmpty(number:number):string{
+    return number=== 0? 'opacity:0.25' : ''
   }
 }
 

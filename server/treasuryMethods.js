@@ -67,22 +67,21 @@ export function createTreasurylog(req, res) {
 
   let rMonth = new Date(TREASURY_LOG.date).getMonth();
   let rYear = new Date(TREASURY_LOG.date).getFullYear();
-  console.log('mes/ano inicial: ', rMonth, rYear,RECURRENCY_OPTIONS.date)
+  console.log('mes/ano inicial: ', rMonth, rYear, RECURRENCY_OPTIONS.date)
 
   if (RECURRENCY_OPTIONS.active) {
     db.all(`SELECT MAX (recurrencyid) as recurrencyid from treasurylog`, (err, resp) => { err ? console.error(err.message) : switcheroo(resp[0].recurrencyid) });
     function switcheroo(currentRecurrencyID) {
       let recurrencyID = currentRecurrencyID + 1
       let date = new Date();
-      date.setFullYear(rYear, rMonth, RECURRENCY_OPTIONS.date);
+      // date.setFullYear(rYear, rMonth, RECURRENCY_OPTIONS.date);
 
       switch (RECURRENCY_OPTIONS.type) {
         case 'm':
           for (let i = 0; i < RECURRENCY_OPTIONS.freq; i++) {
-            if (i !== 0) {
-              if (rMonth + i === 12) { rMonth = 0; rYear++; } else { rMonth++; }
-              date.setFullYear(rYear, rMonth, RECURRENCY_OPTIONS.date);
-            }
+            date.setFullYear(rYear, rMonth, RECURRENCY_OPTIONS.date);
+            if (rMonth === 11) { rMonth = 0; rYear++; } else { rMonth++ }
+
 
             db.serialize(() => {
               db.run(`INSERT INTO treasurylog (title, date, value, cat, subcat, type, obs, recurrencyid) VALUES ('${TREASURY_LOG.title}', '${date.getTime()}', '${TREASURY_LOG.value}', '${TREASURY_LOG.cat}', '${TREASURY_LOG.subcat}', '${TREASURY_LOG.type}', '${TREASURY_LOG.obs}', '${recurrencyID}')`, (err, resp) => { err ? console.error(err.message) : console.log('[C4 monthly] treasury log created') });
@@ -96,7 +95,7 @@ export function createTreasurylog(req, res) {
 
         case 'a':
           for (let i = 0; i < RECURRENCY_OPTIONS.freq; i++) {
-            date.setFullYear((rYear+i), rMonth, RECURRENCY_OPTIONS.date);
+            date.setFullYear((rYear + i), rMonth, RECURRENCY_OPTIONS.date);
             db.serialize(() => {
               db.run(`INSERT INTO treasurylog (title, date, value, cat, subcat, type, obs, recurrencyid) VALUES ('${TREASURY_LOG.title}', '${date.getTime()}', '${TREASURY_LOG.value}', '${TREASURY_LOG.cat}', '${TREASURY_LOG.subcat}', '${TREASURY_LOG.type}', '${TREASURY_LOG.obs}', '0')`, (err, resp) => { err ? console.error(err.message) : console.log('[C4 yearly] treasury log created') });
 

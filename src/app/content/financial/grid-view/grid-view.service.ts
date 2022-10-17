@@ -6,8 +6,10 @@ export class GridViewService {
 
   selectedView: string;
   gridSubtitle: string;
+  monthlyCurrentDate: Date;
 
   constructor() {
+    this.monthlyCurrentDate = new Date();
     this.selectedView = 'month';
     this.gridSubtitle = '';
     this.gridSubtitleGenerator();

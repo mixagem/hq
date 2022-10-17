@@ -40,7 +40,7 @@
 
 <!-- calendário -->
 <div class="mhq-row">
-  <div class="mhq-col-2" style="height: 30px;"></div>
+  <div class="mhq-col-2" style="height: 30px;margin-right: 10px;"></div>
   <div class="mhq-col-10">
     <!-- loop para cabeçalho com o calendario -->
     <div class="mhq-row">
@@ -55,20 +55,20 @@
 <div *ngIf="gridReady" id="mhq-grid-wrapper" class="mhq-row">
 
   <!-- títulos de categorias -->
-  <div id="mhq-grid-categories-wrapper" class="mhq-col-2">
+  <div id="mhq-grid-categories-wrapper" class="mhq-col-2" style="margin-right: 10px;">
     <mat-spinner *ngIf="!areCategoriesReady" color="accent" style="margin:auto"></mat-spinner>
 
     <div *ngIf="areCategoriesReady">
 
       <!-- loop para categorias  -->
-      <div *ngFor="let cat of activeCategories">
-        <div [style]="miscService.getCategoryStyles(cat.id)" style="height:40px;">
+      <div *ngFor="let cat of activeCategories" class="mhq-grid-active-category">
+        <div class="mhq-grid-category-title" [style]="miscService.getCategoryStyles(cat.id)">
           <mat-icon>{{cat.icon}}</mat-icon>{{cat.title}}
         </div>
 
         <!-- loop para sub categorias  -->
         <div *ngFor="let subcat of cat.subcats">
-          <div *ngIf="subcat.active" [style]="miscService.getCategoryStyles(cat.id)" style="opacity: .8;height:30px">
+          <div *ngIf="subcat.active" class="mhq-grid-subcategory-title" [style]="miscService.getCategoryStyles(cat.id)">
             {{subcat.title}}</div>
         </div>
 
@@ -85,12 +85,13 @@
     <div *ngIf="areCategoriesReady">
 
       <!-- loop para celuluas diárias  -->
-      <div class="mhq-row" *ngFor="let cat of activeCategories" style="flex-wrap: wrap;">
+      <div class="mhq-row" *ngFor="let cat of activeCategories" style="flex-wrap: wrap;"
+        class="mhq-grid-active-category">
 
         <!-- celulas da categoria -->
         <div class="mhq-row">
-          <div *ngFor="let x of placeholder; let i = index;"
-            style="width:100%;height:40px;background-color:rgb(0, 144, 201);border:1px solid gray;box-sizing:border-box">
+          <div *ngFor="let x of placeholder; let i = index;" [ngStyle]="miscService.getCategoryStyles(cat.id)"
+            class="mhq-category-summary">
             {{monthlySnapshots.categories[cat.id][i]}}
           </div>
         </div>
@@ -98,9 +99,10 @@
         <!-- celulas da sub categoria -->
         <div class="mhq-row" *ngFor="let subcat of cat.subcats">
           <div *ngFor="let x of placeholder; let i = index;" style="width:100%;">
-            <div *ngIf="subcat.active"
-              style="width:100%;height:30px;background-color:rgb(159, 222, 247);border:1px solid gray;box-sizing:border-box">
-              {{monthlySnapshots.subcategories[subcat.id][i]}}</div>
+            <div *ngIf="subcat.active" class="mhq-active-subcat-cell" [ngStyle]="miscService.getCategoryStyles(cat.id)"
+              [style]="isSubcatCellEmpty(monthlySnapshots.subcategories[subcat.id][i])">
+              {{monthlySnapshots.subcategories[subcat.id][i] === 0 ? '' : monthlySnapshots.subcategories[subcat.id][i]}}
+            </div>
           </div>
         </div>
 
