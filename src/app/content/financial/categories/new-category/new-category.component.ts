@@ -30,6 +30,7 @@ export class NewCategoryComponent implements OnInit {
     } else {
       this.tempFiCategory = JSON.parse(JSON.stringify(DEFAULT_FICATEGORY)); // o rest operator não tava a bombar fixe aqui
     }
+    this.categoriesService.recordBorderStyle['background-color']=this.tempFiCategory.bgcolor;
   }
 
   // ações de registo

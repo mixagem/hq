@@ -21,9 +21,11 @@ export class CategoriesService {
   activePreviewCategory: IFinancialCategory; // clone da categoria atualmente em consulta utilizado para a duplicação
 
   constructor(private _categorySnackBarsService: CategorySnackBarsService, private _http: HttpClient, private _router: Router, private _timerService: TimerService, private _loadingService: LoadingService, private _errorHandlingService: ErrorHandlingService) {
+    this.allCategories = [];
     this.cloningCategory = false;
     this.fetchCategories(); // vai buscar à bd as categorias e movimentos existentes. quando concluído, passa o loadingComplete = true
     this.onInitTrigger = new Subject<any>(); // trigger para onInit do componente
+    this.recordBorderStyle = { "background-color": 'rgb(0,0,0)' };
   }
 
   // trigger para onInit do componente

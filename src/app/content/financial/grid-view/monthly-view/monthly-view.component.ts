@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
-import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
+
 import { ErrorHandlingService, LoadingService, MiscService } from 'src/assets/services/misc.service';
 import { CategoriesService } from '../../categories/categories.service';
 import { TreasuryService } from '../../treasury-log/treasury.service';
@@ -23,6 +23,7 @@ export type MonthlySnapshots = {
 })
 export class MonthlyViewComponent implements OnInit {
 
+  gridSubtitle:string;
   currentDate: Date; // data utilizada para navegação
   gridReady: boolean; // variável com o estado de recepção do snapshot
   monthlySnapshots: MonthlySnapshots // objetos com snapshots recebidos
@@ -30,12 +31,13 @@ export class MonthlyViewComponent implements OnInit {
   activeCategories: IFinancialCategory[] // lista de categorias ativas
   areCategoriesReady: boolean; // estado de recepção das categorias ativas
 
-  constructor(private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, private _categoriesService: CategoriesService, private _treasuryService: TreasuryService, private _loadingService: LoadingService, public miscService: MiscService, private _gridviewService:GridViewService, private _dialog: MatDialog) {
+  constructor(private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, private _categoriesService: CategoriesService, private _treasuryService: TreasuryService, private _loadingService: LoadingService, public miscService: MiscService, private _gridviewService: GridViewService, private _dialog: MatDialog) {
     this.gridReady = false;
     this.areCategoriesReady = false;
     this.currentDate = new Date(); // inicializa a data com a data atual
     this.getCategoriesMonthlySnapshots((new Date().getFullYear()), (new Date().getMonth())); // vai buscar os snapshots à bd
     this.monthlySnapshots = { categories: {}, subcategories: {}, daily: [] } // inicializar a var
+    this.gridSubtitle = '';
   }
 
   ngOnInit(): void {
@@ -44,24 +46,34 @@ export class MonthlyViewComponent implements OnInit {
     if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.treasuryLoadingComplete) { return }
     this.placeholder = new Array(this._gridviewService.getMonthDays(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1)).fill(0);
     this.activeCategories = [...this._categoriesService.incomeCategories, ...this._categoriesService.expenseCategories].filter(category => category.active);
+    this.monthlyGridSubtitleGenerator()
     this.areCategoriesReady = true;
   }
 
   changeMonth(target: number): void {
-    if (target === -1) {
-      if (this.currentDate.getMonth() === 0) {
-        this.currentDate.setFullYear(this.currentDate.getFullYear() - 1, 11);
-      } else {
-        this.currentDate.setMonth(this.currentDate.getMonth() - 1)
-      }
-    } else {
-      if (this.currentDate.getMonth() === 11) {
-        this.currentDate.setFullYear(this.currentDate.getFullYear() + 1, 0);
-      } else {
-        this.currentDate.setMonth(this.currentDate.getMonth() + 1)
-      }
+    switch (target) {
+      case -1:
+        if (this.currentDate.getMonth() === 0) {
+          this.currentDate.setFullYear(this.currentDate.getFullYear() - 1, 11);
+        } else {
+          this.currentDate.setMonth(this.currentDate.getMonth() - 1)
+        }
+        break;
+
+      case 1:
+        if (this.currentDate.getMonth() === 11) {
+          this.currentDate.setFullYear(this.currentDate.getFullYear() + 1, 0);
+        } else {
+          this.currentDate.setMonth(this.currentDate.getMonth() + 1)
+        }
+        break;
+
+      case 0: default:
+        this.currentDate = new Date();
     }
+
     this.getCategoriesMonthlySnapshots(this.currentDate.getFullYear(), this.currentDate.getMonth())
+    this.monthlyGridSubtitleGenerator()
   }
 
   // vai buscar os snapshots à bd
@@ -83,6 +95,10 @@ export class MonthlyViewComponent implements OnInit {
     })
   }
 
+  monthlyGridSubtitleGenerator() {
+    this.gridSubtitle = this.currentDate.toLocaleString('default', { year: 'numeric', month: 'long' });
+  }
+}
 
   // showDailySumDetails(day: number): void {
   //   const HTTP_PARAMS = new HttpParams().set('month',999).set('year', 999).set('day', day);
@@ -158,4 +174,3 @@ export class MonthlyViewComponent implements OnInit {
   // }
 
 
-}

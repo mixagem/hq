@@ -21,18 +21,17 @@ export class TreasuryService {
   recurrencyFreq: recurencyFrequency[] // opções frequencia recurrencia
 
   constructor(private _errorHandlingService: ErrorHandlingService, private _http: HttpClient, private _router: Router, private _loadingService: LoadingService, private _timerService: TimerService) {
+    this.cloningTreasuryLog = false;
     this.fetchTreasuryLog();
     this.onInitTrigger = new Subject<any>();
     this.recurrencyFreq = REC_FREQ;
+    this.recordBorderStyle = {"background-color":"rgb(0,0,0)"}
   }
 
   onInitTriggerCall(): void {
     this.onInitTrigger.next('');
   }
 
-  ngOnInit(): void {
-    this.cloningTreasuryLog = false;
-  }
 
   // vai á bd buscar os movimentos
   fetchTreasuryLog(source: string = '', LogID?: number): void {

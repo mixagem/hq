@@ -9,14 +9,19 @@ import { GridViewService } from './grid-view.service';
 })
 export class GridViewComponent implements OnInit {
 
-  constructor(public gridViewService:GridViewService, private _router: Router) {  }
+  constructor(public gridViewService: GridViewService, private _router: Router) { }
 
   ngOnInit(): void {
     this._router.navigate([`/fi/grid/${this.gridViewService.selectedView}`]);
   }
 
-  changeView(selectedView:string) :void {
+  changeView(selectedView: string): void {
     this.gridViewService.selectedView = selectedView;
     this._router.navigate([`/fi/grid/${selectedView}`]);
+  }
+
+  navigationFix(target: string): void {
+    this._router.navigateByUrl(`/fi/${target}`, { skipLocationChange: true }).then(() => { this._router.navigate([`/fi/${target}/add`]); });
+
   }
 }

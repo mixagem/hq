@@ -1,3 +1,20 @@
-::ng-deep mhq-monthly-view{
+::ng-deep mhq-monthly-view {
   width: 100%;
+}
+
+.mhq-monthly-grid-nav {
+  padding: 30px 0;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    margin: 0 5px;
+  }
+
+  #mhq-grid-subtitle {
+    color: var(--mhq-waikiki-pcolor-1);
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0 10px;
+  }
 }

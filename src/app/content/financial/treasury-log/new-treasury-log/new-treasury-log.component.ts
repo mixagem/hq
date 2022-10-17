@@ -49,8 +49,12 @@ export class NewTreasuryLogComponent implements OnInit {
     if (this.treasuryService.cloningTreasuryLog) {
       this.tempTreasuryLog = this.treasuryService.activeTreasuryLog;
       this.tempTreasuryLog.id = 0;
+      this.treasuryService.recordBorderStyle['background-color'] = this.miscService.getCategoryStyles(this.tempTreasuryLog.cat)['background-color']
+
     } else {
-      this.tempTreasuryLog = JSON.parse(JSON.stringify(DEFAULT_TLOG));
+      this.tempTreasuryLog = JSON.parse(JSON.stringify(DEFAULT_TLOG))
+      this.treasuryService.recordBorderStyle['background-color'] = 'rgb(0,0,0)'
+      ;
     }
     this.treasuryLogDatepickerForm = new FormControl(new Date(this.tempTreasuryLog.date), [Validators.required]);
     if (this.treasuryService.cloningTreasuryLog) {
