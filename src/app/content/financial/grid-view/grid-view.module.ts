@@ -4,6 +4,7 @@ import { MonthlyViewComponent } from './monthly-view/monthly-view.component';
 import { AnualViewComponent } from './anual-view/anual-view.component';
 import { DecadeViewComponent } from './decade-view/decade-view.component';
 import { MaterialImportsModule } from 'src/assets/modules/material-imports.module';
+import { NgScrollbarModule } from 'ngx-scrollbar';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { MaterialImportsModule } from 'src/assets/modules/material-imports.modul
     DecadeViewComponent,],
   imports: [
     CommonModule,
-    MaterialImportsModule
+    MaterialImportsModule,
+    NgScrollbarModule
   ],
   exports: [
     MonthlyViewComponent,

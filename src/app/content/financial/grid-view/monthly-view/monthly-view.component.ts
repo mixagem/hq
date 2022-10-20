@@ -47,6 +47,13 @@ export class MonthlyViewComponent implements OnInit {
     this.areCategoriesReady = true;
   }
 
+  isLastSubcat(cat: IFinancialCategory, index: number): string {
+    // o css:last-of-type tá todo fdd, tive que mandar aqui este marteladão para as curvinhas
+    let lastActiveIndex = 0;
+    for (let i = cat.subcats.length; i > 0; i--) { if (cat.subcats[i - 1].active) { lastActiveIndex = i - 1; break } }
+    return lastActiveIndex === index ? 'mhq-last-active-subcategory' : ''
+  }
+
   changeMonth(target: number, picker?: MatDatepicker<any>): void {
     switch (target) {
       case -1:
@@ -79,7 +86,7 @@ export class MonthlyViewComponent implements OnInit {
   getDailySumAcomEvolution(): void { // total acomulado
     this.dailySumAcomEvolution = [];
 
-    const HTTP_PARAMS = new HttpParams().set('month', this._gridviewService.monthlyCurrentDate.getMonth()).set('year', this._gridviewService.monthlyCurrentDate.getFullYear()).set('days', this._gridviewService.getMonthDays(this._gridviewService.monthlyCurrentDate.getFullYear(),this._gridviewService.monthlyCurrentDate.getMonth()))
+    const HTTP_PARAMS = new HttpParams().set('month', this._gridviewService.monthlyCurrentDate.getMonth()).set('year', this._gridviewService.monthlyCurrentDate.getFullYear()).set('days', this._gridviewService.getMonthDays(this._gridviewService.monthlyCurrentDate.getFullYear(), this._gridviewService.monthlyCurrentDate.getMonth()))
     const CALL = this._http.post('http://localhost:16190/dailysumevo', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({

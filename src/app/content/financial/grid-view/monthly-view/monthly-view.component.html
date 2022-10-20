@@ -1,153 +1,164 @@
 <mat-progress-bar *ngIf="!gridReady" mode="indeterminate" color="accent"></mat-progress-bar>
 
-<!-- navegação calendário -->
-<div class="mhq-row mhq-monthly-grid-nav">
 
-  <button mat-icon-button color="primary" [matMenuTriggerFor]="changeViewMenu">
-    <mat-icon>visibility</mat-icon>
-  </button>
+<div style="height:100%" class="amae">
+  <!-- navegação calendário -->
+  <div class="mhq-row mhq-monthly-grid-nav">
 
-  <button mat-icon-button color="primary" (click)="changeMonth(-1)">
-    <mat-icon>arrow_back_ios_new</mat-icon>
-  </button>
-
-  <span id="mhq-grid-subtitle">{{gridSubtitle}}</span>
-
-  <button mat-icon-button color="primary" (click)="changeMonth(1)">
-    <mat-icon>arrow_forward_ios_new</mat-icon>
-  </button>
-
-  <input matInput [matDatepicker]="picker" style="width: 0px;height: 0px;opacity: 0;">
-  <mat-datepicker #picker startView="multi-year" (monthSelected)="monthPicked($event, picker)">
-    <mat-datepicker-actions>
-      <button mat-raised-button color="accent" (click)="changeMonth(0,picker)">Este mês</button>
-    </mat-datepicker-actions>
-  </mat-datepicker>
-
-  <button mat-icon-button color="primary" (click)="picker.open()">
-    <mat-icon>today</mat-icon>
-  </button>
-
-  <mat-menu #changeViewMenu="matMenu">
-    <button mat-menu-item disabled>
-      <mat-icon>calendar_month</mat-icon>
-      <span>Vista mensal</span>
+    <button mat-icon-button color="primary" [matMenuTriggerFor]="changeViewMenu">
+      <mat-icon>visibility</mat-icon>
     </button>
-    <button mat-menu-item disabled>
-      <mat-icon>calendar_month</mat-icon>
-      <span>Vista anual</span>
+
+    <button mat-icon-button color="primary" (click)="changeMonth(-1)">
+      <mat-icon>arrow_back_ios_new</mat-icon>
     </button>
-    <button mat-menu-item disabled>
-      <mat-icon>calendar_month</mat-icon>
-      <span>Vista década</span>
+
+    <span id="mhq-grid-subtitle">{{gridSubtitle}}</span>
+
+    <button mat-icon-button color="primary" (click)="changeMonth(1)">
+      <mat-icon>arrow_forward_ios_new</mat-icon>
     </button>
-  </mat-menu>
 
-</div>
+    <input matInput [matDatepicker]="picker" style="width: 0px;height: 0px;opacity: 0;">
+    <mat-datepicker #picker startView="multi-year" (monthSelected)="monthPicked($event, picker)">
+      <mat-datepicker-actions>
+        <button mat-raised-button color="accent" (click)="changeMonth(0,picker)">Este mês</button>
+      </mat-datepicker-actions>
+    </mat-datepicker>
 
-<!-- calendário -->
-<div class="mhq-row">
-  <div class="mhq-col-2" style="height: 30px;margin-right: 10px;"></div>
-  <div class="mhq-col-10">
-    <!-- loop para cabeçalho com o calendario -->
-    <div class="mhq-row">
-      <div *ngFor="let x of placeholder; let i = index;"
-        style="width:100%;height:30px;color:coral;display: flex;align-items: center;justify-content: center;font-weight: 600;font-size:18px;">
-        {{i+1}}</div>
-    </div>
-  </div>
-</div>
+    <button mat-icon-button color="primary" (click)="picker.open()">
+      <mat-icon>today</mat-icon>
+    </button>
 
-<!-- grelha (para envolver em scroll bar quando necessário) -->
-<div *ngIf="gridReady" id="mhq-grid-wrapper" class="mhq-row">
-
-  <!-- títulos de categorias -->
-  <div id="mhq-grid-categories-wrapper" class="mhq-col-2" style="margin-right: 10px;">
-    <mat-spinner *ngIf="!areCategoriesReady" color="accent" style="margin:auto"></mat-spinner>
-
-    <div *ngIf="areCategoriesReady">
-
-      <!-- loop para categorias  -->
-      <div *ngFor="let cat of activeCategories" class="mhq-grid-active-category">
-        <div class="mhq-grid-category-title" [style]="miscService.getCategoryStyles(cat.id)">
-          <mat-icon>{{cat.icon}}</mat-icon>{{cat.title}}
-        </div>
-
-        <!-- loop para sub categorias  -->
-        <div *ngFor="let subcat of cat.subcats" class="mhq-grid-active-subcategory">
-          <div *ngIf="subcat.active" class="mhq-grid-subcategory-title" [style]="miscService.getCategoryStyles(cat.id)">
-            {{subcat.title}}</div>
-        </div>
-
-      </div>
-
-      <!-- parte dos totais -->
-      <div class="mhq-grid-active-category mhq-totals-wrapper">
-        <div class="mhq-grid-category-title">
-          <mat-icon>euro</mat-icon>Total
-        </div>
-        <div class="mhq-grid-category-title">
-          <mat-icon>euro</mat-icon>Total Acomulado
-        </div>
-      </div>
-
-
-    </div>
+    <mat-menu #changeViewMenu="matMenu">
+      <button mat-menu-item disabled>
+        <mat-icon>calendar_month</mat-icon>
+        <span>Vista mensal</span>
+      </button>
+      <button mat-menu-item disabled>
+        <mat-icon>calendar_month</mat-icon>
+        <span>Vista anual</span>
+      </button>
+      <button mat-menu-item disabled>
+        <mat-icon>calendar_month</mat-icon>
+        <span>Vista década</span>
+      </button>
+    </mat-menu>
 
   </div>
 
-  <!--  celulas para valores do snapshot  -->
-  <div id="mhq-grid-cells-wrapper" class="mhq-col-10">
-    <mat-spinner *ngIf="!areCategoriesReady" color="accent" style="margin:auto"></mat-spinner>
+  <!-- calendário -->
+  <div class="mhq-row" style="height: 30px">
+    <div class="mhq-col-2" style="height: 30px;margin-right: 10px;"></div>
+    <div class="mhq-col-10">
+      <!-- loop para cabeçalho com o calendario -->
+      <div class="mhq-row">
+        <div *ngFor="let x of placeholder; let i = index;"
+          style="width:100%;height:30px;color:coral;display: flex;align-items: center;justify-content: center;font-weight: 600;font-size:18px;">
+          {{i+1}}</div>
+      </div>
+    </div>
+  </div>
 
-    <div *ngIf="areCategoriesReady">
+  <!-- grelha (para envolver em scroll bar quando necessário) -->
+  <ng-scrollbar style="height: calc(100% - 100px - 30px)">
+    <div *ngIf="gridReady" id="mhq-grid-wrapper" class="mhq-row">
 
-      <!-- loop para celuluas diárias  -->
-      <div class="mhq-row mhq-grid-active-category" *ngFor="let cat of activeCategories" style="flex-wrap: wrap;">
+      <!-- títulos de categorias -->
+      <div id="mhq-grid-categories-wrapper" class="mhq-col-2" style="margin-right: 10px;">
+        <mat-spinner *ngIf="!areCategoriesReady" color="accent" style="margin:auto"></mat-spinner>
 
+        <div *ngIf="areCategoriesReady">
 
-        <!-- celulas da categoria -->
-        <div class="mhq-row">
-          <div *ngFor="let x of placeholder; let i = index;" [ngStyle]="miscService.getCategoryStyles(cat.id)"
-            class="mhq-category-summary"
-            [ngClass]="monthlySnapshots.categories[cat.id][i] === 0? 'mhq-cat-cell-null':'mhq-cat-cell-not-null'"
-            (click)="showDailyCatDetails(cat.id,i+1)">
-            {{monthlySnapshots.categories[cat.id][i] === 0? '' : monthlySnapshots.categories[cat.id][i] |
-            number:'1.2-2'}}
+          <!-- loop para categorias  -->
+          <div *ngFor="let cat of activeCategories" class="mhq-grid-active-category">
+            <div class="mhq-grid-category-title" [style]="miscService.getCategoryStyles(cat.id)">
+              <mat-icon>{{cat.icon}}</mat-icon>{{cat.title}}
+            </div>
+
+            <!-- loop para sub categorias  -->
+
+            <div *ngFor="let subcat of cat.subcats; let i = index;"
+              [ngClass]="subcat.active? isLastSubcat(cat,i) :'mhq-inactive-subcategory'"
+              class="mhq-grid-subcategory-title" [style]="miscService.getCategoryStyles(cat.id)">
+              {{subcat.title}}
+            </div>
+
           </div>
-        </div>
 
-        <!-- celulas da sub categoria -->
-        <div class="mhq-row" *ngFor="let subcat of cat.subcats">
-          <div *ngFor="let x of placeholder; let i = index;" style="width:100%;">
-            <div *ngIf="subcat.active" class="mhq-active-subcat-cell" [ngStyle]="miscService.getCategoryStyles(cat.id)"
-              [ngClass]="monthlySnapshots.subcategories[subcat.id][i]===0? 'mhq-null-cell':''"
-              (click)="showDailySubCatDetails(subcat.id,i+1)">
-              <span>{{monthlySnapshots.subcategories[subcat.id][i] | number:'1.2-2'}}</span>
-
+          <!-- parte dos totais -->
+          <div class="mhq-grid-active-category mhq-totals-wrapper">
+            <div class="mhq-grid-category-title">
+              <mat-icon>euro</mat-icon>Total
+            </div>
+            <div class="mhq-grid-category-title">
+              <mat-icon>euro</mat-icon>Total Acomulado
             </div>
           </div>
+
+
         </div>
 
       </div>
 
-      <div class="mhq-grid-totals-cells-wrapper">
-        <div class="mhq-row mhq-grid-active-category">
-          <div *ngFor="let x of placeholder; let i = index;" class="mhq-category-summary"
-            [ngClass]="monthlySnapshots.daily[i]===0? 'mhq-null-cell':''"
-            (click)="showDailySumDetails(i+1)">{{monthlySnapshots.daily[i] === 0? '' : monthlySnapshots.daily[i] |
-            number:'1.2-2'}}</div>
-        </div>
-        <div class="mhq-row mhq-grid-active-category">
-          <div *ngFor="let x of placeholder; let i = index;" class="mhq-category-summary">{{dailySumAcomEvolution[i] |
-            number:'1.2-2'}}</div>
-        </div>
-      </div>
+      <!--  celulas para valores do snapshot  -->
+      <div id="mhq-grid-cells-wrapper" class="mhq-col-10">
+        <mat-spinner *ngIf="!areCategoriesReady" color="accent" style="margin:auto"></mat-spinner>
 
-      <!-- parte dos totais -->
+        <div *ngIf="areCategoriesReady">
+
+          <!-- loop para celuluas diárias  -->
+          <div class="mhq-row mhq-grid-active-category" *ngFor="let cat of activeCategories" style="flex-wrap: wrap;">
+
+
+            <!-- celulas da categoria -->
+            <div class="mhq-row">
+              <div *ngFor="let x of placeholder; let i = index;" [ngStyle]="miscService.getCategoryStyles(cat.id)"
+                class="mhq-category-summary"
+                [ngClass]="monthlySnapshots.categories[cat.id][i] === 0? 'mhq-cat-cell-null':'mhq-cat-cell-not-null'"
+                (click)="showDailyCatDetails(cat.id,i+1)">
+                {{monthlySnapshots.categories[cat.id][i] === 0? '' : monthlySnapshots.categories[cat.id][i] |
+                number:'1.2-2':'pt'}}
+              </div>
+            </div>
+
+            <!-- celulas da sub categoria -->
+            <div class="mhq-row" *ngFor="let subcat of cat.subcats">
+              <div *ngFor="let x of placeholder; let i = index;" style="width:100%;">
+                <div *ngIf="subcat.active" class="mhq-active-subcat-cell"
+                  [ngStyle]="miscService.getCategoryStyles(cat.id)"
+                  [ngClass]="monthlySnapshots.subcategories[subcat.id][i]===0? 'mhq-null-cell':''"
+                  (click)="showDailySubCatDetails(subcat.id,i+1)">
+                  <span>{{monthlySnapshots.subcategories[subcat.id][i] | number:'1.2-2':'pt'}}</span>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="mhq-grid-totals-cells-wrapper">
+            <div class="mhq-row mhq-grid-active-category">
+              <div *ngFor="let x of placeholder; let i = index;" class="mhq-category-summary"
+                [ngClass]="monthlySnapshots.daily[i]===0? 'mhq-null-cell':''" (click)="showDailySumDetails(i+1)">
+                {{monthlySnapshots.daily[i] === 0? '' : monthlySnapshots.daily[i] |
+                number:'1.2-2':'pt'}}</div>
+            </div>
+            <div class="mhq-row mhq-grid-active-category">
+              <div *ngFor="let x of placeholder; let i = index;" class="mhq-category-summary">{{dailySumAcomEvolution[i]
+                |
+                number:'1.0-0':'pt'}}</div>
+            </div>
+          </div>
+
+          <!-- parte dos totais -->
+
+        </div>
+
+      </div>
 
     </div>
+  </ng-scrollbar>
 
-  </div>
 
 </div>
