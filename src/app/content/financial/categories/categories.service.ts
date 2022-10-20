@@ -74,8 +74,7 @@ export class CategoriesService {
   createNewRecord(cloningCategory: boolean): void {
     // verifica se é duplicação ou é introdução normal
     this.cloningCategory = cloningCategory;
-    if (!this.cloningCategory) { this.recordBorderStyle = { 'background-color': 'gray' } };
-    this._router.navigateByUrl('/fi/cats', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/cats/add']); });
+    this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/cats/add']); });
   }
 
   // fecha a gaveta do registo

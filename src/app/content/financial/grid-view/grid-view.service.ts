@@ -22,7 +22,7 @@ export class GridViewService {
   }
 
   getMonthDays(year: number, month: number): number {
-    return new Date(year, month, 0).getDate();
+    return new Date(year, month+1, 0).getDate();
   };
 
   gridSubtitleGenerator(): void {

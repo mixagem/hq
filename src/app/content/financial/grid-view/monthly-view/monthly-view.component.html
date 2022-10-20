@@ -20,7 +20,7 @@
   <input matInput [matDatepicker]="picker" style="width: 0px;height: 0px;opacity: 0;">
   <mat-datepicker #picker startView="multi-year" (monthSelected)="monthPicked($event, picker)">
     <mat-datepicker-actions>
-      <button mat-raised-button color="primary" (click)="changeMonth(0,picker)">Hoje</button>
+      <button mat-raised-button color="accent" (click)="changeMonth(0,picker)">Este mês</button>
     </mat-datepicker-actions>
   </mat-datepicker>
 
@@ -81,6 +81,17 @@
 
       </div>
 
+      <!-- parte dos totais -->
+      <div class="mhq-grid-active-category mhq-totals-wrapper">
+        <div class="mhq-grid-category-title">
+          <mat-icon>euro</mat-icon>Total
+        </div>
+        <div class="mhq-grid-category-title">
+          <mat-icon>euro</mat-icon>Total Acomulado
+        </div>
+      </div>
+
+
     </div>
 
   </div>
@@ -92,14 +103,17 @@
     <div *ngIf="areCategoriesReady">
 
       <!-- loop para celuluas diárias  -->
-      <div class="mhq-row" *ngFor="let cat of activeCategories" style="flex-wrap: wrap;"
-        class="mhq-grid-active-category">
+      <div class="mhq-row mhq-grid-active-category" *ngFor="let cat of activeCategories" style="flex-wrap: wrap;">
+
 
         <!-- celulas da categoria -->
         <div class="mhq-row">
           <div *ngFor="let x of placeholder; let i = index;" [ngStyle]="miscService.getCategoryStyles(cat.id)"
-            class="mhq-category-summary" (click)="showDailyCatDetails(cat.id,i+1)">
-            {{monthlySnapshots.categories[cat.id][i] === 0? '0' : monthlySnapshots.categories[cat.id][i] | number:'1.2-2'}}
+            class="mhq-category-summary"
+            [ngClass]="monthlySnapshots.categories[cat.id][i] === 0? 'mhq-cat-cell-null':'mhq-cat-cell-not-null'"
+            (click)="showDailyCatDetails(cat.id,i+1)">
+            {{monthlySnapshots.categories[cat.id][i] === 0? '' : monthlySnapshots.categories[cat.id][i] |
+            number:'1.2-2'}}
           </div>
         </div>
 
@@ -107,7 +121,7 @@
         <div class="mhq-row" *ngFor="let subcat of cat.subcats">
           <div *ngFor="let x of placeholder; let i = index;" style="width:100%;">
             <div *ngIf="subcat.active" class="mhq-active-subcat-cell" [ngStyle]="miscService.getCategoryStyles(cat.id)"
-              [ngClass]="monthlySnapshots.subcategories[subcat.id][i]===0? 'mhq-null-cell':'mhq-not-null-cell'"
+              [ngClass]="monthlySnapshots.subcategories[subcat.id][i]===0? 'mhq-null-cell':''"
               (click)="showDailySubCatDetails(subcat.id,i+1)">
               <span>{{monthlySnapshots.subcategories[subcat.id][i] | number:'1.2-2'}}</span>
 
@@ -116,6 +130,21 @@
         </div>
 
       </div>
+
+      <div class="mhq-grid-totals-cells-wrapper">
+        <div class="mhq-row mhq-grid-active-category">
+          <div *ngFor="let x of placeholder; let i = index;" class="mhq-category-summary"
+            [ngClass]="monthlySnapshots.daily[i]===0? 'mhq-null-cell':''"
+            (click)="showDailySumDetails(i+1)">{{monthlySnapshots.daily[i] === 0? '' : monthlySnapshots.daily[i] |
+            number:'1.2-2'}}</div>
+        </div>
+        <div class="mhq-row mhq-grid-active-category">
+          <div *ngFor="let x of placeholder; let i = index;" class="mhq-category-summary">{{dailySumAcomEvolution[i] |
+            number:'1.2-2'}}</div>
+        </div>
+      </div>
+
+      <!-- parte dos totais -->
 
     </div>
 

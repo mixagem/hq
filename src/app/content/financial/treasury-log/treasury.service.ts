@@ -7,6 +7,7 @@ import { ErrorHandlingService, LoadingService, TimerService } from 'src/assets/s
 
 type RecordBorderStyle = { "background-color": string }
 type recurencyFrequency = { "string": string, "value": string }
+
 const REC_FREQ: recurencyFrequency[] = [{ string: "Mensal", value: "m" }, { string: "Anual", value: "a" }]
 
 @Injectable({ providedIn: 'root' })
@@ -29,7 +30,6 @@ export class TreasuryService {
   }
 
   onInitTriggerCall(): void { this.onInitTrigger.next(''); }
-
 
   // vai á bd buscar os movimentos
   fetchTreasuryLog(source: string = '', LogID?: number): void {
@@ -62,7 +62,7 @@ export class TreasuryService {
   addMode(cloningTreasuryLog: boolean): void {
     this.cloningTreasuryLog = cloningTreasuryLog;
     if (!this.cloningTreasuryLog) { this.recordBorderStyle = { 'background-color': 'gray' } }
-    this._router.navigateByUrl('/fi/tlogs', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs/add']); });
+    this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs/add']); });
   }
 
   // fecha a gaveta e volta para o modo de listagem

@@ -22,6 +22,7 @@ export class MonthlyViewComponent implements OnInit {
 
   gridSubtitle: string;
   gridReady: boolean; // variável com o estado de recepção do snapshot
+  dailySumAcomEvolution: number[]//snapshot acomulado
   monthlySnapshots: MonthlySnapshots // objetos com snapshots recebidos
   placeholder: Array<number>; //utilizado no ngFor com o número de dias do mês
   activeCategories: IFinancialCategory[] // lista de categorias ativas
@@ -31,6 +32,7 @@ export class MonthlyViewComponent implements OnInit {
     this.gridReady = false;
     this.areCategoriesReady = false;
     this.monthlySnapshots = { categories: {}, subcategories: {}, daily: [] } // inicializar a var
+    this.getDailySumAcomEvolution();
     this.getCategoriesMonthlySnapshots(this._gridviewService.monthlyCurrentDate.getFullYear(), this._gridviewService.monthlyCurrentDate.getMonth()); // vai buscar os snapshots à bd
     this.gridSubtitle = '';
   }
@@ -39,9 +41,9 @@ export class MonthlyViewComponent implements OnInit {
     this._treasuryService.onInitTrigger.subscribe(x => { this.ngOnInit(); });     // triggers remoto do OnInit
     this._categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.treasuryLoadingComplete) { return }
-    this.placeholder = new Array(this._gridviewService.getMonthDays(this._gridviewService.monthlyCurrentDate.getFullYear(), this._gridviewService.monthlyCurrentDate.getMonth() + 1)).fill(0);
+    this.placeholder = new Array(this._gridviewService.getMonthDays(this._gridviewService.monthlyCurrentDate.getFullYear(), this._gridviewService.monthlyCurrentDate.getMonth())).fill(0);
     this.activeCategories = [...this._categoriesService.incomeCategories, ...this._categoriesService.expenseCategories].filter(category => category.active);
-    this.monthlyGridSubtitleGenerator()
+    this.monthlyGridSubtitleGenerator();
     this.areCategoriesReady = true;
   }
 
@@ -68,13 +70,29 @@ export class MonthlyViewComponent implements OnInit {
         picker!.close();
     }
 
+
+    this.getDailySumAcomEvolution();
     this.getCategoriesMonthlySnapshots(this._gridviewService.monthlyCurrentDate.getFullYear(), this._gridviewService.monthlyCurrentDate.getMonth());
     this.monthlyGridSubtitleGenerator();
   }
 
+  getDailySumAcomEvolution(): void { // total acomulado
+    this.dailySumAcomEvolution = [];
+
+    const HTTP_PARAMS = new HttpParams().set('month', this._gridviewService.monthlyCurrentDate.getMonth()).set('year', this._gridviewService.monthlyCurrentDate.getFullYear()).set('days', this._gridviewService.getMonthDays(this._gridviewService.monthlyCurrentDate.getFullYear(),this._gridviewService.monthlyCurrentDate.getMonth()))
+    const CALL = this._http.post('http://localhost:16190/dailysumevo', HTTP_PARAMS, { responseType: 'json' })
+
+    CALL.subscribe({
+      next: codeReceived => {
+        const RESP = codeReceived as number[]; this.dailySumAcomEvolution = RESP;
+      },
+      error: err => this._errorHandlingService.handleError(err)
+    })
+  }
+
   // vai buscar os snapshots à bd
   getCategoriesMonthlySnapshots(year: number, month: number): void {
-    const HTTP_PARAMS = new HttpParams().set('year', year).set('month', month + 1).set('monthdays', this._gridviewService.getMonthDays(year, month + 1))
+    const HTTP_PARAMS = new HttpParams().set('year', year).set('month', month).set('monthdays', this._gridviewService.getMonthDays(year, month))
     const CALL = this._http.post('http://localhost:16190/dailycatsevo', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
@@ -99,6 +117,7 @@ export class MonthlyViewComponent implements OnInit {
 
   monthPicked(event: Date, picker: MatDatepicker<any>): void {
     this._gridviewService.monthlyCurrentDate.setFullYear(event.getFullYear(), event.getMonth());
+    this.getDailySumAcomEvolution();
     this.getCategoriesMonthlySnapshots(this._gridviewService.monthlyCurrentDate.getFullYear(), this._gridviewService.monthlyCurrentDate.getMonth())
     this.monthlyGridSubtitleGenerator()
     picker.close();
@@ -106,7 +125,7 @@ export class MonthlyViewComponent implements OnInit {
 
 
   showDailySumDetails(day: number): void {
-    const HTTP_PARAMS = new HttpParams().set('month', this._gridviewService.monthlyCurrentDate.getMonth()+1).set('year', this._gridviewService.monthlyCurrentDate.getFullYear()).set('day', day);
+    const HTTP_PARAMS = new HttpParams().set('month', this._gridviewService.monthlyCurrentDate.getMonth()).set('year', this._gridviewService.monthlyCurrentDate.getFullYear()).set('day', day);
     const CALL = this._http.post('http://localhost:16190/dailydetails', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
@@ -120,7 +139,7 @@ export class MonthlyViewComponent implements OnInit {
   }
 
   showDailySubCatDetails(subcatID: number, day: number): void {
-    const HTTP_PARAMS = new HttpParams().set('month', this._gridviewService.monthlyCurrentDate.getMonth()+1).set('year', this._gridviewService.monthlyCurrentDate.getFullYear()).set('day', day).set('subcat', subcatID);
+    const HTTP_PARAMS = new HttpParams().set('month', this._gridviewService.monthlyCurrentDate.getMonth()).set('year', this._gridviewService.monthlyCurrentDate.getFullYear()).set('day', day).set('subcat', subcatID);
     const CALL = this._http.post('http://localhost:16190/dailysubcatdetails', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
@@ -134,7 +153,7 @@ export class MonthlyViewComponent implements OnInit {
   }
 
   showDailyCatDetails(catID: number, day: number): void {
-    const HTTP_PARAMS = new HttpParams().set('month', this._gridviewService.monthlyCurrentDate.getMonth()+1).set('year', this._gridviewService.monthlyCurrentDate.getFullYear()).set('day', day).set('cat', catID);
+    const HTTP_PARAMS = new HttpParams().set('month', this._gridviewService.monthlyCurrentDate.getMonth()).set('year', this._gridviewService.monthlyCurrentDate.getFullYear()).set('day', day).set('cat', catID);
     const CALL = this._http.post('http://localhost:16190/dailycatdetails', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
