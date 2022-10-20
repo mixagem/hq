@@ -1,4 +1,4 @@
-import { genDailySumAcomEvo, genDailyCategoriesEvo, getDailyCatDetails, getDailySubCatDetails, getDailyDetails} from './overviewMethods.js';
+import { dailyTotalAcomulatedSnapshot, monthlySnapshots, dailyCatDetails, dailySubCatDetails, dailyTotalDetails} from './monthlyViewMethods.js';
 import { createTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog } from './treasuryMethods.js';
 import { fetchCategories, createNewCategory, deleteCategory, updateCategory, getSubcategorySequence } from './categoriesMethods.js'
 import express from 'express';
@@ -15,12 +15,12 @@ APP.use(express.urlencoded({ extended: true }));
 APP.listen(PORT, () => console.log(".: MI HQ - Listening on port 16190 :."));
 
 
-// overview
-APP.post('/dailysumevo', function (req, res) { return genDailySumAcomEvo(req, res); }); //snapshot
-APP.post('/dailycatsevo', function (req, res) { return genDailyCategoriesEvo(req, res); }); //snapshot
-APP.post('/getdailydetails', function(req,res) { return getDailyDetails(req,res)})
-APP.post('/getdailycatdetails', function(req,res) { return getDailyCatDetails(req,res)})
-APP.post('/getdailysubcatdetails', function(req,res) { return getDailySubCatDetails(req,res)})
+// grid :: monthly-view
+APP.post('/dailysumevo', function (req, res) { return dailyTotalAcomulatedSnapshot(req, res); }); //snapshot
+APP.post('/dailycatsevo', function (req, res) { return monthlySnapshots(req, res); }); //snapshot
+APP.post('/dailydetails', function(req,res) { return dailyTotalDetails(req,res)})
+APP.post('/dailycatdetails', function(req,res) { return dailyCatDetails(req,res)})
+APP.post('/dailysubcatdetails', function(req,res) { return dailySubCatDetails(req,res)})
 
 // categories
 APP.get('/fetchcats', function (req, res) { return fetchCategories(req, res); });

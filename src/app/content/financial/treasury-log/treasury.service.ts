@@ -25,12 +25,10 @@ export class TreasuryService {
     this.fetchTreasuryLog();
     this.onInitTrigger = new Subject<any>();
     this.recurrencyFreq = REC_FREQ;
-    this.recordBorderStyle = {"background-color":"rgb(0,0,0)"}
+    this.recordBorderStyle = { "background-color": "rgb(0,0,0)" }
   }
 
-  onInitTriggerCall(): void {
-    this.onInitTrigger.next('');
-  }
+  onInitTriggerCall(): void { this.onInitTrigger.next(''); }
 
 
   // vai á bd buscar os movimentos
@@ -64,7 +62,7 @@ export class TreasuryService {
   addMode(cloningTreasuryLog: boolean): void {
     this.cloningTreasuryLog = cloningTreasuryLog;
     if (!this.cloningTreasuryLog) { this.recordBorderStyle = { 'background-color': 'gray' } }
-    this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs/add']); });
+    this._router.navigateByUrl('/fi/tlogs', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs/add']); });
   }
 
   // fecha a gaveta e volta para o modo de listagem

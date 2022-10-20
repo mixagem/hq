@@ -17,7 +17,14 @@
     <mat-icon>arrow_forward_ios_new</mat-icon>
   </button>
 
-  <button mat-icon-button color="primary" (click)="changeMonth(0)">
+  <input matInput [matDatepicker]="picker" style="width: 0px;height: 0px;opacity: 0;">
+  <mat-datepicker #picker startView="multi-year" (monthSelected)="monthPicked($event, picker)">
+    <mat-datepicker-actions>
+      <button mat-raised-button color="primary" (click)="changeMonth(0,picker)">Hoje</button>
+    </mat-datepicker-actions>
+  </mat-datepicker>
+
+  <button mat-icon-button color="primary" (click)="picker.open()">
     <mat-icon>today</mat-icon>
   </button>
 
@@ -67,7 +74,7 @@
         </div>
 
         <!-- loop para sub categorias  -->
-        <div *ngFor="let subcat of cat.subcats">
+        <div *ngFor="let subcat of cat.subcats" class="mhq-grid-active-subcategory">
           <div *ngIf="subcat.active" class="mhq-grid-subcategory-title" [style]="miscService.getCategoryStyles(cat.id)">
             {{subcat.title}}</div>
         </div>
@@ -91,8 +98,8 @@
         <!-- celulas da categoria -->
         <div class="mhq-row">
           <div *ngFor="let x of placeholder; let i = index;" [ngStyle]="miscService.getCategoryStyles(cat.id)"
-            class="mhq-category-summary">
-            {{monthlySnapshots.categories[cat.id][i]}}
+            class="mhq-category-summary" (click)="showDailyCatDetails(cat.id,i+1)">
+            {{monthlySnapshots.categories[cat.id][i] === 0? '0' : monthlySnapshots.categories[cat.id][i] | number:'1.2-2'}}
           </div>
         </div>
 
@@ -100,8 +107,10 @@
         <div class="mhq-row" *ngFor="let subcat of cat.subcats">
           <div *ngFor="let x of placeholder; let i = index;" style="width:100%;">
             <div *ngIf="subcat.active" class="mhq-active-subcat-cell" [ngStyle]="miscService.getCategoryStyles(cat.id)"
-              [style]="isSubcatCellEmpty(monthlySnapshots.subcategories[subcat.id][i])">
-              {{monthlySnapshots.subcategories[subcat.id][i] === 0 ? '' : monthlySnapshots.subcategories[subcat.id][i]}}
+              [ngClass]="monthlySnapshots.subcategories[subcat.id][i]===0? 'mhq-null-cell':'mhq-not-null-cell'"
+              (click)="showDailySubCatDetails(subcat.id,i+1)">
+              <span>{{monthlySnapshots.subcategories[subcat.id][i] | number:'1.2-2'}}</span>
+
             </div>
           </div>
         </div>

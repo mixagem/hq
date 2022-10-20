@@ -37,6 +37,6 @@ export class CategoriesComponent implements OnInit {
   // (onclick) nos registos de categoria
   viewRecordDetails(categoryID: number): void {
     this.categoriesService.recordBorderStyle = { "background-color": this._miscService.getCategoryStyles(categoryID)['background-color'] };
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this.router.navigate(['/fi/cats', categoryID]); });
+    this.router.navigateByUrl('/fi/cats', { skipLocationChange: true }).then(() => { this.router.navigate(['/fi/cats', categoryID]); });
   }
 }

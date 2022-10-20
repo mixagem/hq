@@ -139,7 +139,7 @@ export class NewTreasuryLogComponent implements OnInit {
     this.subcategoriesList.length > 0 ? this.subcatForm.enable() : this.subcatForm.disable();
   }
 
-  recurrencyToggle(event: MatSlideToggleChange) {
+  recurrencyToggle(event: MatSlideToggleChange): void {
     event.checked ? this.recurrencyFrequency.enable() : this.recurrencyFrequency.disable();
   }
 }

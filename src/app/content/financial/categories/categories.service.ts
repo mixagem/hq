@@ -29,9 +29,7 @@ export class CategoriesService {
   }
 
   // trigger para onInit do componente
-  onInitTriggerCall(): void {
-    this.onInitTrigger.next('');
-  }
+  onInitTriggerCall(): void { this.onInitTrigger.next(''); }
 
   // método para obter o último id utilizado nas categorias em bd
   getCurrentSubcategoriesSequence(): void {
@@ -55,7 +53,7 @@ export class CategoriesService {
         this._loadingService.categoriesLoadingComplete = true; // loading das categorias pronto
 
         // faz refresh da listagem e do registo em consulta
-        if (source === 'saveCategory') { this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/cats', catID]); }); }
+        if (source === 'saveCategory') { this._router.navigateByUrl('/fi/cats', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/cats', catID]); }); }
 
         // fecha a gaveta do registo, fecha a modal e faz refresh da listagem
         if (source === 'deleteCategory') {
@@ -77,7 +75,7 @@ export class CategoriesService {
     // verifica se é duplicação ou é introdução normal
     this.cloningCategory = cloningCategory;
     if (!this.cloningCategory) { this.recordBorderStyle = { 'background-color': 'gray' } };
-    this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/cats/add']); });
+    this._router.navigateByUrl('/fi/cats', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/cats/add']); });
   }
 
   // fecha a gaveta do registo

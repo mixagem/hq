@@ -39,6 +39,6 @@ export class TreasuryLogComponent implements OnInit {
   // navegação para modo de consulta de registo
   viewMode(logID: number, catID: number): void {
     this.treasuryService.recordBorderStyle = { "background-color": this.miscService.getCategoryStyles(catID)['background-color'] };
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this.router.navigate(['/fi/tlogs', logID]); });
+    this.router.navigateByUrl('/fi/tlogs', { skipLocationChange: true }).then(() => { this.router.navigate(['/fi/tlogs', logID]); });
   }
 }

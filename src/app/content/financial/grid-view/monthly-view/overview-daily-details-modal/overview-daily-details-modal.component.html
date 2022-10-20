@@ -1,21 +1,21 @@
 <h1 mat-dialog-title class="mhq-modal-header" style="background: var(--mhq-waikiki-pcolor-1);">
-  <mat-icon>feed</mat-icon>{{overviewService.titleForDetails}}
+  <mat-icon>feed</mat-icon>{{gridViewService.titleForDetails}}
 </h1>
 
 <div mat-dialog-content class="mhq-modal-content-wrapper">
 
   <div *ngIf="isDataSourceEmpty">no movs found bro</div>
 
-  <table *ngIf="!isDataSourceEmpty" mat-table [dataSource]="dataSource" [class]="'mhq-overview-modal-'+overviewService.source">
+  <table *ngIf="!isDataSourceEmpty" mat-table [dataSource]="dataSource" [class]="'mhq-overview-modal-'+gridViewService.source">
 
-    <ng-container matColumnDef="icon" *ngIf="overviewService.source === 'daily'">
+    <ng-container matColumnDef="icon" *ngIf="gridViewService.source === 'daily'">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let element" [ngStyle]="miscService.getCategoryStyles(element.cat)">
         <mat-icon>{{miscService.getCategoryIconFromSubcategoryID(element.subcat)}}</mat-icon>
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="subcat" *ngIf="overviewService.source !== 'subcategory'">
+    <ng-container matColumnDef="subcat" *ngIf="gridViewService.source !== 'subcategory'">
       <th mat-header-cell *matHeaderCellDef>Subcategoria</th>
       <td mat-cell *matCellDef="let element">
        {{miscService.getSubcategoryTitleSimplex(element.subcat)}}

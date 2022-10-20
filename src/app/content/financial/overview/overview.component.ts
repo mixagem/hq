@@ -8,7 +8,7 @@ import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
 import { ErrorHandlingService, LoadingService, MiscService } from 'src/assets/services/misc.service';
 import { CategoriesService } from '../categories/categories.service';
 import { TreasuryService } from '../treasury-log/treasury.service';
-import { OverviewDailyDetailsModalComponent } from './overview-daily-details-modal/overview-daily-details-modal.component';
+import { OverviewDailyDetailsModalComponent } from '../grid-view/monthly-view/overview-daily-details-modal/overview-daily-details-modal.component';
 import { OverviewService } from './overview.service';
 
 @Component({
@@ -129,7 +129,7 @@ export class OverviewComponent implements OnInit {
 
   showDailySumDetails(day: number): void {
     const HTTP_PARAMS = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear).set('day', day);
-    const CALL = this._http.post('http://localhost:16190/getdailydetails', HTTP_PARAMS, { responseType: 'json' })
+    const CALL = this._http.post('http://localhost:16190/dailydetails', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
       next: codeReceived => {
@@ -143,7 +143,7 @@ export class OverviewComponent implements OnInit {
 
   showDailySubCatDetails(subcatID: number, day: number): void {
     const HTTP_PARAMS = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear).set('day', day).set('subcat', subcatID);
-    const CALL = this._http.post('http://localhost:16190/getdailysubcatdetails', HTTP_PARAMS, { responseType: 'json' })
+    const CALL = this._http.post('http://localhost:16190/dailysubcatdetails', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
       next: codeReceived => {
@@ -157,7 +157,7 @@ export class OverviewComponent implements OnInit {
 
   showDailyCatDetails(catID: number, day: number): void {
     const HTTP_PARAMS = new HttpParams().set('month', this.selectedMonth).set('year', this.selectedYear).set('day', day).set('cat', catID);
-    const CALL = this._http.post('http://localhost:16190/getdailycatdetails', HTTP_PARAMS, { responseType: 'json' })
+    const CALL = this._http.post('http://localhost:16190/dailycatdetails', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
       next: codeReceived => {
