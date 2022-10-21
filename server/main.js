@@ -1,6 +1,6 @@
 import { dailyTotalAcomulatedSnapshot, monthlySnapshots, dailyCatDetails, dailySubCatDetails, dailyTotalDetails} from './monthlyViewMethods.js';
 import { monthlyTotalAcomulatedSnapshot, yearlySnapshots, monthlyCatDetails, monthlySubCatDetails, monthlyTotalDetails} from './yearlyViewMethods.js';
-import { updateRecurrency, getRecurencyLogs, createTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog } from './treasuryMethods.js';
+import { deleteAllRecurrencies, dettachRecurrency, updateRecurrency, getRecurencyLogs, createTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog } from './treasuryMethods.js';
 import { fetchCategories, createNewCategory, deleteCategory, updateCategory, getSubcategorySequence } from './categoriesMethods.js'
 
 
@@ -25,7 +25,6 @@ APP.post('/monthlycatdetails', function(req,res) { return monthlyCatDetails(req,
 APP.post('/monthlysubcatdetails', function(req,res) { return monthlySubCatDetails(req,res)})
 
 
-
 // grid :: monthly-view
 APP.post('/dailysumevo', function (req, res) { return dailyTotalAcomulatedSnapshot(req, res); }); //snapshot
 APP.post('/dailycatsevo', function (req, res) { return monthlySnapshots(req, res); }); //snapshot
@@ -47,6 +46,8 @@ APP.post('/updatetreasurylog', function (req, res) { return updateTreasuryLog(re
 APP.post('/createtreasurylog', function (req, res) { return createTreasurylog(req, res); });
 APP.post('/getrecurencylogs', function (req, res) { return getRecurencyLogs(req, res); });
 APP.post('/updaterecurrency', function (req, res) { return updateRecurrency(req, res); });
+APP.post('/dettachrecurrency', function (req, res) { return dettachRecurrency(req, res); });
+APP.post('/deleteallrecurrencies', function (req, res) { return deleteAllRecurrencies(req, res); });
 
 
 // TODO SNAPSHOT PARA TODOS REDO

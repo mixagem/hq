@@ -21,9 +21,14 @@
         <mat-icon>not_interested</mat-icon>
       </button></div>
 
-    <div *ngIf="!editingMode" class="mhq-quickaction-default"><button mat-icon-button
+      <div *ngIf="!editingMode" class="mhq-quickaction-default"><button mat-icon-button
         (click)="treasuryService.addMode(true)">
         <mat-icon>file_copy</mat-icon>
+      </button></div>
+
+      <div *ngIf="!editingMode" class="mhq-quickaction-default"><button
+        (click)="openDialog3('300ms','150ms')" mat-icon-button [disabled]="recurrencyFamily.length===0">
+        <mat-icon>link_off</mat-icon>
       </button></div>
 
     <div *ngIf="!editingMode" class="mhq-quickaction-delete" (click)="openDialog('300ms', '150ms')"><button

@@ -165,3 +165,42 @@ export function updateRecurrency(req, res) {
     err ? console.error(err.message) : res.send('gucci');
   });
 }
+
+
+export function dettachRecurrency(req,res){
+
+  const TREASURY_LOG = JSON.parse(req.body.tlog);
+
+  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+    if (err) { console.error(err.message); }
+    console.log(`[C9] detaching movmento from recurrency "${TREASURY_LOG.recurrencyid}"`);
+  });
+
+  db.serialize(() => {
+    db.run(`UPDATE treasurylog SET title='${TREASURY_LOG.title}', value='${TREASURY_LOG.value}', cat='${TREASURY_LOG.cat}', subcat='${TREASURY_LOG.subcat}', type='${TREASURY_LOG.type}', obs='${TREASURY_LOG.obs}', recurrencyid='0' WHERE id='${TREASURY_LOG.id}'`, (err, resp) => { err ? console.error(err.message) : []; });
+  });
+
+  db.close((err) => {
+    err ? console.error(err.message) : res.send('gucci');
+  });
+
+}
+
+export function deleteAllRecurrencies(req,res){
+
+  const TREASURY_LOG_RECURRENCY_ID = Number(req.body.recurrencyID);
+
+  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+    if (err) { console.error(err.message); }
+    console.log(`[C10] deletting all movments from recorrency from "${TREASURY_LOG_RECURRENCY_ID}"`);
+  });
+
+  db.serialize(() => {
+    db.run(`DELETE from treasurylog WHERE recurrencyid='${TREASURY_LOG_RECURRENCY_ID}'`, (err, resp) => { err ? console.error(err.message) : []; });
+  });
+
+  db.close((err) => {
+    err ? console.error(err.message) : res.send('gucci');
+  });
+
+}

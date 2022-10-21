@@ -1,14 +1,14 @@
 <h1 mat-dialog-title class="mhq-modal-header">
-  <mat-icon>warning_amber</mat-icon>Remover registo
+  <mat-icon>warning_amber</mat-icon>Desancorar da recurrencia
 </h1>
 
 <div mat-dialog-content class="mhq-modal-content-wrapper">
 
   <div class="mhq-modal-content">Tens a certeza que queres remover o registo
-    <span>{{treasuryService.activeTreasuryLog.title}}</span>?</div>
+    <span>{{treasuryService.activeTreasuryLog.title}}</span> da recorrência?</div>
 
   <div mat-dialog-actions class="mhq-modal-close-actions">
-    <button mat-flat-button color="warn" (click)="deleteTreasuryLog()">Remover registo</button>
+    <button mat-flat-button color="warn" (click)="dettachFromRecurrency()">Desancroar registo</button>
     <button mat-stroked-button mat-dialog-close color="primary">Cancelar</button>
   </div>
 

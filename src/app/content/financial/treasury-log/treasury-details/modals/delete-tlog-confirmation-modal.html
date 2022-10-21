@@ -1,0 +1,31 @@
+<h1 mat-dialog-title class="mhq-modal-header">
+  <mat-icon>warning_amber</mat-icon>Remover registo
+</h1>
+
+<div mat-dialog-content class="mhq-modal-content-wrapper">
+
+  <div class="mhq-modal-content">Tens a certeza que queres remover o registo
+    <span>{{treasuryService.activeTreasuryLog.title}}</span>?
+
+    <mat-slide-toggle #doubleCheckToggle style="margin-top:15px" [disabled]="!haveRecurrency" [style]="!haveRecurrency? 'display:none':''">Remover todas as recorrências</mat-slide-toggle>
+  </div>
+
+  <div *ngIf="haveRecurrency" id="mhq-remove-all-recurrencies-wrapper">
+    <div mat-dialog-actions class="mhq-modal-close-actions">
+      <button *ngIf="!doubleCheckToggle.checked" mat-flat-button color="warn" (click)="deleteTreasuryLog()">Remover
+        registo</button>
+      <button *ngIf="doubleCheckToggle.checked" mat-flat-button color="warn" (click)="deleteAllRecurrencies()">Remover
+        todos os registos da recorrência</button>
+      <button mat-stroked-button mat-dialog-close color="primary">Cancelar</button>
+    </div>
+  </div>
+
+  <div *ngIf="!haveRecurrency" id="mhq-remove-all-recurrencies-wrapper">
+    <div mat-dialog-actions class="mhq-modal-close-actions">
+      <button mat-flat-button color="warn" (click)="deleteTreasuryLog()">Remover
+        registo</button>
+      <button mat-stroked-button mat-dialog-close color="primary">Cancelar</button>
+    </div>
+  </div>
+
+</div>

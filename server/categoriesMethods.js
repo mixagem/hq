@@ -70,7 +70,7 @@ export function createNewCategory(req, res) {
     if (CATEGORY.subcats.length > 0) {
       console.log('[C4] creating sub-categories');
       CATEGORY.subcats.forEach((subcat, i) => {
-        db.run(`INSERT INTO subcategories (maincatid, title, budget, active, subcatorder) VALUES ('${assignedCategoryID}', '${subcat.title}', '${subcat.budget}', '${subcat.active}', '${i + 1}' )`, (err, resp) => { err ? console.error(err.message) : console.log('[C4b] sub-category "' + subcat.title + '" created'); });
+        db.run(`INSERT INTO subcategories (maincatid, title, budget, active, subcatorder) VALUES ('${assignedCategoryID}', '${subcat.title}', '${subcat.budget}', '${subcat.active}', '${Number(i)}' )`, (err, resp) => { err ? console.error(err.message) : console.log('[C4b] sub-category "' + subcat.title + '" created'); });
       });
     }
 
@@ -119,7 +119,7 @@ export function updateCategory(req, res) {
 
     if (CATEGORY.subcats.length > 0) {
       CATEGORY.subcats.forEach((subcat, i) => {
-        db.run(`INSERT INTO subcategories (id, maincatid, title, budget, active, subcatorder) VALUES ('${subcat.id}', '${subcat.maincatid}', '${subcat.title}', '${subcat.budget}', '${subcat.active}', '${subcat.subcatorder}' )`, (err, resp) => { err ? console.error(err.message) : console.log('[C6b] sub-category "' + subcat.title + '" updated'); });
+        db.run(`INSERT INTO subcategories (id, maincatid, title, budget, active, subcatorder) VALUES ('${subcat.id}', '${subcat.maincatid}', '${subcat.title}', '${subcat.budget}', '${subcat.active}', '${Number(i)}' )`, (err, resp) => { err ? console.error(err.message) : console.log('[C6b] sub-category "' + subcat.title + '" updated'); });
       });
     }
   });
