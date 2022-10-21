@@ -73,8 +73,9 @@
                 <mat-select-trigger>{{catForm.value}}</mat-select-trigger>
                 <mat-option *ngFor="let option of categoriesList" [value]="option">
                   <mat-icon
-                    [ngStyle]="miscService.getCategoryStyles(miscService.getCategoryFromTitle(option).id)">
-                    {{miscService.getCategory(miscService.getCategoryFromTitle(option).id).icon}}</mat-icon>
+                  [ngStyle]="{'background-color':categoriesService.catEnum[categoriesService.catTitleEnum[option].id].bgcolor,'color':categoriesService.catEnum[categoriesService.catTitleEnum[option].id].textcolor}">
+
+                    {{categoriesService.catTitleEnum[option].icon}}</mat-icon>
                   {{option}}
                 </mat-option>
               </mat-select>

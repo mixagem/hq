@@ -6,8 +6,7 @@ import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-cate
 import { CategoriesService } from '../categories.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteCategoryConfirmationModalComponent } from './delete-category-confirmation-modal/delete-category-confirmation-modal.component';
-import { ErrorHandlingService, MiscService } from 'src/assets/services/misc.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ErrorHandlingService } from 'src/assets/services/misc.service';
 import { CategorySnackBarsService } from '../../../../../assets/services/snack-bars.service';
 
 @Component({
@@ -22,13 +21,13 @@ export class CategoryDetailsComponent implements OnInit {
   tempFiCategory: IFinancialCategory; // clone da categoria utilizada no modo  edição
   editingMode: boolean; // boolean com o estado do modo de edição
 
-  constructor(private _categorySnackBarsService: CategorySnackBarsService, private _route: ActivatedRoute, public categoriesService: CategoriesService, private _http: HttpClient, private _dialog: MatDialog, public miscService: MiscService, private _errorHandlingService: ErrorHandlingService) {
+  constructor(private _categorySnackBarsService: CategorySnackBarsService, private _route: ActivatedRoute, public categoriesService: CategoriesService, private _http: HttpClient, private _dialog: MatDialog,  private _errorHandlingService: ErrorHandlingService) {
     this.editingMode = false;
   }
 
   ngOnInit(): void {
     this.id = Number(this._route.snapshot.paramMap.get('id'));
-    this.fiCategory = this.miscService.getCategory(this.id);
+    this.fiCategory = this.categoriesService.catEnum[this.id];
     this.tempFiCategory = JSON.parse(JSON.stringify(this.fiCategory));
     this.categoriesService.activePreviewCategory = JSON.parse(JSON.stringify(this.fiCategory));
     this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });

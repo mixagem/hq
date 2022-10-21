@@ -16,9 +16,9 @@
 
     <ng-container matColumnDef="cat">
       <th mat-header-cell *matHeaderCellDef> Categoria </th>
-      <td mat-cell *matCellDef="let element" [ngStyle]="miscService.getCategoryStyles(element.cat)">
-        <mat-icon>{{miscService.getCategory(element.cat).icon}}</mat-icon>
-        <span>{{miscService.getSubcategory(element.cat,element.subcat).title}}</span>
+      <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':categoriesService.catEnum[element.cat].bgcolor,'color':categoriesService.catEnum[element.cat].textcolor}">
+        <mat-icon>{{categoriesService.catEnum[element.cat].icon}}</mat-icon>
+        <span>{{categoriesService.subcatEnum[element.subcat].title}}</span>
       </td>
     </ng-container>
 

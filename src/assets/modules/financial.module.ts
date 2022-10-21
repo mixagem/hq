@@ -7,7 +7,6 @@ import { AppRoutingModule } from 'src/app/app-routing.module';
 import { MaterialImportsModule } from './material-imports.module';
 import { CategoryDetailsComponent } from 'src/app/content/financial/categories/category-details/category-details.component';
 import { HttpClientModule } from '@angular/common/http';
-import { OverviewComponent } from 'src/app/content/financial/overview/overview.component';
 import { NewCategoryComponent } from 'src/app/content/financial/categories/new-category/new-category.component';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { TreasuryLogComponent } from 'src/app/content/financial/treasury-log/treasury-log.component';
@@ -27,7 +26,6 @@ import { GridViewModule } from 'src/app/content/financial/grid-view/grid-view.mo
     FinancialComponent,
     CategoriesComponent,
     CategoryDetailsComponent,
-    OverviewComponent,
     NewCategoryComponent,
     TreasuryLogComponent,
     TreasuryDetailsComponent,
@@ -57,7 +55,6 @@ import { GridViewModule } from 'src/app/content/financial/grid-view/grid-view.mo
     FinancialComponent,
     CategoriesComponent,
     CategoryDetailsComponent,
-    OverviewComponent,
     TreasuryLogComponent,
     TreasuryDetailsComponent,
     DeleteTreasuryLogConfirmationModal,

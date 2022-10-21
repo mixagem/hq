@@ -11,7 +11,11 @@ import { GridViewService } from './grid-view.service';
 })
 export class GridViewComponent  {
 
-  constructor(public gridViewService: GridViewService,private _categoriesService:CategoriesService, private _router: Router, private _treasuryService:TreasuryService) { console.log('const') }
+  constructor(public gridViewService: GridViewService,private _categoriesService:CategoriesService, private _router: Router, private _treasuryService:TreasuryService) {
+
+
+    
+   }
 
 
 

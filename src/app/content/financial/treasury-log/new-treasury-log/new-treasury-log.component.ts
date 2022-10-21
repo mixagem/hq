@@ -6,7 +6,7 @@ import { CategoriesService } from '../../categories/categories.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { TreasuryService } from '../treasury.service';
 import { MatDatepicker } from '@angular/material/datepicker';
-import { ErrorHandlingService, MiscService, TimerService } from 'src/assets/services/misc.service';
+import { ErrorHandlingService, TimerService } from 'src/assets/services/misc.service';
 import { MatSelectChange } from '@angular/material/select';
 import { CategorySnackBarsService } from 'src/assets/services/snack-bars.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
@@ -41,7 +41,7 @@ export class NewTreasuryLogComponent implements OnInit {
   saveComplete: boolean;
 
 
-  constructor(private _errorHandlingService: ErrorHandlingService, public miscService: MiscService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, public _router: Router, public _http: HttpClient, private _timerService: TimerService, private _categoriesSnackBarService: CategorySnackBarsService) {
+  constructor(private _errorHandlingService: ErrorHandlingService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, public _router: Router, public _http: HttpClient, private _timerService: TimerService, private _categoriesSnackBarService: CategorySnackBarsService) {
     this.saveComplete = true;
   }
 
@@ -49,18 +49,18 @@ export class NewTreasuryLogComponent implements OnInit {
     if (this.treasuryService.cloningTreasuryLog) {
       this.tempTreasuryLog = this.treasuryService.activeTreasuryLog;
       this.tempTreasuryLog.id = 0;
-      this.treasuryService.recordBorderStyle['background-color'] = this.miscService.getCategoryStyles(this.tempTreasuryLog.cat)['background-color']
+      this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.tempTreasuryLog.cat].bgcolor
 
     } else {
       this.tempTreasuryLog = JSON.parse(JSON.stringify(DEFAULT_TLOG))
       this.treasuryService.recordBorderStyle['background-color'] = 'rgb(0,0,0)'
-      ;
+        ;
     }
     this.treasuryLogDatepickerForm = new FormControl(new Date(this.tempTreasuryLog.date), [Validators.required]);
     if (this.treasuryService.cloningTreasuryLog) {
       this.refreshSubcategoryList(this.tempTreasuryLog.cat);
-      this.catForm = new FormControl(this.miscService.getCategory(this.tempTreasuryLog.cat).title, [Validators.required]);
-      this.subcatForm = new FormControl(this.miscService.getSubcategory(this.tempTreasuryLog.cat, this.tempTreasuryLog.subcat).title, [Validators.required]);
+      this.catForm = new FormControl(this.categoriesService.catEnum[this.tempTreasuryLog.cat].title, [Validators.required]);
+      this.subcatForm = new FormControl(this.categoriesService.subcatEnum[this.tempTreasuryLog.subcat].title, [Validators.required]);
     } else {
       this.catForm = new FormControl('', [Validators.required]);
       this.subcatForm = new FormControl({ value: '', disabled: true }, [Validators.required]);
@@ -78,10 +78,10 @@ export class NewTreasuryLogComponent implements OnInit {
       case 'save':
         if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this.openMissingCategoriesSnackBar() }
         if (!this.recurrencyFrequency.disabled && !this.recurrencyFrequency.valid) { return this.openMissingCategoriesSnackBar() }
-        const CAT = this.miscService.getCategoryFromTitle(this.catForm.value);
+        const CAT = this.categoriesService.catTitleEnum[`${this.catForm.value}`];
         this.tempTreasuryLog.date = this.treasuryLogDatepickerForm.value.getTime();
         this.tempTreasuryLog.cat = CAT.id;
-        this.tempTreasuryLog.subcat = this.miscService.getSubcategoryFromTitle(CAT.subcats, this.subcatForm.value).id;
+        this.tempTreasuryLog.subcat = this.categoriesService.subcatTitleEnum[`${this.subcatForm.value}`].id;
         this.tempTreasuryLog.value = Number(this.tempTreasuryLog.value.toString().replace(',', '.'))
         if (!this.tempTreasuryLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) {
           return this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
@@ -112,7 +112,7 @@ export class NewTreasuryLogComponent implements OnInit {
 
     CALL.subscribe({
       next: codeReceived => {
-        this.treasuryService.recordBorderStyle['background-color'] = this.miscService.getCategoryStyles(this.tempTreasuryLog.cat)['background-color'];
+        this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.tempTreasuryLog.cat].bgcolor
         this.treasuryService.fetchTreasuryLog('saveTreasuryLog', Number(codeReceived));
         RECURRENCY_OPTIONS.active ? this._categoriesSnackBarService.triggerCategoriesSnackbar(true, 'playlist_add', this.tempTreasuryLog.title, ['Os movimentos ', ' foram criados com sucesso.']) : this._categoriesSnackBarService.triggerCategoriesSnackbar(true, 'playlist_add', this.tempTreasuryLog.title, ['O movimento ', ' foi criado com sucesso.']); // dispara a snackbar
         this.saveComplete = true;
@@ -127,8 +127,9 @@ export class NewTreasuryLogComponent implements OnInit {
 
   refreshSubcategoryList(catID: number = 0, catTitle: string = ''): void {
     let category: IFinancialCategory;
-    if (catID !== 0) { category = this.miscService.getCategory(catID); }
-    if (catTitle !== '') { category = this.miscService.getCategoryFromTitle(catTitle); }
+    if (catID !== 0) { category = this.categoriesService.catEnum[catID]; }
+    if (catTitle !== '') { category = this.categoriesService.catTitleEnum[`${catTitle}`] }
+
     this.subcategoriesList = [];
     category!.subcats.forEach(subcat => { this.subcategoriesList.push(subcat.title) });
   }

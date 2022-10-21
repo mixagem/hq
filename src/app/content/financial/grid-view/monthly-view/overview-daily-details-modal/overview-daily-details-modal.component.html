@@ -42,14 +42,14 @@
       [class]="'mhq-overview-modal-'+gridViewService.source">
 
       <ng-container matColumnDef="icon" *ngIf="gridViewService.source === 'daily'">
-        <td mat-cell *matCellDef="let element" [ngStyle]="miscService.getCategoryStyles(element.cat)">
-          <mat-icon>{{miscService.getCategoryIconFromSubcategoryID(element.subcat)}}</mat-icon>
+        <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':categoriesService.catEnum[element.cat].bgcolor,'color':categoriesService.catEnum[element.cat].textcolor}">
+          <mat-icon>{{categoriesService.catEnum[element.cat].icon}}</mat-icon>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="subcat" *ngIf="gridViewService.source !== 'subcategory'">
         <td mat-cell *matCellDef="let element">
-          {{miscService.getSubcategoryTitleSimplex(element.subcat)}}
+          {{categoriesService.subcatEnum[element.subcat].title}}
         </td>
       </ng-container>
 

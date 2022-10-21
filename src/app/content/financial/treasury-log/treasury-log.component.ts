@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
-import { LoadingService, MiscService } from 'src/assets/services/misc.service';
+import { LoadingService } from 'src/assets/services/misc.service';
 import { CategoriesService } from '../categories/categories.service';
 import { TreasuryService } from './treasury.service';
 
@@ -18,7 +18,7 @@ export class TreasuryLogComponent implements OnInit {
   dataSource: MatTableDataSource<ITreasuryLog>;  // datasource para tabela
   displayedColumns: string[];   // array com as colunas da tabela
 
-  constructor(public treasuryService: TreasuryService, public categoriesService: CategoriesService, public router: Router, public miscService: MiscService, private _loadingService: LoadingService) {
+  constructor(public treasuryService: TreasuryService, public categoriesService: CategoriesService, public router: Router, private _loadingService: LoadingService) {
     this.isMatTableReady = false;
   }
 
@@ -38,7 +38,7 @@ export class TreasuryLogComponent implements OnInit {
 
   // navegação para modo de consulta de registo
   viewMode(logID: number, catID: number): void {
-    this.treasuryService.recordBorderStyle = { "background-color": this.miscService.getCategoryStyles(catID)['background-color'] };
+    this.treasuryService.recordBorderStyle = { "background-color": this.categoriesService.catEnum[catID].bgcolor};
     this.router.navigateByUrl('/fi/tlogs', { skipLocationChange: true }).then(() => { this.router.navigate(['/fi/tlogs', logID]); });
   }
 }

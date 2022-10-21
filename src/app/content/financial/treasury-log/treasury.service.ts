@@ -22,6 +22,8 @@ export class TreasuryService {
   recurrencyFreq: recurencyFrequency[] // opções frequencia recurrencia
   recurrenyTempTlog: ITreasuryLog
 
+  tlogEnum: any;
+
   constructor(private _errorHandlingService: ErrorHandlingService, private _http: HttpClient, private _router: Router, private _loadingService: LoadingService, private _timerService: TimerService) {
     this.cloningTreasuryLog = false;
     this.fetchTreasuryLog();
@@ -41,6 +43,10 @@ export class TreasuryService {
         const RESP = codeReceived as ITreasuryLog[];
         this.treasuryLog = RESP;
         this._loadingService.treasuryLoadingComplete = true;
+
+        this.tlogEnum = {}; this.treasuryLog.forEach(tlog => { this.tlogEnum[`${tlog.id}`] = tlog });
+
+
 
         if (source === 'saveTreasuryLog') { this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs', LogID]); }); }
 

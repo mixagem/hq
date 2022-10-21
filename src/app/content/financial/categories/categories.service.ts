@@ -20,12 +20,18 @@ export class CategoriesService {
   cloningCategory: Boolean;  // boolean para verificar se é duplicada ou é criada nova categoria
   activePreviewCategory: IFinancialCategory; // clone da categoria atualmente em consulta utilizado para a duplicação
 
+  catEnum: any;
+  subcatEnum: any;
+  catTitleEnum: any;
+  subcatTitleEnum: any;
+
   constructor(private _categorySnackBarsService: CategorySnackBarsService, private _http: HttpClient, private _router: Router, private _timerService: TimerService, private _loadingService: LoadingService, private _errorHandlingService: ErrorHandlingService) {
     this.allCategories = [];
     this.cloningCategory = false;
     this.fetchCategories(); // vai buscar à bd as categorias e movimentos existentes. quando concluído, passa o loadingComplete = true
     this.onInitTrigger = new Subject<any>(); // trigger para onInit do componente
     this.recordBorderStyle = { "background-color": 'rgb(0,0,0)' };
+    this.catEnum = {}; this.subcatEnum = {}; this.catTitleEnum = {}; this.subcatTitleEnum = {};
   }
 
   // trigger para onInit do componente
@@ -51,6 +57,17 @@ export class CategoriesService {
         this.expenseCategories = RESP.filter(cat => cat.type === 'expense'); //split para re-ordenação
         this.incomeCategories = RESP.filter(cat => cat.type === 'income'); //split para re-ordenação
         this._loadingService.categoriesLoadingComplete = true; // loading das categorias pronto
+
+        //enums
+        this.allCategories.forEach(cat => {
+          this.catEnum[`${cat.id}`] = cat;
+          this.catTitleEnum[`${cat.title}`] = cat;
+          cat.subcats.forEach(subcat => {
+            this.subcatEnum[`${subcat.id}`] = subcat;
+            cat.subcats.forEach(subcat => { this.subcatTitleEnum[`${subcat.title}`] = subcat });
+          });
+        });
+
 
         // faz refresh da listagem e do registo em consulta
         if (source === 'saveCategory') { this._router.navigateByUrl('/fi/cats', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/cats', catID]); }); }

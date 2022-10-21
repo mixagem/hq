@@ -7,13 +7,12 @@ import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
 import { CategoriesService } from '../../categories/categories.service';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { TreasuryService } from '../treasury.service';
-import { ErrorHandlingService, MiscService } from 'src/assets/services/misc.service';
+import { ErrorHandlingService } from 'src/assets/services/misc.service';
 import { MatSelectChange } from '@angular/material/select';
 import { CategorySnackBarsService } from 'src/assets/services/snack-bars.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 import { ThemePalette } from '@angular/material/core';
-import { MatPaginatorIntl } from '@angular/material/paginator';
 
 @Component({
   selector: 'mhq-treasury-details',
@@ -37,22 +36,22 @@ export class TreasuryDetailsComponent implements OnInit {
   recurrencyFrequency: FormControl<any>;
   recurrencyFamily: ITreasuryLog[];
 
-  constructor(private _errorHandlingService: ErrorHandlingService, private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, private _categoriesService: CategoriesService, public miscService: MiscService, private _categoriesSnackBarService: CategorySnackBarsService, private _router: Router) {
+  constructor(private _errorHandlingService: ErrorHandlingService, private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, public categoriesService: CategoriesService, private _categoriesSnackBarService: CategorySnackBarsService, private _router: Router) {
     this.editingMode = false;
     this.recurrencyFamily = [];
   }
 
   ngOnInit(): void {
     this.id = Number(this._route.snapshot.paramMap.get('id')!);
-    this.treasuryLog = this.miscService.getTreasuryLog(this.id)
+    this.treasuryLog = this.treasuryService.tlogEnum[this.id]
     this.tempTreasuryLog = JSON.parse(JSON.stringify(this.treasuryLog));
     this.treasuryService.activeTreasuryLog = JSON.parse(JSON.stringify(this.treasuryLog));
     this.treasuryLogDatepickerForm = new FormControl(new Date(this.treasuryLog.date), [Validators.required]);
-    this.catForm = new FormControl(this.miscService.getCategory(this.tempTreasuryLog.cat).title, [Validators.required]);
-    this.subcatForm = new FormControl({ value: this.miscService.getSubcategory(this.tempTreasuryLog.cat, this.tempTreasuryLog.subcat).title, disabled: true }, [Validators.required]);
-    this.miscService.getCategory(this.tempTreasuryLog.cat).subcats.forEach(subcat => { this.subcategoriesList.push(subcat.title) });
+    this.catForm = new FormControl(this.categoriesService.catEnum[this.tempTreasuryLog.cat].title, [Validators.required]);
+    this.subcatForm = new FormControl({ value: this.categoriesService.subcatEnum[this.tempTreasuryLog.subcat].title, disabled: true }, [Validators.required]);
+    this.categoriesService.catEnum[this.tempTreasuryLog.cat].subcats.forEach((subcat: { title: string; }) => { this.subcategoriesList.push(subcat.title) });
     this.subcatForm.enable();
-    this._categoriesService.allCategories.forEach(cat => { this.categoriesList.push(cat.title) });
+    this.categoriesService.allCategories.forEach(cat => { this.categoriesList.push(cat.title) });
     this.getRecurrencyFamily();
   }
 
@@ -102,18 +101,18 @@ export class TreasuryDetailsComponent implements OnInit {
       case 'start':
         this.tempTreasuryLog = JSON.parse(JSON.stringify(this.treasuryLog));
         this.refreshSubcategoryList(this.tempTreasuryLog.cat);
-        this.catForm = new FormControl(this.miscService.getCategory(this.tempTreasuryLog.cat).title, [Validators.required]);
-        this.subcatForm = new FormControl(this.miscService.getSubcategory(this.tempTreasuryLog.cat, this.tempTreasuryLog.subcat).title, [Validators.required]);
+        this.catForm = new FormControl(this.categoriesService.catEnum[this.tempTreasuryLog.cat].title, [Validators.required]);
+        this.subcatForm = new FormControl(this.categoriesService.subcatEnum[this.tempTreasuryLog.subcat].title, [Validators.required]);
         this.subcategoriesList.length > 0 ? this.subcatForm.enable() : this.subcatForm.disable();
         this.editingMode = true;
         break;
 
       case 'save':
         if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this.openMissingCategoriesSnackBar(); }
-        const CATEGORY = this.miscService.getCategoryFromTitle(this.catForm.value);
+        const CATEGORY = this.categoriesService.catTitleEnum[`${this.catForm.value}`];
         this.tempTreasuryLog.date = this.treasuryLogDatepickerForm.value.getTime();
         this.tempTreasuryLog.cat = CATEGORY.id;
-        this.tempTreasuryLog.subcat = this.miscService.getSubcategoryFromTitle(CATEGORY.subcats, this.subcatForm.value).id;
+        this.tempTreasuryLog.subcat = this.categoriesService.subcatTitleEnum[`${this.subcatForm.value}`].id;
         this.treasuryService.recordBorderStyle['background-color'] = CATEGORY.bgcolor;
         this.tempTreasuryLog.value = Number(this.tempTreasuryLog.value.toString().replace(',', '.')); // conversão de vírgulas para pontos
         if (!this.tempTreasuryLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) {
@@ -153,8 +152,8 @@ export class TreasuryDetailsComponent implements OnInit {
 
   refreshSubcategoryList(catID: number = 0, catTitle: string = ''): void {
     let category: IFinancialCategory;
-    if (catID !== 0) { category = this.miscService.getCategory(catID); }
-    if (catTitle !== '') { category = this.miscService.getCategoryFromTitle(catTitle); }
+    if (catID !== 0) { category = this.categoriesService.catEnum[catID]; }
+    if (catTitle !== '') { category = this.categoriesService.catTitleEnum[`${catTitle}`] }
     this.subcategoriesList = [];
     category!.subcats.forEach(subcat => { this.subcategoriesList.push(subcat.title) });
   }
@@ -170,7 +169,7 @@ export class TreasuryDetailsComponent implements OnInit {
   }
 
   viewMode(logID: number, catID: number): void {
-    this.treasuryService.recordBorderStyle = { "background-color": this.miscService.getCategoryStyles(catID)['background-color'] };
+    this.treasuryService.recordBorderStyle = { "background-color": this.categoriesService.catEnum[catID].bgcolor };
     this._router.navigateByUrl('/fi/tlogs', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs', logID]); });
   }
 
@@ -252,7 +251,7 @@ export class UpdateRecurrencyLogConfirmationModal {
   updateRecurrencyStatus() {
     this.allRecurrencyOptions = this.recurrencyOptions.options != null && this.recurrencyOptions.options.every(option => option.toChange);
   }
-  getRecurrencyOptionsStatus () {
+  getRecurrencyOptionsStatus() {
     if (this.recurrencyOptions.options == null) {
       return false;
     }

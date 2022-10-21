@@ -159,7 +159,7 @@
           <mat-icon>data_array</mat-icon>
         </div>
         <p>Não existem sub-categorias configuradas para a categoria
-          <span [ngStyle]="miscService.getCategoryStyles(fiCategory.id)">{{fiCategory.title}}</span>
+          <span [ngStyle]="{'background-color':categoriesService.catEnum[fiCategory.id].bgcolor,'color':categoriesService.catEnum[fiCategory.id].textcolor}">{{fiCategory.title}}</span>
         </p>
       </div>
 

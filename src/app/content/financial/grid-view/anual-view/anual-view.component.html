@@ -1,7 +1,7 @@
 <mat-progress-bar *ngIf="!gridReady" mode="indeterminate" color="accent"></mat-progress-bar>
 
 
-<div style="height:100%" >
+<div style="height:100%">
   <!-- navegação calendário -->
   <div class="mhq-row mhq-monthly-grid-nav">
 
@@ -72,7 +72,8 @@
 
           <!-- loop para categorias  -->
           <div *ngFor="let cat of activeCategories" class="mhq-grid-active-category">
-            <div class="mhq-grid-category-title" [style]="miscService.getCategoryStyles(cat.id)">
+            <div class="mhq-grid-category-title"
+              [ngStyle]="{'background-color':categoriesService.catEnum[cat.id].bgcolor,'color':categoriesService.catEnum[cat.id].textcolor}">
               <mat-icon>{{cat.icon}}</mat-icon>{{cat.title}}
             </div>
 
@@ -80,7 +81,8 @@
 
             <div *ngFor="let subcat of cat.subcats; let i = index;"
               [ngClass]="subcat.active? isLastSubcat(cat,i) :'mhq-inactive-subcategory'"
-              class="mhq-grid-subcategory-title" [style]="miscService.getCategoryStyles(cat.id)">
+              class="mhq-grid-subcategory-title"
+              [ngStyle]="{'background-color':categoriesService.catEnum[cat.id].bgcolor,'color':categoriesService.catEnum[cat.id].textcolor}">
               {{subcat.title}}
             </div>
 
@@ -113,7 +115,8 @@
 
             <!-- celulas da categoria -->
             <div class="mhq-row">
-              <div *ngFor="let x of placeholder; let i = index;" [ngStyle]="miscService.getCategoryStyles(cat.id)"
+              <div *ngFor="let x of placeholder; let i = index;"
+                [ngStyle]="{'background-color':categoriesService.catEnum[cat.id].bgcolor,'color':categoriesService.catEnum[cat.id].textcolor}"
                 class="mhq-category-summary"
                 [ngClass]="yearlySnapshots.categories[cat.id][i] === 0? 'mhq-cat-cell-null':'mhq-cat-cell-not-null'"
                 (click)="showMonthlyCatDetails(cat.id,i)">
@@ -126,7 +129,7 @@
             <div class="mhq-row" *ngFor="let subcat of cat.subcats">
               <div *ngFor="let x of placeholder; let i = index;" style="width:100%;">
                 <div *ngIf="subcat.active" class="mhq-active-subcat-cell"
-                  [ngStyle]="miscService.getCategoryStyles(cat.id)"
+                  [ngStyle]="{'background-color':categoriesService.catEnum[cat.id].bgcolor,'color':categoriesService.catEnum[cat.id].textcolor}"
                   [ngClass]="yearlySnapshots.subcategories[subcat.id][i]===0? 'mhq-null-cell':''"
                   (click)="showMonthlySubCatDetails(subcat.id,i)">
                   <span>{{yearlySnapshots.subcategories[subcat.id][i] | number:'1.2-2':'pt'}}</span>
@@ -143,13 +146,14 @@
                 [ngClass]="yearlySnapshots.daily[i]===0? 'mhq-null-cell':''" (click)="showMonthlySumDetails(i)">
                 {{yearlySnapshots.daily[i] === 0? '' : yearlySnapshots.daily[i] |
                 number:'1.2-2':'pt'}}</div> -->
-                <div *ngFor="let x of placeholder; let i = index;" class="mhq-category-summary"
+              <div *ngFor="let x of placeholder; let i = index;" class="mhq-category-summary"
                 [ngClass]="yearlySnapshots.daily[i]===0? 'mhq-null-cell':''" (click)="showMonthlySumDetails(i)">
                 {{yearlySnapshots.daily[i] === 0? '' : yearlySnapshots.daily[i] |
                 number:'1.2-2':'pt'}}</div>
             </div>
             <div class="mhq-row mhq-grid-active-category">
-              <div *ngFor="let x of placeholder; let i = index;" class="mhq-category-summary">{{monthlySumAcomEvolution[i]
+              <div *ngFor="let x of placeholder; let i = index;" class="mhq-category-summary">
+                {{monthlySumAcomEvolution[i]
                 |
                 number:'1.0-0':'pt'}}</div>
             </div>

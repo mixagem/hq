@@ -4,7 +4,7 @@ import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 import { CategoriesService } from '../categories.service';
 import { Router } from '@angular/router';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
-import { ErrorHandlingService, MiscService, TimerService } from 'src/assets/services/misc.service';
+import { ErrorHandlingService, TimerService } from 'src/assets/services/misc.service';
 import { CategorySnackBarsService } from '../../../../../assets/services/snack-bars.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -20,7 +20,7 @@ const DEFAULT_FISUBCATEGORY: IFinancialSubCategory = { id: Date.now(), maincatid
 
 export class NewCategoryComponent implements OnInit {
   tempFiCategory: IFinancialCategory; // categoria utilizada no modo de introdução
-  constructor(public miscService: MiscService, public categoriesService: CategoriesService, private _http: HttpClient, private _router: Router, private _timerService: TimerService, private _categorySnackBarsService: CategorySnackBarsService, private _snackBar: MatSnackBar, private _errorHandlingService: ErrorHandlingService) { }
+  constructor(public categoriesService: CategoriesService, private _http: HttpClient, private _router: Router, private _timerService: TimerService, private _categorySnackBarsService: CategorySnackBarsService, private _snackBar: MatSnackBar, private _errorHandlingService: ErrorHandlingService) { }
 
   ngOnInit(): void {
     // cria a categoria temporária de acordo com o tipo de introdução

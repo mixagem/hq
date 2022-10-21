@@ -4,7 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 import { CategoriesService } from './categories.service';
 import { Router } from '@angular/router';
-import { LoadingService, MiscService } from 'src/assets/services/misc.service';
+import { LoadingService } from 'src/assets/services/misc.service';
 
 @Component({
   selector: 'mhq-categories',
@@ -17,7 +17,7 @@ export class CategoriesComponent implements OnInit {
   dataSource: MatTableDataSource<IFinancialCategory>;  // datasource para tabela
   displayedColumns: string[];  // colunas da tabela
 
-  constructor(public categoriesService: CategoriesService, public router: Router, private _miscService: MiscService, private _loadingService: LoadingService) {
+  constructor(public categoriesService: CategoriesService, public router: Router, private _loadingService: LoadingService) {
     this.isMatTableReady = false;
   }
 
@@ -36,7 +36,7 @@ export class CategoriesComponent implements OnInit {
 
   // (onclick) nos registos de categoria
   viewRecordDetails(categoryID: number): void {
-    this.categoriesService.recordBorderStyle = { "background-color": this._miscService.getCategoryStyles(categoryID)['background-color'] };
+    this.categoriesService.recordBorderStyle = { "background-color": this.categoriesService.catEnum[categoryID].bgcolor };
     this.router.navigateByUrl('/fi/cats', { skipLocationChange: true }).then(() => { this.router.navigate(['/fi/cats', categoryID]); });
   }
 }

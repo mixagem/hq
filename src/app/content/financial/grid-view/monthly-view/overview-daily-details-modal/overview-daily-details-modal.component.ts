@@ -3,7 +3,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
-import { MiscService } from 'src/assets/services/misc.service';
 import { CategoriesService } from '../../../categories/categories.service';
 import { TreasuryService } from '../../../treasury-log/treasury.service';
 import { GridViewService } from '../../grid-view.service';
@@ -18,7 +17,7 @@ export class OverviewDailyDetailsModalComponent implements OnInit {
   isDataSourceEmpty: Boolean;
   displayedColumns: string[];
 
-  constructor(public categoriesService: CategoriesService, public gridViewService:GridViewService, public miscService: MiscService, private _router: Router, private _treasuryService: TreasuryService) { }
+  constructor(public categoriesService: CategoriesService, public gridViewService:GridViewService,  private _router: Router, private _treasuryService: TreasuryService) { }
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource<ITreasuryLog>([...this.gridViewService.treasuryLogsForDetails]);
@@ -46,7 +45,7 @@ export class OverviewDailyDetailsModalComponent implements OnInit {
 
   goToTreasuryLog(treasuryLogID: number, categoryID: number) {
     const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-    this._treasuryService.recordBorderStyle = { 'background-color': this.miscService.getCatStyleSimplex(categoryID)[0] }
+    this._treasuryService.recordBorderStyle = { 'background-color': this.categoriesService.catEnum[categoryID].bgcolor }
     this._router.navigate(['/fi/tlogs', treasuryLogID]);
   }
 }

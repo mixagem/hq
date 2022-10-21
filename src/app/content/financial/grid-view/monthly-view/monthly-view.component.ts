@@ -5,7 +5,7 @@ import { MatDatepicker } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
-import { ErrorHandlingService, LoadingService, MiscService } from 'src/assets/services/misc.service';
+import { ErrorHandlingService, LoadingService } from 'src/assets/services/misc.service';
 import { CategoriesService } from '../../categories/categories.service';
 import { TreasuryService } from '../../treasury-log/treasury.service';
 import { GridViewService } from '../grid-view.service';
@@ -28,7 +28,7 @@ export class MonthlyViewComponent implements OnInit {
   activeCategories: IFinancialCategory[] // lista de categorias ativas
   areCategoriesReady: boolean; // estado de recepção das categorias ativas
 
-  constructor(private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, private _categoriesService: CategoriesService, private _treasuryService: TreasuryService, private _loadingService: LoadingService, public miscService: MiscService, public gridViewService: GridViewService, private _dialog: MatDialog) {
+  constructor(private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, public categoriesService: CategoriesService, private _treasuryService: TreasuryService, private _loadingService: LoadingService, public gridViewService: GridViewService, private _dialog: MatDialog) {
     this.gridReady = false;
     this.areCategoriesReady = false;
     this.monthlySnapshots = { categories: {}, subcategories: {}, daily: [] } // inicializar a var
@@ -39,10 +39,10 @@ export class MonthlyViewComponent implements OnInit {
 
   ngOnInit(): void {
     this._treasuryService.onInitTrigger.subscribe(x => { this.ngOnInit(); });     // triggers remoto do OnInit
-    this._categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
+    this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.treasuryLoadingComplete) { return }
     this.placeholder = new Array(this.gridViewService.getMonthDays(this.gridViewService.monthlyCurrentDate.getFullYear(), this.gridViewService.monthlyCurrentDate.getMonth())).fill(0);
-    this.activeCategories = [...this._categoriesService.incomeCategories, ...this._categoriesService.expenseCategories].filter(category => category.active);
+    this.activeCategories = [...this.categoriesService.incomeCategories, ...this.categoriesService.expenseCategories].filter(category => category.active);
     this.monthlyGridSubtitleGenerator();
     this.areCategoriesReady = true;
   }
@@ -180,12 +180,12 @@ export class MonthlyViewComponent implements OnInit {
 
       case 'category':
         this.gridViewService.source = source;
-        this.gridViewService.titleForDetails = `${this.miscService.getCategoryTitle(catOrSubcat!)} @ ${day}/${this.gridViewService.monthlyCurrentDate.toLocaleString('default', { month: 'long' })}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
+        this.gridViewService.titleForDetails = `${this.categoriesService.catEnum[catOrSubcat!].title} @ ${day}/${this.gridViewService.monthlyCurrentDate.toLocaleString('default', { month: 'long' })}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
         break;
 
       case 'subcategory':
         this.gridViewService.source = source;
-        this.gridViewService.titleForDetails = `${this.miscService.getSubcategoryTitle(this.miscService.getCategoryIDFromSubcategoryID(catOrSubcat!), catOrSubcat!)} @ ${day}/${this.gridViewService.monthlyCurrentDate.toLocaleString('default', { month: 'long' })}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
+        this.gridViewService.titleForDetails = `${this.categoriesService.subcatEnum[catOrSubcat!].title} @ ${day}/${this.gridViewService.monthlyCurrentDate.toLocaleString('default', { month: 'long' })}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
         break;
 
       case 'daily':
