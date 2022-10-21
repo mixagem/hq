@@ -197,7 +197,7 @@ export class MonthlyViewComponent implements OnInit {
 
     this._dialog.open(OverviewDailyDetailsModalComponent, {
       width: '50vw',
-      height: '50vh',
+      height: '465px',
       enterAnimationDuration,
       exitAnimationDuration,
     });

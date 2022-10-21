@@ -6,50 +6,80 @@
 
   <div *ngIf="isDataSourceEmpty">no movs found bro</div>
 
-  <table *ngIf="!isDataSourceEmpty" mat-table [dataSource]="dataSource" [class]="'mhq-overview-modal-'+gridViewService.source">
+  <table *ngIf="!isDataSourceEmpty" mat-table [dataSource]="dataSource"
+    [class]="'mhq-overview-modal-'+gridViewService.source" style="height: 56px;">
 
     <ng-container matColumnDef="icon" *ngIf="gridViewService.source === 'daily'">
       <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let element" [ngStyle]="miscService.getCategoryStyles(element.cat)">
-        <mat-icon>{{miscService.getCategoryIconFromSubcategoryID(element.subcat)}}</mat-icon>
-      </td>
+
     </ng-container>
 
     <ng-container matColumnDef="subcat" *ngIf="gridViewService.source !== 'subcategory'">
       <th mat-header-cell *matHeaderCellDef>Subcategoria</th>
-      <td mat-cell *matCellDef="let element">
-       {{miscService.getSubcategoryTitleSimplex(element.subcat)}}
-      </td>
+
     </ng-container>
 
     <ng-container matColumnDef="title">
       <th mat-header-cell *matHeaderCellDef>Título</th>
-      <td mat-cell *matCellDef="let element">
-        {{element.title}}
-      </td>
+
     </ng-container>
 
     <ng-container matColumnDef="value">
       <th mat-header-cell *matHeaderCellDef>Valor</th>
-      <td mat-cell *matCellDef="let element" [style]="element.type === 'expense' ? 'font-weight:500;color:red' : 'font-weight:500;color:green' ">
-        {{element | guita:true}}
-      </td>
+
     </ng-container>
 
     <ng-container matColumnDef="link">
       <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell class="mhq-overview-modal-link" *matCellDef="let element">
-        <button mat-icon-button [color]="'primary'" (click)="goToTreasuryLog(element.id, element.cat)">
-          <mat-icon>link</mat-icon>
-        </button>
-      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
 
   </table>
+  <ng-scrollbar style="height: calc(100% - 112px);">
+    <table *ngIf="!isDataSourceEmpty" mat-table [dataSource]="dataSource"
+      [class]="'mhq-overview-modal-'+gridViewService.source">
 
-  <mat-paginator *ngIf="!isDataSourceEmpty" [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+      <ng-container matColumnDef="icon" *ngIf="gridViewService.source === 'daily'">
+        <td mat-cell *matCellDef="let element" [ngStyle]="miscService.getCategoryStyles(element.cat)">
+          <mat-icon>{{miscService.getCategoryIconFromSubcategoryID(element.subcat)}}</mat-icon>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="subcat" *ngIf="gridViewService.source !== 'subcategory'">
+        <td mat-cell *matCellDef="let element">
+          {{miscService.getSubcategoryTitleSimplex(element.subcat)}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="title">
+        <td mat-cell *matCellDef="let element">
+          {{element.title}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="value">
+        <td mat-cell *matCellDef="let element"
+          [style]="element.type === 'expense' ? 'font-weight:500;color:red' : 'font-weight:500;color:green' ">
+          {{element | guita:true}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="link">
+        <td mat-cell class="mhq-overview-modal-link" *matCellDef="let element">
+          <button mat-icon-button [color]="'primary'" (click)="goToTreasuryLog(element.id, element.cat)">
+            <mat-icon>link</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+  </ng-scrollbar>
+  <mat-paginator *ngIf="!isDataSourceEmpty" [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons style="height: 56px;">
+  </mat-paginator>
 
 </div>

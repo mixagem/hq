@@ -48,6 +48,11 @@ export class AnualViewComponent implements OnInit {
     this.areCategoriesReady = true;
   }
 
+  monthLocale(month:number):string {
+    const TEMP_DATE = new Date(); TEMP_DATE.setMonth(month);
+    return TEMP_DATE.toLocaleString('default', { month: 'long' });
+  }
+
   isLastSubcat(cat: IFinancialCategory, index: number): string {
     // o css:last-of-type tá todo fdd, tive que mandar aqui este marteladão para as curvinhas
     let lastActiveIndex = 0;
@@ -189,7 +194,7 @@ export class AnualViewComponent implements OnInit {
 
     this._dialog.open(OverviewDailyDetailsModalComponent, {
       width: '50vw',
-      height: '50vh',
+      height: '465px',
       enterAnimationDuration,
       exitAnimationDuration,
     });
