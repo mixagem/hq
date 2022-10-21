@@ -38,7 +38,7 @@ export class NavmenuService {
       isMainTitle: false,
       haveChild: false,
       name: 'Grelha movimentos',
-      route: '/fi/grid',
+      route: '/fi/grid/',
       parentEntry: 'fi'
     },{
       isMainTitle: false,

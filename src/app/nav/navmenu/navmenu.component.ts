@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GridViewService } from 'src/app/content/financial/grid-view/grid-view.service';
 import { NavmenuService } from './navmenu.service';
 
 
@@ -11,7 +12,7 @@ import { NavmenuService } from './navmenu.service';
 export class NavmenuComponent implements OnInit {
   isMenuOpen: boolean;
 
-  constructor(public navmenuService: NavmenuService) { }
+  constructor(public navmenuService: NavmenuService, public gridViewService:GridViewService) { }
 
   ngOnInit(): void { this.isMenuOpen = false; }
 

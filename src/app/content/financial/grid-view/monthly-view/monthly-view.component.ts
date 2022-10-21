@@ -28,12 +28,12 @@ export class MonthlyViewComponent implements OnInit {
   activeCategories: IFinancialCategory[] // lista de categorias ativas
   areCategoriesReady: boolean; // estado de recepção das categorias ativas
 
-  constructor(private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, private _categoriesService: CategoriesService, private _treasuryService: TreasuryService, private _loadingService: LoadingService, public miscService: MiscService, private _gridviewService: GridViewService, private _dialog: MatDialog) {
+  constructor(private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, private _categoriesService: CategoriesService, private _treasuryService: TreasuryService, private _loadingService: LoadingService, public miscService: MiscService, public gridViewService: GridViewService, private _dialog: MatDialog) {
     this.gridReady = false;
     this.areCategoriesReady = false;
     this.monthlySnapshots = { categories: {}, subcategories: {}, daily: [] } // inicializar a var
     this.getDailySumAcomEvolution();
-    this.getCategoriesMonthlySnapshots(this._gridviewService.monthlyCurrentDate.getFullYear(), this._gridviewService.monthlyCurrentDate.getMonth()); // vai buscar os snapshots à bd
+    this.getCategoriesMonthlySnapshots(this.gridViewService.monthlyCurrentDate.getFullYear(), this.gridViewService.monthlyCurrentDate.getMonth()); // vai buscar os snapshots à bd
     this.gridSubtitle = '';
   }
 
@@ -41,7 +41,7 @@ export class MonthlyViewComponent implements OnInit {
     this._treasuryService.onInitTrigger.subscribe(x => { this.ngOnInit(); });     // triggers remoto do OnInit
     this._categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.treasuryLoadingComplete) { return }
-    this.placeholder = new Array(this._gridviewService.getMonthDays(this._gridviewService.monthlyCurrentDate.getFullYear(), this._gridviewService.monthlyCurrentDate.getMonth())).fill(0);
+    this.placeholder = new Array(this.gridViewService.getMonthDays(this.gridViewService.monthlyCurrentDate.getFullYear(), this.gridViewService.monthlyCurrentDate.getMonth())).fill(0);
     this.activeCategories = [...this._categoriesService.incomeCategories, ...this._categoriesService.expenseCategories].filter(category => category.active);
     this.monthlyGridSubtitleGenerator();
     this.areCategoriesReady = true;
@@ -57,36 +57,36 @@ export class MonthlyViewComponent implements OnInit {
   changeMonth(target: number, picker?: MatDatepicker<any>): void {
     switch (target) {
       case -1:
-        if (this._gridviewService.monthlyCurrentDate.getMonth() === 0) {
-          this._gridviewService.monthlyCurrentDate.setFullYear(this._gridviewService.monthlyCurrentDate.getFullYear() - 1, 11);
+        if (this.gridViewService.monthlyCurrentDate.getMonth() === 0) {
+          this.gridViewService.monthlyCurrentDate.setFullYear(this.gridViewService.monthlyCurrentDate.getFullYear() - 1, 11);
         } else {
-          this._gridviewService.monthlyCurrentDate.setMonth(this._gridviewService.monthlyCurrentDate.getMonth() - 1)
+          this.gridViewService.monthlyCurrentDate.setMonth(this.gridViewService.monthlyCurrentDate.getMonth() - 1)
         }
         break;
 
       case 1:
-        if (this._gridviewService.monthlyCurrentDate.getMonth() === 11) {
-          this._gridviewService.monthlyCurrentDate.setFullYear(this._gridviewService.monthlyCurrentDate.getFullYear() + 1, 0);
+        if (this.gridViewService.monthlyCurrentDate.getMonth() === 11) {
+          this.gridViewService.monthlyCurrentDate.setFullYear(this.gridViewService.monthlyCurrentDate.getFullYear() + 1, 0);
         } else {
-          this._gridviewService.monthlyCurrentDate.setMonth(this._gridviewService.monthlyCurrentDate.getMonth() + 1)
+          this.gridViewService.monthlyCurrentDate.setMonth(this.gridViewService.monthlyCurrentDate.getMonth() + 1)
         }
         break;
 
       case 0: default:
-        this._gridviewService.monthlyCurrentDate = new Date();
+        this.gridViewService.monthlyCurrentDate = new Date();
         picker!.close();
     }
 
 
     this.getDailySumAcomEvolution();
-    this.getCategoriesMonthlySnapshots(this._gridviewService.monthlyCurrentDate.getFullYear(), this._gridviewService.monthlyCurrentDate.getMonth());
+    this.getCategoriesMonthlySnapshots(this.gridViewService.monthlyCurrentDate.getFullYear(), this.gridViewService.monthlyCurrentDate.getMonth());
     this.monthlyGridSubtitleGenerator();
   }
 
   getDailySumAcomEvolution(): void { // total acomulado
     this.dailySumAcomEvolution = [];
 
-    const HTTP_PARAMS = new HttpParams().set('month', this._gridviewService.monthlyCurrentDate.getMonth()).set('year', this._gridviewService.monthlyCurrentDate.getFullYear()).set('days', this._gridviewService.getMonthDays(this._gridviewService.monthlyCurrentDate.getFullYear(), this._gridviewService.monthlyCurrentDate.getMonth()))
+    const HTTP_PARAMS = new HttpParams().set('month', this.gridViewService.monthlyCurrentDate.getMonth()).set('year', this.gridViewService.monthlyCurrentDate.getFullYear()).set('days', this.gridViewService.getMonthDays(this.gridViewService.monthlyCurrentDate.getFullYear(), this.gridViewService.monthlyCurrentDate.getMonth()))
     const CALL = this._http.post('http://localhost:16190/dailysumevo', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
@@ -99,7 +99,7 @@ export class MonthlyViewComponent implements OnInit {
 
   // vai buscar os snapshots à bd
   getCategoriesMonthlySnapshots(year: number, month: number): void {
-    const HTTP_PARAMS = new HttpParams().set('year', year).set('month', month).set('monthdays', this._gridviewService.getMonthDays(year, month))
+    const HTTP_PARAMS = new HttpParams().set('year', year).set('month', month).set('monthdays', this.gridViewService.getMonthDays(year, month))
     const CALL = this._http.post('http://localhost:16190/dailycatsevo', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
@@ -117,28 +117,28 @@ export class MonthlyViewComponent implements OnInit {
   }
 
   monthlyGridSubtitleGenerator(): void {
-    this.gridSubtitle = this._gridviewService.monthlyCurrentDate.toLocaleString('default', { year: 'numeric', month: 'long' });
+    this.gridSubtitle = this.gridViewService.monthlyCurrentDate.toLocaleString('default', { year: 'numeric', month: 'long' });
   }
 
 
 
   monthPicked(event: Date, picker: MatDatepicker<any>): void {
-    this._gridviewService.monthlyCurrentDate.setFullYear(event.getFullYear(), event.getMonth());
+    this.gridViewService.monthlyCurrentDate.setFullYear(event.getFullYear(), event.getMonth());
     this.getDailySumAcomEvolution();
-    this.getCategoriesMonthlySnapshots(this._gridviewService.monthlyCurrentDate.getFullYear(), this._gridviewService.monthlyCurrentDate.getMonth())
+    this.getCategoriesMonthlySnapshots(this.gridViewService.monthlyCurrentDate.getFullYear(), this.gridViewService.monthlyCurrentDate.getMonth())
     this.monthlyGridSubtitleGenerator()
     picker.close();
   }
 
 
   showDailySumDetails(day: number): void {
-    const HTTP_PARAMS = new HttpParams().set('month', this._gridviewService.monthlyCurrentDate.getMonth()).set('year', this._gridviewService.monthlyCurrentDate.getFullYear()).set('day', day);
+    const HTTP_PARAMS = new HttpParams().set('month', this.gridViewService.monthlyCurrentDate.getMonth()).set('year', this.gridViewService.monthlyCurrentDate.getFullYear()).set('day', day);
     const CALL = this._http.post('http://localhost:16190/dailydetails', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
       next: codeReceived => {
         const RESP = codeReceived as ITreasuryLog[]
-        this._gridviewService.treasuryLogsForDetails = RESP
+        this.gridViewService.treasuryLogsForDetails = RESP
         this.openDialog('300ms', '150ms', 'daily', day)
       },
       error: err => this._errorHandlingService.handleError(err)
@@ -146,13 +146,13 @@ export class MonthlyViewComponent implements OnInit {
   }
 
   showDailySubCatDetails(subcatID: number, day: number): void {
-    const HTTP_PARAMS = new HttpParams().set('month', this._gridviewService.monthlyCurrentDate.getMonth()).set('year', this._gridviewService.monthlyCurrentDate.getFullYear()).set('day', day).set('subcat', subcatID);
+    const HTTP_PARAMS = new HttpParams().set('month', this.gridViewService.monthlyCurrentDate.getMonth()).set('year', this.gridViewService.monthlyCurrentDate.getFullYear()).set('day', day).set('subcat', subcatID);
     const CALL = this._http.post('http://localhost:16190/dailysubcatdetails', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
       next: codeReceived => {
         const RESP = codeReceived as ITreasuryLog[]
-        this._gridviewService.treasuryLogsForDetails = RESP
+        this.gridViewService.treasuryLogsForDetails = RESP
         this.openDialog('300ms', '150ms', 'subcategory', day, subcatID)
       },
       error: err => this._errorHandlingService.handleError(err)
@@ -160,13 +160,13 @@ export class MonthlyViewComponent implements OnInit {
   }
 
   showDailyCatDetails(catID: number, day: number): void {
-    const HTTP_PARAMS = new HttpParams().set('month', this._gridviewService.monthlyCurrentDate.getMonth()).set('year', this._gridviewService.monthlyCurrentDate.getFullYear()).set('day', day).set('cat', catID);
+    const HTTP_PARAMS = new HttpParams().set('month', this.gridViewService.monthlyCurrentDate.getMonth()).set('year', this.gridViewService.monthlyCurrentDate.getFullYear()).set('day', day).set('cat', catID);
     const CALL = this._http.post('http://localhost:16190/dailycatdetails', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
       next: codeReceived => {
         const RESP = codeReceived as ITreasuryLog[]
-        this._gridviewService.treasuryLogsForDetails = RESP
+        this.gridViewService.treasuryLogsForDetails = RESP
         this.openDialog('300ms', '150ms', 'category', day, catID)
       },
       error: err => this._errorHandlingService.handleError(err)
@@ -179,18 +179,18 @@ export class MonthlyViewComponent implements OnInit {
     switch (source) {
 
       case 'category':
-        this._gridviewService.source = source;
-        this._gridviewService.titleForDetails = `${this.miscService.getCategoryTitle(catOrSubcat!)} @ ${day}/${this._gridviewService.monthlyCurrentDate.toLocaleString('default', { month: 'long' })}/${this._gridviewService.monthlyCurrentDate.getFullYear()}`
+        this.gridViewService.source = source;
+        this.gridViewService.titleForDetails = `${this.miscService.getCategoryTitle(catOrSubcat!)} @ ${day}/${this.gridViewService.monthlyCurrentDate.toLocaleString('default', { month: 'long' })}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
         break;
 
       case 'subcategory':
-        this._gridviewService.source = source;
-        this._gridviewService.titleForDetails = `${this.miscService.getSubcategoryTitle(this.miscService.getCategoryIDFromSubcategoryID(catOrSubcat!), catOrSubcat!)} @ ${day}/${this._gridviewService.monthlyCurrentDate.toLocaleString('default', { month: 'long' })}/${this._gridviewService.monthlyCurrentDate.getFullYear()}`
+        this.gridViewService.source = source;
+        this.gridViewService.titleForDetails = `${this.miscService.getSubcategoryTitle(this.miscService.getCategoryIDFromSubcategoryID(catOrSubcat!), catOrSubcat!)} @ ${day}/${this.gridViewService.monthlyCurrentDate.toLocaleString('default', { month: 'long' })}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
         break;
 
       case 'daily':
-        this._gridviewService.source = source;
-        this._gridviewService.titleForDetails = `Resumo de movimentos @ ${day}/${this._gridviewService.monthlyCurrentDate.toLocaleString('default', { month: 'long' })}/${this._gridviewService.monthlyCurrentDate.getFullYear()}`
+        this.gridViewService.source = source;
+        this.gridViewService.titleForDetails = `Resumo de movimentos @ ${day}/${this.gridViewService.monthlyCurrentDate.toLocaleString('default', { month: 'long' })}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
         break;
     }
 

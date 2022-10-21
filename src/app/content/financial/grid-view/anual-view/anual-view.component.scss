@@ -1,0 +1,126 @@
+::ng-deep mhq-anual-view {
+  width: 100%;
+}
+
+.mhq-monthly-grid-nav {
+  padding: 30px 0;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    margin: 0 5px;
+  }
+
+  #mhq-grid-subtitle {
+    color: var(--mhq-waikiki-pcolor-1);
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0 10px;
+  }
+}
+
+.mhq-grid-active-category {
+  margin-bottom: 10px;
+
+  .mhq-category-summary {
+    width: 100%;
+    height: 40px;
+    box-sizing: border-box;
+    opacity: 0.45;
+  }
+
+  &.mhq-totals-wrapper {
+    .mhq-grid-category-title {
+      color: #fff;
+      &:nth-child(1) {
+        background-color: rgb(0, 30, 87);
+      }
+      &:nth-child(2) {
+        background-color: rgb(0, 15, 44);
+        border-bottom-left-radius: 15px;
+        border-top-left-radius: 0px;
+      }
+    }
+  }
+
+  .mhq-grid-category-title {
+    border-top-left-radius: 15px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+
+    mat-icon {
+      margin: 0 10px 0 15px;
+    }
+  }
+
+  .mhq-grid-subcategory-title {
+    opacity: 0.7;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+  }
+  .mhq-last-active-subcategory {
+    border-bottom-left-radius: 15px;
+  }
+  .mhq-inactive-subcategory {
+    display: none;
+  }
+}
+
+.mhq-active-subcat-cell {
+  height: 30px;
+  opacity: 1;
+  cursor: pointer;
+}
+
+.mhq-category-summary,
+.mhq-active-subcat-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  box-sizing: border-box;
+  background-clip: content-box;
+  padding: 1px;
+}
+
+.mhq-null-cell {
+  opacity: 0.3 !important;
+  cursor: default !important;
+  span {
+    opacity: 0;
+  }
+}
+
+.mhq-grid-totals-cells-wrapper {
+  .mhq-grid-active-category {
+    margin: 0;
+    color: #fff;
+    &:first-of-type {
+      .mhq-category-summary {
+        background-color: rgb(0, 30, 87);
+        opacity: 0.8;
+        cursor: pointer;
+      }
+    }
+    &:last-of-type {
+      .mhq-category-summary {
+        background-color: rgb(0, 15, 44);
+        opacity: 0.8;
+      }
+    }
+  }
+}
+
+// &:nth-child(1) {
+//   background-color: rgb(0, 30, 87);
+// }
+// &:nth-child(2) {
+//   background-color: rgb(0, 15, 44);
+
+.mhq-cat-cell-not-null {
+  opacity: 0.8 !important;
+  cursor: pointer;
+}

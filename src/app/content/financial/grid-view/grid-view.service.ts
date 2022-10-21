@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
 
 @Injectable({ providedIn: 'root' })
@@ -14,9 +15,9 @@ export class GridViewService {
   source:string;;
 
 
-  constructor() {
+  constructor(private _router:Router) {
     this.monthlyCurrentDate = new Date();
-    this.selectedView = 'month';
+    this.selectedView = 'anual';
     this.gridSubtitle = '';
     this.gridSubtitleGenerator();
   }
@@ -24,6 +25,12 @@ export class GridViewService {
   getMonthDays(year: number, month: number): number {
     return new Date(year, month+1, 0).getDate();
   };
+
+  swapGridView(view:string) :void {
+    this.selectedView = view;
+    this.gridSubtitleGenerator();
+    this._router.navigateByUrl(`/fi/grid/${view}`)
+  }
 
   gridSubtitleGenerator(): void {
     switch (this.selectedView) {

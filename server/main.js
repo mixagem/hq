@@ -1,6 +1,9 @@
 import { dailyTotalAcomulatedSnapshot, monthlySnapshots, dailyCatDetails, dailySubCatDetails, dailyTotalDetails} from './monthlyViewMethods.js';
+import { monthlyTotalAcomulatedSnapshot, yearlySnapshots, monthlyCatDetails, monthlySubCatDetails, monthlyTotalDetails} from './yearlyViewMethods.js';
 import { createTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog } from './treasuryMethods.js';
 import { fetchCategories, createNewCategory, deleteCategory, updateCategory, getSubcategorySequence } from './categoriesMethods.js'
+
+
 import express from 'express';
 import cors from 'cors';
 
@@ -13,6 +16,14 @@ APP.use(express.urlencoded({ extended: true }));
 
 
 APP.listen(PORT, () => console.log(".: MI HQ - Listening on port 16190 :."));
+
+// grid :: yearly-view
+APP.post('/monthlysumevo', function (req, res) { return monthlyTotalAcomulatedSnapshot(req, res); }); //snapshot
+APP.post('/monthlycatsevo', function (req, res) { return yearlySnapshots(req, res); }); //snapshot
+APP.post('/monthlydetails', function(req,res) { return monthlyTotalDetails(req,res)})
+APP.post('/monthlycatdetails', function(req,res) { return monthlyCatDetails(req,res)})
+APP.post('/monthlysubcatdetails', function(req,res) { return monthlySubCatDetails(req,res)})
+
 
 
 // grid :: monthly-view

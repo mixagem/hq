@@ -1,27 +1,20 @@
 import sqlite3 from 'sqlite3';
 
-export function getMonthlyDetails(req, res) {
+export function monthlyTotalDetails(req, res) {
 
-  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
-    if (err) { console.error(err.message); }
-    console.log(`Fetching ${req.body.day}/${req.body.month}/${req.body.year} details from ${req.body.subcat}...`);
-  });
-
-  const dataIni = new Date('2022-01-01T00:00:00.000Z')
-  dataIni.setFullYear(req.body.year,req.body.month - 1)
-
-  const dataFi = new Date(dataIni.getTime())
-  dataFi.setMonth(req.body.month)
-
-  const dataIniMilli = dataIni.getTime();
-  const dataFiMilli = dataFi.getTime()-1;
+  const MONTH = Number(req.body.month);
+  const YEAR = Number(req.body.year);
+  const DATA_INI = new Date('2022-01-01T00:00:00.000Z'); DATA_INI.setFullYear(YEAR, MONTH); const DATA_INI_MS = DATA_INI.getTime();
+  const DATA_FINI = new Date('2022-01-01T00:00:00.000Z'); DATA_FINI.setFullYear(YEAR, MONTH + 1); const DATA_FINI_MS = DATA_FINI.getTime() - 1;
 
   let monthlyMovments = [];
 
+  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+    if (err) { console.error(err.message); }
+    console.log(`Fetching ${MONTH}/${YEAR} details from ${req.body.subcat}...`);
+  });
   db.serialize(() => {
-
-    db.each(`SELECT * FROM treasurylog WHERE date >= ${dataIniMilli} AND date <= ${dataFiMilli}`, (err, row) => { err ? console.error(err.message) : monthlyMovments.push(row) })
-
+    db.each(`SELECT * FROM treasurylog WHERE date >= ${DATA_INI_MS} AND date <= ${DATA_FINI_MS}`, (err, row) => { err ? console.error(err.message) : monthlyMovments.push(row) })
   });
 
   db.close((err) => {
@@ -31,28 +24,22 @@ export function getMonthlyDetails(req, res) {
 
 }
 
+export function monthlySubCatDetails(req, res) {
 
-export function getMonthlySubCatDetails(req, res) {
-
-  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
-    if (err) { console.error(err.message); }
-    console.log(`Fetching ${req.body.day}/${req.body.month}/${req.body.year} details from ${req.body.subcat}...`);
-  });
-
-  const dataIni = new Date('2022-01-01T00:00:00.000Z')
-  dataIni.setFullYear(req.body.year,req.body.month - 1)
-
-  const dataFi = new Date(dataIni.getTime())
-  dataFi.setMonth(req.body.month);
-
-  const dataIniMilli = dataIni.getTime();
-  const dataFiMilli = dataFi.getTime()-1;
+  const MONTH = Number(req.body.month);
+  const YEAR = Number(req.body.year);
+  const DATA_INI = new Date('2022-01-01T00:00:00.000Z'); DATA_INI.setFullYear(YEAR, MONTH); const DATA_INI_MS = DATA_INI.getTime();
+  const DATA_FINI = new Date('2022-01-01T00:00:00.000Z'); DATA_FINI.setFullYear(YEAR, MONTH + 1); const DATA_FINI_MS = DATA_FINI.getTime() - 1;
 
   let monthlyMovments = [];
 
+  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+    if (err) { console.error(err.message); }
+    console.log(`Fetching ${MONTH}/${YEAR} details from ${req.body.subcat}...`);
+  });
   db.serialize(() => {
 
-    db.each(`SELECT * FROM treasurylog WHERE date >= ${dataIniMilli} AND date <= ${dataFiMilli} AND subcat=${req.body.subcat}`, (err, row) => { err ? console.error(err.message) : monthlyMovments.push(row) })
+    db.each(`SELECT * FROM treasurylog WHERE date >= ${DATA_INI_MS} AND date <= ${DATA_FINI_MS} AND subcat=${req.body.subcat}`, (err, row) => { err ? console.error(err.message) : monthlyMovments.push(row) })
 
   });
 
@@ -60,32 +47,25 @@ export function getMonthlySubCatDetails(req, res) {
     err ? console.error(err.message) : res.send(monthlyMovments)
     console.log('Fetching complete')
   });
-
 }
 
-export function getMonthlyCatDetails(req, res) {
+export function monthlyCatDetails(req, res) {
 
-  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
-    if (err) { console.error(err.message); }
-    console.log(`Fetching ${req.body.day}/${req.body.month}/${req.body.year} details from ${req.body.cat}...`);
-  });
-
-
-  const dataIni = new Date('2022-01-01T00:00:00.000Z')
-  dataIni.setFullYear(req.body.year,req.body.month - 1)
-
-  const dataFi = new Date(dataIni.getTime())
-  dataFi.setMonth(req.body.month)
-
-
-  const dataIniMilli = dataIni.getTime();
-  const dataFiMilli = dataFi.getTime()-1;
+  const MONTH = Number(req.body.month);
+  const YEAR = Number(req.body.year);
+  const DATA_INI = new Date('2022-01-01T00:00:00.000Z'); DATA_INI.setFullYear(YEAR, MONTH); const DATA_INI_MS = DATA_INI.getTime();
+  const DATA_FINI = new Date('2022-01-01T00:00:00.000Z'); DATA_FINI.setFullYear(YEAR, MONTH + 1); const DATA_FINI_MS = DATA_FINI.getTime() - 1;
 
   let monthlyMovments = [];
 
+  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+    if (err) { console.error(err.message); }
+    console.log(`Fetching ${MONTH}/${YEAR} details from ${req.body.cat}...`);
+  });
+
   db.serialize(() => {
 
-    db.each(`SELECT * FROM treasurylog WHERE date >= ${dataIniMilli} AND date <= ${dataFiMilli} AND cat=${req.body.cat}`, (err, row) => { err ? console.error(err.message) : monthlyMovments.push(row) })
+    db.each(`SELECT * FROM treasurylog WHERE date >= ${DATA_INI_MS} AND date <= ${DATA_FINI_MS} AND cat=${req.body.cat}`, (err, row) => { err ? console.error(err.message) : monthlyMovments.push(row) })
 
   });
 
@@ -97,163 +77,130 @@ export function getMonthlyCatDetails(req, res) {
 }
 
 //snapshots das categorias / subcategorias
-export function genMonthlyCategoriesEvo(req, res) {
+export function yearlySnapshots(req, res) {
+
+  const YEAR = Number(req.body.year);
+  const DATA_INI = new Date('2022-01-01T00:00:00.000Z');
+  const DATA_FINI = new Date('2022-01-01T00:00:00.000Z');
+  DATA_INI.setFullYear(YEAR); const DATA_INI_MS = DATA_INI.getTime();
+  DATA_FINI.setFullYear(YEAR + 1); const DATA_FINI_MS = DATA_FINI.getTime() - 1;
+
+  let categoryList = []; //array com categorias ativas
+  let subCategoryList = []; // array com as subcategorias ativas, das categorias ativas
+
 
   let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
     if (err) { console.error(err.message); }
     console.log('Generating categories snapshots...');
   });
 
-  const dataIni = new Date('2022-01-01T00:00:00.000Z');
-  dataIni.setFullYear(req.body.year)
-
-  const dataFi = new Date('2022-01-01T00:00:00.000Z');
-  dataFi.setFullYear(req.body.year+1)
-
-  const dataIniMilli = dataIni.getTime();
-  const dataFiMilli = dataFi.getTime()-1;
-
-  let categoryList = [];
-  let subCategoryList = [];
-
-  let yearlyMovments = [];
-  let generatedCategorySnapshots = {};
-  let generatedSubCategorySnapshots = {};
-
   db.serialize(() => {
-
-    db.each(`SELECT * FROM treasurylog WHERE date <= ${dataFiMilli} AND date >= ${dataIniMilli}`, (err, row) => { err ? console.error(err.message) : yearlyMovments.push(row) })
-      .each(`SELECT * FROM categories WHERE active = 'true' `, (err, row) => { err ? console.error(err.message) : categoryList.push(row.id) })
-      .each(`SELECT * FROM subcategories WHERE active = 'true' `, (err, row) => { err ? console.error(err.message) : subCategoryList.push(row.id) })
-
+    db.each(`SELECT * FROM categories WHERE active = 'true' `, (err, row) => { err ? console.error(err.message) : categoryList.push(row.id) })
+      .each(`SELECT * FROM subcategories WHERE active = 'true' `, (err, row) => { err ? console.error(err.message) : categoryList.includes(row.maincatid) ? subCategoryList.push(row.id) : [] })
   })
+  db.close((err) => { err ? console.error(err.message) : fetchMovments(); });
 
-  db.close((err) => {
-    err ? console.error(err.message) : generateSnapshots();
-  });
+  let yearlyMovments = []; //movimentos para as categorias ativas
+  let generatedCategorySnapshots = {}; //snapshots categorias
+  let generatedSubCategorySnapshots = {}; //snapshots subcategorias
 
-  function generateSnapshots() {
 
-    categoryList.forEach(category => {
+  function fetchMovments() {
+    const QUERY = `SELECT * FROM treasurylog WHERE date <= ${DATA_FINI_MS} AND date >= ${DATA_INI_MS}`
+    let queryExtra = ''
 
-      let categorySnapshot = [];
-
-      for (let i = 0; i < 12; i++) {
-
-        let value = 0;
-        monthlyMovments.forEach(movement => {
-
-          if ((new Date(movement.date).getMonth()) === i  && movement.cat === category) {
-            movement.type === 'expense' ? value -= movement.value : value += movement.value;
-
-          }
-
-        });
-
-        categorySnapshot[i] = value;
-      }
-
-      generatedCategorySnapshots[`${category}`] = categorySnapshot;
-
+    categoryList.forEach((category, i) => {
+      i === 0 ? queryExtra += ` AND ( cat='${category}'` : queryExtra += ` OR cat='${category}'`;
+      if (i === categoryList.length - 1) { queryExtra += ' )' }
+      generatedCategorySnapshots[`${category}`] = Array(12).fill(0)
     });
 
-    console.log('Categories snapshots sucessfully generated.');
-    console.log('Generating subcategories snapshots...');
+    subCategoryList.forEach((subcategory, i) => { generatedSubCategorySnapshots[`${subcategory}`] = Array(12).fill(0) });
 
-    subCategoryList.forEach(subcategory => {
-
-      let subCategorySnapshot = [];
-
-      for (let i = 0; i < 12; i++) {
-
-        let value = 0;
-        monthlyMovments.forEach(movement => {
-
-          if ((new Date(movement.date).getMonth()) === i && movement.subcat === subcategory) {
-            movement.type === 'expense' ? value -= movement.value : value += movement.value;
-          }
-
-        });
-
-        subCategorySnapshot[i] = value;
-      }
-
-      generatedSubCategorySnapshots[`${subcategory}`] = subCategorySnapshot;
-
+    let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => { if (err) { console.error(err.message); } });
+    db.serialize(() => {
+      db.each(`${QUERY}${queryExtra}`, (err, row) => { err ? console.error(err.message) : yearlyMovments.push(row) })
     });
 
-    console.log('Subcategories snapshots sucessfully generated.');
-    console.log('Generating dailysum snapshot...');
-
-    let monthlySumEvo = Array(12).fill(0)
-    monthlyMovments.forEach(movement => {
-      movement.type === 'expense' ? monthlySumEvo[(new Date(movement.date).getMonth())] -= movement.value : monthlySumEvo[(new Date(movement.date).getMonth())] += movement.value
+    db.close((err) => {
+      err ? console.error(err.message) : generateSnapshots();
     });
 
-    console.log('Dailysum snapshot sucessfully generated.');
-    res.send([generatedCategorySnapshots, generatedSubCategorySnapshots, monthlySumEvo])
+    function generateSnapshots() {
+      yearlyMovments.forEach(movement => {
+        if (movement.type === 'expense') {
+          generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getMonth())] =
+            Number((generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getMonth())] - movement.value).toFixed(2))
 
+          if (subCategoryList.includes(movement.subcat)) {
+            generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getMonth())] =
+              Number((generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getMonth())] - movement.value).toFixed(2));
+          };
+
+        } else {
+          generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getMonth())] =
+            Number((generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getMonth())] + movement.value).toFixed(2));
+          if (subCategoryList.includes(movement.subcat)) {
+            generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getMonth())] =
+            Number((generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getMonth())] + movement.value).toFixed(2));
+          };
+        }
+      })
+
+      let monthlySumEvo = Array(12).fill(0);
+      yearlyMovments.forEach(movement => {
+        movement.type === 'expense' ?
+          monthlySumEvo[(new Date(movement.date).getMonth())] = Number((monthlySumEvo[(new Date(movement.date).getMonth())] - movement.value).toFixed(2)) :
+          monthlySumEvo[(new Date(movement.date).getMonth())] = Number((monthlySumEvo[(new Date(movement.date).getMonth())] + movement.value).toFixed(2));
+      });
+      console.log(generatedCategorySnapshots)
+      res.send([generatedCategorySnapshots, generatedSubCategorySnapshots, monthlySumEvo]);
+    }
   }
 }
 
-
 // snapshot total acumulado
-export function genDailySumAcomEvo(req, res) {
+export function monthlyTotalAcomulatedSnapshot(req, res) {
+
+  const YEAR = Number(req.body.year);
+  const DATA_INI = new Date('2022-01-01T00:00:00.000Z'); DATA_INI.setFullYear(YEAR,); const DATA_INI_MS = DATA_INI.getTime();
+  const DATA_FINI = new Date('2022-01-01T00:00:00.000Z'); DATA_FINI.setFullYear(YEAR + 1); const DATA_FINI_MS = DATA_FINI.getTime() - 1;
+
+  let yearlyMovments = [];
+  let initialSum = [];
 
   let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
     if (err) { console.error(err.message); }
     console.log('Generating daily acomul snapshot...');
   });
 
-  const dataIni = new Date('2022-01-01T00:00:00.000Z');
-  dataIni.setFullYear(req.body.year)
-
-  const dataFi = new Date('2022-01-01T00:00:00.000Z');
-  dataFi.setFullYear(req.body.year+1)
-
-  const dataIniMilli = dataIni.getTime();
-  const dataFiMilli = dataFi.getTime()-1;
-
-  let yearlyMovments = [];
-  let initialSum = [];
-
   db.serialize(() => {
 
-    db.each(`SELECT * FROM treasurylog WHERE date <= ${dataFiMilli} AND date >= ${dataIniMilli}`, (err, row) => { err ? console.error(err.message) : yearlyMovments.push(row) })
-      .all(`SELECT SUM(value) FROM treasurylog WHERE type='income' AND date < ${dataIniMilli}`, (err, row) => { err ? console.error(err.message) : initialSum[0]=(Object.values(row[0])[0]) })
-      .all(`SELECT SUM(value) FROM treasurylog WHERE type='expense' AND date < ${dataIniMilli}`, (err, row) => { err ? console.error(err.message) : initialSum[1]=(Object.values(row[0])[0]) })
-
+    db.each(`SELECT * FROM treasurylog WHERE date <= ${DATA_FINI_MS} AND date >= ${DATA_INI_MS}`, (err, row) => { err ? console.error(err.message) : yearlyMovments.push(row) })
+      .all(`SELECT SUM(value) FROM treasurylog WHERE type='income' AND date <= ${DATA_INI_MS - 1}`, (err, row) => { err ? console.error(err.message) : initialSum[0] = Object.values(row[0])[0] })
+      .all(`SELECT SUM(value) FROM treasurylog WHERE type='expense' AND date <= ${DATA_INI_MS - 1}`, (err, row) => { err ? console.error(err.message) : initialSum[1] = Object.values(row[0])[0] })
   })
 
   db.close((err) => {
-    err ? console.error(err.message) : generateAcomSnapshot(initialSum,yearlyMovments);
+    err ? console.error(err.message) : generateAcomSnapshot();
     console.log('Daily acomul snapshot sucessfully generated.');
   });
 
-  function generateAcomSnapshot(initialSum,yearlyMovments) {
+  function generateAcomSnapshot() {
 
-    let monthlySumAcomEvo = [];
+    let monthlySumAcomEvoEvo = new Array(12).fill(0);
     let initialSumCalculated = 0;
 
     initialSum.forEach((sum, i) => {
-      if (sum !== null) { i === 0 ? initialSumCalculated += sum : initialSumCalculated -= sum }
+      if (sum !== null) { i === 0 ? initialSumCalculated = Number((initialSumCalculated + sum).toFixed(2)) : initialSumCalculated = Number((initialSumCalculated - sum).toFixed(2)) }
     });
 
-    for (let i = 0; i < 12; i++) {
+    monthlySumAcomEvoEvo[0] = Number((monthlySumAcomEvoEvo[0] + initialSumCalculated).toFixed(2));
+    yearlyMovments.forEach(movement => movement.type === 'expense' ?
+      monthlySumAcomEvoEvo[new Date(movement.date).getMonth()] = Number((monthlySumAcomEvoEvo[new Date(movement.date).getMonth()] - movement.value).toFixed(2)) :
+      monthlySumAcomEvoEvo[new Date(movement.date).getMonth()] = Number((monthlySumAcomEvoEvo[new Date(movement.date).getMonth()] + movement.value).toFixed(2)));
+    for (let i = 1; i < 12; i++) { monthlySumAcomEvoEvo[i] = Number((monthlySumAcomEvoEvo[i] + monthlySumAcomEvoEvo[i - 1]).toFixed(2)) }
 
-      let monthlySum = 0;
-
-      if (i === 0) { monthlySum += initialSumCalculated }
-      if (i !== 0) monthlySum += monthlySumAcomEvo[i-1]
-
-      yearlyMovments.forEach(movement => { if ((new Date(movement.date).getMonth()) === i) { movement.type === 'expense' ? monthlySum -= movement.value : monthlySum += movement.value } });
-
-      monthlySumAcomEvo.push(Number(monthlySum).toFixed(2));
-
-    }
-
-    res.send(monthlySumAcomEvo);
-
+    res.send(monthlySumAcomEvoEvo);
   }
-
 }

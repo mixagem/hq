@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { CategoriesService } from '../categories/categories.service';
+import { TreasuryService } from '../treasury-log/treasury.service';
 import { GridViewService } from './grid-view.service';
 
 @Component({
@@ -7,13 +9,12 @@ import { GridViewService } from './grid-view.service';
   templateUrl: './grid-view.component.html',
   styleUrls: ['./grid-view.component.scss']
 })
-export class GridViewComponent implements OnInit {
+export class GridViewComponent  {
 
-  constructor(public gridViewService: GridViewService, private _router: Router) { }
+  constructor(public gridViewService: GridViewService,private _categoriesService:CategoriesService, private _router: Router, private _treasuryService:TreasuryService) { console.log('const') }
 
-  ngOnInit(): void {
-    this._router.navigate([`/fi/grid/${this.gridViewService.selectedView}`]);
-  }
+
+
 
   changeView(selectedView: string): void {
     this.gridViewService.selectedView = selectedView;
@@ -21,6 +22,8 @@ export class GridViewComponent implements OnInit {
   }
 
   navigationFix(target: string): void {
+    this._categoriesService.cloningCategory = false;
+    this._treasuryService.cloningTreasuryLog = false;
     this._router.navigateByUrl(`/fi/${target}`, { skipLocationChange: true }).then(() => { this._router.navigate([`/fi/${target}/add`]); });
 
   }

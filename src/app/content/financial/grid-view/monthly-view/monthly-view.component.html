@@ -1,7 +1,7 @@
 <mat-progress-bar *ngIf="!gridReady" mode="indeterminate" color="accent"></mat-progress-bar>
 
 
-<div style="height:100%" class="amae">
+<div style="height:100%">
   <!-- navegação calendário -->
   <div class="mhq-row mhq-monthly-grid-nav">
 
@@ -31,11 +31,11 @@
     </button>
 
     <mat-menu #changeViewMenu="matMenu">
-      <button mat-menu-item disabled>
+      <button mat-menu-item >
         <mat-icon>calendar_month</mat-icon>
         <span>Vista mensal</span>
       </button>
-      <button mat-menu-item disabled>
+      <button mat-menu-item (click)="gridViewService.swapGridView('anual')">
         <mat-icon>calendar_month</mat-icon>
         <span>Vista anual</span>
       </button>
