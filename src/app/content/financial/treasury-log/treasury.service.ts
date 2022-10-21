@@ -20,6 +20,7 @@ export class TreasuryService {
   activeTreasuryLog: ITreasuryLog;   // clone do movimento  atualmente em consulta
   cloningTreasuryLog: Boolean;   // boolean que indica se é duplicação ou intrudução nova
   recurrencyFreq: recurencyFrequency[] // opções frequencia recurrencia
+  recurrenyTempTlog: ITreasuryLog
 
   constructor(private _errorHandlingService: ErrorHandlingService, private _http: HttpClient, private _router: Router, private _loadingService: LoadingService, private _timerService: TimerService) {
     this.cloningTreasuryLog = false;
@@ -71,4 +72,6 @@ export class TreasuryService {
     this._timerService.timer = setTimeout(navi.bind(null, this._router), 1000)
     function navi(router: Router): void { router.navigate(['/fi/tlogs']) }
   }
+
+
 }

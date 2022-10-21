@@ -1,0 +1,14 @@
+<h1 mat-dialog-title class="mhq-modal-header">
+  <mat-icon>warning_amber</mat-icon>Remover registo
+</h1>
+
+<div mat-dialog-content class="mhq-modal-content-wrapper">
+
+  <div class="mhq-modal-content">Queres aproveitar e atualizar todas as recurrências com as informações deste movimento?</div>
+
+  <div mat-dialog-actions class="mhq-modal-close-actions">
+    <button mat-flat-button color="sucess" (click)="recurrencyUpdate(true)">Sim</button>
+    <button mat-flat-button color="warn" (click)="recurrencyUpdate(false)">Não</button>
+  </div>
+
+</div>

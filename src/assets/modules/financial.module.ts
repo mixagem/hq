@@ -11,7 +11,7 @@ import { OverviewComponent } from 'src/app/content/financial/overview/overview.c
 import { NewCategoryComponent } from 'src/app/content/financial/categories/new-category/new-category.component';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { TreasuryLogComponent } from 'src/app/content/financial/treasury-log/treasury-log.component';
-import { TreasuryDetailsComponent, DeleteTreasuryLogConfirmationModal } from 'src/app/content/financial/treasury-log/treasury-details/treasury-details.component';
+import { TreasuryDetailsComponent, DeleteTreasuryLogConfirmationModal, UpdateRecurrencyLogConfirmationModal } from 'src/app/content/financial/treasury-log/treasury-details/treasury-details.component';
 import { NewTreasuryLogComponent } from 'src/app/content/financial/treasury-log/new-treasury-log/new-treasury-log.component';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { GuitaPipe, GuitaSimplexPipe } from '../pipes/guita.pipe';
@@ -37,6 +37,7 @@ import { GridViewModule } from 'src/app/content/financial/grid-view/grid-view.mo
     GuitaSimplexPipe,
     OverviewDailyDetailsModalComponent,
     DeleteCategoryConfirmationModalComponent,
+    UpdateRecurrencyLogConfirmationModal,
     MhqSucessSnackBarComponent,
     MhqFailureSnackBarComponent,
     GridViewComponent
@@ -65,6 +66,7 @@ import { GridViewModule } from 'src/app/content/financial/grid-view/grid-view.mo
     GuitaSimplexPipe,
     OverviewDailyDetailsModalComponent,
     DeleteCategoryConfirmationModalComponent,
+    UpdateRecurrencyLogConfirmationModal,
     MhqSucessSnackBarComponent,
     MhqFailureSnackBarComponent,
     GridViewComponent

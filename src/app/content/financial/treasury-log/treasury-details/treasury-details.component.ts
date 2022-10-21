@@ -2,10 +2,10 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
 import { CategoriesService } from '../../categories/categories.service';
-import { MatDatepicker, MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatDatepicker } from '@angular/material/datepicker';
 import { TreasuryService } from '../treasury.service';
 import { ErrorHandlingService, MiscService } from 'src/assets/services/misc.service';
 import { MatSelectChange } from '@angular/material/select';
@@ -33,9 +33,11 @@ export class TreasuryDetailsComponent implements OnInit {
   recurrency: boolean  // recorrencia
   recurrencyType: string;
   recurrencyFrequency: FormControl<any>;
+  recurrencyFamily: ITreasuryLog[];
 
-  constructor(private _errorHandlingService: ErrorHandlingService, private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, private _categoriesService: CategoriesService, public miscService: MiscService, private _categoriesSnackBarService: CategorySnackBarsService) {
+  constructor(private _errorHandlingService: ErrorHandlingService, private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, private _categoriesService: CategoriesService, public miscService: MiscService, private _categoriesSnackBarService: CategorySnackBarsService, private _router: Router) {
     this.editingMode = false;
+    this.recurrencyFamily = [];
   }
 
   ngOnInit(): void {
@@ -49,6 +51,27 @@ export class TreasuryDetailsComponent implements OnInit {
     this.miscService.getCategory(this.tempTreasuryLog.cat).subcats.forEach(subcat => { this.subcategoriesList.push(subcat.title) });
     this.subcatForm.enable();
     this._categoriesService.allCategories.forEach(cat => { this.categoriesList.push(cat.title) });
+    this.getRecurrencyFamily();
+  }
+
+  getRecurrencyFamily(): void {
+    if (this.tempTreasuryLog.recurrencyid === 0) { return }
+    const HTTP_PARAMS = new HttpParams().set('tlogID', this.tempTreasuryLog.id).set('recurID', this.tempTreasuryLog.recurrencyid)
+    const CALL = this._http.post('http://localhost:16190/getrecurencylogs', HTTP_PARAMS, { responseType: 'json' })
+
+    CALL.subscribe({
+      next: codeReceived => {
+        const RESP = codeReceived as ITreasuryLog[];
+        this.recurrencyFamily = RESP
+      },
+      error: err => {
+        this._errorHandlingService.handleError(err);
+      }
+    })
+  }
+
+  getTlogDateLocale(date: number): string {
+    return new Date(date).toLocaleDateString('pt')
   }
 
   saveTreasurylog(): void {
@@ -94,7 +117,14 @@ export class TreasuryDetailsComponent implements OnInit {
         if (!this.tempTreasuryLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) {
           return this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
         }
-        this.saveTreasurylog();
+
+        if (this.tempTreasuryLog.recurrencyid === 0) {
+          this.saveTreasurylog();
+        }
+        if (this.tempTreasuryLog.recurrencyid !== 0) {
+          this.treasuryService.recurrenyTempTlog = this.tempTreasuryLog;
+          this.openDialog2('300ms', '150ms')
+        }
         break;
 
       case 'end': default:
@@ -104,6 +134,14 @@ export class TreasuryDetailsComponent implements OnInit {
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this._dialog.open(DeleteTreasuryLogConfirmationModal, {
+      width: '580px',
+      height: '220px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
+  }
+  openDialog2(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this._dialog.open(UpdateRecurrencyLogConfirmationModal, {
       width: '580px',
       height: '220px',
       enterAnimationDuration,
@@ -127,6 +165,11 @@ export class TreasuryDetailsComponent implements OnInit {
 
   recurrencyToggle(event: MatSlideToggleChange): void {
     event.checked ? this.recurrencyFrequency.enable() : this.recurrencyFrequency.disable();
+  }
+
+  viewMode(logID: number, catID: number): void {
+    this.treasuryService.recordBorderStyle = { "background-color": this.miscService.getCategoryStyles(catID)['background-color'] };
+    this._router.navigateByUrl('/fi/tlogs', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs', logID]); });
   }
 
 
@@ -155,6 +198,47 @@ export class DeleteTreasuryLogConfirmationModal {
     CALL.subscribe({
       next: codeReceived => { this.treasuryService.fetchTreasuryLog('deleteTreasuryLog'); },
       error: err => this._errorHandlingService.handleError(err)
+    })
+  }
+}
+
+
+////////////////////////////////////////
+
+
+
+@Component({
+  selector: 'update-recurrency-confirmation-modal',
+  templateUrl: './update-recurrency-confirmation-modal.html',
+  styleUrls: ['../../../../../assets/styles/mhq-large-modal.scss']
+})
+
+// preciso do temporario
+
+export class UpdateRecurrencyLogConfirmationModal {
+
+  constructor(public treasuryService: TreasuryService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, private _categoriesSnackBarService: CategorySnackBarsService) { }
+
+  recurrencyUpdate(update: boolean): void {
+
+    const HTTP_PARAMS = new HttpParams().set('tlog', JSON.stringify(this.treasuryService.recurrenyTempTlog))
+
+    let call;
+
+    if (update) { call = this._http.post('http://localhost:16190/updaterecurrency', HTTP_PARAMS, { responseType: 'text' }) }
+    else { call = this._http.post('http://localhost:16190/updatetreasurylog', HTTP_PARAMS, { responseType: 'text' }) }
+
+    call.subscribe({
+      next: codeReceived => {
+        this.treasuryService.fetchTreasuryLog('saveTreasuryLog',this.treasuryService.recurrenyTempTlog.id);
+        const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
+        this._categoriesSnackBarService.triggerCategoriesSnackbar(true, 'save_as', this.treasuryService.recurrenyTempTlog.title, ['O movimento ', ' e respetivas recorrências, foram atualizadas com sucesso.']);
+      },
+      error: err => {
+        this._errorHandlingService.handleError(err);
+        const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
+        this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', this.treasuryService.recurrenyTempTlog.title, ['Ocurreu algo inesperado ao atualizar as recorrências para o movimento ', '.']);
+      }
     })
   }
 }

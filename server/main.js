@@ -1,6 +1,6 @@
 import { dailyTotalAcomulatedSnapshot, monthlySnapshots, dailyCatDetails, dailySubCatDetails, dailyTotalDetails} from './monthlyViewMethods.js';
 import { monthlyTotalAcomulatedSnapshot, yearlySnapshots, monthlyCatDetails, monthlySubCatDetails, monthlyTotalDetails} from './yearlyViewMethods.js';
-import { createTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog } from './treasuryMethods.js';
+import { updateRecurrency, getRecurencyLogs, createTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog } from './treasuryMethods.js';
 import { fetchCategories, createNewCategory, deleteCategory, updateCategory, getSubcategorySequence } from './categoriesMethods.js'
 
 
@@ -45,6 +45,8 @@ APP.get('/fetchtreasurylogs', function (req, res) { return fetchTreasuryLogs(req
 APP.post('/deletetreasurylog', function (req, res) { return deleteTreasuryLog(req, res); });
 APP.post('/updatetreasurylog', function (req, res) { return updateTreasuryLog(req, res); });
 APP.post('/createtreasurylog', function (req, res) { return createTreasurylog(req, res); });
+APP.post('/getrecurencylogs', function (req, res) { return getRecurencyLogs(req, res); });
+APP.post('/updaterecurrency', function (req, res) { return updateRecurrency(req, res); });
 
 
 // TODO SNAPSHOT PARA TODOS REDO

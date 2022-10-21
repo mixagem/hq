@@ -111,19 +111,52 @@
         </div>
       </div>
 
+
+
+
+
+
+
+
+    </div>
+    <div class="mhq-wrapper-row" *ngIf="!editingMode">
       <h1>
         <div>
           <mat-icon>info_outline</mat-icon>Recorrências
         </div>
       </h1>
+      <table *ngIf="recurrencyFamily.length>0 && !editingMode">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Valor</th>
+            <th></th>
+          </tr>
+        </thead>
+      </table>
 
+      <ng-scrollbar *ngIf="recurrencyFamily.length>0 && !editingMode" style="height:100%;width: 100%;">
+        <table>
+          <tbody>
+            <tr *ngFor="let tlog of recurrencyFamily">
+              <td>
+                <div class="mhq-mat-inputs-margin">{{getTlogDateLocale(tlog.date)}}</div>
+              </td>
+              <td>
+                <div class="mhq-mat-inputs-margin">{{tlog | guita:true}}</div>
+              </td>
+              <td>
+                <div class="mhq-mat-inputs-margin"><button mat-icon-button (click)="viewMode(tlog.id,tlog.cat)"
+                    color="primary">
+                    <mat-icon>link</mat-icon>
+                  </button>
+                </div>
+              </td>
 
-
-      <div class="mhq-row">
-
-        SELECT * FROM treasurylog WHERE recurrencyid = ""
-
-      </div>
+            </tr>
+          </tbody>
+        </table>
+      </ng-scrollbar>
 
     </div>
 
@@ -181,8 +214,7 @@
               <mat-select [formControl]="catForm" (selectionChange)="categorySelectChanged($event)">
                 <mat-select-trigger>{{catForm.value}}</mat-select-trigger>
                 <mat-option *ngFor="let option of categoriesList" [value]="option">
-                  <mat-icon
-                  [ngStyle]="miscService.getCategoryStyles(miscService.getCategoryFromTitle(option).id)">
+                  <mat-icon [ngStyle]="miscService.getCategoryStyles(miscService.getCategoryFromTitle(option).id)">
                     {{miscService.getCategory(miscService.getCategoryFromTitle(option).id).icon}}</mat-icon>
                   {{option}}
                 </mat-option>
@@ -227,17 +259,8 @@
         </div>
       </div>
 
-      <h1>
-        <div>
-          <mat-icon>info_outline</mat-icon>Recorrência
-        </div>
-      </h1>
+  
 
-      <div class="mhq-row">
-
-        wip
-
-      </div>
 
     </div>
 
