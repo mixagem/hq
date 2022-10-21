@@ -12,6 +12,8 @@ import { MatSelectChange } from '@angular/material/select';
 import { CategorySnackBarsService } from 'src/assets/services/snack-bars.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
+import { ThemePalette } from '@angular/material/core';
+import { MatPaginatorIntl } from '@angular/material/paginator';
 
 @Component({
   selector: 'mhq-treasury-details',
@@ -142,8 +144,8 @@ export class TreasuryDetailsComponent implements OnInit {
   }
   openDialog2(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this._dialog.open(UpdateRecurrencyLogConfirmationModal, {
-      width: '580px',
-      height: '220px',
+      width: '640px',
+      height: '320px',
       enterAnimationDuration,
       exitAnimationDuration,
     });
@@ -205,7 +207,12 @@ export class DeleteTreasuryLogConfirmationModal {
 
 ////////////////////////////////////////
 
-
+export type RecurrencyOptions = {
+  name: string;
+  toChange: boolean;
+  color: ThemePalette;
+  options?: RecurrencyOptions[];
+}
 
 @Component({
   selector: 'update-recurrency-confirmation-modal',
@@ -217,7 +224,48 @@ export class DeleteTreasuryLogConfirmationModal {
 
 export class UpdateRecurrencyLogConfirmationModal {
 
-  constructor(public treasuryService: TreasuryService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, private _categoriesSnackBarService: CategorySnackBarsService) { }
+  recurrencyOptions: RecurrencyOptions;
+  allRecurrencyOptions: boolean = false;
+
+  constructor(public treasuryService: TreasuryService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, private _categoriesSnackBarService: CategorySnackBarsService) {
+    this.allRecurrencyOptions = false;
+
+    this.recurrencyOptions = {
+      name: 'Opções a alterar',
+      toChange: false,
+      color: 'primary',
+      options: [
+        {
+          name: 'Título',
+          toChange: false,
+          color: 'primary'
+        },
+        {
+          name: 'Valor',
+          toChange: false,
+          color: 'primary'
+        }
+      ]
+    }
+  }
+
+  updateRecurrencyStatus() {
+    this.allRecurrencyOptions = this.recurrencyOptions.options != null && this.recurrencyOptions.options.every(option => option.toChange);
+  }
+  getRecurrencyOptionsStatus () {
+    if (this.recurrencyOptions.options == null) {
+      return false;
+    }
+    return this.recurrencyOptions.options.filter(option => option.toChange).length > 0 && !this.allRecurrencyOptions;
+  }
+
+  wantAllRecurrencyOptions(toChange: boolean) {
+    this.allRecurrencyOptions = toChange;
+    if (this.recurrencyOptions.options == null) {
+      return;
+    }
+    this.recurrencyOptions.options.forEach(option => (option.toChange = toChange));
+  }
 
   recurrencyUpdate(update: boolean): void {
 
@@ -230,7 +278,7 @@ export class UpdateRecurrencyLogConfirmationModal {
 
     call.subscribe({
       next: codeReceived => {
-        this.treasuryService.fetchTreasuryLog('saveTreasuryLog',this.treasuryService.recurrenyTempTlog.id);
+        this.treasuryService.fetchTreasuryLog('saveTreasuryLog', this.treasuryService.recurrenyTempTlog.id);
         const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
         this._categoriesSnackBarService.triggerCategoriesSnackbar(true, 'save_as', this.treasuryService.recurrenyTempTlog.title, ['O movimento ', ' e respetivas recorrências, foram atualizadas com sucesso.']);
       },
@@ -242,3 +290,5 @@ export class UpdateRecurrencyLogConfirmationModal {
     })
   }
 }
+
+

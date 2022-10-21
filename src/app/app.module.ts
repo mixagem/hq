@@ -8,6 +8,8 @@ import { AppContentModule } from 'src/assets/modules/app-content.module';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { getPTPaginatorIntl } from 'src/assets/pipes/matPTPaginator'
 
 registerLocaleData(localePt);
 
@@ -25,7 +27,8 @@ registerLocaleData(localePt);
   ],
 
   providers:
-    [{ provide: MAT_DATE_LOCALE, useValue: 'pt-PT' }],
+    [{ provide: MAT_DATE_LOCALE, useValue: 'pt-PT' },
+    { provide: MatPaginatorIntl, useValue: getPTPaginatorIntl() }],
 
   bootstrap: [AppComponent]
 })

@@ -1,14 +1,35 @@
 <h1 mat-dialog-title class="mhq-modal-header">
-  <mat-icon>warning_amber</mat-icon>Remover registo
+  <mat-icon>warning_amber</mat-icon>Atualizar recorrências
 </h1>
 
 <div mat-dialog-content class="mhq-modal-content-wrapper">
 
-  <div class="mhq-modal-content">Queres aproveitar e atualizar todas as recurrências com as informações deste movimento?</div>
+  <div style="padding-bottom:10px;height:auto" class="mhq-modal-content"><span>Queres aproveitar e atualizar todas as
+      recurrências
+      com as informações deste movimento?</span>
+  </div>
+
+  <div style="padding-left:20px;">
+    <mat-checkbox [checked]="allRecurrencyOptions" color="primary" [indeterminate]="getRecurrencyOptionsStatus()"
+      (change)="wantAllRecurrencyOptions($event.checked)">
+      {{recurrencyOptions.name}}
+    </mat-checkbox>
+
+
+    <ul style="list-style-type: none;margin-top:5px;">
+      <li *ngFor="let option of recurrencyOptions.options">
+        <mat-checkbox [(ngModel)]="option.toChange" [color]="option.color" (ngModelChange)="updateRecurrencyStatus()">
+          {{option.name}}
+        </mat-checkbox>
+      </li>
+    </ul>
+  </div>
 
   <div mat-dialog-actions class="mhq-modal-close-actions">
-    <button mat-flat-button color="sucess" (click)="recurrencyUpdate(true)">Sim</button>
-    <button mat-flat-button color="warn" (click)="recurrencyUpdate(false)">Não</button>
+    <button mat-stroked-button color="primary" (click)="recurrencyUpdate(true)"
+      [disabled]="allRecurrencyOptions === false && getRecurrencyOptionsStatus()===false">Sim</button>
+    <button mat-stroked-button color="primary" (click)="recurrencyUpdate(false)">Não</button>
+    <button mat-stroked-button mat-dialog-close color="warn">Cancelar</button>
   </div>
 
 </div>

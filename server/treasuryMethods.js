@@ -137,7 +137,7 @@ export function getRecurencyLogs(req, res) {
   let tLogsFromRecurrency = [];
 
   db.serialize(() => {
-    db.each(`SELECT * FROM treasurylog WHERE recurrencyid='${RECURRENCY_ID}' AND NOT id='${TREASURY_LOG_ID}'`, (err, resp) => { err ? console.error(err.message) : tLogsFromRecurrency.push(resp); });
+    db.each(`SELECT * FROM treasurylog WHERE recurrencyid='${RECURRENCY_ID}' AND NOT id='${TREASURY_LOG_ID}' ORDER BY date DESC`, (err, resp) => { err ? console.error(err.message) : tLogsFromRecurrency.push(resp); });
   });
 
   db.close((err) => {
