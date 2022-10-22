@@ -25,6 +25,5 @@ export class DeleteCategoryConfirmationModalComponent {
       next: codeReceived => { this.categoriesService.fetchCategories('deleteCategory'); },
       error: err => this._errorHandlingService.handleError(err)
     })
-
   }
 }

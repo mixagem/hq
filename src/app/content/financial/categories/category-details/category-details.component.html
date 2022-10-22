@@ -1,6 +1,6 @@
-<div class="mhq-row full-height mhq-category-details-wrapper">
+<div class="mhq-row full-height mhq-mainform-details-wrapper">
 
-  <div class="mhq-categories-drawer-left">
+  <div class="mhq-mainform-drawer-actions">
     <div class="mhq-quickaction-close" (click)="categoriesService.closeDetails()">
       <mat-icon>close</mat-icon>
     </div>
@@ -31,7 +31,7 @@
   </div>
 
 
-  <div class="mhq-categories-drawer-right">
+  <div class="mhq-mainform-drawer-content">
 
     <div class="mhq-wrapper-row" *ngIf="!editingMode">
       <h1>
@@ -164,7 +164,7 @@
       </div>
 
       <div *ngIf="tempFiCategory.subcats.length===0 && editingMode" class="mhq-row mhq-no-subcategories">
-        <div (click)="attachSubcategory()" class="mhq-add-subcategory">
+        <div (click)="attachSubcategory()">
           <mat-icon>add</mat-icon>
         </div>
         <p>Carrega para adicionar uma nova sub-categoria</p>

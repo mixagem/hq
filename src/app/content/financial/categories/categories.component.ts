@@ -11,7 +11,7 @@ import { ReorderCategoriesModalComponent } from './reorder-categories-modal/reor
 @Component({
   selector: 'mhq-categories',
   templateUrl: './categories.component.html',
-  styleUrls: ['./categories.component.scss']
+  styleUrls: ['./categories.component.scss', '../../../../assets/styles/mhq-mainform.scss']
 })
 
 export class CategoriesComponent implements OnInit {
@@ -24,30 +24,29 @@ export class CategoriesComponent implements OnInit {
   }
 
   @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
-    if (!this._loadingService.categoriesLoadingComplete) { return }
+    if (!this._loadingService.categoriesLoadingComplete) { return } //loading check
     this.dataSource.paginator = paginator;
   }
 
   ngOnInit(): void {
+    //loading check
     this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this._loadingService.categoriesLoadingComplete) { return }
+
+    //mainform construction
     this.dataSource = new MatTableDataSource<IFinancialCategory>([...this.categoriesService.allCategories]);
     this.displayedColumns = ['icon', 'title', 'type', 'active'];
     this.isMatTableReady = true;
   }
 
-  // (onclick) nos registos de categoria
+  // (onclick) modo consulta
   viewRecordDetails(categoryID: number): void {
     this.categoriesService.recordBorderStyle = { "background-color": this.categoriesService.catEnum[categoryID].bgcolor };
     this.router.navigateByUrl('/fi/cats', { skipLocationChange: true }).then(() => { this.router.navigate(['/fi/cats', categoryID]); });
   }
 
+  // re-order categories actions
   openOrderingModal(enterAnimationDuration: string, exitAnimationDuration: string): void {
-    this._matDialog.open(ReorderCategoriesModalComponent, {
-      width: '700px',
-      height:'75vh',
-      enterAnimationDuration,
-      exitAnimationDuration,
-    });
+    this._matDialog.open(ReorderCategoriesModalComponent, { width: '700px', height: '75vh', enterAnimationDuration, exitAnimationDuration, });
   }
 }

@@ -6,21 +6,20 @@ import { Router } from '@angular/router';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
 import { ErrorHandlingService, TimerService } from 'src/assets/services/misc.service';
 import { MHQSnackBarsService } from '../../../../../assets/services/mhq-snackbar.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
-// objectos default para modo de introdução de nova categoria/subcategorias
 const DEFAULT_FICATEGORY: IFinancialCategory = { id: 0, type: 'expense', title: 'Nova categoria', icon: 'dns', bgcolor: 'rgb(0,0,0)', textcolor: 'rgb(255,255,255)', subcats: [], active: false, order: 0 };
 const DEFAULT_FISUBCATEGORY: IFinancialSubCategory = { id: Date.now(), maincatid: 0, title: 'Nova sub-categoria', budget: 0, active: false, order: 0 };
 
 @Component({
   selector: 'mhq-new-category',
   templateUrl: './new-category.component.html',
-  styleUrls: ['../category-details/category-details.component.scss']
+  styleUrls: ['../../../../../assets/styles/mhq-mainform-details.scss']
 })
 
 export class NewCategoryComponent implements OnInit {
-  tempFiCategory: IFinancialCategory; // categoria utilizada no modo de introdução
-  constructor(public categoriesService: CategoriesService, private _http: HttpClient, private _router: Router, private _timerService: TimerService, private _mhqSnackbarService: MHQSnackBarsService, private _snackBar: MatSnackBar, private _errorHandlingService: ErrorHandlingService) { }
+  tempFiCategory: IFinancialCategory;
+
+  constructor(public categoriesService: CategoriesService, private _http: HttpClient, private _router: Router, private _timerService: TimerService, private _mhqSnackbarService: MHQSnackBarsService, private _errorHandlingService: ErrorHandlingService) { }
 
   ngOnInit(): void {
     // cria a categoria temporária de acordo com o tipo de introdução
@@ -30,7 +29,7 @@ export class NewCategoryComponent implements OnInit {
     } else {
       this.tempFiCategory = JSON.parse(JSON.stringify(DEFAULT_FICATEGORY)); // o rest operator não tava a bombar fixe aqui
     }
-    this.categoriesService.recordBorderStyle['background-color']=this.tempFiCategory.bgcolor;
+    this.categoriesService.recordBorderStyle['background-color'] = this.tempFiCategory.bgcolor;
   }
 
   // ações de registo
@@ -64,9 +63,9 @@ export class NewCategoryComponent implements OnInit {
     CALL.subscribe({
       next: codeReceived => {
         if (codeReceived !== 'MHQ_ERROR') {
-          this.categoriesService.fetchCategories('saveCategory', Number(codeReceived)); // atualiza o modo listagem / consulta
-          this.categoriesService.recordBorderStyle['background-color'] = this.tempFiCategory.bgcolor; // atualiza a cor do border da gaveta com da nova categoria
-          this._mhqSnackbarService.triggerMHQSnackbar(true, 'playlist_add', this.tempFiCategory.title, ['A categoria ', ' foi criada com sucesso.']); // dispara a snackbar
+          this.categoriesService.fetchCategories('saveCategory', Number(codeReceived));
+          this.categoriesService.recordBorderStyle['background-color'] = this.tempFiCategory.bgcolor;
+          this._mhqSnackbarService.triggerMHQSnackbar(true, 'playlist_add', this.tempFiCategory.title, ['A categoria ', ' foi criada com sucesso.']);
         } else {
           this._mhqSnackbarService.triggerMHQSnackbar(false, 'report', this.tempFiCategory.title, ['Ocurreu um erro ao guardar as alterações à categoria ', '.']);
         }
@@ -74,5 +73,4 @@ export class NewCategoryComponent implements OnInit {
       error: err => this._errorHandlingService.handleError(err)
     })
   }
-
 }

@@ -1,5 +1,7 @@
-::ng-deep .mat-dialog-container {
-  padding: 0 !important;
+::ng-deep {
+  .mat-dialog-container {
+    padding: 0 !important;
+  }
 }
 
 * {
@@ -16,7 +18,6 @@
   color: var(--mhq-light-text);
   height: 70px;
   margin: 0;
-
   mat-icon {
     padding-right: 15px;
     box-sizing: content-box;
@@ -24,29 +25,23 @@
 }
 
 .mhq-modal-content-wrapper {
-  height: calc(100% - 70px);
-  padding: 3vh 1.5vw 1vh;
+  height: calc(100% - 70px - 70px);
+  padding: 2vh 1.5vw 2vh;
   margin: 0;
   overflow: clip;
 
-  .mhq-modal-content {
-    height: calc(100% - 75px);
-
-    .mhq-category-modal-label {
-      padding: 5px 10px;
-      border-radius: 5px;
-    }
+  .mhq-category-modal-label {
+    padding: 5px 10px;
+    border-radius: 5px;
   }
+}
 
-  .mhq-modal-close-actions {
-    height: 75px;
-
-    button {
-      margin: 0 5px;
-
-      &:first-of-type {
-        margin-left: 10px;
-      }
+.mhq-modal-close-actions {
+  height: 70px;
+  button {
+    margin: 0 5px;
+    &:first-of-type {
+      margin-left: 25px;
     }
   }
 }

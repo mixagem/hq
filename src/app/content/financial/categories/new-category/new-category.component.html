@@ -1,6 +1,6 @@
-<div class="mhq-row full-height mhq-category-details-wrapper">
+<div class="mhq-row full-height mhq-mainform-details-wrapper">
 
-  <div class="mhq-categories-drawer-left">
+  <div class="mhq-mainform-drawer-actions">
 
     <div class="mhq-quickaction-close" (click)="categoriesService.closeDetails()">
       <mat-icon>close</mat-icon>
@@ -9,15 +9,16 @@
     <div class="mhq-quickaction-save" (click)="newCategoryRecordActions('save')"><button mat-icon-button>
         <mat-icon>save</mat-icon>
       </button></div>
+
     <div class="mhq-quickaction-delete" (click)="newCategoryRecordActions('end')"><button mat-icon-button>
         <mat-icon>not_interested</mat-icon>
       </button></div>
 
     <div [ngStyle]="categoriesService.recordBorderStyle"></div>
+
   </div>
 
-
-  <div class="mhq-categories-drawer-right">
+  <div class="mhq-mainform-drawer-content">
 
     <div class="mhq-wrapper-row">
 
@@ -99,7 +100,7 @@
 
       <div *ngIf="tempFiCategory.subcats.length===0" class="mhq-row mhq-no-subcategories">
 
-        <div (click)="createSubcategory()" class="mhq-add-subcategory">
+        <div (click)="createSubcategory()">
           <mat-icon>add</mat-icon>
         </div>
         <p>Carrega para adicionar uma nova sub-categoria</p>

@@ -6,45 +6,66 @@
     <h1>
       <mat-icon>account_balance</mat-icon>Movimentos de tesouraria
     </h1>
-    <div class="mhq-mainform-actions"><button mat-flat-button color="accent" (click)="treasuryService.addMode(false)">
+
+    <div class="mhq-mainform-actions">
+      <button mat-flat-button color="accent" (click)="treasuryService.addMode(false)">
         <mat-icon>add</mat-icon>Adicionar movimento
       </button>
     </div>
   </div>
 
-  <table mat-table [dataSource]="dataSource">
 
-    <ng-container matColumnDef="cat">
-      <th mat-header-cell *matHeaderCellDef> Categoria </th>
-      <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':categoriesService.catEnum[element.cat].bgcolor,'color':categoriesService.catEnum[element.cat].textcolor}">
-        <mat-icon>{{categoriesService.catEnum[element.cat].icon}}</mat-icon>
-        <span>{{categoriesService.subcatEnum[element.subcat].title}}</span>
-      </td>
-    </ng-container>
+  <div class="mhq-row mhq-mainform-content">
+    <table mat-table [dataSource]="dataSource">
 
-    <ng-container matColumnDef="date">
-      <th mat-header-cell *matHeaderCellDef> Data </th>
-      <td mat-cell *matCellDef="let element"> {{element.date | date:"dd/MM/yyyy"}} </td>
-    </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 
-    <ng-container matColumnDef="title">
-      <th mat-header-cell *matHeaderCellDef> Título </th>
-      <td mat-cell *matCellDef="let element"> {{element.title}} </td>
-    </ng-container>
+      <ng-container matColumnDef="cat">
+        <th mat-header-cell *matHeaderCellDef> Categoria </th>
+      </ng-container>
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef> Data </th>
+      </ng-container>
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef> Título </th>
+      </ng-container>
+      <ng-container matColumnDef="value">
+        <th mat-header-cell *matHeaderCellDef> Valor </th>
+      </ng-container>
+    </table>
 
-    <ng-container matColumnDef="value">
-      <th mat-header-cell *matHeaderCellDef> Valor </th>
-      <td mat-cell *matCellDef="let element"
-        [style]="element.type === 'expense' ? 'font-weight:500;color:red' : 'font-weight:500;color:green' ">
-        {{element | guita: true}} </td>
-    </ng-container>
+    <ng-scrollbar style="width:100%">
+    <table mat-table [dataSource]="dataSource">
 
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="viewMode(row.id,row.cat)"></tr>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="viewMode(row.id,row.cat)"></tr>
-  </table>
-  <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+      <ng-container matColumnDef="cat">
+        <th mat-header-cell *matHeaderCellDef> Categoria </th>
+        <td mat-cell *matCellDef="let element"
+          [ngStyle]="{'background-color':categoriesService.catEnum[element.cat].bgcolor,'color':categoriesService.catEnum[element.cat].textcolor}">
+          <mat-icon>{{categoriesService.catEnum[element.cat].icon}}</mat-icon>
+          <span>{{categoriesService.subcatEnum[element.subcat].title}}</span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="date">
+        <td mat-cell *matCellDef="let element"> {{element.date | date:"dd/MM/yyyy"}} </td>
+      </ng-container>
+      <ng-container matColumnDef="title">
+        <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+      </ng-container>
+      <ng-container matColumnDef="value">
+        <td mat-cell *matCellDef="let element"
+          [style]="element.type === 'expense' ? 'font-weight:500;color:red' : 'font-weight:500;color:green' ">
+          {{element | guita: true}} </td>
+      </ng-container>
+    </table>
 
+    </ng-scrollbar>
+  </div>
+
+  <div class="mhq-row mhq-mainform-footer">
+    <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+  </div>
 </div>
 
 <div *ngIf="router.url !== '/fi/tlogs'" id="mhq-category-details"

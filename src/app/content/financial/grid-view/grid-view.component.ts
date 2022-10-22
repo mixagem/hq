@@ -7,14 +7,14 @@ import { GridViewService } from './grid-view.service';
 @Component({
   selector: 'mhq-grid-view',
   templateUrl: './grid-view.component.html',
-  styleUrls: ['./grid-view.component.scss']
+  styleUrls: ['./grid-view.component.scss','../../../../assets/styles/mhq-mainform.scss']
 })
 export class GridViewComponent  {
 
   constructor(public gridViewService: GridViewService,private _categoriesService:CategoriesService, private _router: Router, private _treasuryService:TreasuryService) {
 
 
-    
+
    }
 
 

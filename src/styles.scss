@@ -33,8 +33,8 @@ body {
   --mhq-waikiki-color-6: rgba(103, 58, 183,.50);
 }
 
-.hidden {
-  display: none !important;
+mat-form-field {
+  width: 95%;
 }
 
 @font-face {
@@ -91,44 +91,7 @@ body {
   font-display: swap;
 }
 
-/* ########## End   - Material modal styles override ##########*/
-/* ########## Start - mhq mainforms ##########*/
-.mhq-mainform-container {
-  box-sizing: border-box;
-  height: calc(100vh - var(--navbar-height));
-  padding: 3vh 2vw;
-  margin: 0;
-}
 
-
-
-.mhq-mainform-header {
-  height: 60px;
-  align-items: center;
-  justify-content: space-between;
-  mat-icon {
-    vertical-align: text-bottom;
-    width: auto;
-    height: auto;
-    padding-right: 15px;
-    font-size: 36px;
-  }
-  h1 {
-    color: var(--mhq-waikiki-pcolor-1);
-  }
-  .mhq-mainform-actions {
-    height: 36px;
-    padding-bottom: 5px;
-    mat-icon {
-      padding-right: 4px;
-      margin-bottom: 3px;
-      margin-left: -5px;
-      font-size:24px;
-    }
-  }
-}
-
-/* ########## End   - mhq mainforms ##########*/
 /* ########## Start - mhq grids ##########*/
 .mhq-row {
   width: 100%;

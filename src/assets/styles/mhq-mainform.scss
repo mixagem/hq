@@ -1,0 +1,47 @@
+.mhq-mainform-container {
+  box-sizing: border-box;
+  height: calc(100vh - var(--navbar-height));
+  padding: 3vh 2vw;
+  margin: 0;
+
+  .mhq-mainform-header {
+    height: 60px;
+    align-items: center;
+    justify-content: space-between;
+    h1 {
+      color: var(--mhq-waikiki-pcolor-1);
+      mat-icon {
+        vertical-align: text-bottom;
+        width: auto;
+        height: auto;
+        padding-right: 15px;
+        font-size: 36px;
+      }
+    }
+
+    .mhq-mainform-actions {
+      height: 36px;
+      button {
+        margin:0 5px;
+        mat-icon {
+          padding-right: 4px;
+          margin-bottom: 3px;
+          margin-left: -5px;
+          font-size: 24px;
+        }
+      }
+    }
+  }
+
+  .mhq-mainform-content {
+    height: calc(100% - 60px - 60px);
+    flex-direction: column;
+    padding-top:10px;
+  }
+
+  .mhq-mainform-footer {
+    height: 60px;
+    display: flex;
+    justify-content: flex-end;
+  }
+}

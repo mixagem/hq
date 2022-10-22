@@ -1,4 +1,4 @@
-table#mhq-categories-table {
+table.mhq-categories-table {
   width: 100%;
   tr:not(.mat-header-row):hover {
     cursor: pointer;
@@ -7,6 +7,7 @@ table#mhq-categories-table {
     }
   }
   tr {
+    height: 50px;
     &:first-child {
       td {
         border-top: 1px solid rgba(0, 0, 0, 0.12);
@@ -45,7 +46,7 @@ table#mhq-categories-table {
     td {
       text-align: center;
       &:nth-child(1) {
-        width: 50px;
+        width: 80px;
         padding: 0px;
         mat-icon {
           vertical-align: bottom;
@@ -66,20 +67,20 @@ table#mhq-categories-table {
   }
 }
 
-#mhq-category-details {
-  position: absolute;
-  top: var(--navbar-height);
-  right: 0;
-  height: calc(100vh - var(--navbar-height));
-  width: 70vw;
-  padding: 0;
-}
-
+// gaveta edição/consulta
 ::ng-deep {
   mhq-category-details {
     width: 70vw;
   }
   mhq-new-category {
     width: 100%;
+  }
+  #mhq-category-details {
+    position: absolute;
+    top: var(--navbar-height);
+    right: 0;
+    height: calc(100vh - var(--navbar-height));
+    width: 70vw;
+    padding: 0;
   }
 }
