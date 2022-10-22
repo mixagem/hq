@@ -64,7 +64,7 @@ export class CategoriesService {
         // fecha a gaveta e envia para o modo de listagem
         if (source === 'deleteCategory') {
           document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
-          this._timerService.timer = setTimeout(navi.bind(null, this._router), 1000);
+          this._timerService.timer = setTimeout(navi.bind(null, this._router), 750);
           function navi(router: Router): void {
             const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
             router.navigateByUrl('/', { skipLocationChange: true }).then(() => { router.navigate(['/fi/cats']); });
@@ -94,7 +94,7 @@ export class CategoriesService {
   // fecha a gaveta do registo
   closeDetails(): void {
     document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight')
-    this._timerService.timer = setTimeout(navi.bind(null, this._router), 1000)
+    this._timerService.timer = setTimeout(navi.bind(null, this._router), 750)
     function navi(router: Router): void { router.navigate(['/fi/cats']) }
   }
 

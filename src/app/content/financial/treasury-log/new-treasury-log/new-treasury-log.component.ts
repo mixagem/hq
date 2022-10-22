@@ -6,18 +6,13 @@ import { CategoriesService } from '../../categories/categories.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { TreasuryService } from '../treasury.service';
 import { MatDatepicker } from '@angular/material/datepicker';
-import { ErrorHandlingService, TimerService } from 'src/assets/services/misc.service';
+import { ErrorHandlingService, LoadingService, TimerService } from 'src/assets/services/misc.service';
 import { MatSelectChange } from '@angular/material/select';
 import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 
-export type RecurrencyOptions = {
-  active: boolean,
-  type: string,
-  freq: number,
-  date: number
-}
+export type RecurrencyOptions = { active: boolean, type: string, freq: number, date: number }
 
 const DEFAULT_TLOG: ITreasuryLog = { id: 0, title: 'Novo movimento de tesouraria', date: Date.now(), value: 0, cat: 0, subcat: 0, type: 'expense', obs: '', recurrencyid: 0 }
 
@@ -41,11 +36,16 @@ export class NewTreasuryLogComponent implements OnInit {
   saveComplete: boolean;
 
 
-  constructor(private _errorHandlingService: ErrorHandlingService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, public _router: Router, public _http: HttpClient, private _timerService: TimerService, private _categoriesSnackBarService: MHQSnackBarsService) {
+  constructor(private _errorHandlingService: ErrorHandlingService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, public _router: Router, public _http: HttpClient, private _timerService: TimerService, private _categoriesSnackBarService: MHQSnackBarsService, public loadingService:LoadingService) {
     this.saveComplete = true;
   }
 
   ngOnInit(): void {
+
+    this.treasuryService.onInitTrigger.subscribe(x => { this.ngOnInit(); });     // triggers remoto do OnInit
+    this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
+    if (!this.loadingService.categoriesLoadingComplete || !this.loadingService.treasuryLoadingComplete) { return }     // loading check
+    
     if (this.treasuryService.cloningTreasuryLog) {
       this.tempTreasuryLog = this.treasuryService.activeTreasuryLog;
       this.tempTreasuryLog.id = 0;
@@ -53,8 +53,7 @@ export class NewTreasuryLogComponent implements OnInit {
 
     } else {
       this.tempTreasuryLog = JSON.parse(JSON.stringify(DEFAULT_TLOG))
-      this.treasuryService.recordBorderStyle['background-color'] = 'rgb(0,0,0)'
-        ;
+      this.treasuryService.recordBorderStyle['background-color'] = 'rgb(0,0,0)';
     }
     this.treasuryLogDatepickerForm = new FormControl(new Date(this.tempTreasuryLog.date), [Validators.required]);
     if (this.treasuryService.cloningTreasuryLog) {
@@ -91,7 +90,7 @@ export class NewTreasuryLogComponent implements OnInit {
 
       case 'end': default:
         document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
-        this._timerService.timer = setTimeout(navi.bind(null, this._router), 1000)
+        this._timerService.timer = setTimeout(navi.bind(null, this._router), 750)
         function navi(router: Router): void {
           router.navigate(['/fi/tlogs'])
         }

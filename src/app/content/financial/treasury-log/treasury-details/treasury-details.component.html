@@ -41,10 +41,14 @@
   </div>
 
   <div class="mhq-mainform-drawer-content">
+    <mat-progress-bar
+      *ngIf="!this.loadingService.categoriesLoadingComplete || !this.loadingService.treasuryLoadingComplete"
+      mode="indeterminate" color="accent"></mat-progress-bar>
 
-     <!--  v- modo consulta -v -->
+    <!--  v- modo consulta -v -->
 
-    <div class="mhq-wrapper-row" *ngIf="!editingMode">
+    <div class="mhq-wrapper-row"
+      *ngIf="!editingMode && this.loadingService.categoriesLoadingComplete && this.loadingService.treasuryLoadingComplete">
 
       <h1>
         <div>
@@ -120,7 +124,8 @@
 
     </div>
 
-    <div class="mhq-wrapper-row" *ngIf="!editingMode">
+    <div class="mhq-wrapper-row"
+      *ngIf="!editingMode && this.loadingService.categoriesLoadingComplete && this.loadingService.treasuryLoadingComplete">
 
       <h1>
         <div>
@@ -162,9 +167,10 @@
 
     </div>
 
-     <!--  ^- modo consulta / modo edição -v -->
+    <!--  ^- modo consulta / modo edição -v -->
 
-    <div class="mhq-wrapper-row" *ngIf="editingMode">
+    <div class="mhq-wrapper-row"
+      *ngIf="editingMode && this.loadingService.categoriesLoadingComplete && this.loadingService.treasuryLoadingComplete">
 
       <h1>
         <div>
@@ -265,6 +271,7 @@
       </div>
 
     </div>
+
 
   </div>
 

@@ -20,7 +20,10 @@
 
   <div class="mhq-mainform-drawer-content">
     <mat-progress-bar *ngIf="!saveComplete" mode="indeterminate" color="accent"></mat-progress-bar>
-    <div class="mhq-wrapper-row">
+    <mat-progress-bar
+    *ngIf="!this.loadingService.categoriesLoadingComplete || !this.loadingService.treasuryLoadingComplete"
+    mode="indeterminate" color="accent"></mat-progress-bar>
+    <div class="mhq-wrapper-row" *ngIf="this.loadingService.categoriesLoadingComplete && this.loadingService.treasuryLoadingComplete">
 
       <h1>
         <div>

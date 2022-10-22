@@ -51,9 +51,12 @@ table {
         width: calc(200px + 3vw);
         padding: 0;
         text-align: left;
+        div {
+          display: flex;
+        }
         mat-icon {
-          padding: 0 10px 0 20px;
-          vertical-align: text-bottom;
+          padding: 0 20px 0 20px;
+          vertical-align: text;
         }
       }
       &:nth-child(2) {

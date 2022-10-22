@@ -2,8 +2,6 @@ import { dailyTotalAcomulatedSnapshot, monthlySnapshots, dailyCatDetails, dailyS
 import { monthlyTotalAcomulatedSnapshot, yearlySnapshots, monthlyCatDetails, monthlySubCatDetails, monthlyTotalDetails} from './yearlyViewMethods.js';
 import { deleteAllRecurrencies, dettachRecurrency, updateRecurrency, getRecurencyLogs, createTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog } from './treasuryMethods.js';
 import { orderCategories, orderSubCategories, fetchCategories, createNewCategory, deleteCategory, updateCategory, getSubcategorySequence } from './categoriesMethods.js'
-
-
 import express from 'express';
 import cors from 'cors';
 
@@ -13,8 +11,6 @@ const PORT = 16190;
 APP.use(express.json());
 APP.use(cors());
 APP.use(express.urlencoded({ extended: true }));
-
-
 APP.listen(PORT, () => console.log(".: MI HQ - Listening on port 16190 :."));
 
 // grid :: yearly-view
@@ -23,7 +19,6 @@ APP.post('/monthlycatsevo', function (req, res) { return yearlySnapshots(req, re
 APP.post('/monthlydetails', function(req,res) { return monthlyTotalDetails(req,res)})
 APP.post('/monthlycatdetails', function(req,res) { return monthlyCatDetails(req,res)})
 APP.post('/monthlysubcatdetails', function(req,res) { return monthlySubCatDetails(req,res)})
-
 
 // grid :: monthly-view
 APP.post('/dailysumevo', function (req, res) { return dailyTotalAcomulatedSnapshot(req, res); }); //snapshot
@@ -50,9 +45,3 @@ APP.post('/getrecurencylogs', function (req, res) { return getRecurencyLogs(req,
 APP.post('/updaterecurrency', function (req, res) { return updateRecurrency(req, res); });
 APP.post('/dettachrecurrency', function (req, res) { return dettachRecurrency(req, res); });
 APP.post('/deleteallrecurrencies', function (req, res) { return deleteAllRecurrencies(req, res); });
-
-
-// TODO SNAPSHOT PARA TODOS REDO
-// no post, recebemos 1 array com as categorias para fazer snapshot
-// por cada objeto de array, fazer uma query do genero select value from treasurylog where data < {data_recebida} and cat = {cat_recebida}
-// no ultimo item do foreach, envia para a fuckyou4, onde fazemos o tratamento e fazemos o db.close, ssuka

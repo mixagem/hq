@@ -13,6 +13,7 @@ const REC_FREQ: recurencyFrequency[] = [{ string: "Mensal", value: "m" }, { stri
 @Injectable({ providedIn: 'root' })
 
 export class TreasuryService {
+  tlogEnum: any; // enum
   loadingComplete: Boolean; // boolean com o estado do loading dos movimentos da bd
   onInitTrigger: Subject<any>;   //trigger para onInit
   recordBorderStyle: RecordBorderStyle;   // cor a ser utilizada no border dos detalhes da categoria/movimento tesouraria
@@ -21,8 +22,6 @@ export class TreasuryService {
   cloningTreasuryLog: Boolean;   // boolean que indica se é duplicação ou intrudução nova
   recurrencyFreq: recurencyFrequency[] // opções frequencia recurrencia
   recurrenyTempTlog: ITreasuryLog
-
-  tlogEnum: any;
 
   constructor(private _errorHandlingService: ErrorHandlingService, private _http: HttpClient, private _router: Router, private _loadingService: LoadingService, private _timerService: TimerService) {
     this.cloningTreasuryLog = false;
@@ -44,17 +43,17 @@ export class TreasuryService {
         this.treasuryLog = RESP;
         this.tlogEnum = {}; this.treasuryLog.forEach(tlog => { this.tlogEnum[`${tlog.id}`] = tlog });
         this._loadingService.treasuryLoadingComplete = true;
+
         if (source === 'saveTreasuryLog') { this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs', LogID]); }); }
 
         if (source === 'deleteTreasuryLog') {
           document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
-          this._timerService.timer = setTimeout(navi.bind(null, this._router), 1000);
+          this._timerService.timer = setTimeout(navi.bind(null, this._router), 750);
           function navi(router: Router): void {
             const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
             router.navigateByUrl('/', { skipLocationChange: true }).then(() => { router.navigate(['/fi/tlogs']); });
           }
         }
-
         this.onInitTriggerCall();
       },
       error: err => this._errorHandlingService.handleError(err)
@@ -71,9 +70,7 @@ export class TreasuryService {
   // fecha a gaveta e volta para o modo de listagem
   closeDetails(): void {
     document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight')
-    this._timerService.timer = setTimeout(navi.bind(null, this._router), 1000)
+    this._timerService.timer = setTimeout(navi.bind(null, this._router), 750)
     function navi(router: Router): void { router.navigate(['/fi/tlogs']) }
   }
-
-
 }

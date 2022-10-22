@@ -7,7 +7,7 @@ import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
 import { CategoriesService } from '../../categories/categories.service';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { TreasuryService } from '../treasury.service';
-import { ErrorHandlingService } from 'src/assets/services/misc.service';
+import { ErrorHandlingService, LoadingService } from 'src/assets/services/misc.service';
 import { MatSelectChange } from '@angular/material/select';
 import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
@@ -36,12 +36,15 @@ export class TreasuryDetailsComponent implements OnInit {
   recurrencyFrequency: FormControl<any>;
   recurrencyFamily: ITreasuryLog[];
 
-  constructor(private _errorHandlingService: ErrorHandlingService, private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, public categoriesService: CategoriesService, private _categoriesSnackBarService: MHQSnackBarsService, private _router: Router) {
+  constructor(public loadingService:LoadingService, private _errorHandlingService: ErrorHandlingService, private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, public categoriesService: CategoriesService, private _categoriesSnackBarService: MHQSnackBarsService, private _router: Router) {
     this.editingMode = false;
     this.recurrencyFamily = [];
   }
 
   ngOnInit(): void {
+    this.treasuryService.onInitTrigger.subscribe(x => { this.ngOnInit(); });     // triggers remoto do OnInit
+    this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
+    if (!this.loadingService.categoriesLoadingComplete || !this.loadingService.treasuryLoadingComplete) { return }     // loading check
     this.id = Number(this._route.snapshot.paramMap.get('id')!);
     this.treasuryLog = this.treasuryService.tlogEnum[this.id]
     this.tempTreasuryLog = JSON.parse(JSON.stringify(this.treasuryLog));
@@ -53,6 +56,7 @@ export class TreasuryDetailsComponent implements OnInit {
     this.subcatForm.enable();
     this.categoriesService.allCategories.forEach(cat => { this.categoriesList.push(cat.title) });
     this.getRecurrencyFamily();
+    this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.treasuryLog.cat].bgcolor;
   }
 
   getRecurrencyFamily(): void {

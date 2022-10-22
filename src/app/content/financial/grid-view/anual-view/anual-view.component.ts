@@ -29,7 +29,7 @@ export class AnualViewComponent implements OnInit {
   activeCategories: IFinancialCategory[] // lista de categorias ativas
   areCategoriesReady: boolean; // estado de recepção das categorias ativas
 
-  constructor(private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, public categoriesService: CategoriesService, private _treasuryService: TreasuryService, private _loadingService: LoadingService,  public gridViewService: GridViewService, private _dialog: MatDialog) {
+  constructor(private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, public categoriesService: CategoriesService, private _treasuryService: TreasuryService, private _loadingService: LoadingService, public gridViewService: GridViewService, private _dialog: MatDialog) {
     this.gridReady = false;
     this.areCategoriesReady = false;
     this.yearlySnapshots = { categories: {}, subcategories: {}, daily: [] } // inicializar a var
@@ -48,7 +48,7 @@ export class AnualViewComponent implements OnInit {
     this.areCategoriesReady = true;
   }
 
-  monthLocale(month:number):string {
+  monthLocale(month: number): string {
     const TEMP_DATE = new Date(); TEMP_DATE.setMonth(month);
     return TEMP_DATE.toLocaleString('default', { month: 'long' });
   }
@@ -143,7 +143,7 @@ export class AnualViewComponent implements OnInit {
   }
 
   showMonthlySubCatDetails(subcatID: number, month: number): void {
-    const HTTP_PARAMS = new HttpParams().set('month',month).set('year', this.gridViewService.monthlyCurrentDate.getFullYear()).set('subcat', subcatID);
+    const HTTP_PARAMS = new HttpParams().set('month', month).set('year', this.gridViewService.monthlyCurrentDate.getFullYear()).set('subcat', subcatID);
     const CALL = this._http.post('http://localhost:16190/monthlysubcatdetails', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
@@ -177,17 +177,17 @@ export class AnualViewComponent implements OnInit {
 
       case 'category':
         this.gridViewService.source = source;
-        this.gridViewService.titleForDetails = `${this.categoriesService.catEnum[catOrSubcat!].title} @ ${month}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
+        this.gridViewService.titleForDetails = `${this.categoriesService.catEnum[catOrSubcat!].title} @ ${new Date(1970,month,1).toLocaleString('default', { month: 'long' })}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
         break;
 
       case 'subcategory':
         this.gridViewService.source = source;
-        this.gridViewService.titleForDetails = `${this.categoriesService.subcatEnum[catOrSubcat!].title} @ ${month}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
+        this.gridViewService.titleForDetails = `${this.categoriesService.subcatEnum[catOrSubcat!].title} @ ${new Date(1970,month,1).toLocaleString('default', { month: 'long' })}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
         break;
 
       case 'daily':
         this.gridViewService.source = source;
-        this.gridViewService.titleForDetails = `Resumo de movimentos @ ${month}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
+        this.gridViewService.titleForDetails = `Resumo de movimentos @ ${new Date(1970,month,1).toLocaleString('default', { month: 'long' })}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
         break;
     }
 

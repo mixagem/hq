@@ -4,7 +4,7 @@ import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 import { CategoriesService } from '../categories.service';
 import { Router } from '@angular/router';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
-import { ErrorHandlingService, TimerService } from 'src/assets/services/misc.service';
+import { ErrorHandlingService, LoadingService, TimerService } from 'src/assets/services/misc.service';
 import { MHQSnackBarsService } from '../../../../../assets/services/mhq-snackbar.service';
 
 const DEFAULT_FICATEGORY: IFinancialCategory = { id: 0, type: 'expense', title: 'Nova categoria', icon: 'dns', bgcolor: 'rgb(0,0,0)', textcolor: 'rgb(255,255,255)', subcats: [], active: false, order: 0 };
@@ -19,9 +19,12 @@ const DEFAULT_FISUBCATEGORY: IFinancialSubCategory = { id: Date.now(), maincatid
 export class NewCategoryComponent implements OnInit {
   tempFiCategory: IFinancialCategory;
 
-  constructor(public categoriesService: CategoriesService, private _http: HttpClient, private _router: Router, private _timerService: TimerService, private _mhqSnackbarService: MHQSnackBarsService, private _errorHandlingService: ErrorHandlingService) { }
+  constructor(public categoriesService: CategoriesService, private _http: HttpClient, private _router: Router, private _timerService: TimerService, private _mhqSnackbarService: MHQSnackBarsService, private _errorHandlingService: ErrorHandlingService, public loadingService:LoadingService) { }
 
   ngOnInit(): void {
+    this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
+    if (!this.loadingService.categoriesLoadingComplete) { return }     // loading check
+
     // cria a categoria temporária de acordo com o tipo de introdução
     if (this.categoriesService.cloningCategory) {
       this.tempFiCategory = { ...this.categoriesService.activePreviewCategory }; // caso seja duplicação de um registo
@@ -41,7 +44,7 @@ export class NewCategoryComponent implements OnInit {
 
       case 'end': default:
         document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
-        this._timerService.timer = setTimeout(navi.bind(null, this._router), 1000);
+        this._timerService.timer = setTimeout(navi.bind(null, this._router), 750);
         function navi(router: Router): void { router.navigate(['/fi/cats']) };
     }
   }

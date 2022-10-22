@@ -57,26 +57,17 @@ export class MonthlyViewComponent implements OnInit {
   changeMonth(target: number, picker?: MatDatepicker<any>): void {
     switch (target) {
       case -1:
-        if (this.gridViewService.monthlyCurrentDate.getMonth() === 0) {
-          this.gridViewService.monthlyCurrentDate.setFullYear(this.gridViewService.monthlyCurrentDate.getFullYear() - 1, 11);
-        } else {
-          this.gridViewService.monthlyCurrentDate.setMonth(this.gridViewService.monthlyCurrentDate.getMonth() - 1)
-        }
+        this.gridViewService.monthlyCurrentDate.getMonth() === 0 ? this.gridViewService.monthlyCurrentDate.setFullYear(this.gridViewService.monthlyCurrentDate.getFullYear() - 1, 11) : this.gridViewService.monthlyCurrentDate.setMonth(this.gridViewService.monthlyCurrentDate.getMonth() - 1);
         break;
 
       case 1:
-        if (this.gridViewService.monthlyCurrentDate.getMonth() === 11) {
-          this.gridViewService.monthlyCurrentDate.setFullYear(this.gridViewService.monthlyCurrentDate.getFullYear() + 1, 0);
-        } else {
-          this.gridViewService.monthlyCurrentDate.setMonth(this.gridViewService.monthlyCurrentDate.getMonth() + 1)
-        }
+        this.gridViewService.monthlyCurrentDate.getMonth() === 0 ? this.gridViewService.monthlyCurrentDate.setFullYear(this.gridViewService.monthlyCurrentDate.getFullYear() + 1, 0) : this.gridViewService.monthlyCurrentDate.setMonth(this.gridViewService.monthlyCurrentDate.getMonth() + 1);
         break;
 
       case 0: default:
         this.gridViewService.monthlyCurrentDate = new Date();
         picker!.close();
     }
-
 
     this.getDailySumAcomEvolution();
     this.getCategoriesMonthlySnapshots(this.gridViewService.monthlyCurrentDate.getFullYear(), this.gridViewService.monthlyCurrentDate.getMonth());
@@ -120,8 +111,6 @@ export class MonthlyViewComponent implements OnInit {
     this.gridSubtitle = this.gridViewService.monthlyCurrentDate.toLocaleString('default', { year: 'numeric', month: 'long' });
   }
 
-
-
   monthPicked(event: Date, picker: MatDatepicker<any>): void {
     this.gridViewService.monthlyCurrentDate.setFullYear(event.getFullYear(), event.getMonth());
     this.getDailySumAcomEvolution();
@@ -129,7 +118,6 @@ export class MonthlyViewComponent implements OnInit {
     this.monthlyGridSubtitleGenerator()
     picker.close();
   }
-
 
   showDailySumDetails(day: number): void {
     const HTTP_PARAMS = new HttpParams().set('month', this.gridViewService.monthlyCurrentDate.getMonth()).set('year', this.gridViewService.monthlyCurrentDate.getFullYear()).set('day', day);
@@ -173,11 +161,9 @@ export class MonthlyViewComponent implements OnInit {
     })
   }
 
-
   // modal
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string, source: string, day: number, catOrSubcat?: number): void {
     switch (source) {
-
       case 'category':
         this.gridViewService.source = source;
         this.gridViewService.titleForDetails = `${this.categoriesService.catEnum[catOrSubcat!].title} @ ${day}/${this.gridViewService.monthlyCurrentDate.toLocaleString('default', { month: 'long' })}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
@@ -194,15 +180,11 @@ export class MonthlyViewComponent implements OnInit {
         break;
     }
 
-
     this._dialog.open(OverviewDailyDetailsModalComponent, {
       width: '50vw',
       height: '465px',
       enterAnimationDuration,
       exitAnimationDuration,
     });
-
   }
-
-
 }

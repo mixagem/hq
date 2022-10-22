@@ -2,18 +2,15 @@
 
   <div class="mhq-row mhq-mainform-header">
 
-    <!-- <a routerLink="month" (click)="changeView('month')">mes</a>
-<a routerLink="anual" (click)="changeView('anual')">ano</a>
-<a routerLink="decade" (click)="changeView('decade')">decada</a> -->
     <h1>
       <mat-icon>account_balance</mat-icon>Grelha de movimentos - {{gridViewService.gridSubtitle}}
     </h1>
 
-    <div class="mhq-mainform-actions"><button mat-stroked-button color="primary" [matMenuTriggerFor]="gridViewActions">
+    <div class="mhq-mainform-actions">
+      <button mat-stroked-button color="primary" [matMenuTriggerFor]="gridViewActions">
         <mat-icon>menu_open</mat-icon>Ações
       </button>
     </div>
-
 
     <mat-menu #gridViewActions="matMenu">
       <button mat-menu-item (click)="navigationFix('cats')">
@@ -25,33 +22,10 @@
         <span >Adicionar movimento</span>
       </button>
     </mat-menu>
-
   </div>
-
 
   <div class="mhq-row" style="height: calc(100% - 60px);">
     <router-outlet></router-outlet>
-
   </div>
 
 </div>
-
-<!--
-
-<button mat-icon-button color="primary" [matMenuTriggerFor]="changeViewMenu">
-  <mat-icon>visibility</mat-icon>
-</button>
-<mat-menu #changeViewMenu="matMenu">
-  <button mat-menu-item disabled>
-    <mat-icon>calendar_month</mat-icon>
-    <span>Vista mensal</span>
-  </button>
-  <button mat-menu-item disabled>
-    <mat-icon>calendar_month</mat-icon>
-    <span>Vista anual</span>
-  </button>
-  <button mat-menu-item disabled>
-    <mat-icon>calendar_month</mat-icon>
-    <span>Vista década</span>
-  </button>
-</mat-menu> -->

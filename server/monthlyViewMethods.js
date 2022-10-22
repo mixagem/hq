@@ -31,7 +31,7 @@ export function dailySubCatDetails(req, res) {
   let dailyMovments = [];
 
   DB.serialize(() => {
-    db.each(`SELECT * FROM treasurylog WHERE date >= ${DATA_INI_MS} AND date <= ${DATA_FINI_MS} AND subcat=${req.body.subcat}`, (err, row) => { err ? console.error(err.message) : dailyMovments.push(row) })
+    DB.each(`SELECT * FROM treasurylog WHERE date >= ${DATA_INI_MS} AND date <= ${DATA_FINI_MS} AND subcat=${req.body.subcat}`, (err, row) => { err ? console.error(err.message) : dailyMovments.push(row) })
   });
 
   DB.close((err) => {
@@ -143,14 +143,14 @@ export function dailyTotalAcomulatedSnapshot(req, res) {
 
   let monthlyMovments = [];
   let initialSum = [];
-  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => { err? console.error(err.message) : console.log('[M5] Generating daily acomulated snapshot') });
-  db.serialize(() => {
-    db.each(`SELECT * FROM treasurylog WHERE date <= ${DATA_FINI_MS} AND date >= ${DATA_INI_MS}`, (err, row) => { err ? console.error(err.message) : monthlyMovments.push(row) })
+  const DB = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => { err? console.error(err.message) : console.log('[M5] Generating daily acomulated snapshot') });
+  DB.serialize(() => {
+    DB.each(`SELECT * FROM treasurylog WHERE date <= ${DATA_FINI_MS} AND date >= ${DATA_INI_MS}`, (err, row) => { err ? console.error(err.message) : monthlyMovments.push(row) })
       .all(`SELECT SUM(value) FROM treasurylog WHERE type='income' AND date <= ${DATA_INI_MS - 1}`, (err, row) => { err ? console.error(err.message) : initialSum[0] = Object.values(row[0])[0] })
       .all(`SELECT SUM(value) FROM treasurylog WHERE type='expense' AND date <= ${DATA_INI_MS - 1}`, (err, row) => { err ? console.error(err.message) : initialSum[1] = Object.values(row[0])[0] })
   })
 
-  db.close((err) => {
+  DB.close((err) => {
     err ? console.error(err.message) : generateAcomSnapshot();
     console.log('[M5] Daily acomulated snapshot generation complete');
   });

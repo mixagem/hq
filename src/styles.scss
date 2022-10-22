@@ -76,6 +76,11 @@ mat-form-field {
   font-display: swap;
 }
 
+.animate__animated.animate__slideInRight,
+.animate__animated.animate__slideOutRight {
+  --animate-duration: .75s;
+}
+
 
 /* ########## Start - mhq grids ##########*/
 .mhq-row {

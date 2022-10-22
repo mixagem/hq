@@ -13,7 +13,7 @@ import { TreasuryLogComponent } from 'src/app/content/financial/treasury-log/tre
 import { TreasuryDetailsComponent, DeleteTreasuryLogConfirmationModal, UpdateRecurrencyLogConfirmationModal, DettachRecurrencyConfirmationModal } from 'src/app/content/financial/treasury-log/treasury-details/treasury-details.component';
 import { NewTreasuryLogComponent } from 'src/app/content/financial/treasury-log/new-treasury-log/new-treasury-log.component';
 import { NgScrollbarModule } from 'ngx-scrollbar';
-import { GuitaPipe, GuitaSimplexPipe } from '../pipes/guita.pipe';
+import { GuitaPipe } from '../pipes/guita.pipe';
 import { OverviewDailyDetailsModalComponent } from 'src/app/content/financial/grid-view/monthly-view/overview-daily-details-modal/overview-daily-details-modal.component';
 import { DeleteCategoryConfirmationModalComponent } from 'src/app/content/financial/categories/category-details/delete-category-confirmation-modal/delete-category-confirmation-modal.component';
 import { GridViewComponent } from 'src/app/content/financial/grid-view/grid-view.component';
@@ -32,7 +32,6 @@ import { MhqSnackBarComponent } from '../components/mhq-snack-bar/mhq-snack-bar.
     DeleteTreasuryLogConfirmationModal,
     NewTreasuryLogComponent,
     GuitaPipe,
-    GuitaSimplexPipe,
     OverviewDailyDetailsModalComponent,
     DeleteCategoryConfirmationModalComponent,
     DettachRecurrencyConfirmationModal,
@@ -61,7 +60,6 @@ import { MhqSnackBarComponent } from '../components/mhq-snack-bar/mhq-snack-bar.
     DeleteTreasuryLogConfirmationModal,
     NewTreasuryLogComponent,
     GuitaPipe,
-    GuitaSimplexPipe,
     OverviewDailyDetailsModalComponent,
     DeleteCategoryConfirmationModalComponent,
     DettachRecurrencyConfirmationModal,

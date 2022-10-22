@@ -8,7 +8,7 @@ const tugaRangeLabel = (page: number, pageSize: number, length: number) => {
   length = Math.max(length, 0);
 
   const startIndex = page * pageSize;
-  
+
   const endIndex =
     startIndex < length
       ? Math.min(startIndex + pageSize, length)
@@ -23,6 +23,8 @@ export function getPTPaginatorIntl() {
   paginatorIntl.itemsPerPageLabel = 'Items por pagina:';
   paginatorIntl.nextPageLabel = 'Página seguinte';
   paginatorIntl.previousPageLabel = 'Página anterior';
+  paginatorIntl.lastPageLabel = 'Última página';
+  paginatorIntl.firstPageLabel = "Primeira página";
   paginatorIntl.getRangeLabel = tugaRangeLabel;
 
   return paginatorIntl;

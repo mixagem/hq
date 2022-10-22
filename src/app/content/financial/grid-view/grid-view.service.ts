@@ -9,11 +9,9 @@ export class GridViewService {
   selectedView: string;
   gridSubtitle: string;
   monthlyCurrentDate: Date;
-
   treasuryLogsForDetails: ITreasuryLog[];
   titleForDetails: string;
-  source:string;;
-
+  source:string;
 
   constructor(private _router:Router) {
     this.monthlyCurrentDate = new Date();
@@ -37,7 +35,6 @@ export class GridViewService {
       case 'month': this.gridSubtitle = 'Vista mensal'; break;
       case 'anual': this.gridSubtitle = 'Vista anual'; break;
       case 'decade': this.gridSubtitle = 'Vista década'; break;
-
     }
   }
 

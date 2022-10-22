@@ -32,8 +32,11 @@
 
 
   <div class="mhq-mainform-drawer-content">
+    <mat-progress-bar
+    *ngIf="!this.loadingService.categoriesLoadingComplete"
+    mode="indeterminate" color="accent"></mat-progress-bar>
 
-    <div class="mhq-wrapper-row" *ngIf="!editingMode">
+    <div class="mhq-wrapper-row" *ngIf="!editingMode && this.loadingService.categoriesLoadingComplete">
       <h1>
         <div>
           <mat-icon>info_outline</mat-icon>Detalhes
@@ -87,7 +90,7 @@
       </div>
     </div>
 
-    <div class="mhq-wrapper-row" *ngIf="editingMode">
+    <div class="mhq-wrapper-row" *ngIf="editingMode && this.loadingService.categoriesLoadingComplete">
       <h1>
         <div>
           <mat-icon>info_outline</mat-icon>Detalhes
@@ -147,7 +150,7 @@
       </div>
     </div>
 
-    <div class="mhq-wrapper-row">
+    <div class="mhq-wrapper-row" *ngIf="this.loadingService.categoriesLoadingComplete">
       <h1>
         <div>
           <mat-icon>low_priority</mat-icon>Sub-categorias
@@ -189,7 +192,7 @@
                 <div class="mhq-mat-inputs-margin">{{subcat.title}}</div>
               </td>
               <td>
-                <div class="mhq-mat-inputs-margin">{{subcat.budget | guitaSimplex}}</div>
+                <div class="mhq-mat-inputs-margin">{{subcat.budget | number:'1.2-2':'pt'}} €</div>
               </td>
               <td>
                 <div class="mhq-mat-inputs-margin">
