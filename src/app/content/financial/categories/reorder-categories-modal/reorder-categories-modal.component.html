@@ -1,5 +1,5 @@
 <h1 mat-dialog-title class="mhq-modal-header">
-  <mat-icon>warning_amber</mat-icon>Re-ordenar
+  <mat-icon>low_priority</mat-icon>Re-ordenar {{tabIndex === 0? 'categorias': 'sub-categorias'}}
 </h1>
 
 <div mat-dialog-content class="mhq-modal-content-wrapper">
@@ -8,21 +8,25 @@
 
   <!-- <mat-tab-group> -->
   <mat-tab-group style="height: calc(100% - 70px);" (selectedTabChange)="changedTab($event)">
-    <mat-tab label="First">
+    <mat-tab label="Categorias">
 
 
       <div class="mhq-modal-content">
-        <div style="height: calc(100% - 75px);padding:30px 25px">
+        <div style="height: calc(100% - 75px);padding:30px 25px" class="mhq-row">
 
-
-          <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
-            <div class="mhq-category-box" *ngFor="let cat of categoriesToOrder" cdkDrag>
-              <div class="mhq-category-box-preview" *cdkDragPlaceholder></div>
-              <span [style]="'background-color:'+cat.bgcolor+';color:'+cat.textcolor">
-                <mat-icon>{{cat.icon}}</mat-icon>
-              </span><span>{{cat.title}}</span>
-            </div>
+          <div class="mhq-col-1">
+            <div *ngFor="let x of categoriesToOrder; let i = index;" style="color:var(--mhq-waikiki-acolor-1);font-weight:500;display:flex;justify-content:flex-start;align-items:center;height: 40px;font-size:18px">{{i+1}}</div>
           </div>
+          <div class="mhq-col-11"> <div cdkDropList class="mhq-background-box" (cdkDropListDropped)="drop($event)">
+            <div class="mhq-category-box" [style]="'border-bottom: solid 1px '+cat.bgcolor" *ngFor="let cat of categoriesToOrder" cdkDrag>
+              <div class="mhq-category-box-preview" *cdkDragPlaceholder></div>
+
+              <mat-icon [style]="'background-color:'+cat.bgcolor+';color:'+cat.textcolor">{{cat.icon}}</mat-icon>
+              <span>{{cat.title}}</span>
+            </div>
+          </div></div>
+
+
 
 
 
@@ -34,7 +38,7 @@
     </mat-tab>
 
 
-    <mat-tab label="Second">
+    <mat-tab label="Sub-categorias">
 
       <div class="mhq-modal-content">
         <div style="height: calc(100% - 75px);padding:30px 25px">
@@ -59,13 +63,20 @@
 
 
 
-          <div cdkDropList class="example-list" (cdkDropListDropped)="drop2($event)"
-            *ngIf="subCategoriesToOrder.length>1">
-            <div class="mhq-category-box" *ngFor="let subcat of subCategoriesToOrder" cdkDrag>
-              <div class="mhq-category-box-preview" *cdkDragPlaceholder></div>
-              <p>{{subcat.title}}</p>
+          <div class="mhq-row" *ngIf="subCategoriesToOrder.length>1">
+
+            <div class="mhq-col-1">
+              <div *ngFor="let x of subCategoriesToOrder; let i = index;" style="color:var(--mhq-waikiki-acolor-1);font-weight:500;display:flex;justify-content:flex-start;align-items:center;height: 40px;font-size:18px">{{i+1}}</div>
             </div>
+            <div class="mhq-col-11">  <div cdkDropList class="mhq-background-box" (cdkDropListDropped)="drop2($event)"
+              >
+              <div class="mhq-category-box" *ngFor="let subcat of subCategoriesToOrder" cdkDrag [style]="'border-bottom:solid 1px '+categoriesService.catEnum[subcat.maincatid].bgcolor">
+                <div class="mhq-category-box-preview" *cdkDragPlaceholder></div>
+                <p style="padding-left:20px">{{subcat.title}}</p>
+              </div>
+            </div></div>
           </div>
+
 
 
 
@@ -86,11 +97,11 @@
 
 
   <div mat-dialog-actions class="mhq-modal-close-actions">
-    <button *ngIf="tabIndex === 0" mat-flat-button color="primary" (click)="saveCategoriesOrder()">Re-ordenar
+    <button *ngIf="tabIndex === 0" mat-stroked-button color="primary" (click)="saveCategoriesOrder()">Re-ordenar
       categorias</button>
-    <button *ngIf="tabIndex === 1" mat-flat-button color="primary" (click)="saveSubCategoriesOrder()">Re-ordenar
+    <button *ngIf="tabIndex === 1" mat-stroked-button color="primary" (click)="saveSubCategoriesOrder()">Re-ordenar
       sub-categorias</button>
-    <button mat-stroked-button mat-dialog-close color="primary">Cancelar</button>
+    <button mat-stroked-button mat-dialog-close color="warn">Cancelar</button>
   </div>
 
 
