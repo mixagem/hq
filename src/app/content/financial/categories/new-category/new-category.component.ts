@@ -15,7 +15,7 @@ const DEFAULT_FISUBCATEGORY: IFinancialSubCategory = { id: Date.now(), maincatid
 @Component({
   selector: 'mhq-new-category',
   templateUrl: './new-category.component.html',
-  styleUrls: ['../../../../../assets/styles/mhq-mainform-details.scss']
+  styleUrls: ['../category-details/category-details.component.scss']
 })
 
 export class NewCategoryComponent implements OnInit {

@@ -1,72 +1,50 @@
 <div class="mhq-mainform-container" style="display: flex">
 
   <div style="width: 50%;overflow-y: auto;word-wrap: break-word;">
+
     <ol>
-      <li>categorias<br>
-        <ul>
-          <li>:hover ações registo</li>
-          <li>loading diretamente para o registo</li>
-          <li>desenvolver ordenação cats / subcats:<br>
-          pegar nas categorias todas, e ao re-aordenatr, </li>
+      <li>
+        <ul>CSS/HTML rework (ajustar estilos genéricos + terminar UI das novas features + ngx-scrollbars)
+          <li>Categorias</li>
+          <li>Movimentos</li>
+          <li>Tesouraria</li>
+          <li>Grid view</li>
+          <li>Modals</li>
+          <li>Snackbars</li>
+          <li>Color palette / theme variables</li>
         </ul>
       </li>
-      <br>
-      <li>movimentos<br>
-        <ul>
+      <li>
+        <ul>Typescript review
+          <li>Components</li>
+          <li>Services</li>
+          <li>Pipes</li>
+          <li>Interfaces</li>
+        </ul>
+      </li>
+       <li>
+        <ul>Server redo
+          <li>Snapshot categorias + diary redo => devem ter movimentos de subcategorias inativas</li>
+        </ul>
+      </li>
+
+      <li>
+        <ul>Features
+          <li>fix para acessos diretos modo consulta registos</li>
           <li>recorrencias v2.1 -> edição em massa com opções</li>
-          <li>fix input manual da data (quando é escrito á mão, só aceita a syntax americana)</li>
-          <li>:hover ações registo</li>
-          <li>loading diretamente para o registo</li>
-
-        </ul>
-      </li>
-      <br>
-      <li>grid view<br>
-        <ul>
-          <li>refract typescript para todas as views</li>
-          <li>rework snapshots -> snapshot categorias e total diário mostra subcategorias inativas</li>
-
-        </ul>
-      </li>
-      <li> decade view<br> <ul>
-        <li>vista decada mostra 15 anos</li>
-      </ul></li>
-      <br>
-      <li>outros<br>
-        <ul>
-          <li>bug do timer quando troco os mambos mt fast</li>
-          <li>ngx scrollbar no menu</li>
-          <li>ngx scrollbar nos mainforms </li>
-          <li>css variables + theme picker</li>
-          <li>velocidade da gaveta</li>
-          <li>refract shared (estilos, serviços...)</li>
-          <li>server code review</li>
-          <li>snackbars service (só preciso de 1)</li>
+          <li>fix input manual da data ecrã movimentos tesouraria (quando é escrito á mão, só aceita a syntax americana)
+          </li>
+          <li>Interfaces</li>
+          <li>grid view - decada view</li>
+          <li>velocidade gavetas</li>
+          <li>bug timer ao consultar um registo, quando a animação de fechar a gaveta ainda não terminou</li>
+          <li>treasury v2 -> faturas c/nif (a ser utilizado no ecrã futuro, efatura)</li>
         </ul>
       </li>
     </ol>
 
     <!--
-    7. adicionar ação para novo movimento de tesouraria no ecrã do overview (gaveta igual ao ecra de movimentos de tesouraria)<br>
-    12. orçamento sub-categoria -> só vai ser utilizado na altura das analises, graficos e alertas<br>
 
-    fix mudança de página da listagem ao consultar o registo -->
-
-    <!-- <br>varios<ul>
-      <li>fix refresh tabela inicial overview (depois de carregada uma vez as categorias, elas não precisam de fazer refresh, só os valores.
-         pensar numa maneira para aproveitar o desenho para ser mais fluida a passagem de meses)</li>
-</ul>
-    overview<br>
-    <ol>
-      <li>Ação para adicionar movimentos</li>
-      <li>desenvolver vista mensal</li>
-      <li>desenvolver vista anual</li>
-    </ol>
-    treasury v2<br>
-    <ol>
-      <li>fatura c/nif (para efatura check)</li>
-      <li>limites orçamento por categoria redo</li>
-    </ol>
     >-->
   </div>
 
@@ -79,11 +57,13 @@
     <h3>orçamentos</h3>
     -- mainform igual aos movimentos de tesouraria, mas apenas para registos de orçamentos<br>
     -- ações do registo: tornar despesa de budget em despesa legit<br>
-    -- atualizar ovewview: adicionar categoria sumatório para despesas em orçamento (adicionar filtro para mostrar/ocultar)<br>
+    -- atualizar ovewview: adicionar categoria sumatório para despesas em orçamento (adicionar filtro para
+    mostrar/ocultar)<br>
     <h3>efatura check</h3>
     -- criar 2 tabuladores: 1 modo listagem, 1 modo análises ()
     -- modo listagem consiste num filtro de todos os movimentos, que tenham nif incluido<br>
-    -- modo análises consiste em snapshots das várias categorias do efatura (estes snapshots têm o valor da categoria, e o valor dedutivel para irs)<br>
+    -- modo análises consiste em snapshots das várias categorias do efatura (estes snapshots têm o valor da categoria, e
+    o valor dedutivel para irs)<br>
     -- ações do registo: marcar como validado (fazer select com base nas categorias do efatura)<br>
     -- ações mainform: validar em massa (abre assistente para validar faturas em massa) <br>
     -- atualizar tesouraria: adicionar campos "nif incluido" e "identificativo fatura"<br>

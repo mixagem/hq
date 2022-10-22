@@ -11,7 +11,7 @@ import { ReorderCategoriesModalComponent } from './reorder-categories-modal/reor
 @Component({
   selector: 'mhq-categories',
   templateUrl: './categories.component.html',
-  styleUrls: ['./categories.component.scss', '../../../../assets/styles/mhq-mainform.scss']
+  styleUrls: ['./categories.component.scss']
 })
 
 export class CategoriesComponent implements OnInit {

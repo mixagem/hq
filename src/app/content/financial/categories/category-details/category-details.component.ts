@@ -12,7 +12,7 @@ import { MHQSnackBarsService } from '../../../../../assets/services/mhq-snackbar
 @Component({
   selector: 'mhq-category-details',
   templateUrl: './category-details.component.html',
-  styleUrls: ['../../../../../assets/styles/mhq-mainform-details.scss']
+  styleUrls: ['./category-details.component.scss']
 })
 
 export class CategoryDetailsComponent implements OnInit {

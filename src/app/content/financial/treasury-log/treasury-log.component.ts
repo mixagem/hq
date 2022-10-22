@@ -10,7 +10,7 @@ import { TreasuryService } from './treasury.service';
 @Component({
   selector: 'mhq-treasury-log',
   templateUrl: './treasury-log.component.html',
-  styleUrls: ['./treasury-log.component.scss', '../../../../assets/styles/mhq-mainform.scss']
+  styleUrls: ['./treasury-log.component.scss']
 })
 
 export class TreasuryLogComponent implements OnInit {

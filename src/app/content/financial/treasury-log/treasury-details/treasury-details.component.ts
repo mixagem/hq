@@ -17,7 +17,7 @@ import { ThemePalette } from '@angular/material/core';
 @Component({
   selector: 'mhq-treasury-details',
   templateUrl: './treasury-details.component.html',
-  styleUrls: ['../../../../../assets/styles/mhq-mainform-details.scss']
+  styleUrls: ['./treasury-details.component.scss']
 })
 
 export class TreasuryDetailsComponent implements OnInit {

@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Router } from '@angular/router';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
@@ -23,6 +24,7 @@ export class ReorderCategoriesModalComponent implements OnInit {
   subCategoriesToOrder: IFinancialSubCategory[];
   catForm: FormControl   // autocomplete categoria
   categoriesList: string[] = [];
+  tabIndex:number;
 
   constructor(private _router: Router, private _mhqSnackbarService: MHQSnackBarsService, private _errorHandlingService: ErrorHandlingService, private _http: HttpClient, public categoriesService: CategoriesService) { }
 
@@ -32,6 +34,8 @@ export class ReorderCategoriesModalComponent implements OnInit {
     this.categoriesToOrder.forEach(cat => {
       this.categoriesList.push(cat.title)
     });
+    this.tabIndex = 0;
+    this.subCategoriesToOrder = [];
   }
 
   drop(event: CdkDragDrop<string[]>): void {
@@ -42,6 +46,9 @@ export class ReorderCategoriesModalComponent implements OnInit {
     moveItemInArray(this.subCategoriesToOrder, event.previousIndex, event.currentIndex);
   }
 
+  changedTab(event: MatTabChangeEvent):void{
+    this.tabIndex = event.index;
+  }
   saveCategoriesOrder(): void {
     let categoryOrderArray: number[] = [];
     this.categoriesToOrder.forEach(cat => { categoryOrderArray.push(cat.id) });

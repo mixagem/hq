@@ -7,7 +7,7 @@
 
 
   <!-- <mat-tab-group> -->
-  <mat-tab-group style="height: calc(100% - 70px);" #tab>
+  <mat-tab-group style="height: calc(100% - 70px);" (selectedTabChange)="changedTab($event)">
     <mat-tab label="First">
 
 
@@ -59,7 +59,8 @@
 
 
 
-          <div cdkDropList class="example-list" (cdkDropListDropped)="drop2($event)">
+          <div cdkDropList class="example-list" (cdkDropListDropped)="drop2($event)"
+            *ngIf="subCategoriesToOrder.length>1">
             <div class="mhq-category-box" *ngFor="let subcat of subCategoriesToOrder" cdkDrag>
               <div class="mhq-category-box-preview" *cdkDragPlaceholder></div>
               <p>{{subcat.title}}</p>
@@ -85,9 +86,10 @@
 
 
   <div mat-dialog-actions class="mhq-modal-close-actions">
-    <button *ngIf="tab.selectedIndex===0" mat-flat-button color="primary" (click)="saveCategoriesOrder()">Re-ordenar categorias</button>
-    <button *ngIf="tab.selectedIndex===1" mat-flat-button
-      color="primary" (click)="saveSubCategoriesOrder()">Re-ordenar sub-categorias</button>
+    <button *ngIf="tabIndex === 0" mat-flat-button color="primary" (click)="saveCategoriesOrder()">Re-ordenar
+      categorias</button>
+    <button *ngIf="tabIndex === 1" mat-flat-button color="primary" (click)="saveSubCategoriesOrder()">Re-ordenar
+      sub-categorias</button>
     <button mat-stroked-button mat-dialog-close color="primary">Cancelar</button>
   </div>
 

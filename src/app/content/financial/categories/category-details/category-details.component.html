@@ -40,44 +40,44 @@
         </div>
       </h1>
       <div class="mhq-row">
-        <div class="mhq-col-1">
+        <div class="mhq-input-wrapper mhq-col-1">
           <mat-form-field appearance="fill">
             <mat-label>ID</mat-label>
             <input matInput disabled [value]="fiCategory.id">
           </mat-form-field>
         </div>
-        <div class="mhq-col-8">
+        <div class="mhq-input-wrapper mhq-col-8">
           <mat-form-field appearance="fill">
             <mat-label>Título</mat-label>
             <input matInput disabled [value]="fiCategory.title">
           </mat-form-field>
         </div>
-        <div class="mhq-col-1">
+        <div class="mhq-input-wrapper mhq-col-1">
           <mat-form-field appearance="fill">
             <mat-label>Icon</mat-label>
             <input matInput disabled>
             <mat-icon matSuffix>{{fiCategory.icon}}</mat-icon>
           </mat-form-field>
         </div>
-        <div class="mhq-col-2 mhq-checkbox-wrapper">
+        <div class="mhq-input-wrapper mhq-col-2 mhq-checkbox-wrapper">
           <mat-checkbox color="primary" disabled [checked]="fiCategory.active">Ativa</mat-checkbox>
         </div>
       </div>
       <div class="mhq-row">
-        <div class="mhq-col-4 radio-group">
+        <div class="mhq-input-wrapper mhq-col-4 mhq-radio-group">
           <p>Tipo:</p>
           <mat-radio-group color="primary" disabled [value]="fiCategory.type">
             <mat-radio-button value="expense">Despesa</mat-radio-button>
             <mat-radio-button value="income">Rendimento</mat-radio-button>
           </mat-radio-group>
         </div>
-        <div class="mhq-col-4">
+        <div class="mhq-input-wrapper mhq-col-4">
           <mat-form-field appearance="fill">
             <mat-label>Cor etiqueta</mat-label>
             <input matInput disabled [value]="fiCategory.bgcolor">
           </mat-form-field>
         </div>
-        <div class="mhq-col-4">
+        <div class="mhq-input-wrapper mhq-col-4">
           <mat-form-field appearance="fill">
             <mat-label>Cor texto</mat-label>
             <input matInput disabled [value]="fiCategory.textcolor">
@@ -94,30 +94,30 @@
         </div>
       </h1>
       <div class="mhq-row">
-        <div class="mhq-col-1">
+        <div class="mhq-input-wrapper mhq-col-1">
           <mat-form-field appearance="fill">
             <mat-label>ID</mat-label>
             <input matInput disabled [value]="tempFiCategory.id">
           </mat-form-field>
         </div>
-        <div class="mhq-col-8">
+        <div class="mhq-input-wrapper mhq-col-8">
           <mat-form-field appearance="fill">
             <mat-label>Título</mat-label>
             <input matInput [(ngModel)]="tempFiCategory.title">
           </mat-form-field>
         </div>
-        <div class="mhq-col-1">
+        <div class="mhq-input-wrapper mhq-col-1">
           <mat-form-field appearance="fill">
             <mat-label>Icon</mat-label>
             <input matInput [(ngModel)]="tempFiCategory.icon">
           </mat-form-field>
         </div>
-        <div class="mhq-col-2 mhq-checkbox-wrapper">
+        <div class="mhq-input-wrapper mhq-col-2 mhq-checkbox-wrapper">
           <mat-checkbox color="primary" [(ngModel)]="tempFiCategory.active">Ativa</mat-checkbox>
         </div>
       </div>
       <div class="mhq-row">
-        <div class="mhq-col-4 radio-group">
+        <div class="mhq-input-wrapper mhq-col-4 mhq-radio-group">
           <p>Tipo:</p>
           <mat-radio-group color="primary" [(ngModel)]="tempFiCategory.type">
             <mat-radio-button value="expense">Despesa</mat-radio-button>
@@ -127,7 +127,7 @@
 
 
 
-        <div class="mhq-col-4">
+        <div class="mhq-input-wrapper mhq-col-4">
           <mat-form-field appearance="fill">
             <mat-label>Cor etiqueta</mat-label>
             <input matInput [cpPosition]="'bottom'" [cpOutputFormat]="'rgba'" [cpAlphaChannel]="'disabled'"
@@ -135,7 +135,7 @@
               [cpSaveClickOutside]="true" [(colorPicker)]="tempFiCategory.bgcolor" [(ngModel)]="tempFiCategory.bgcolor">
           </mat-form-field>
         </div>
-        <div class="mhq-col-4">
+        <div class="mhq-input-wrapper mhq-col-4">
           <mat-form-field appearance="fill">
             <mat-label>Cor texto</mat-label>
             <input matInput [cpPosition]="'bottom'" [cpOutputFormat]="'rgba'" [cpAlphaChannel]="'disabled'"
@@ -223,7 +223,7 @@
               </td>
               <td>
                 <mat-form-field appearance="fill">
-                  <input class="mgh-budget-input" matInput [(ngModel)]="tempsubcat.budget">
+                  <input class="mhq-budget-input" matInput [(ngModel)]="tempsubcat.budget">
                 </mat-form-field>
               </td>
               <td>
@@ -240,8 +240,8 @@
               </td>
             </tr>
             <tr>
-              <td class="mhg-add-subcat-cell" colspan="6" (click)="attachSubcategory()">
-                <div class="mhg-add-subcat"><mat-icon>add</mat-icon>adicionar sub-categoria</div>
+              <td class="mhq-add-subcat-cell" colspan="6" (click)="attachSubcategory()">
+                <div class="mhq-add-subcat"><mat-icon>add</mat-icon>adicionar sub-categoria</div>
               </td>
             </tr>
           </tbody>

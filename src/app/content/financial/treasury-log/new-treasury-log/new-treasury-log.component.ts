@@ -24,7 +24,7 @@ const DEFAULT_TLOG: ITreasuryLog = { id: 0, title: 'Novo movimento de tesouraria
 @Component({
   selector: 'mhq-new-treasury-log',
   templateUrl: './new-treasury-log.component.html',
-  styleUrls: ['../../../../../assets/styles/mhq-mainform-details.scss']
+  styleUrls: ['../treasury-details/treasury-details.component.scss']
 })
 
 export class NewTreasuryLogComponent implements OnInit {

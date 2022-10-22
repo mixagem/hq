@@ -30,21 +30,21 @@
 
       <div class="mhq-row">
 
-        <div class="mhq-col-1">
+        <div class="mhq-input-wrapper mhq-col-1">
           <mat-form-field appearance="fill">
             <mat-label>ID</mat-label>
             <input matInput disabled [(ngModel)]="tempTreasuryLog.id">
           </mat-form-field>
         </div>
 
-        <div class="mhq-col-8">
+        <div class="mhq-input-wrapper mhq-col-8">
           <mat-form-field appearance="fill">
             <mat-label>Título</mat-label>
             <input matInput [(ngModel)]="tempTreasuryLog.title">
           </mat-form-field>
         </div>
 
-        <div class="mhq-col-3">
+        <div class="mhq-input-wrapper mhq-col-3">
           <mat-form-field appearance="fill">
             <mat-label>Data</mat-label>
             <input matInput [matDatepicker]="treasuryLogDatepicker" [formControl]="treasuryLogDatepickerForm">
@@ -56,7 +56,7 @@
       </div>
       <div class="mhq-row">
 
-        <div class="mhq-col-4 radio-group">
+        <div class="mhq-input-wrapper mhq-col-4 mhq-radio-group">
           <p>Tipo:</p>
           <mat-radio-group color="primary" [(ngModel)]="tempTreasuryLog.type">
             <mat-radio-button value="expense">Despesa</mat-radio-button>
@@ -64,7 +64,7 @@
           </mat-radio-group>
         </div>
 
-        <div class="mhq-col-4">
+        <div class="mhq-input-wrapper mhq-col-4">
 
           <form class="mhq-cats-form" style="width: 100%;">
             <mat-form-field>
@@ -84,7 +84,7 @@
 
         </div>
 
-        <div class="mhq-col-4">
+        <div class="mhq-input-wrapper mhq-col-4">
 
           <form class="mhq-subcats-form" style="width: 100%;">
             <mat-form-field>
@@ -102,14 +102,14 @@
       </div>
       <div class="mhq-row">
 
-        <div class="mhq-col-9">
+        <div class="mhq-input-wrapper mhq-col-9">
           <mat-form-field appearance="fill">
             <mat-label>Obs</mat-label>
             <textarea matInput [(ngModel)]="tempTreasuryLog.obs"></textarea>
           </mat-form-field>
         </div>
 
-        <div class="mhq-col-3">
+        <div class="mhq-input-wrapper mhq-col-3">
           <mat-form-field appearance="fill">
             <mat-label>Valor</mat-label>
             <input matInput [(ngModel)]="tempTreasuryLog.value">
@@ -130,7 +130,7 @@
 
       <div class="mhq-row">
 
-        <div class="mhq-col-4">
+        <div class="mhq-input-wrapper mhq-col-4">
           <mat-form-field appearance="fill">
             <mat-label>Frequência da recorrência</mat-label>
             <mat-select [disabled]="!recurrency" [(ngModel)]="recurrencyType">
@@ -141,7 +141,7 @@
           </mat-form-field>
         </div>
 
-        <div class="mhq-col-4">
+        <div class="mhq-input-wrapper mhq-col-4">
           <mat-form-field appearance="fill">
             <mat-label>Número de ocorrências</mat-label>
             <input matInput type="number" [formControl]="recurrencyFrequency">
