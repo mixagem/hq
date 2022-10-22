@@ -43,7 +43,7 @@ export class AnualViewComponent implements OnInit {
     this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.treasuryLoadingComplete) { return }
     this.placeholder = new Array(12).fill(0);
-    this.activeCategories = [...this.categoriesService.incomeCategories, ...this.categoriesService.expenseCategories].filter(category => category.active);
+    this.activeCategories = [...this.categoriesService.allCategories].filter(category => category.active);
     this.yearlyGridSubtitleGenerator();
     this.areCategoriesReady = true;
   }

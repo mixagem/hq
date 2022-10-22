@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
-import { CategorySnackBarsService } from 'src/assets/services/snack-bars.service';
+import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
 import { ErrorHandlingService, LoadingService, TimerService } from 'src/assets/services/misc.service';
 
 type RecordBorderStyle = { "background-color": string }
@@ -15,8 +15,6 @@ export class CategoriesService {
   onInitTrigger: Subject<any>; // trigger para onInit
   recordBorderStyle: RecordBorderStyle;// estilo a ser aplicado na gaveta do registo
   allCategories: IFinancialCategory[];  // categorias existentes em bd
-  expenseCategories: IFinancialCategory[]; // split para re-ordenação das categorias
-  incomeCategories: IFinancialCategory[]; // split para re-ordenação das categorias
   cloningCategory: Boolean;  // boolean para verificar se é duplicada ou é criada nova categoria
   activePreviewCategory: IFinancialCategory; // clone da categoria atualmente em consulta utilizado para a duplicação
 
@@ -25,7 +23,7 @@ export class CategoriesService {
   catTitleEnum: any;
   subcatTitleEnum: any;
 
-  constructor(private _categorySnackBarsService: CategorySnackBarsService, private _http: HttpClient, private _router: Router, private _timerService: TimerService, private _loadingService: LoadingService, private _errorHandlingService: ErrorHandlingService) {
+  constructor(private _mhqSnackbarService: MHQSnackBarsService, private _http: HttpClient, private _router: Router, private _timerService: TimerService, private _loadingService: LoadingService, private _errorHandlingService: ErrorHandlingService) {
     this.allCategories = [];
     this.cloningCategory = false;
     this.fetchCategories(); // vai buscar à bd as categorias e movimentos existentes. quando concluído, passa o loadingComplete = true
@@ -54,8 +52,6 @@ export class CategoriesService {
         const RESP = codeReceived as IFinancialCategory[];
         // guardar no serviço a resposta da bd
         this.allCategories = RESP;
-        this.expenseCategories = RESP.filter(cat => cat.type === 'expense'); //split para re-ordenação
-        this.incomeCategories = RESP.filter(cat => cat.type === 'income'); //split para re-ordenação
         this._loadingService.categoriesLoadingComplete = true; // loading das categorias pronto
 
         //enums
@@ -103,17 +99,17 @@ export class CategoriesService {
 
   headerInputsValidation(tempFiCategory: IFinancialCategory): boolean {
     if (tempFiCategory.icon.includes(' ')) {
-      this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', 'Icon', ['O ', ' encontra-se incorretamente definido.']);
+      this._mhqSnackbarService.triggerMHQSnackbar(false, 'report', 'Icon', ['O ', ' encontra-se incorretamente definido.']);
       return false;
     }
     // não consegui utilizar o formControl com o ColorPicker
     if (tempFiCategory.bgcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
-      this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', 'Cor etiqueta', ['A ', ' encontra-se incorretamente definida.']);
+      this._mhqSnackbarService.triggerMHQSnackbar(false, 'report', 'Cor etiqueta', ['A ', ' encontra-se incorretamente definida.']);
       return false;
     }
     // não consegui utilizar o formControl com o ColorPicker
     if (tempFiCategory.textcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
-      this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', 'Cor texto', ['A ', ' encontra-se incorretamente definida.']);
+      this._mhqSnackbarService.triggerMHQSnackbar(false, 'report', 'Cor texto', ['A ', ' encontra-se incorretamente definida.']);
       return false;
     }
     // não consegui utilizar o formControl para números indeterminados de inputs
@@ -124,7 +120,7 @@ export class CategoriesService {
       }
     });
     if (!areSubcatsBugdgetCorrect) {
-      this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', 'Orçamento', ['Existem sub-categorias para as quais o ', ' se encontra incorretamente definido.']);
+      this._mhqSnackbarService.triggerMHQSnackbar(false, 'report', 'Orçamento', ['Existem sub-categorias para as quais o ', ' se encontra incorretamente definido.']);
       return false;
     }
     return true;

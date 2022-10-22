@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { CategorySnackBarsService } from 'src/assets/services/snack-bars.service';
+import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
 import { ErrorHandlingService } from 'src/assets/services/misc.service';
 import { TreasuryService } from '../../../treasury-log/treasury.service';
 import { CategoriesService } from '../../categories.service';
@@ -13,11 +13,11 @@ import { CategoriesService } from '../../categories.service';
 
 export class DeleteCategoryConfirmationModalComponent {
 
-  constructor(private _categorySnackBarsService: CategorySnackBarsService, public categoriesService: CategoriesService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, private _treasuryService: TreasuryService) { }
+  constructor(private _mhqSnackbarService: MHQSnackBarsService, public categoriesService: CategoriesService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, private _treasuryService: TreasuryService) { }
 
   deleteCategory(): void {
     for (let i = 0; i < this._treasuryService.treasuryLog.length; i++) {
-      if(this._treasuryService.treasuryLog[i].cat === this.categoriesService.activePreviewCategory.id) {return this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', this.categoriesService.activePreviewCategory.title, ['Não é possível remover a categoria ', ', devido à existência de movimentos associados a esta.']);}
+      if(this._treasuryService.treasuryLog[i].cat === this.categoriesService.activePreviewCategory.id) {return this._mhqSnackbarService.triggerMHQSnackbar(false, 'report', this.categoriesService.activePreviewCategory.title, ['Não é possível remover a categoria ', ', devido à existência de movimentos associados a esta.']);}
     }
     const HTTP_PARAMS = new HttpParams().set('cat', this.categoriesService.activePreviewCategory.id)
     const CALL = this._http.post('http://localhost:16190/deletecategory', HTTP_PARAMS, { responseType: 'text' })

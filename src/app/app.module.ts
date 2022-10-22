@@ -9,7 +9,8 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { MatPaginatorIntl } from '@angular/material/paginator';
-import { getPTPaginatorIntl } from 'src/assets/pipes/matPTPaginator'
+import { getPTPaginatorIntl } from 'src/assets/pipes/matPTPaginator';
+import { ReorderCategoriesModalComponent } from './content/financial/categories/reorder-categories-modal/reorder-categories-modal.component'
 
 registerLocaleData(localePt);
 

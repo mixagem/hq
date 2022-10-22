@@ -5,6 +5,8 @@ import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 import { CategoriesService } from './categories.service';
 import { Router } from '@angular/router';
 import { LoadingService } from 'src/assets/services/misc.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ReorderCategoriesModalComponent } from './reorder-categories-modal/reorder-categories-modal.component';
 
 @Component({
   selector: 'mhq-categories',
@@ -17,7 +19,7 @@ export class CategoriesComponent implements OnInit {
   dataSource: MatTableDataSource<IFinancialCategory>;  // datasource para tabela
   displayedColumns: string[];  // colunas da tabela
 
-  constructor(public categoriesService: CategoriesService, public router: Router, private _loadingService: LoadingService) {
+  constructor(public categoriesService: CategoriesService, public router: Router, private _loadingService: LoadingService, private _matDialog: MatDialog) {
     this.isMatTableReady = false;
   }
 
@@ -38,5 +40,14 @@ export class CategoriesComponent implements OnInit {
   viewRecordDetails(categoryID: number): void {
     this.categoriesService.recordBorderStyle = { "background-color": this.categoriesService.catEnum[categoryID].bgcolor };
     this.router.navigateByUrl('/fi/cats', { skipLocationChange: true }).then(() => { this.router.navigate(['/fi/cats', categoryID]); });
+  }
+
+  openOrderingModal(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this._matDialog.open(ReorderCategoriesModalComponent, {
+      width: '700px',
+      height:'75vh',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
   }
 }

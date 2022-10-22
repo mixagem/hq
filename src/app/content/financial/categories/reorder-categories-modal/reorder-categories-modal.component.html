@@ -1,0 +1,53 @@
+<h1 mat-dialog-title class="mhq-modal-header">
+  <mat-icon>warning_amber</mat-icon>Re-ordenar
+</h1>
+
+<div mat-dialog-content class="mhq-modal-content-wrapper">
+
+
+
+  <!-- <mat-tab-group> -->
+  <mat-tab-group style="height: 100%;">
+    <mat-tab label="First">
+
+
+      <div class="mhq-modal-content">
+        <div style="height: calc(100% - 75px);padding:30px 25px">
+
+
+          <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+            <div class="mhq-category-box" *ngFor="let cat of categoriesToOrder" cdkDrag>
+              <div class="mhq-category-box-preview" *cdkDragPlaceholder></div>
+              <span [style]="'background-color:'+cat.bgcolor+';color:'+cat.textcolor"><mat-icon>{{cat.icon}}</mat-icon></span><span>{{cat.title}}</span>
+            </div>
+          </div>
+
+
+
+
+        </div>
+        <div mat-dialog-actions class="mhq-modal-close-actions">
+          <button mat-flat-button color="primary" (click)="saveCategoriesOrder()">Guardar</button>
+          <button mat-stroked-button mat-dialog-close color="primary">Cancelar</button>
+        </div>
+      </div>
+
+    </mat-tab>
+
+
+
+
+
+
+
+
+    <mat-tab label="Second"> Content 2 </mat-tab>
+
+  </mat-tab-group>
+
+
+
+
+
+
+</div>

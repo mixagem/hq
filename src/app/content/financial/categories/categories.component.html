@@ -10,48 +10,62 @@
 
     <div class="mhq-mainform-actions">
 
-      <button mat-flat-button color="accent" (click)="categoriesService.createNewRecord(false)">
-        <mat-icon>add</mat-icon>Adicionar categoria
+      <button mat-stroked-button color="primary" [matMenuTriggerFor]="categoriesExtraActions">
+        <mat-icon>menu_open</mat-icon>Ações
       </button>
 
-    </div>
+
+
+    <mat-menu #categoriesExtraActions="matMenu">
+      <button mat-menu-item (click)="openOrderingModal('300ms','150ms')">
+        <mat-icon>add</mat-icon>
+        <span>Re-ordenar categorias</span>
+      </button>
+
+    </mat-menu>
+
+    <button mat-flat-button color="accent" (click)="categoriesService.createNewRecord(false)">
+      <mat-icon>add</mat-icon>Adicionar categoria
+    </button>
 
   </div>
 
-  <table mat-table [dataSource]="dataSource">
+</div>
 
-    <ng-container matColumnDef="icon">
-      <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let element" [style]="'color:'+element.textcolor+';background-color:'+element.bgcolor">
-        <mat-icon>{{element.icon}}</mat-icon>
-      </td>
-    </ng-container>
+<table mat-table [dataSource]="dataSource">
 
-    <ng-container matColumnDef="title">
-      <th mat-header-cell *matHeaderCellDef>Categoria</th>
-      <td mat-cell *matCellDef="let element">{{element.title}}</td>
-    </ng-container>
+  <ng-container matColumnDef="icon">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let element" [style]="'color:'+element.textcolor+';background-color:'+element.bgcolor">
+      <mat-icon>{{element.icon}}</mat-icon>
+    </td>
+  </ng-container>
 
-    <ng-container matColumnDef="type">
-      <th mat-header-cell *matHeaderCellDef>Tipo</th>
-      <td mat-cell *matCellDef="let element" [style]="element.type === 'expense' ? 'color:red':'color:green'">
-        <mat-icon>{{element.type === 'expense' ? 'money_off':'attach_money'}}</mat-icon>
-      </td>
-    </ng-container>
+  <ng-container matColumnDef="title">
+    <th mat-header-cell *matHeaderCellDef>Categoria</th>
+    <td mat-cell *matCellDef="let element">{{element.title}}</td>
+  </ng-container>
 
-    <ng-container matColumnDef="active">
-      <th mat-header-cell *matHeaderCellDef>Ativa</th>
-      <td mat-cell *matCellDef="let element">
-        <mat-checkbox [checked]="element.active" color="primary" disabled></mat-checkbox>
-      </td>
-    </ng-container>
+  <ng-container matColumnDef="type">
+    <th mat-header-cell *matHeaderCellDef>Tipo</th>
+    <td mat-cell *matCellDef="let element" [style]="element.type === 'expense' ? 'color:red':'color:green'">
+      <mat-icon>{{element.type === 'expense' ? 'money_off':'attach_money'}}</mat-icon>
+    </td>
+  </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="viewRecordDetails(row.id)"></tr>
+  <ng-container matColumnDef="active">
+    <th mat-header-cell *matHeaderCellDef>Ativa</th>
+    <td mat-cell *matCellDef="let element">
+      <mat-checkbox [checked]="element.active" color="primary" disabled></mat-checkbox>
+    </td>
+  </ng-container>
 
-  </table>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="viewRecordDetails(row.id)"></tr>
 
-  <mat-paginator #paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+</table>
+
+<mat-paginator #paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
 
 </div>
 

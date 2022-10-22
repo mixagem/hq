@@ -7,7 +7,7 @@ import { CategoriesService } from '../categories.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteCategoryConfirmationModalComponent } from './delete-category-confirmation-modal/delete-category-confirmation-modal.component';
 import { ErrorHandlingService } from 'src/assets/services/misc.service';
-import { CategorySnackBarsService } from '../../../../../assets/services/snack-bars.service';
+import { MHQSnackBarsService } from '../../../../../assets/services/mhq-snackbar.service';
 
 @Component({
   selector: 'mhq-category-details',
@@ -21,7 +21,7 @@ export class CategoryDetailsComponent implements OnInit {
   tempFiCategory: IFinancialCategory; // clone da categoria utilizada no modo  edição
   editingMode: boolean; // boolean com o estado do modo de edição
 
-  constructor(private _categorySnackBarsService: CategorySnackBarsService, private _route: ActivatedRoute, public categoriesService: CategoriesService, private _http: HttpClient, private _dialog: MatDialog,  private _errorHandlingService: ErrorHandlingService) {
+  constructor(private _mhqSnackbarService: MHQSnackBarsService, private _route: ActivatedRoute, public categoriesService: CategoriesService, private _http: HttpClient, private _dialog: MatDialog,  private _errorHandlingService: ErrorHandlingService) {
     this.editingMode = false;
   }
 
@@ -74,10 +74,10 @@ export class CategoryDetailsComponent implements OnInit {
           this.categoriesService.fetchCategories('saveCategory', this.id); // atualiza o modo listagem / consulta
           this.categoriesService.recordBorderStyle['background-color'] = this.tempFiCategory.bgcolor; // atualiza a cor do border da gaveta com a nova cor da categoria
           this.editingMode = false; // termina o modo de edição
-          this._categorySnackBarsService.triggerCategoriesSnackbar(true, 'save_as', this.tempFiCategory.title, ['A categoria ', ' foi atualizada com sucesso.']); // dispara a snackbar
+          this._mhqSnackbarService.triggerMHQSnackbar(true, 'save_as', this.tempFiCategory.title, ['A categoria ', ' foi atualizada com sucesso.']); // dispara a snackbar
         }
         else {
-          this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', this.tempFiCategory.title, ['Ocurreu um erro ao guardar as alterações à categoria ', '.']);
+          this._mhqSnackbarService.triggerMHQSnackbar(false, 'report', this.tempFiCategory.title, ['Ocurreu um erro ao guardar as alterações à categoria ', '.']);
         }
       },
       error: err => this._errorHandlingService.handleError(err)

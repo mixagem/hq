@@ -16,10 +16,10 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 import { GuitaPipe, GuitaSimplexPipe } from '../pipes/guita.pipe';
 import { OverviewDailyDetailsModalComponent } from 'src/app/content/financial/grid-view/monthly-view/overview-daily-details-modal/overview-daily-details-modal.component';
 import { DeleteCategoryConfirmationModalComponent } from 'src/app/content/financial/categories/category-details/delete-category-confirmation-modal/delete-category-confirmation-modal.component';
-import { MhqSucessSnackBarComponent } from '../components/mhq-sucess-snack-bar/mhq-sucess-snack-bar.component';
-import { MhqFailureSnackBarComponent } from '../components/mhq-failure-snack-bar/mhq-failure-snack-bar.component';
 import { GridViewComponent } from 'src/app/content/financial/grid-view/grid-view.component';
 import { GridViewModule } from 'src/app/content/financial/grid-view/grid-view.module';
+import { ReorderCategoriesModalComponent } from 'src/app/content/financial/categories/reorder-categories-modal/reorder-categories-modal.component';
+import { MhqSnackBarComponent } from '../components/mhq-snack-bar/mhq-snack-bar.component';
 
 @NgModule({
   declarations: [
@@ -37,9 +37,9 @@ import { GridViewModule } from 'src/app/content/financial/grid-view/grid-view.mo
     DeleteCategoryConfirmationModalComponent,
     DettachRecurrencyConfirmationModal,
     UpdateRecurrencyLogConfirmationModal,
-    MhqSucessSnackBarComponent,
-    MhqFailureSnackBarComponent,
-    GridViewComponent
+    ReorderCategoriesModalComponent,
+    GridViewComponent,
+    MhqSnackBarComponent
 
   ],
   imports: [
@@ -66,8 +66,8 @@ import { GridViewModule } from 'src/app/content/financial/grid-view/grid-view.mo
     DeleteCategoryConfirmationModalComponent,
     DettachRecurrencyConfirmationModal,
     UpdateRecurrencyLogConfirmationModal,
-    MhqSucessSnackBarComponent,
-    MhqFailureSnackBarComponent,
+    ReorderCategoriesModalComponent,
+    MhqSnackBarComponent,
     GridViewComponent
 
   ]

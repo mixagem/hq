@@ -1,7 +1,7 @@
 import { dailyTotalAcomulatedSnapshot, monthlySnapshots, dailyCatDetails, dailySubCatDetails, dailyTotalDetails} from './monthlyViewMethods.js';
 import { monthlyTotalAcomulatedSnapshot, yearlySnapshots, monthlyCatDetails, monthlySubCatDetails, monthlyTotalDetails} from './yearlyViewMethods.js';
 import { deleteAllRecurrencies, dettachRecurrency, updateRecurrency, getRecurencyLogs, createTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog } from './treasuryMethods.js';
-import { fetchCategories, createNewCategory, deleteCategory, updateCategory, getSubcategorySequence } from './categoriesMethods.js'
+import { orderCategories, fetchCategories, createNewCategory, deleteCategory, updateCategory, getSubcategorySequence } from './categoriesMethods.js'
 
 
 import express from 'express';
@@ -38,6 +38,7 @@ APP.get('/currentsubcategorysequence', function (req, res) { return getSubcatego
 APP.post('/createnewcategory', function (req, res) { return createNewCategory(req, res); });
 APP.post('/deletecategory', function (req, res) { return deleteCategory(req, res); });
 APP.post('/updatecategory', function (req, res) { return updateCategory(req, res); });
+APP.post('/ordercategories', function (req, res) { return orderCategories(req, res); });
 
 // treasury
 APP.get('/fetchtreasurylogs', function (req, res) { return fetchTreasuryLogs(req, res); });

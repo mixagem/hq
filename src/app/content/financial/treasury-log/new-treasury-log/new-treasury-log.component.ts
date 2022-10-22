@@ -8,7 +8,7 @@ import { TreasuryService } from '../treasury.service';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { ErrorHandlingService, TimerService } from 'src/assets/services/misc.service';
 import { MatSelectChange } from '@angular/material/select';
-import { CategorySnackBarsService } from 'src/assets/services/snack-bars.service';
+import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 
@@ -41,7 +41,7 @@ export class NewTreasuryLogComponent implements OnInit {
   saveComplete: boolean;
 
 
-  constructor(private _errorHandlingService: ErrorHandlingService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, public _router: Router, public _http: HttpClient, private _timerService: TimerService, private _categoriesSnackBarService: CategorySnackBarsService) {
+  constructor(private _errorHandlingService: ErrorHandlingService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, public _router: Router, public _http: HttpClient, private _timerService: TimerService, private _categoriesSnackBarService: MHQSnackBarsService) {
     this.saveComplete = true;
   }
 
@@ -70,7 +70,7 @@ export class NewTreasuryLogComponent implements OnInit {
   }
 
   openMissingCategoriesSnackBar(): void {
-    this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', 'categoria/sub-categoria', ['O par ', 'não se encontra definido.'])
+    this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'categoria/sub-categoria', ['O par ', 'não se encontra definido.'])
   }
 
   newTreasuryLogRecordActions(action: string): void {
@@ -84,7 +84,7 @@ export class NewTreasuryLogComponent implements OnInit {
         this.tempTreasuryLog.subcat = this.categoriesService.subcatTitleEnum[`${this.subcatForm.value}`].id;
         this.tempTreasuryLog.value = Number(this.tempTreasuryLog.value.toString().replace(',', '.'))
         if (!this.tempTreasuryLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) {
-          return this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
+          return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
         }
         this.createTreasurylog();
         break;
@@ -114,12 +114,12 @@ export class NewTreasuryLogComponent implements OnInit {
       next: codeReceived => {
         this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.tempTreasuryLog.cat].bgcolor
         this.treasuryService.fetchTreasuryLog('saveTreasuryLog', Number(codeReceived));
-        RECURRENCY_OPTIONS.active ? this._categoriesSnackBarService.triggerCategoriesSnackbar(true, 'playlist_add', this.tempTreasuryLog.title, ['Os movimentos ', ' foram criados com sucesso.']) : this._categoriesSnackBarService.triggerCategoriesSnackbar(true, 'playlist_add', this.tempTreasuryLog.title, ['O movimento ', ' foi criado com sucesso.']); // dispara a snackbar
+        RECURRENCY_OPTIONS.active ? this._categoriesSnackBarService.triggerMHQSnackbar(true, 'playlist_add', this.tempTreasuryLog.title, ['Os movimentos ', ' foram criados com sucesso.']) : this._categoriesSnackBarService.triggerMHQSnackbar(true, 'playlist_add', this.tempTreasuryLog.title, ['O movimento ', ' foi criado com sucesso.']); // dispara a snackbar
         this.saveComplete = true;
       },
       error: err => {
         this._errorHandlingService.handleError(err);
-        RECURRENCY_OPTIONS.active ? this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', this.tempTreasuryLog.title, ['Ocurreu algo inesperado ao criar os movimentos ', '.']) : this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', this.tempTreasuryLog.title, ['Ocurreu algo inesperado ao criar o movimento ', '.']); // dispara a snackbar
+        RECURRENCY_OPTIONS.active ? this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.tempTreasuryLog.title, ['Ocurreu algo inesperado ao criar os movimentos ', '.']) : this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.tempTreasuryLog.title, ['Ocurreu algo inesperado ao criar o movimento ', '.']); // dispara a snackbar
         this.saveComplete = true;
       }
     })

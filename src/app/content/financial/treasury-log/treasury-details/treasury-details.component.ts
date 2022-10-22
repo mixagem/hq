@@ -9,7 +9,7 @@ import { MatDatepicker } from '@angular/material/datepicker';
 import { TreasuryService } from '../treasury.service';
 import { ErrorHandlingService } from 'src/assets/services/misc.service';
 import { MatSelectChange } from '@angular/material/select';
-import { CategorySnackBarsService } from 'src/assets/services/snack-bars.service';
+import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 import { ThemePalette } from '@angular/material/core';
@@ -36,7 +36,7 @@ export class TreasuryDetailsComponent implements OnInit {
   recurrencyFrequency: FormControl<any>;
   recurrencyFamily: ITreasuryLog[];
 
-  constructor(private _errorHandlingService: ErrorHandlingService, private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, public categoriesService: CategoriesService, private _categoriesSnackBarService: CategorySnackBarsService, private _router: Router) {
+  constructor(private _errorHandlingService: ErrorHandlingService, private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, public categoriesService: CategoriesService, private _categoriesSnackBarService: MHQSnackBarsService, private _router: Router) {
     this.editingMode = false;
     this.recurrencyFamily = [];
   }
@@ -85,17 +85,17 @@ export class TreasuryDetailsComponent implements OnInit {
       next: codeReceived => {
         this.treasuryService.fetchTreasuryLog('saveTreasuryLog', this.tempTreasuryLog.id);
         this.editingMode = false;
-        this._categoriesSnackBarService.triggerCategoriesSnackbar(true, 'save_as', this.tempTreasuryLog.title, ['O movimento ', ' foi atualizado com sucesso.']);
+        this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', this.tempTreasuryLog.title, ['O movimento ', ' foi atualizado com sucesso.']);
       },
       error: err => {
         this._errorHandlingService.handleError(err);
-        this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', this.tempTreasuryLog.title, ['Ocurreu algo inesperado ao atualizar o movimento ', '.']);
+        this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.tempTreasuryLog.title, ['Ocurreu algo inesperado ao atualizar o movimento ', '.']);
       }
     })
   }
 
   openMissingCategoriesSnackBar(): void {
-    this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', 'categoria/sub-categoria', ['O par ', 'não se encontra definido.'])
+    this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'categoria/sub-categoria', ['O par ', 'não se encontra definido.'])
   }
 
   editingTreasuryLogRecordActions(action: string): void {
@@ -118,7 +118,7 @@ export class TreasuryDetailsComponent implements OnInit {
         this.treasuryService.recordBorderStyle['background-color'] = CATEGORY.bgcolor;
         this.tempTreasuryLog.value = Number(this.tempTreasuryLog.value.toString().replace(',', '.')); // conversão de vírgulas para pontos
         if (!this.tempTreasuryLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) {
-          return this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
+          return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
         }
 
         if (this.tempTreasuryLog.recurrencyid === 0) {
@@ -202,7 +202,7 @@ export class TreasuryDetailsComponent implements OnInit {
 
 export class DettachRecurrencyConfirmationModal {
 
-  constructor(public treasuryService: TreasuryService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, private _categoriesSnackBarService: CategorySnackBarsService) { }
+  constructor(public treasuryService: TreasuryService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, private _categoriesSnackBarService: MHQSnackBarsService) { }
 
   dettachFromRecurrency(): void {
     const HTTP_PARAMS = new HttpParams().set('tlog', JSON.stringify(this.treasuryService.recurrenyTempTlog))
@@ -212,12 +212,12 @@ export class DettachRecurrencyConfirmationModal {
       next: codeReceived => {
         this.treasuryService.fetchTreasuryLog('saveTreasuryLog', this.treasuryService.recurrenyTempTlog.id);
         const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-        this._categoriesSnackBarService.triggerCategoriesSnackbar(true, 'save_as', this.treasuryService.recurrenyTempTlog.title, ['O movimento ', ' foi removido da recorrência com sucesso.']);
+        this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', this.treasuryService.recurrenyTempTlog.title, ['O movimento ', ' foi removido da recorrência com sucesso.']);
       },
       error: err => {
         this._errorHandlingService.handleError(err);
         const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-        this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', this.treasuryService.recurrenyTempTlog.title, ['Ocurreu algo inesperado ao atualizar o movimento ', '.']);
+        this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.treasuryService.recurrenyTempTlog.title, ['Ocurreu algo inesperado ao atualizar o movimento ', '.']);
       }
     })
   }
@@ -296,7 +296,7 @@ export class UpdateRecurrencyLogConfirmationModal {
   recurrencyOptions: RecurrencyOptions;
   allRecurrencyOptions: boolean = false;
 
-  constructor(public treasuryService: TreasuryService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, private _categoriesSnackBarService: CategorySnackBarsService) {
+  constructor(public treasuryService: TreasuryService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, private _categoriesSnackBarService: MHQSnackBarsService) {
     this.allRecurrencyOptions = false;
 
     this.recurrencyOptions = {
@@ -349,12 +349,12 @@ export class UpdateRecurrencyLogConfirmationModal {
       next: codeReceived => {
         this.treasuryService.fetchTreasuryLog('saveTreasuryLog', this.treasuryService.recurrenyTempTlog.id);
         const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-        this._categoriesSnackBarService.triggerCategoriesSnackbar(true, 'save_as', this.treasuryService.recurrenyTempTlog.title, ['O movimento ', ' e respetivas recorrências, foram atualizadas com sucesso.']);
+        this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', this.treasuryService.recurrenyTempTlog.title, ['O movimento ', ' e respetivas recorrências, foram atualizadas com sucesso.']);
       },
       error: err => {
         this._errorHandlingService.handleError(err);
         const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-        this._categoriesSnackBarService.triggerCategoriesSnackbar(false, 'report', this.treasuryService.recurrenyTempTlog.title, ['Ocurreu algo inesperado ao atualizar as recorrências para o movimento ', '.']);
+        this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.treasuryService.recurrenyTempTlog.title, ['Ocurreu algo inesperado ao atualizar as recorrências para o movimento ', '.']);
       }
     })
   }

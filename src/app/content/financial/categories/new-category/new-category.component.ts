@@ -5,7 +5,7 @@ import { CategoriesService } from '../categories.service';
 import { Router } from '@angular/router';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
 import { ErrorHandlingService, TimerService } from 'src/assets/services/misc.service';
-import { CategorySnackBarsService } from '../../../../../assets/services/snack-bars.service';
+import { MHQSnackBarsService } from '../../../../../assets/services/mhq-snackbar.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // objectos default para modo de introdução de nova categoria/subcategorias
@@ -20,7 +20,7 @@ const DEFAULT_FISUBCATEGORY: IFinancialSubCategory = { id: Date.now(), maincatid
 
 export class NewCategoryComponent implements OnInit {
   tempFiCategory: IFinancialCategory; // categoria utilizada no modo de introdução
-  constructor(public categoriesService: CategoriesService, private _http: HttpClient, private _router: Router, private _timerService: TimerService, private _categorySnackBarsService: CategorySnackBarsService, private _snackBar: MatSnackBar, private _errorHandlingService: ErrorHandlingService) { }
+  constructor(public categoriesService: CategoriesService, private _http: HttpClient, private _router: Router, private _timerService: TimerService, private _mhqSnackbarService: MHQSnackBarsService, private _snackBar: MatSnackBar, private _errorHandlingService: ErrorHandlingService) { }
 
   ngOnInit(): void {
     // cria a categoria temporária de acordo com o tipo de introdução
@@ -66,9 +66,9 @@ export class NewCategoryComponent implements OnInit {
         if (codeReceived !== 'MHQ_ERROR') {
           this.categoriesService.fetchCategories('saveCategory', Number(codeReceived)); // atualiza o modo listagem / consulta
           this.categoriesService.recordBorderStyle['background-color'] = this.tempFiCategory.bgcolor; // atualiza a cor do border da gaveta com da nova categoria
-          this._categorySnackBarsService.triggerCategoriesSnackbar(true, 'playlist_add', this.tempFiCategory.title, ['A categoria ', ' foi criada com sucesso.']); // dispara a snackbar
+          this._mhqSnackbarService.triggerMHQSnackbar(true, 'playlist_add', this.tempFiCategory.title, ['A categoria ', ' foi criada com sucesso.']); // dispara a snackbar
         } else {
-          this._categorySnackBarsService.triggerCategoriesSnackbar(false, 'report', this.tempFiCategory.title, ['Ocurreu um erro ao guardar as alterações à categoria ', '.']);
+          this._mhqSnackbarService.triggerMHQSnackbar(false, 'report', this.tempFiCategory.title, ['Ocurreu um erro ao guardar as alterações à categoria ', '.']);
         }
       },
       error: err => this._errorHandlingService.handleError(err)

@@ -9,7 +9,7 @@ export function fetchCategories(req, res) {
 
   let categories = [];
   db.serialize(() => {
-    db.each(`SELECT * FROM categories ORDER BY id DESC`, (err, cat) => {
+    db.each(`SELECT * FROM categories ORDER BY catorder`, (err, cat) => {
       if (err) { console.error(err.message) }
       else {
         cat.subcats = []; // na tabela da bd, não existe a coluna subcats, tenho que a declarar aqui
@@ -22,7 +22,6 @@ export function fetchCategories(req, res) {
 
   db.close((err) => {
     err ? console.error(err.message) : res.send(categories);
-    console.log('[C1] categories fetch complete');
   });
 
   function pushSubcatToCategory(subcat) {
@@ -126,5 +125,26 @@ export function updateCategory(req, res) {
 
   db.close((err) => {
     err ? console.error(err.message) : res.send('1'); // desenvolver tratamento de erro do lado do front end
+  });
+}
+
+
+// ######> guardar alterações efetuadas à categoria
+export function orderCategories(req, res) {
+  const NEW_CAT_ORDER = JSON.parse(req.body.newcatorder);
+
+  console.log(NEW_CAT_ORDER)
+  const DB = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => { if (err) { console.error(err.message); } });
+  //
+  DB.serialize(() => {
+
+    NEW_CAT_ORDER.forEach((CAT_ID, i) => {
+      DB.run(`UPDATE categories SET catorder ='${i}' WHERE id='${CAT_ID}'`)
+    });
+
+  });
+
+  DB.close((err) => {
+    if (err) { console.error(err.message); res.send('0') } else { res.send('1') } // desenvolver tratamento de erro do lado do front end
   });
 }
