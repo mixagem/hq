@@ -1,0 +1,51 @@
+::ng-deep {
+  .mat-dialog-container {
+    padding: 0 !important;
+  }
+  .mat-tab-body-wrapper {
+    height: 100%;
+  }
+  .mat-option-text {
+    display: flex !important;
+  }
+  .cdk-global-scrollblock{
+      overflow: hidden;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.mhq-modal-header {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  padding: 15px 25px;
+  display: flex;
+  align-items: center;
+  background-color: var(--mhq-waikiki-pcolor-1);
+  color: var(--mhq-light-text);
+  height: 70px;
+  margin: 0;
+  mat-icon {
+    padding-right: 15px;
+    box-sizing: content-box;
+  }
+}
+
+.mhq-modal-content-wrapper {
+  height: calc(100% - 70px - 70px);
+  padding: 2vh 1.5vw .5vh;
+  margin: 0;
+  overflow: clip;
+}
+
+.mhq-modal-close-actions {
+  height: 70px;
+  button {
+    margin: 0 5px;
+    &:first-of-type {
+      margin-left: 25px;
+    }
+  }
+}

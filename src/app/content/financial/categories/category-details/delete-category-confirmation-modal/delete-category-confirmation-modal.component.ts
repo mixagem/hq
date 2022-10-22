@@ -8,7 +8,7 @@ import { CategoriesService } from '../../categories.service';
 @Component({
   selector: 'mhq-delete-category-confirmation-modal',
   templateUrl: './delete-category-confirmation-modal.component.html',
-  styleUrls: ['./delete-category-confirmation-modal.component.scss']
+  styleUrls: ['./delete-category-confirmation-modal.component.scss','../../../../../../assets/styles/mhq-modal.scss']
 })
 
 export class DeleteCategoryConfirmationModalComponent {

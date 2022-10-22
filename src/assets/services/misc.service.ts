@@ -31,11 +31,9 @@ export class LoadingService {
   // variável com o estado da comunicação à bd
   categoriesLoadingComplete: Boolean;
   treasuryLoadingComplete: Boolean;
-  enumLoadingComplete: Boolean;
 
   constructor() {
     this.categoriesLoadingComplete = false;
     this.treasuryLoadingComplete = false;
-    this.enumLoadingComplete = false;
   }
 }

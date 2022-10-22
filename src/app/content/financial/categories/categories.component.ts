@@ -33,7 +33,7 @@ export class CategoriesComponent implements OnInit {
     this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this._loadingService.categoriesLoadingComplete) { return }
 
-    //mainform construction
+    //construção mainform
     this.dataSource = new MatTableDataSource<IFinancialCategory>([...this.categoriesService.allCategories]);
     this.displayedColumns = ['icon', 'title', 'type', 'active'];
     this.isMatTableReady = true;
@@ -45,7 +45,7 @@ export class CategoriesComponent implements OnInit {
     this.router.navigateByUrl('/fi/cats', { skipLocationChange: true }).then(() => { this.router.navigate(['/fi/cats', categoryID]); });
   }
 
-  // re-order categories actions
+  // re-order categories action
   openOrderingModal(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this._matDialog.open(ReorderCategoriesModalComponent, { width: '700px', height: '75vh', enterAnimationDuration, exitAnimationDuration, });
   }
