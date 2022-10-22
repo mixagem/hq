@@ -42,12 +42,8 @@ export class TreasuryService {
       next: (codeReceived) => {
         const RESP = codeReceived as ITreasuryLog[];
         this.treasuryLog = RESP;
-        this._loadingService.treasuryLoadingComplete = true;
-
         this.tlogEnum = {}; this.treasuryLog.forEach(tlog => { this.tlogEnum[`${tlog.id}`] = tlog });
-
-
-
+        this._loadingService.treasuryLoadingComplete = true;
         if (source === 'saveTreasuryLog') { this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs', LogID]); }); }
 
         if (source === 'deleteTreasuryLog') {

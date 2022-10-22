@@ -8,7 +8,8 @@ import { CategoriesService } from '../../categories.service';
 @Component({
   selector: 'mhq-delete-category-confirmation-modal',
   templateUrl: './delete-category-confirmation-modal.component.html',
-  styleUrls: ['./delete-category-confirmation-modal.component.scss','../../../../../../assets/styles/mhq-modal.scss']
+  styles: ['.mhq-modal-header{background-color: var(--mhq-waikiki-danger)!important;}','.mhq-category-modal-label{padding: 5px 10px;border-radius: 5px;}'],
+  styleUrls: ['../../../../../../assets/styles/mhq-modal.scss']
 })
 
 export class DeleteCategoryConfirmationModalComponent {
@@ -17,7 +18,7 @@ export class DeleteCategoryConfirmationModalComponent {
 
   deleteCategory(): void {
     for (let i = 0; i < this._treasuryService.treasuryLog.length; i++) {
-      if(this._treasuryService.treasuryLog[i].cat === this.categoriesService.activePreviewCategory.id) {return this._mhqSnackbarService.triggerMHQSnackbar(false, 'report', this.categoriesService.activePreviewCategory.title, ['Não é possível remover a categoria ', ', devido à existência de movimentos associados a esta.']);}
+      if (this._treasuryService.treasuryLog[i].cat === this.categoriesService.activePreviewCategory.id) { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'report', this.categoriesService.activePreviewCategory.title, ['Não é possível remover a categoria ', ', devido à existência de movimentos associados a esta.']); }
     }
     const HTTP_PARAMS = new HttpParams().set('cat', this.categoriesService.activePreviewCategory.id)
     const CALL = this._http.post('http://localhost:16190/deletecategory', HTTP_PARAMS, { responseType: 'text' })

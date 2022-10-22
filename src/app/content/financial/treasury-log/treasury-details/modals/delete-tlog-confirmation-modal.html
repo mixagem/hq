@@ -1,31 +1,26 @@
 <h1 mat-dialog-title class="mhq-modal-header">
-  <mat-icon>warning_amber</mat-icon>Remover registo
+  <mat-icon>warning_amber</mat-icon>Eliminar movimento
 </h1>
 
 <div mat-dialog-content class="mhq-modal-content-wrapper">
 
-  <div class="mhq-modal-content">Tens a certeza que queres remover o registo
-    <span>{{treasuryService.activeTreasuryLog.title}}</span>?
+  <p>Eliminar o movimento <b>{{treasuryService.activeTreasuryLog.title}}</b> ?</p>
 
-    <mat-slide-toggle #doubleCheckToggle style="margin-top:15px" [disabled]="!haveRecurrency" [style]="!haveRecurrency? 'display:none':''">Remover todas as recorrências</mat-slide-toggle>
-  </div>
+  <mat-slide-toggle #doubleCheckToggle style="margin-top:15px" [disabled]="!haveRecurrency"
+    [style]="!haveRecurrency? 'display:none':''">Eliminar todos os movimentos da mesma recorrência</mat-slide-toggle>
 
-  <div *ngIf="haveRecurrency" id="mhq-remove-all-recurrencies-wrapper">
-    <div mat-dialog-actions class="mhq-modal-close-actions">
-      <button *ngIf="!doubleCheckToggle.checked" mat-flat-button color="warn" (click)="deleteTreasuryLog()">Remover
-        registo</button>
-      <button *ngIf="doubleCheckToggle.checked" mat-flat-button color="warn" (click)="deleteAllRecurrencies()">Remover
-        todos os registos da recorrência</button>
-      <button mat-stroked-button mat-dialog-close color="primary">Cancelar</button>
-    </div>
-  </div>
+</div>
 
-  <div *ngIf="!haveRecurrency" id="mhq-remove-all-recurrencies-wrapper">
-    <div mat-dialog-actions class="mhq-modal-close-actions">
-      <button mat-flat-button color="warn" (click)="deleteTreasuryLog()">Remover
-        registo</button>
-      <button mat-stroked-button mat-dialog-close color="primary">Cancelar</button>
-    </div>
-  </div>
+<div *ngIf="haveRecurrency" mat-dialog-actions class="mhq-modal-close-actions">
+  <button *ngIf="!doubleCheckToggle.checked" mat-flat-button color="warn" (click)="deleteTreasuryLog()">Eliminar
+    movimento</button>
+  <button *ngIf="doubleCheckToggle.checked" mat-flat-button color="warn" (click)="deleteAllRecurrencies()">Eliminar
+    todos os movimentos</button>
+  <button mat-stroked-button mat-dialog-close color="warn">Cancelar</button>
+</div>
 
+<div *ngIf="!haveRecurrency" mat-dialog-actions class="mhq-modal-close-actions">
+  <button mat-flat-button color="warn" (click)="deleteTreasuryLog()">Eliminar
+    movimento</button>
+  <button mat-stroked-button mat-dialog-close color="warn">Cancelar</button>
 </div>

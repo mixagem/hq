@@ -1,7 +1,7 @@
 @import "~@angular/material/theming";
 @include mat-core();
 
-$primary: mat-palette($mat-light-blue, A400);
+$primary: mat-palette($mat-light-blue, A700);
 $accent: mat-palette($mat-orange, 200);
 
 $theme: mat-light-theme($primary, $accent);
@@ -13,5 +13,20 @@ $theme: mat-light-theme($primary, $accent);
 // .color-accent {
 //   color: mat-color($accent);
 // }
+
+:root {
+  --navbar-height: 56px;
+  --mhq-dark-text: #000;
+  --mhq-dark-bg: #000;
+  --mhq-light-text: #fff;
+  --mhq-light-bg: #fff;
+  --mhq-waikiki-danger: #D32F2F;
+  --mhq-waikiki-sucess: #9CCC65;
+  --mhq-waikiki-pcolor-1: #0091EA;
+  --mhq-waikiki-acolor-1: #ff8f00;
+  --mhq-waikiki-acolor-2: #ffc266;
+  --mhq-waikiki-acolor-3: #fce3bf;
+  --mhq-waikiki-color-6: rgba(103, 58, 183,.50);
+}
 
 @include angular-material-theme($theme);

@@ -30,7 +30,7 @@ export class TreasuryLogComponent implements OnInit {
   ngOnInit(): void {
     this.treasuryService.onInitTrigger.subscribe(x => { this.ngOnInit(); });     // triggers remoto do OnInit
     this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
-    if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.treasuryLoadingComplete) { return }     // se o loading ainda não estiver pronto, interrompe o ngOnInit
+    if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.treasuryLoadingComplete) { return }     // loading check
     this.dataSource = new MatTableDataSource<ITreasuryLog>(this.treasuryService.treasuryLog);     // incializar tabela
     this.displayedColumns = ['cat', 'title', 'date', 'value'];
     this.isMatTableReady = true;

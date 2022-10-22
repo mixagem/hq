@@ -1,6 +1,6 @@
-<div class="mhq-row full-height mhq-category-details-wrapper">
+<div class="mhq-row full-height mhq-mainform-details-wrapper">
 
-  <div class="mhq-categories-drawer-left">
+  <div class="mhq-mainform-drawer-actions">
 
     <div class="mhq-quickaction-close" (click)="treasuryService.closeDetails()">
       <mat-icon>close</mat-icon>
@@ -18,7 +18,7 @@
 
   </div>
 
-  <div class="mhq-categories-drawer-right">
+  <div class="mhq-mainform-drawer-content">
     <mat-progress-bar *ngIf="!saveComplete" mode="indeterminate" color="accent"></mat-progress-bar>
     <div class="mhq-wrapper-row">
 

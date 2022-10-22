@@ -17,7 +17,7 @@ import { ThemePalette } from '@angular/material/core';
 @Component({
   selector: 'mhq-treasury-details',
   templateUrl: './treasury-details.component.html',
-  styleUrls: ['./treasury-details.component.scss']
+  styleUrls: ['../../../../../assets/styles/mhq-mainform-details.scss']
 })
 
 export class TreasuryDetailsComponent implements OnInit {
@@ -74,8 +74,6 @@ export class TreasuryDetailsComponent implements OnInit {
   getTlogDateLocale(date: number): string {
     return new Date(date).toLocaleDateString('pt')
   }
-
-
 
   saveTreasurylog(): void {
     const HTTP_PARAMS = new HttpParams().set('tlog', JSON.stringify(this.tempTreasuryLog))
@@ -143,6 +141,7 @@ export class TreasuryDetailsComponent implements OnInit {
       exitAnimationDuration,
     });
   }
+
   openDialog2(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this._dialog.open(UpdateRecurrencyLogConfirmationModal, {
       width: '640px',
@@ -151,6 +150,7 @@ export class TreasuryDetailsComponent implements OnInit {
       exitAnimationDuration,
     });
   }
+
   openDialog3(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this.treasuryService.recurrenyTempTlog = this.tempTreasuryLog;
     this._dialog.open(DettachRecurrencyConfirmationModal, {
@@ -160,7 +160,6 @@ export class TreasuryDetailsComponent implements OnInit {
       exitAnimationDuration,
     });
   }
-
 
   refreshSubcategoryList(catID: number = 0, catTitle: string = ''): void {
     let category: IFinancialCategory;
@@ -184,20 +183,16 @@ export class TreasuryDetailsComponent implements OnInit {
     this.treasuryService.recordBorderStyle = { "background-color": this.categoriesService.catEnum[catID].bgcolor };
     this._router.navigateByUrl('/fi/tlogs', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs', logID]); });
   }
-
-
-
 }
 
 
 ////////////////////////////////////////
 
 
-
 @Component({
   selector: 'dettach-recurrency-confirmation-modal',
   templateUrl: './modals/dettach-recurrency-confirmation-modal.html',
-  styleUrls: ['../../../../../assets/styles/mhq-large-modal.scss']
+  styleUrls: ['../../../../../assets/styles/mhq-modal.scss']
 })
 
 export class DettachRecurrencyConfirmationModal {
@@ -221,33 +216,22 @@ export class DettachRecurrencyConfirmationModal {
       }
     })
   }
-
-
 }
 
-
 ////////////////////////////////////////
-
-
-
-
-
-
-////////////////////////////////////////
-
 
 
 @Component({
   selector: 'delete-tlog-confirmation-modal',
   templateUrl: './modals/delete-tlog-confirmation-modal.html',
-  styleUrls: ['../../../../../assets/styles/mhq-large-modal.scss']
+  styles: ['.mhq-modal-header{background-color: var(--mhq-waikiki-danger)!important;}'],
+  styleUrls: ['../../../../../assets/styles/mhq-modal.scss']
 })
 
 export class DeleteTreasuryLogConfirmationModal {
-
   haveRecurrency: boolean;
-  constructor(public treasuryService: TreasuryService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService) {
 
+  constructor(public treasuryService: TreasuryService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService) {
     this.haveRecurrency = this.treasuryService.activeTreasuryLog.recurrencyid !== 0
   }
 
@@ -260,7 +244,6 @@ export class DeleteTreasuryLogConfirmationModal {
       error: err => this._errorHandlingService.handleError(err)
     })
   }
-
 
   deleteAllRecurrencies(): void {
     const HTTP_PARAMS = new HttpParams().set('recurrencyID', this.treasuryService.activeTreasuryLog.recurrencyid)
@@ -286,34 +269,19 @@ export type RecurrencyOptions = {
 @Component({
   selector: 'update-recurrency-confirmation-modal',
   templateUrl: './modals/update-recurrency-confirmation-modal.html',
-  styleUrls: ['../../../../../assets/styles/mhq-large-modal.scss']
+  styleUrls: ['../../../../../assets/styles/mhq-modal.scss']
 })
 
-// preciso do temporario
-
 export class UpdateRecurrencyLogConfirmationModal {
-
   recurrencyOptions: RecurrencyOptions;
   allRecurrencyOptions: boolean = false;
 
   constructor(public treasuryService: TreasuryService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, private _categoriesSnackBarService: MHQSnackBarsService) {
     this.allRecurrencyOptions = false;
-
     this.recurrencyOptions = {
-      name: 'Opções a alterar',
-      toChange: false,
-      color: 'primary',
-      options: [
-        {
-          name: 'Título',
-          toChange: false,
-          color: 'primary'
-        },
-        {
-          name: 'Valor',
-          toChange: false,
-          color: 'primary'
-        }
+      name: 'Opções a alterar', toChange: false, color: 'primary', options: [
+        { name: 'Título', toChange: false, color: 'primary' },
+        { name: 'Valor', toChange: false, color: 'primary' }
       ]
     }
   }
@@ -341,7 +309,6 @@ export class UpdateRecurrencyLogConfirmationModal {
     const HTTP_PARAMS = new HttpParams().set('tlog', JSON.stringify(this.treasuryService.recurrenyTempTlog))
 
     let call;
-
     if (update) { call = this._http.post('http://localhost:16190/updaterecurrency', HTTP_PARAMS, { responseType: 'text' }) }
     else { call = this._http.post('http://localhost:16190/updatetreasurylog', HTTP_PARAMS, { responseType: 'text' }) }
 

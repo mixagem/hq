@@ -44,7 +44,6 @@ export class CategoriesService {
         //backend call
         const RESP = codeReceived as IFinancialCategory[];
         this.allCategories = RESP;
-        this._loadingService.categoriesLoadingComplete = true; // loading das categorias pronto
 
         //enums
         this.allCategories.forEach(cat => {
@@ -55,6 +54,9 @@ export class CategoriesService {
             cat.subcats.forEach(subcat => { this.subcatTitleEnum[`${subcat.title}`] = subcat });
           });
         });
+
+        this._loadingService.categoriesLoadingComplete = true; // loading das categorias pronto
+
 
         // encaminha para o registo em consulta
         if (source === 'saveCategory') { this._router.navigateByUrl('/fi/cats', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/cats', catID]); }); }

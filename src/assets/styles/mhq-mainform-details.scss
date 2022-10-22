@@ -239,7 +239,6 @@
   }
 }
 
-
 ::ng-deep {
   .mat-datepicker-toggle-default-icon {
     color: var(--mhq-waikiki-pcolor-1);
@@ -266,4 +265,22 @@
       }
     }
   }
+}
+
+// select categoria @ movimentos tesouraria
+
+  mat-option {
+    padding-left: 0px;
+    mat-icon {
+      width: 45px;
+      height: 42px;
+      align-items: center;
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+
+.mhq-subcat-select {
+  padding-left: 15px;
 }

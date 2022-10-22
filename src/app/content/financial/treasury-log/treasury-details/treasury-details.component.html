@@ -1,6 +1,6 @@
-<div class="mhq-row full-height mhq-category-details-wrapper">
+<div class="mhq-row full-height mhq-mainform-details-wrapper">
 
-  <div class="mhq-categories-drawer-left">
+  <div class="mhq-mainform-drawer-actions">
 
     <div class="mhq-quickaction-close" (click)="treasuryService.closeDetails()">
       <mat-icon>close</mat-icon>
@@ -21,13 +21,13 @@
         <mat-icon>not_interested</mat-icon>
       </button></div>
 
-      <div *ngIf="!editingMode" class="mhq-quickaction-default"><button mat-icon-button
+    <div *ngIf="!editingMode" class="mhq-quickaction-default"><button mat-icon-button
         (click)="treasuryService.addMode(true)">
         <mat-icon>file_copy</mat-icon>
       </button></div>
 
-      <div *ngIf="!editingMode" class="mhq-quickaction-default"><button
-        (click)="openDialog3('300ms','150ms')" mat-icon-button [disabled]="recurrencyFamily.length===0">
+    <div *ngIf="!editingMode" class="mhq-quickaction-default"><button (click)="openDialog3('300ms','150ms')"
+        mat-icon-button [disabled]="recurrencyFamily.length===0">
         <mat-icon>link_off</mat-icon>
       </button></div>
 
@@ -40,7 +40,9 @@
 
   </div>
 
-  <div class="mhq-categories-drawer-right">
+  <div class="mhq-mainform-drawer-content">
+
+     <!--  v- modo consulta -v -->
 
     <div class="mhq-wrapper-row" *ngIf="!editingMode">
 
@@ -116,20 +118,16 @@
         </div>
       </div>
 
-
-
-
-
-
-
-
     </div>
+
     <div class="mhq-wrapper-row" *ngIf="!editingMode">
+
       <h1>
         <div>
           <mat-icon>info_outline</mat-icon>Recorrências
         </div>
       </h1>
+
       <table *ngIf="recurrencyFamily.length>0 && !editingMode">
         <thead>
           <tr>
@@ -157,13 +155,14 @@
                   </button>
                 </div>
               </td>
-
             </tr>
           </tbody>
         </table>
       </ng-scrollbar>
 
     </div>
+
+     <!--  ^- modo consulta / modo edição -v -->
 
     <div class="mhq-wrapper-row" *ngIf="editingMode">
 
@@ -264,9 +263,6 @@
           </mat-form-field>
         </div>
       </div>
-
-
-
 
     </div>
 
