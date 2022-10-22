@@ -1,8 +1,11 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
+import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
 import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
 import { ErrorHandlingService } from 'src/assets/services/misc.service';
 import { CategoriesService } from '../categories.service';
@@ -17,15 +20,26 @@ import { CategoriesService } from '../categories.service';
 export class ReorderCategoriesModalComponent implements OnInit {
 
   categoriesToOrder: IFinancialCategory[]
+  subCategoriesToOrder: IFinancialSubCategory[];
+  catForm: FormControl   // autocomplete categoria
+  categoriesList: string[] = [];
 
-  constructor(private _router:Router, private _mhqSnackbarService: MHQSnackBarsService, private _errorHandlingService: ErrorHandlingService, private _http: HttpClient, private _categoriesService: CategoriesService) { }
+  constructor(private _router: Router, private _mhqSnackbarService: MHQSnackBarsService, private _errorHandlingService: ErrorHandlingService, private _http: HttpClient, public categoriesService: CategoriesService) { }
 
   ngOnInit(): void {
-    this.categoriesToOrder = [...this._categoriesService.allCategories];
+    this.categoriesToOrder = [...this.categoriesService.allCategories];
+    this.catForm = new FormControl('', [Validators.required]);
+    this.categoriesToOrder.forEach(cat => {
+      this.categoriesList.push(cat.title)
+    });
   }
 
   drop(event: CdkDragDrop<string[]>): void {
     moveItemInArray(this.categoriesToOrder, event.previousIndex, event.currentIndex);
+  }
+
+  drop2(event: CdkDragDrop<string[]>): void {
+    moveItemInArray(this.subCategoriesToOrder, event.previousIndex, event.currentIndex);
   }
 
   saveCategoriesOrder(): void {
@@ -39,11 +53,11 @@ export class ReorderCategoriesModalComponent implements OnInit {
       next: (codeReceived) => {
         switch (Number(codeReceived)) {
           case 1:
-            this._categoriesService.fetchCategories();
+            this.categoriesService.fetchCategories();
             const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-            this._mhqSnackbarService.triggerMHQSnackbar(true, 'smiley', 're-ordenadas', ['As categorias foram ', ' com sucesso.']);
+            this._mhqSnackbarService.triggerMHQSnackbar(true, 'smile', 're-ordenadas', ['As categorias foram ', ' com sucesso.']);
             this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/cats']); });
-            this._categoriesService.onInitTriggerCall();
+            this.categoriesService.onInitTriggerCall();
 
             break;
 
@@ -51,15 +65,45 @@ export class ReorderCategoriesModalComponent implements OnInit {
             this._mhqSnackbarService.triggerMHQSnackbar(false, 'alert', 're-ordenar', ['Algo inesperado ao ', ' as categorias.']);
 
         }
-
-
-
-
       },
       error: err => this._errorHandlingService.handleError(err)
     });
   }
 
+  saveSubCategoriesOrder(): void {
+    let subCategoryOrderArray: number[] = [];
+    this.subCategoriesToOrder.forEach(subcat => { subCategoryOrderArray.push(subcat.id) });
+    const HTTP_PARAMS = new HttpParams().set('newsubcatorder', JSON.stringify(subCategoryOrderArray))
+
+    const CALL = this._http.post('http://localhost:16190/ordersubcategories', HTTP_PARAMS, { responseType: 'text' });
+    CALL.subscribe({
+      next: (codeReceived) => {
+        switch (Number(codeReceived)) {
+          case 1:
+            this.categoriesService.fetchCategories();
+            const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
+            this._mhqSnackbarService.triggerMHQSnackbar(true, 'smile', 're-ordenadas', ['As sub-categorias foram ', ' com sucesso.']);
+            this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/cats']); });
+            this.categoriesService.onInitTriggerCall();
+
+            break;
+
+          case 0: default:
+            this._mhqSnackbarService.triggerMHQSnackbar(false, 'alert', 're-ordenar', ['Algo inesperado ao ', ' as sub-categorias.']);
+
+        }
+      },
+      error: err => this._errorHandlingService.handleError(err)
+    });
+  }
+
+  categorySelectChanged(event: MatSelectChange): void {
+    // console.log(event.value)
+    const CATEGORY: IFinancialCategory = this.categoriesService.catTitleEnum[event.value];
+    this.subCategoriesToOrder = [];
+    CATEGORY.subcats.forEach(subcat => { this.subCategoriesToOrder.push(subcat) });
+    console.log(this.subCategoriesToOrder)
+  }
 
 
 }

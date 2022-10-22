@@ -7,7 +7,7 @@
 
 
   <!-- <mat-tab-group> -->
-  <mat-tab-group style="height: 100%;">
+  <mat-tab-group style="height: calc(100% - 70px);" #tab>
     <mat-tab label="First">
 
 
@@ -18,7 +18,9 @@
           <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
             <div class="mhq-category-box" *ngFor="let cat of categoriesToOrder" cdkDrag>
               <div class="mhq-category-box-preview" *cdkDragPlaceholder></div>
-              <span [style]="'background-color:'+cat.bgcolor+';color:'+cat.textcolor"><mat-icon>{{cat.icon}}</mat-icon></span><span>{{cat.title}}</span>
+              <span [style]="'background-color:'+cat.bgcolor+';color:'+cat.textcolor">
+                <mat-icon>{{cat.icon}}</mat-icon>
+              </span><span>{{cat.title}}</span>
             </div>
           </div>
 
@@ -26,27 +28,68 @@
 
 
         </div>
-        <div mat-dialog-actions class="mhq-modal-close-actions">
-          <button mat-flat-button color="primary" (click)="saveCategoriesOrder()">Guardar</button>
-          <button mat-stroked-button mat-dialog-close color="primary">Cancelar</button>
-        </div>
+
       </div>
 
     </mat-tab>
 
 
+    <mat-tab label="Second">
+
+      <div class="mhq-modal-content">
+        <div style="height: calc(100% - 75px);padding:30px 25px">
+
+
+
+          <form class="mhq-cats-form" style="width: 100%;">
+            <mat-form-field>
+              <mat-label>Categoria</mat-label>
+              <mat-select [formControl]="catForm" (selectionChange)="categorySelectChanged($event)">
+                <mat-select-trigger>{{catForm.value}}</mat-select-trigger>
+                <mat-option *ngFor="let option of categoriesList" [value]="option">
+                  <mat-icon
+                    [ngStyle]="{'background-color':categoriesService.catEnum[categoriesService.catTitleEnum[option].id].bgcolor,'color':categoriesService.catEnum[categoriesService.catTitleEnum[option].id].textcolor}">
+
+                    {{categoriesService.catTitleEnum[option].icon}}</mat-icon>
+                  {{option}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </form>
+
+
+
+          <div cdkDropList class="example-list" (cdkDropListDropped)="drop2($event)">
+            <div class="mhq-category-box" *ngFor="let subcat of subCategoriesToOrder" cdkDrag>
+              <div class="mhq-category-box-preview" *cdkDragPlaceholder></div>
+              <p>{{subcat.title}}</p>
+            </div>
+          </div>
 
 
 
 
 
+        </div>
 
-    <mat-tab label="Second"> Content 2 </mat-tab>
+
+      </div>
+
+
+
+
+
+    </mat-tab>
 
   </mat-tab-group>
 
 
-
+  <div mat-dialog-actions class="mhq-modal-close-actions">
+    <button *ngIf="tab.selectedIndex===0" mat-flat-button color="primary" (click)="saveCategoriesOrder()">Re-ordenar categorias</button>
+    <button *ngIf="tab.selectedIndex===1" mat-flat-button
+      color="primary" (click)="saveSubCategoriesOrder()">Re-ordenar sub-categorias</button>
+    <button mat-stroked-button mat-dialog-close color="primary">Cancelar</button>
+  </div>
 
 
 

@@ -17,7 +17,7 @@ export function fetchCategories(req, res) {
         categories.push(cat);
       }
     });
-    db.each(`SELECT * FROM subcategories`, (err, subcat) => { err ? console.error(err.message) : pushSubcatToCategory(subcat); });
+    db.each(`SELECT * FROM subcategories ORDER BY subcatorder`, (err, subcat) => { err ? console.error(err.message) : pushSubcatToCategory(subcat); });
   });
 
   db.close((err) => {
@@ -140,6 +140,24 @@ export function orderCategories(req, res) {
 
     NEW_CAT_ORDER.forEach((CAT_ID, i) => {
       DB.run(`UPDATE categories SET catorder ='${i}' WHERE id='${CAT_ID}'`)
+    });
+
+  });
+
+  DB.close((err) => {
+    if (err) { console.error(err.message); res.send('0') } else { res.send('1') } // desenvolver tratamento de erro do lado do front end
+  });
+}
+
+// ######> guardar alterações efetuadas à categoria
+export function orderSubCategories(req, res) {
+  const NEW_SUBCAT_ORDER = JSON.parse(req.body.newsubcatorder);
+  const DB = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => { if (err) { console.error(err.message); } });
+  //
+  DB.serialize(() => {
+
+    NEW_SUBCAT_ORDER.forEach((SUBCAT_ID, i) => {
+      DB.run(`UPDATE subcategories SET subcatorder ='${i}' WHERE id='${SUBCAT_ID}'`)
     });
 
   });
