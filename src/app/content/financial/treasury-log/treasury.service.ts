@@ -7,17 +7,17 @@ import { ErrorHandlingService, LoadingService, TimerService } from 'src/assets/s
 
 type RecordBorderStyle = { "background-color": string }
 type recurencyFrequency = { "string": string, "value": string }
+export type treasuryLogEnum = { [key: number]: ITreasuryLog }
 
 const REC_FREQ: recurencyFrequency[] = [{ string: "Mensal", value: "m" }, { string: "Anual", value: "a" }]
 
 @Injectable({ providedIn: 'root' })
 
 export class TreasuryService {
-  tlogEnum: any; // enum
+  tlogEnum: treasuryLogEnum; // enum
   loadingComplete: Boolean; // boolean com o estado do loading dos movimentos da bd
   onInitTrigger: Subject<any>;   //trigger para onInit
   recordBorderStyle: RecordBorderStyle;   // cor a ser utilizada no border dos detalhes da categoria/movimento tesouraria
-  treasuryLog: ITreasuryLog[];   // arrays para os movimentos  existentes em bd
   activeTreasuryLog: ITreasuryLog;   // clone do movimento  atualmente em consulta
   cloningTreasuryLog: Boolean;   // boolean que indica se é duplicação ou intrudução nova
   recurrencyFreq: recurencyFrequency[] // opções frequencia recurrencia
@@ -40,8 +40,8 @@ export class TreasuryService {
     CALL.subscribe({
       next: (codeReceived) => {
         const RESP = codeReceived as ITreasuryLog[];
-        this.treasuryLog = RESP;
-        this.tlogEnum = {}; this.treasuryLog.forEach(tlog => { this.tlogEnum[`${tlog.id}`] = tlog });
+
+        this.tlogEnum = {}; RESP.forEach(tlog => { this.tlogEnum[`${tlog.id}`] = tlog });
         this._loadingService.treasuryLoadingComplete = true;
 
         if (source === 'saveTreasuryLog') { this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs', LogID]); }); }

@@ -14,7 +14,7 @@ import { CategoriesService } from '../categories.service';
 @Component({
   selector: 'mhq-reorder-categories-modal',
   templateUrl: './reorder-categories-modal.component.html',
-  styleUrls: ['./reorder-categories-modal.component.scss','../../../../../assets/styles/mhq-modal.scss']
+  styleUrls: ['./reorder-categories-modal.component.scss', '../../../../../assets/styles/mhq-modal.scss']
 })
 
 export class ReorderCategoriesModalComponent implements OnInit {
@@ -28,7 +28,8 @@ export class ReorderCategoriesModalComponent implements OnInit {
   constructor(private _router: Router, private _mhqSnackbarService: MHQSnackBarsService, private _errorHandlingService: ErrorHandlingService, private _http: HttpClient, public categoriesService: CategoriesService) { }
 
   ngOnInit(): void {
-    this.categoriesToOrder = [...this.categoriesService.allCategories];
+    this.categoriesToOrder = [];
+    for (const CAT in this.categoriesService.catEnum) { { this.categoriesToOrder.push(this.categoriesService.catEnum[CAT]) } }
     this.catForm = new FormControl('', [Validators.required]);
     this.categoriesToOrder.forEach(cat => {
       this.categoriesList.push(cat.title)

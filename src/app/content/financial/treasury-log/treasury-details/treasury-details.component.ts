@@ -46,7 +46,9 @@ export class TreasuryDetailsComponent implements OnInit {
     this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this.loadingService.categoriesLoadingComplete || !this.loadingService.treasuryLoadingComplete) { return }     // loading check
     this.id = Number(this._route.snapshot.paramMap.get('id')!);
-    this.treasuryLog = this.treasuryService.tlogEnum[this.id]
+    console.log(this.treasuryService.tlogEnum)
+    this.treasuryLog = this.treasuryService.tlogEnum[this.id];
+    console.log(this.treasuryLog)
     this.tempTreasuryLog = JSON.parse(JSON.stringify(this.treasuryLog));
     this.treasuryService.activeTreasuryLog = JSON.parse(JSON.stringify(this.treasuryLog));
     this.treasuryLogDatepickerForm = new FormControl(new Date(this.treasuryLog.date), [Validators.required]);
@@ -54,7 +56,7 @@ export class TreasuryDetailsComponent implements OnInit {
     this.subcatForm = new FormControl({ value: this.categoriesService.subcatEnum[this.tempTreasuryLog.subcat].title, disabled: true }, [Validators.required]);
     this.categoriesService.catEnum[this.tempTreasuryLog.cat].subcats.forEach((subcat: { title: string; }) => { this.subcategoriesList.push(subcat.title) });
     this.subcatForm.enable();
-    this.categoriesService.allCategories.forEach(cat => { this.categoriesList.push(cat.title) });
+    for (const CAT in this.categoriesService.catEnum) { this.categoriesList.push(this.categoriesService.catEnum[CAT].title) }
     this.getRecurrencyFamily();
     this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.treasuryLog.cat].bgcolor;
   }

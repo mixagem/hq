@@ -10,7 +10,7 @@ import { TreasuryService } from './treasury.service';
 @Component({
   selector: 'mhq-treasury-log',
   templateUrl: './treasury-log.component.html',
-  styleUrls: ['./treasury-log.component.scss','../../../../assets/styles/mhq-mainform.scss']
+  styleUrls: ['./treasury-log.component.scss', '../../../../assets/styles/mhq-mainform.scss']
 })
 
 export class TreasuryLogComponent implements OnInit {
@@ -31,7 +31,9 @@ export class TreasuryLogComponent implements OnInit {
     this.treasuryService.onInitTrigger.subscribe(x => { this.ngOnInit(); });     // triggers remoto do OnInit
     this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.treasuryLoadingComplete) { return }     // loading check
-    this.dataSource = new MatTableDataSource<ITreasuryLog>(this.treasuryService.treasuryLog);     // incializar tabela
+    let treasurylog: ITreasuryLog[] = [];
+    for (const TLOG in this.treasuryService.tlogEnum) { treasurylog.push(this.treasuryService.tlogEnum[TLOG]) }
+    this.dataSource = new MatTableDataSource<ITreasuryLog>(treasurylog);     // incializar tabela
     this.displayedColumns = ['cat', 'title', 'date', 'value'];
     this.isMatTableReady = true;
   }

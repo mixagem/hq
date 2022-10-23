@@ -3,29 +3,33 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
+import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
 import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
 import { ErrorHandlingService, LoadingService, TimerService } from 'src/assets/services/misc.service';
 
 type RecordBorderStyle = { "background-color": string }
 
+export type FinancialCategoryEnum = { [key: number]: IFinancialCategory }
+export type FinancialSubcategoryNum = { [key: number]: IFinancialSubCategory }
+export type FinancialCategoryTitleEnum = { [key: string]: IFinancialCategory }
+export type FinancialSubcategoryTitleNum = { [key: string]: IFinancialSubCategory }
+
 @Injectable({ providedIn: 'root' })
 
 export class CategoriesService {
   // enums
-  catEnum: any;
-  subcatEnum: any;
-  catTitleEnum: any;
-  subcatTitleEnum: any;
+  catEnum: FinancialCategoryEnum;
+  subcatEnum: FinancialSubcategoryNum;
+  catTitleEnum: FinancialCategoryTitleEnum;
+  subcatTitleEnum: FinancialSubcategoryTitleNum;
 
   currentSubcategoryDBSequence: number; // valor da sequencia de subcategorias da BD
   onInitTrigger: Subject<any>; // trigger para onInit
   recordBorderStyle: RecordBorderStyle;// estilo a ser aplicado na gaveta do registo
-  allCategories: IFinancialCategory[];  // categorias existentes em bd
   cloningCategory: Boolean;  // boolean para verificar se é duplicada ou é criada nova categoria
   activePreviewCategory: IFinancialCategory; // clone da categoria atualmente em consulta utilizado para a duplicação
 
   constructor(private _mhqSnackbarService: MHQSnackBarsService, private _http: HttpClient, private _router: Router, private _timerService: TimerService, private _loadingService: LoadingService, private _errorHandlingService: ErrorHandlingService) {
-    this.allCategories = [];
     this.cloningCategory = false;
     this.onInitTrigger = new Subject<any>(); // trigger para onInit do componente
     this.recordBorderStyle = { "background-color": 'rgb(0,0,0)' };
@@ -43,10 +47,8 @@ export class CategoriesService {
       next: (codeReceived) => {
         //backend call
         const RESP = codeReceived as IFinancialCategory[];
-        this.allCategories = RESP;
-
         //enums
-        this.allCategories.forEach(cat => {
+        RESP.forEach(cat => {
           this.catEnum[`${cat.id}`] = cat;
           this.catTitleEnum[`${cat.title}`] = cat;
           cat.subcats.forEach(subcat => {

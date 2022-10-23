@@ -34,7 +34,9 @@ export class CategoriesComponent implements OnInit {
     if (!this._loadingService.categoriesLoadingComplete) { return }
 
     //construção mainform
-    this.dataSource = new MatTableDataSource<IFinancialCategory>([...this.categoriesService.allCategories]);
+    let categories: IFinancialCategory[] = [];
+    for (const CAT in this.categoriesService.catEnum) { categories.push(this.categoriesService.catEnum[CAT]) }
+    this.dataSource = new MatTableDataSource<IFinancialCategory>(categories);
     this.displayedColumns = ['icon', 'title', 'type', 'active'];
     this.isMatTableReady = true;
   }
