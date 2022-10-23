@@ -45,7 +45,7 @@ export class NewTreasuryLogComponent implements OnInit {
     this.treasuryService.onInitTrigger.subscribe(x => { this.ngOnInit(); });     // triggers remoto do OnInit
     this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this.loadingService.categoriesLoadingComplete || !this.loadingService.treasuryLoadingComplete) { return }     // loading check
-
+    
     if (this.treasuryService.cloningTreasuryLog) {
       this.tempTreasuryLog = this.treasuryService.activeTreasuryLog;
       this.tempTreasuryLog.id = 0;
@@ -64,7 +64,7 @@ export class NewTreasuryLogComponent implements OnInit {
       this.catForm = new FormControl('', [Validators.required]);
       this.subcatForm = new FormControl({ value: '', disabled: true }, [Validators.required]);
     }
-    for (const CAT in this.categoriesService.catEnum) { this.categoriesList.push(this.categoriesService.catEnum[CAT].title) }
+    this.categoriesService.allCategories.forEach(cat => { this.categoriesList.push(cat.title) });
     this.recurrencyFrequency = new FormControl({ value: '', disabled: true }, [Validators.required, Validators.min(2)]);
   }
 

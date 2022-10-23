@@ -43,8 +43,7 @@ export class MonthlyViewComponent implements OnInit {
     this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.treasuryLoadingComplete) { return }
     this.placeholder = new Array(this.gridViewService.getMonthDays(this.gridViewService.monthlyCurrentDate.getFullYear(), this.gridViewService.monthlyCurrentDate.getMonth())).fill(0);
-    this.activeCategories = [];
-    for (const CAT in this.categoriesService.catEnum) { if(this.categoriesService.catEnum[CAT].active){this.activeCategories.push(this.categoriesService.catEnum[CAT]) } }
+    this.activeCategories = [...this.categoriesService.allCategories].filter(category => category.active);
     this.monthlyGridSubtitleGenerator();
     this.areCategoriesReady = true;
   }
