@@ -59,7 +59,7 @@
       </ng-container>
       <ng-container matColumnDef="type">
         <td mat-cell *matCellDef="let element" [style]="element.type === 'expense' ? 'color:red':'color:green'">
-          <mat-icon>{{element.type === 'expense' ? 'money_off':'attach_money'}}</mat-icon>
+          <mat-icon style="margin-top: 8px;">{{element.type === 'expense' ? 'money_off':'attach_money'}}</mat-icon>
         </td>
       </ng-container>
       <ng-container matColumnDef="active">

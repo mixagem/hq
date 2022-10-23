@@ -38,7 +38,7 @@ export class TreasuryLogComponent implements OnInit {
 
   // navegação para modo de consulta de registo
   viewMode(logID: number, catID: number): void {
-    this.treasuryService.recordBorderStyle = { "background-color": this.categoriesService.catEnum[catID].bgcolor};
+    if (document.querySelector('#mhq-category-details')?.classList.contains('animate__slideOutRight')) { document.querySelector('#mhq-category-details')?.classList.replace('animate__slideOutRight', 'animate__slideInRight') }
     this.router.navigateByUrl('/fi/tlogs', { skipLocationChange: true }).then(() => { this.router.navigate(['/fi/tlogs', logID]); });
   }
 }

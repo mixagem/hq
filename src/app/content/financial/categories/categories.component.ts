@@ -41,7 +41,8 @@ export class CategoriesComponent implements OnInit {
 
   // (onclick) modo consulta
   viewRecordDetails(categoryID: number): void {
-    this.categoriesService.recordBorderStyle = { "background-color": this.categoriesService.catEnum[categoryID].bgcolor };
+    //fix para quando consulta-mos enquanto a animção do fecho da gaveta está a fechar -v
+    if (document.querySelector('#mhq-category-details')?.classList.contains('animate__slideOutRight')) { document.querySelector('#mhq-category-details')?.classList.replace('animate__slideOutRight', 'animate__slideInRight') }
     this.router.navigateByUrl('/fi/cats', { skipLocationChange: true }).then(() => { this.router.navigate(['/fi/cats', categoryID]); });
   }
 

@@ -45,7 +45,6 @@ export class OverviewDailyDetailsModalComponent implements OnInit {
 
   goToTreasuryLog(treasuryLogID: number, categoryID: number) {
     const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-    this._treasuryService.recordBorderStyle = { 'background-color': this.categoriesService.catEnum[categoryID].bgcolor }
     this._router.navigate(['/fi/tlogs', treasuryLogID]);
   }
 }

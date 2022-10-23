@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
 import { TimerService } from 'src/assets/services/misc.service';
-import { CategoriesService } from './content/financial/categories/categories.service';
-import { TreasuryService } from './content/financial/treasury-log/treasury.service';
+import { GridViewService } from './content/financial/grid-view/grid-view.service';
 
 @Component({
   selector: 'mhq-root',
@@ -13,7 +12,16 @@ import { TreasuryService } from './content/financial/treasury-log/treasury.servi
 export class AppComponent {
   title = 'hq';
 
-  constructor(private _categoriesService: CategoriesService, private _treasuryService: TreasuryService, private _router: Router, private _timerService: TimerService) {
-    this._router.events.forEach((event) => { if (event instanceof NavigationStart) { clearTimeout(this._timerService.timer) } });
+  constructor(private _router: Router, private _timerService: TimerService, private _gridViewService: GridViewService) {
+
+    this._router.events.forEach((event) => {
+      console.log(event);
+      if (event instanceof NavigationStart) {
+        clearTimeout(this._timerService.timer);
+        if (event.url === "/fi/grid") { this._router.navigateByUrl(`/fi/grid/${this._gridViewService.selectedView}`, { skipLocationChange: true }) }
+      }
+    });
+
   }
 }
+

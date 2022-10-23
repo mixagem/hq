@@ -184,7 +184,6 @@ export class TreasuryDetailsComponent implements OnInit {
   }
 
   viewMode(logID: number, catID: number): void {
-    this.treasuryService.recordBorderStyle = { "background-color": this.categoriesService.catEnum[catID].bgcolor };
     this._router.navigateByUrl('/fi/tlogs', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs', logID]); });
   }
 }

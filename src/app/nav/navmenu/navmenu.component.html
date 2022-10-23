@@ -8,7 +8,7 @@
   </div>
   <div *ngFor="let menuEntry of navmenuService.menuEntries" class="mhq-menu-entry toggle-route-entry">
     <a [ngClass]="menuEntry.isMainTitle? 'mhq-main-title-'+menuEntry.parentEntry : 'mhq-sub-title-'+menuEntry.parentEntry+' hidden'"
-      [routerLink]="!menuEntry.haveChild ? menuEntry.route+(menuEntry.route==='/fi/grid/'? gridViewService.selectedView : []) : []"
+      [routerLink]="!menuEntry.haveChild ? menuEntry.route : []"
       (click)="menuEntryClick($event)">
       <mat-icon>{{menuEntry.icon}}</mat-icon>
       <span *ngIf="!isMenuOpen" class="tooltiptext">{{menuEntry.name}}</span>

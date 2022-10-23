@@ -63,7 +63,6 @@ export class TreasuryService {
   // inicia o modo de introdução / duplicação
   addMode(cloningTreasuryLog: boolean): void {
     this.cloningTreasuryLog = cloningTreasuryLog;
-    if (!this.cloningTreasuryLog) { this.recordBorderStyle = { 'background-color': 'gray' } }
     this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs/add']); });
   }
 
