@@ -3,8 +3,11 @@
   <div class="mhq-row mhq-mainform-header">
 
     <h1>
-      <mat-icon>account_balance</mat-icon>Grelha de movimentos - {{gridViewService.gridSubtitle}}
+      <mat-icon>account_balance</mat-icon>Grelha de movimentos - <span [ngSwitch]="router.url"><span
+          *ngSwitchCase="'/fi/grid/month'">Vista mensal</span><span *ngSwitchCase="'/fi/grid/anual'">Vista anual</span><span
+          *ngSwitchCase="'/fi/grid/decade'">Vista década</span></span>
     </h1>
+
 
     <div class="mhq-mainform-actions">
       <button mat-stroked-button color="primary" [matMenuTriggerFor]="gridViewActions">
@@ -15,11 +18,11 @@
     <mat-menu #gridViewActions="matMenu">
       <button mat-menu-item (click)="navigationFix('cats')">
         <mat-icon>add</mat-icon>
-        <span >Adicionar categoria</span>
+        <span>Adicionar categoria</span>
       </button>
       <button mat-menu-item (click)="navigationFix('tlogs')">
         <mat-icon>add</mat-icon>
-        <span >Adicionar movimento</span>
+        <span>Adicionar movimento</span>
       </button>
     </mat-menu>
   </div>

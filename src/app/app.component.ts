@@ -15,10 +15,11 @@ export class AppComponent {
   constructor(private _router: Router, private _timerService: TimerService, private _gridViewService: GridViewService) {
 
     this._router.events.forEach((event) => {
-      console.log(event);
       if (event instanceof NavigationStart) {
         clearTimeout(this._timerService.timer);
-        if (event.url === "/fi/grid") { this._router.navigateByUrl(`/fi/grid/${this._gridViewService.selectedView}`, { skipLocationChange: true }) }
+        if (event.url === "/fi/grid") {
+          this._router.navigateByUrl(`/fi/grid/${this._gridViewService.selectedView}`)
+         }
       }
     });
 

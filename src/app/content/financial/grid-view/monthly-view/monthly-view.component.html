@@ -31,11 +31,11 @@
     </button>
 
     <mat-menu #changeViewMenu="matMenu">
-      <button mat-menu-item>
+      <button mat-menu-item [routerLink]="'/fi/grid/month'">
         <mat-icon>calendar_month</mat-icon>
         <span>Vista mensal</span>
       </button>
-      <button mat-menu-item (click)="gridViewService.swapGridView('anual')">
+      <button mat-menu-item [routerLink]="'/fi/grid/anual'" >
         <mat-icon>calendar_month</mat-icon>
         <span>Vista anual</span>
       </button>
@@ -55,7 +55,7 @@
     <!-- calendário -->
   <div class="mhq-row" style="height: 30px;position: sticky;top:0;background-color: #fff;z-index: 10;">
     <div style="width:calc(1 / 5 * 100vw);max-width:250px; height: 30px;padding-right:10px;"></div>
-    <div class="mhq-col-10">
+    <div style="width: 100%;">
       <!-- loop para cabeçalho com o calendario -->
       <div class="mhq-row" >
         <div *ngFor="let x of placeholder; let i = index;"
@@ -107,7 +107,7 @@
       <!--  celulas para valores do snapshot  -->
       <!-- <ng-scrollbar track="horizontal" [autoWidthDisabled]="false" [autoHeightDisabled]="false" > -->
 
-      <div id="mhq-grid-cells-wrapper" class="mhq-col-10">
+      <div id="mhq-grid-cells-wrapper" style="width: 100%;">
 
         <mat-spinner *ngIf="!areCategoriesReady" color="accent" style="margin:auto"></mat-spinner>
 
@@ -154,7 +154,7 @@
               <div *ngFor="let x of placeholder; let i = index;" class="mhq-category-summary">
                 {{dailySumAcomEvolution[i]
                 |
-                number:'1.0-0':'pt'}}</div>
+                number:'1.2-2':'pt'}}</div>
             </div>
           </div>
 

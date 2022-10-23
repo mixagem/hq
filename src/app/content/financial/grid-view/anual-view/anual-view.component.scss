@@ -1,3 +1,8 @@
+.mhq-cat-cell-null,
+.mhq-null-cell{
+  pointer-events: none;
+}
+
 ::ng-deep mhq-anual-view {
   width: 100%;
 }

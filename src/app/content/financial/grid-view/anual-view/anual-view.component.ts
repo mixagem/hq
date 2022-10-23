@@ -46,6 +46,7 @@ export class AnualViewComponent implements OnInit {
     this.activeCategories = [...this.categoriesService.allCategories].filter(category => category.active);
     this.yearlyGridSubtitleGenerator();
     this.areCategoriesReady = true;
+    this.gridViewService.selectedView = 'anual';
   }
 
   monthLocale(month: number): string {

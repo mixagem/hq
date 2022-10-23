@@ -5,6 +5,7 @@ import { AnualViewComponent } from './anual-view/anual-view.component';
 import { DecadeViewComponent } from './decade-view/decade-view.component';
 import { MaterialImportsModule } from 'src/assets/modules/material-imports.module';
 import { NgScrollbarModule } from 'ngx-scrollbar';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -14,12 +15,14 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
   imports: [
     CommonModule,
     MaterialImportsModule,
-    NgScrollbarModule
+    NgScrollbarModule,
+    RouterModule
   ],
   exports: [
     MonthlyViewComponent,
     AnualViewComponent,
     DecadeViewComponent,
+    RouterModule
   ]
 })
 export class GridViewModule { }

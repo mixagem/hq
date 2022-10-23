@@ -69,7 +69,7 @@ export function monthlySnapshots(req, res) {
   let categoryList = []; //array com categorias ativas
   let subCategoryList = []; // array com as subcategorias ativas, das categorias ativas
 
-  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => { err? console.error(err.message) : console.log('[M4] Generating categories snapshots') });
+  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => { err ? console.error(err.message) : console.log('[M4] Generating categories snapshots') });
   db.serialize(() => {
     db.each(`SELECT * FROM categories WHERE active = 'true' `, (err, row) => { err ? console.error(err.message) : categoryList.push(row.id) })
       .each(`SELECT * FROM subcategories WHERE active = 'true' `, (err, row) => { err ? console.error(err.message) : categoryList.includes(row.maincatid) ? subCategoryList.push(row.id) : [] })
@@ -98,36 +98,43 @@ export function monthlySnapshots(req, res) {
     });
 
     db.close((err) => {
+      console.log(monthlyMovments)
       err ? console.error(err.message) : generateSnapshots();
     });
 
     function generateSnapshots() {
       monthlyMovments.forEach(movement => {
         if (movement.type === 'expense') {
-          generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getDate()) - 1] =
-            sumToFixed(generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getDate()) - 1], -movement.value);
-          if (subCategoryList.includes(movement.subcat)) {
-            generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getDate()) - 1] =
-              sumToFixed(generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getDate()) - 1], -movement.value)
-          } else {
-            generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getDate()) - 1] =
-              sumToFixed(generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getDate()) - 1], movement.value);
-            if (subCategoryList.includes(movement.subcat)) {
-              generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getDate()) - 1] =
-                sumToFixed(generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getDate()) - 1], movement.value)
-            };
-          }
+          generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getDate()) - 1] = sumToFixed(generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getDate()) - 1], -movement.value);
+          if (subCategoryList.includes(movement.subcat)) { generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getDate()) - 1] = sumToFixed(generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getDate()) - 1], -movement.value) }
+        }
+        else {
+          generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getDate()) - 1] = sumToFixed(generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getDate()) - 1], movement.value);
+          if (subCategoryList.includes(movement.subcat)) { generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getDate()) - 1] = sumToFixed(generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getDate()) - 1], movement.value) };
         }
       })
 
-      let dailySumEvo = Array(Number(req.body.monthdays)).fill(0);
-      monthlyMovments.forEach(movement => {
-        movement.type === 'expense' ?
-          dailySumEvo[(new Date(movement.date).getDate()) - 1] = sumToFixed(dailySumEvo[(new Date(movement.date).getDate()) - 1], -movement.value) :
-          dailySumEvo[(new Date(movement.date).getDate()) - 1] = sumToFixed(dailySumEvo[(new Date(movement.date).getDate()) - 1], movement.value)
+      let monthlyMovmentsNotFiltered = []
+      let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => { if (err) { console.error(err.message); } });
+      db.serialize(() => {
+        db.each(`${QUERY}`, (err, row) => { err ? console.error(err.message) : monthlyMovmentsNotFiltered.push(row) })
       });
-      console.log('[M4] Categories snapshots generation complete')
-      res.send([generatedCategorySnapshots, generatedSubCategorySnapshots, dailySumEvo]);
+
+      db.close((err) => {
+        err ? console.error(err.message) : generateDailySnapshots();
+      });
+
+      function generateDailySnapshots() {
+        let dailySumEvo = Array(Number(req.body.monthdays)).fill(0);
+        monthlyMovmentsNotFiltered.forEach(movement => {
+          movement.type === 'expense' ?
+            dailySumEvo[(new Date(movement.date).getDate()) - 1] = sumToFixed(dailySumEvo[(new Date(movement.date).getDate()) - 1], -movement.value) :
+            dailySumEvo[(new Date(movement.date).getDate()) - 1] = sumToFixed(dailySumEvo[(new Date(movement.date).getDate()) - 1], movement.value)
+        });
+        console.log('[M4] Categories snapshots generation complete')
+        res.send([generatedCategorySnapshots, generatedSubCategorySnapshots, dailySumEvo]);
+      }
+
     }
   }
 }
@@ -143,7 +150,7 @@ export function dailyTotalAcomulatedSnapshot(req, res) {
 
   let monthlyMovments = [];
   let initialSum = [];
-  const DB = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => { err? console.error(err.message) : console.log('[M5] Generating daily acomulated snapshot') });
+  const DB = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => { err ? console.error(err.message) : console.log('[M5] Generating daily acomulated snapshot') });
   DB.serialize(() => {
     DB.each(`SELECT * FROM treasurylog WHERE date <= ${DATA_FINI_MS} AND date >= ${DATA_INI_MS}`, (err, row) => { err ? console.error(err.message) : monthlyMovments.push(row) })
       .all(`SELECT SUM(value) FROM treasurylog WHERE type='income' AND date <= ${DATA_INI_MS - 1}`, (err, row) => { err ? console.error(err.message) : initialSum[0] = Object.values(row[0])[0] })

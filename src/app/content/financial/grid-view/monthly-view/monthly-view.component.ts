@@ -35,6 +35,7 @@ export class MonthlyViewComponent implements OnInit {
     this.getDailySumAcomEvolution();
     this.getCategoriesMonthlySnapshots(this.gridViewService.monthlyCurrentDate.getFullYear(), this.gridViewService.monthlyCurrentDate.getMonth()); // vai buscar os snapshots à bd
     this.gridSubtitle = '';
+    this.gridViewService.selectedView = 'month';
   }
 
   ngOnInit(): void {

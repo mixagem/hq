@@ -124,14 +124,27 @@ export function yearlySnapshots(req, res) {
         }
       })
 
-      let monthlySumEvo = Array(12).fill(0);
-      yearlyMovments.forEach(movement => {
-        movement.type === 'expense' ?
-          monthlySumEvo[(new Date(movement.date).getMonth())] = sumToFixed(monthlySumEvo[(new Date(movement.date).getMonth())], - movement.value) :
-          monthlySumEvo[(new Date(movement.date).getMonth())] = sumToFixed(monthlySumEvo[(new Date(movement.date).getMonth())], movement.value);
+      let yearlyMovmentsNotFiltered = []
+      let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => { if (err) { console.error(err.message); } });
+      db.serialize(() => {
+        db.each(`${QUERY}`, (err, row) => { err ? console.error(err.message) : yearlyMovmentsNotFiltered.push(row) })
       });
-      console.log('[Y4] Snapshot generation complete')
-      res.send([generatedCategorySnapshots, generatedSubCategorySnapshots, monthlySumEvo]);
+
+      db.close((err) => {
+        err ? console.error(err.message) : generateDailySnapshots();
+      });
+
+      function generateDailySnapshots() {
+        let monthlySumEvo = Array(12).fill(0);
+        yearlyMovmentsNotFiltered.forEach(movement => {
+          movement.type === 'expense' ?
+            monthlySumEvo[(new Date(movement.date).getMonth())] = sumToFixed(monthlySumEvo[(new Date(movement.date).getMonth())], - movement.value) :
+            monthlySumEvo[(new Date(movement.date).getMonth())] = sumToFixed(monthlySumEvo[(new Date(movement.date).getMonth())], movement.value);
+        });
+        console.log('[Y4] Snapshot generation complete')
+        res.send([generatedCategorySnapshots, generatedSubCategorySnapshots, monthlySumEvo]);
+      }
+
     }
   }
 }

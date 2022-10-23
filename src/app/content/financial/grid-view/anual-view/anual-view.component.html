@@ -31,11 +31,11 @@
     </button>
 
     <mat-menu #changeViewMenu="matMenu">
-      <button mat-menu-item (click)="gridViewService.swapGridView('month')">
+      <button mat-menu-item [routerLink]="'/fi/grid/month'">
         <mat-icon>calendar_month</mat-icon>
         <span>Vista mensal</span>
       </button>
-      <button mat-menu-item>
+      <button mat-menu-item [routerLink]="'/fi/grid/anual'" >
         <mat-icon>calendar_month</mat-icon>
         <span>Vista anual</span>
       </button>
@@ -155,7 +155,7 @@
               <div *ngFor="let x of placeholder; let i = index;" class="mhq-category-summary">
                 {{monthlySumAcomEvolution[i]
                 |
-                number:'1.0-0':'pt'}}</div>
+                number:'1.2-2':'pt'}}</div>
             </div>
           </div>
 

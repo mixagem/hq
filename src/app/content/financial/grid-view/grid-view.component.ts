@@ -12,16 +12,11 @@ import { GridViewService } from './grid-view.service';
 
 export class GridViewComponent {
 
-  constructor(public gridViewService: GridViewService, private _categoriesService: CategoriesService, private _router: Router, private _treasuryService: TreasuryService) { }
-
-  changeView(selectedView: string): void {
-    this.gridViewService.selectedView = selectedView;
-    this._router.navigate([`/fi/grid/${selectedView}`]);
-  }
+  constructor(public gridViewService: GridViewService, private _categoriesService: CategoriesService, public router: Router, private _treasuryService: TreasuryService) { }
 
   navigationFix(target: string): void {
     this._categoriesService.cloningCategory = false;
     this._treasuryService.cloningTreasuryLog = false;
-    this._router.navigateByUrl(`/fi/${target}`, { skipLocationChange: true }).then(() => { this._router.navigate([`/fi/${target}/add`]); });
+    this.router.navigateByUrl(`/fi/${target}`, { skipLocationChange: true }).then(() => { this.router.navigate([`/fi/${target}/add`]); });
   }
 }
