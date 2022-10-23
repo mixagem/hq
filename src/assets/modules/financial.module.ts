@@ -20,6 +20,9 @@ import { GridViewComponent } from 'src/app/content/financial/grid-view/grid-view
 import { GridViewModule } from 'src/app/content/financial/grid-view/grid-view.module';
 import { ReorderCategoriesModalComponent } from 'src/app/content/financial/categories/reorder-categories-modal/reorder-categories-modal.component';
 import { MhqSnackBarComponent } from '../components/mhq-snack-bar/mhq-snack-bar.component';
+import { BudgetDetailsComponent } from 'src/app/content/financial/budgeting/budget-details/budget-details.component';
+import { NewBudgetComponent } from 'src/app/content/financial/budgeting/new-budget/new-budget.component';
+import { BudgetingComponent } from 'src/app/content/financial/budgeting/budgeting.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +41,10 @@ import { MhqSnackBarComponent } from '../components/mhq-snack-bar/mhq-snack-bar.
     UpdateRecurrencyLogConfirmationModal,
     ReorderCategoriesModalComponent,
     GridViewComponent,
-    MhqSnackBarComponent
+    MhqSnackBarComponent,
+    NewBudgetComponent,
+    BudgetDetailsComponent,
+    BudgetingComponent
 
   ],
   imports: [
@@ -66,7 +72,10 @@ import { MhqSnackBarComponent } from '../components/mhq-snack-bar/mhq-snack-bar.
     UpdateRecurrencyLogConfirmationModal,
     ReorderCategoriesModalComponent,
     MhqSnackBarComponent,
-    GridViewComponent
+    GridViewComponent,
+    NewBudgetComponent,
+    BudgetDetailsComponent,
+    BudgetingComponent
 
   ]
 })

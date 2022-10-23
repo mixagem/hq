@@ -2,6 +2,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AgendaComponent } from './content/agenda/agenda.component';
 import { DashboardComponent } from './content/dashboard/dashboard.component';
+import { BudgetDetailsComponent } from './content/financial/budgeting/budget-details/budget-details.component';
+import { BudgetingComponent } from './content/financial/budgeting/budgeting.component';
+import { NewBudgetComponent } from './content/financial/budgeting/new-budget/new-budget.component';
 import { CategoriesComponent } from './content/financial/categories/categories.component';
 import { CategoryDetailsComponent } from './content/financial/categories/category-details/category-details.component';
 import { NewCategoryComponent } from './content/financial/categories/new-category/new-category.component';
@@ -35,6 +38,11 @@ const ROUTES: Routes = [
         path: 'cats', component: CategoriesComponent, children: [
           { path: 'add', component: NewCategoryComponent },
           { path: ':id', component: CategoryDetailsComponent }]
+      }, {
+        path: 'budget', component: BudgetingComponent, children: [
+          { path: 'add', component: NewBudgetComponent },
+          { path: ':id', component: BudgetDetailsComponent }
+        ]
       }
     ]
   }];

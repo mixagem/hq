@@ -56,7 +56,7 @@ export class NavmenuService {
       isMainTitle: false,
       haveChild: false,
       name: 'Orçamentos',
-      route: '/fi/budgeting',
+      route: '/fi/budget',
       parentEntry: 'fi'
     },{
       isMainTitle: false,
