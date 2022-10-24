@@ -62,15 +62,17 @@ export class NewCategoryComponent implements OnInit {
   // concluí o modo de introdução (manda para bd, faz fresh à listagem e à gaveta)
   createNewCategory(): void {
     const HTTP_PARAMS = new HttpParams().set('category', JSON.stringify(this.tempFiCategory));
-    const CALL = this._http.post('http://localhost:16190/createnewcategory', HTTP_PARAMS, { responseType: 'text' });
+    const CALL = this._http.post('http://localhost:16190/createnewcategory', HTTP_PARAMS, { responseType: 'json' });
     CALL.subscribe({
       next: codeReceived => {
-        if (codeReceived !== 'MHQ_ERROR') {
+        const RESP = codeReceived as string[];
+
+        if (RESP[0] !== 'MHQERROR') {
           this.categoriesService.fetchCategories('saveCategory', Number(codeReceived));
           this.categoriesService.recordBorderStyle['background-color'] = this.tempFiCategory.bgcolor;
           this._mhqSnackbarService.triggerMHQSnackbar(true, 'playlist_add', this.tempFiCategory.title, ['A categoria ', ' foi criada com sucesso.']);
         } else {
-          this._mhqSnackbarService.triggerMHQSnackbar(false, 'report', this.tempFiCategory.title, ['Ocurreu um erro ao guardar as alterações à categoria ', '.']);
+          this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', '', [`${RESP.slice(1).join('<br>')}`,'']);
         }
       },
       error: err => this._errorHandlingService.handleError(err)

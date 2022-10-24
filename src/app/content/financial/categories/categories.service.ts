@@ -38,14 +38,15 @@ export class CategoriesService {
 
   // vai á bd buscar as categorias + atualiza o modo de listagem e o registo em consulta
   fetchCategories(source: string = '', catID?: number): void {
-    const CALL = this._http.get('http://localhost:16190/fetchcats');
+    const CALL = this._http.get('http://localhost:16190/fetchcats', { responseType: 'json' });
+
     CALL.subscribe({
       next: (codeReceived) => {
-        //backend call
+        const ERROR_CODE = codeReceived as string[];
+        if (ERROR_CODE[0] === 'MHQERROR') { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', ERROR_CODE[1], ['', '']); }
         const RESP = codeReceived as IFinancialCategory[];
-        this.allCategories = RESP;
 
-        //enums
+        this.allCategories = RESP;
         this.allCategories.forEach(cat => {
           this.catEnum[`${cat.id}`] = cat;
           this.catTitleEnum[`${cat.title}`] = cat;
@@ -84,10 +85,15 @@ export class CategoriesService {
 
   // método para obter o último id utilizado nas categorias em bd
   getCurrentSubcategoriesSequence(): void {
-    const CALL = this._http.get('http://localhost:16190/currentsubcategorysequence');
+    const CALL = this._http.get('http://localhost:16190/currentsubcategorysequence', { responseType: 'json' });
     CALL.subscribe({
-      next: (codeReceived) => { this.currentSubcategoryDBSequence = Number(codeReceived) },
-      error: err => this._errorHandlingService.handleError(err)
+      next: (codeReceived) => {
+        const RESP = codeReceived as string[];
+        if (RESP[0] === 'MHQERROR') { this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', RESP[1], ['', '']); location} else {
+          this.currentSubcategoryDBSequence = Number(RESP[0]);
+        }
+      },
+      error: err => { this._errorHandlingService.handleError(err);}
     });
   }
 

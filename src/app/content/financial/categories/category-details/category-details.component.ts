@@ -68,18 +68,19 @@ export class CategoryDetailsComponent implements OnInit {
   // Ação para guardar as alterações ao registo
   saveCategoryChanges(): void {
     const HTTP_PARAMS = new HttpParams().set('category', JSON.stringify(this.tempFiCategory))
-    const CALL = this._http.post('http://localhost:16190/updatecategory', HTTP_PARAMS, { responseType: 'text' })
+    const CALL = this._http.post('http://localhost:16190/updatecategory', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
       next: codeReceived => {
-        if (Number(codeReceived) === 1) {
+        const RESP = codeReceived as string[];
+        if (RESP[0] !== 'MHQERROR') {
           this.categoriesService.fetchCategories('saveCategory', this.id); // atualiza o modo listagem / consulta
           this.categoriesService.recordBorderStyle['background-color'] = this.tempFiCategory.bgcolor; // atualiza a cor do border da gaveta com a nova cor da categoria
           this.editingMode = false; // termina o modo de edição
           this._mhqSnackbarService.triggerMHQSnackbar(true, 'save_as', this.tempFiCategory.title, ['A categoria ', ' foi atualizada com sucesso.']); // dispara a snackbar
         }
         else {
-          this._mhqSnackbarService.triggerMHQSnackbar(false, 'report', this.tempFiCategory.title, ['Ocurreu um erro ao guardar as alterações à categoria ', '.']);
+          this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', '', [`${RESP.slice(1).join('<br>')}`,'']);
         }
       },
       error: err => this._errorHandlingService.handleError(err)

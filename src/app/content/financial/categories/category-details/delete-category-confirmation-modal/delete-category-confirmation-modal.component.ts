@@ -8,7 +8,7 @@ import { CategoriesService } from '../../categories.service';
 @Component({
   selector: 'mhq-delete-category-confirmation-modal',
   templateUrl: './delete-category-confirmation-modal.component.html',
-  styles: ['.mhq-modal-header{background-color: var(--mhq-waikiki-danger)!important;}','.mhq-category-modal-label{padding: 5px 10px;border-radius: 5px;}'],
+  styles: ['.mhq-modal-header{background-color: var(--mhq-waikiki-danger)!important;}', '.mhq-category-modal-label{padding: 5px 10px;border-radius: 5px;}'],
   styleUrls: ['../../../../../../assets/styles/mhq-modal.scss']
 })
 
@@ -20,10 +20,15 @@ export class DeleteCategoryConfirmationModalComponent {
     for (let i = 0; i < this._treasuryService.treasuryLog.length; i++) {
       if (this._treasuryService.treasuryLog[i].cat === this.categoriesService.activePreviewCategory.id) { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'report', this.categoriesService.activePreviewCategory.title, ['Não é possível remover a categoria ', ', devido à existência de movimentos associados a esta.']); }
     }
-    const HTTP_PARAMS = new HttpParams().set('cat', this.categoriesService.activePreviewCategory.id)
-    const CALL = this._http.post('http://localhost:16190/deletecategory', HTTP_PARAMS, { responseType: 'text' })
+    const HTTP_PARAMS = new HttpParams().set('cat', JSON.stringify(this.categoriesService.activePreviewCategory))
+    const CALL = this._http.post('http://localhost:16190/deletecategory', HTTP_PARAMS, { responseType: 'json' })
     CALL.subscribe({
-      next: codeReceived => { this.categoriesService.fetchCategories('deleteCategory'); },
+      next: codeReceived => {
+        const RESP = codeReceived as string[];
+        if (RESP[0] === 'MHQERROR') { this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', '', [RESP[0], '']) }
+        else { this._mhqSnackbarService.triggerMHQSnackbar(true, 'recycling', '', [RESP[0], '']) }
+        this.categoriesService.fetchCategories('deleteCategory');
+      },
       error: err => this._errorHandlingService.handleError(err)
     })
   }
