@@ -15,6 +15,7 @@ const REC_FREQ: recurencyFrequency[] = [{ string: "Mensal", value: "m" }, { stri
 export class TreasuryService {
   tlogEnum: any; // enum
   loadingComplete: Boolean; // boolean com o estado do loading dos movimentos da bd
+  onInitTrigger: Subject<any>;   //trigger para onInit
   recordBorderStyle: RecordBorderStyle;   // cor a ser utilizada no border dos detalhes da categoria/movimento tesouraria
   treasuryLog: ITreasuryLog[];   // arrays para os movimentos  existentes em bd
   activeTreasuryLog: ITreasuryLog;   // clone do movimento  atualmente em consulta
@@ -25,10 +26,12 @@ export class TreasuryService {
   constructor(private _errorHandlingService: ErrorHandlingService, private _http: HttpClient, private _router: Router, private _loadingService: LoadingService, private _timerService: TimerService) {
     this.cloningTreasuryLog = false;
     this.fetchTreasuryLog();
+    this.onInitTrigger = new Subject<any>();
     this.recurrencyFreq = REC_FREQ;
     this.recordBorderStyle = { "background-color": "rgb(0,0,0)" }
   }
 
+  onInitTriggerCall(): void { this.onInitTrigger.next(''); this.onInitTrigger.complete; this.onInitTrigger = new Subject<any>(); }
 
 
   // vai á bd buscar os movimentos
@@ -38,26 +41,21 @@ export class TreasuryService {
     CALL.subscribe({
       next: (codeReceived) => {
         const RESP = codeReceived as ITreasuryLog[];
+        this.treasuryLog = RESP;
+        this.tlogEnum = {}; this.treasuryLog.forEach(tlog => { this.tlogEnum[`${tlog.id}`] = tlog });
+        this._loadingService.treasuryLoadingComplete = true;
 
         if (source === 'saveTreasuryLog') { this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs', LogID]); }); }
 
         if (source === 'deleteTreasuryLog') {
           document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
-          this._timerService.timer = setTimeout(() => {
+          this._timerService.timer = setTimeout(navi.bind(null, this._router), 750);
+          function navi(router: Router): void {
             const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-            this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs']); });
-            this.treasuryLog = RESP;
-            this.tlogEnum = {}; this.treasuryLog.forEach(tlog => { this.tlogEnum[`${tlog.id}`] = tlog });
-            this._loadingService.treasuryLoadingComplete = true;
-
-          }, 750);
+            router.navigateByUrl('/', { skipLocationChange: true }).then(() => { router.navigate(['/fi/tlogs']); });
+          }
         }
-        else {
-          this.treasuryLog = RESP;
-          this.tlogEnum = {}; this.treasuryLog.forEach(tlog => { this.tlogEnum[`${tlog.id}`] = tlog });
-          this._loadingService.treasuryLoadingComplete = true;
-        }
-
+        this.onInitTriggerCall();
       },
       error: err => this._errorHandlingService.handleError(err)
     });
