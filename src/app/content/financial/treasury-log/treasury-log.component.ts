@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
 import { LoadingService } from 'src/assets/services/misc.service';
 import { CategoriesService } from '../categories/categories.service';
@@ -38,6 +39,7 @@ export class TreasuryLogComponent implements OnInit {
 
   // navegação para modo de consulta de registo
   viewMode(logID: number, catID: number): void {
+    this.treasuryService.onInitTrigger.complete; this.treasuryService.onInitTrigger = new Subject<any>();
     if (document.querySelector('#mhq-category-details')?.classList.contains('animate__slideOutRight')) { document.querySelector('#mhq-category-details')?.classList.replace('animate__slideOutRight', 'animate__slideInRight') }
     this.router.navigateByUrl('/fi/tlogs', { skipLocationChange: true }).then(() => { this.router.navigate(['/fi/tlogs', logID]); });
   }

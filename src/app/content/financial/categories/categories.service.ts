@@ -34,7 +34,7 @@ export class CategoriesService {
   }
 
   // trigger para onInit do componente
-  onInitTriggerCall(): void { this.onInitTrigger.next(''); }
+  onInitTriggerCall(): void { this.onInitTrigger.next(''); this.onInitTrigger.complete; this.onInitTrigger = new Subject<any>();}
 
   // vai á bd buscar as categorias + atualiza o modo de listagem e o registo em consulta
   fetchCategories(source: string = '', catID?: number): void {

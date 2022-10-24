@@ -31,7 +31,8 @@ export class TreasuryService {
     this.recordBorderStyle = { "background-color": "rgb(0,0,0)" }
   }
 
-  onInitTriggerCall(): void { this.onInitTrigger.next(''); }
+  onInitTriggerCall(): void { this.onInitTrigger.next(''); this.onInitTrigger.complete; this.onInitTrigger = new Subject<any>(); }
+
 
   // vai á bd buscar os movimentos
   fetchTreasuryLog(source: string = '', LogID?: number): void {

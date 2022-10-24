@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { LoadingService } from 'src/assets/services/misc.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ReorderCategoriesModalComponent } from './reorder-categories-modal/reorder-categories-modal.component';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'mhq-categories',
@@ -41,6 +42,8 @@ export class CategoriesComponent implements OnInit {
 
   // (onclick) modo consulta
   viewRecordDetails(categoryID: number): void {
+
+    this.categoriesService.onInitTrigger.complete; this.categoriesService.onInitTrigger = new Subject<any>();
     //fix para quando consulta-mos enquanto a animção do fecho da gaveta está a fechar -v
     if (document.querySelector('#mhq-category-details')?.classList.contains('animate__slideOutRight')) { document.querySelector('#mhq-category-details')?.classList.replace('animate__slideOutRight', 'animate__slideInRight') }
     this.router.navigateByUrl('/fi/cats', { skipLocationChange: true }).then(() => { this.router.navigate(['/fi/cats', categoryID]); });
