@@ -29,7 +29,6 @@ export class TreasuryLogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.treasuryService.onInitTrigger.subscribe(x => { this.ngOnInit(); });     // triggers remoto do OnInit
     this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.treasuryLoadingComplete) { return }     // loading check
     this.dataSource = new MatTableDataSource<ITreasuryLog>(this.treasuryService.treasuryLog);     // incializar tabela
@@ -39,7 +38,6 @@ export class TreasuryLogComponent implements OnInit {
 
   // navegação para modo de consulta de registo
   viewMode(logID: number, catID: number): void {
-    this.treasuryService.onInitTrigger.complete; this.treasuryService.onInitTrigger = new Subject<any>();
     if (document.querySelector('#mhq-category-details')?.classList.contains('animate__slideOutRight')) { document.querySelector('#mhq-category-details')?.classList.replace('animate__slideOutRight', 'animate__slideInRight') }
     this.router.navigateByUrl('/fi/tlogs', { skipLocationChange: true }).then(() => { this.router.navigate(['/fi/tlogs', logID]); });
   }

@@ -41,8 +41,7 @@ export class TreasuryDetailsComponent implements OnInit {
     this.recurrencyFamily = [];
   }
 
-  ngOnInit(): void {
-    this.treasuryService.onInitTrigger.subscribe(x => { this.ngOnInit(); });     // triggers remoto do OnInit
+  ngOnInit(): void {    // triggers remoto do OnInit
     this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this.loadingService.categoriesLoadingComplete || !this.loadingService.treasuryLoadingComplete) { return }     // loading check
     this.id = Number(this._route.snapshot.paramMap.get('id')!);
@@ -55,6 +54,7 @@ export class TreasuryDetailsComponent implements OnInit {
     this.categoriesService.catEnum[this.tempTreasuryLog.cat].subcats.forEach((subcat: { title: string; }) => { this.subcategoriesList.push(subcat.title) });
     this.subcatForm.enable();
     this.categoriesService.allCategories.forEach(cat => { this.categoriesList.push(cat.title) });
+    console.log('sdas')
     this.getRecurrencyFamily();
     this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.treasuryLog.cat].bgcolor;
   }
@@ -117,7 +117,6 @@ export class TreasuryDetailsComponent implements OnInit {
         this.tempTreasuryLog.date = this.treasuryLogDatepickerForm.value.getTime();
         this.tempTreasuryLog.cat = CATEGORY.id;
         this.tempTreasuryLog.subcat = this.categoriesService.subcatTitleEnum[`${this.subcatForm.value}`].id;
-        this.treasuryService.recordBorderStyle['background-color'] = CATEGORY.bgcolor;
         this.tempTreasuryLog.value = Number(this.tempTreasuryLog.value.toString().replace(',', '.')); // conversão de vírgulas para pontos
         if (!this.tempTreasuryLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) {
           return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
