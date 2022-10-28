@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ScaleType } from '@swimlane/ngx-charts';
+import { CategoriesService } from '../categories/categories.service';
 
 
 export type SavingsSnapshot = {
@@ -21,8 +22,9 @@ export type SavingsSnapshot = {
 
 export class SavingsComponent {
   multi: SavingsSnapshot[] = [];
+  multi2: SavingsSnapshot[] = [];
 
-  waikiki =  {
+  waikiki = {
     name: 'waikiki',
     selectable: true,
     group: ScaleType.Ordinal,
@@ -34,13 +36,33 @@ export class SavingsComponent {
     ]
   }
 
-  constructor(private _http: HttpClient) {
+  constructor(private _http: HttpClient, private _categoriesService: CategoriesService) {
     Object.assign(this, this.multi);
-    this.getYearlySnapshotForGraphs();
+    this.getYearlySavingSnapshotsForGraphs();
+    this.getSnapshotForGraphs(2023, [1, 2]);
+  }
+
+  getSnapshotForGraphs(year: number, categories: number[]): void {
+    // ano, categorias, subcategorias
+    const CAT_TITLES: string[] = [];
+    categories.forEach(catID => { CAT_TITLES.push(this._categoriesService.catEnum[catID].title) });
+
+
+    const HTTP_PARAMS = new HttpParams().set('year', year).set('cats', JSON.stringify(categories)).set('titles', JSON.stringify(CAT_TITLES));
+    const CALL = this._http.post('http://localhost:16190/testesnapshot', HTTP_PARAMS, { responseType: 'json' });
+    CALL.subscribe({
+      next: (codeReceived) => {
+        const RESP = codeReceived as SavingsSnapshot[];
+        this.multi2 = new Array(2);
+        this.multi2[0] = RESP[0]
+        this.multi2[1] = RESP[1];
+      },
+      error: err => { }
+    });
   }
 
 
-  getYearlySnapshotForGraphs(): void {
+  getYearlySavingSnapshotsForGraphs(): void {
     const HTTP_PARAMS = new HttpParams().set('year', 2023)
     const CALL = this._http.post('http://localhost:16190/savingsgraphsnapshot', HTTP_PARAMS, { responseType: 'json' });
     CALL.subscribe({
@@ -49,8 +71,6 @@ export class SavingsComponent {
         this.multi = new Array(2);
         this.multi[0] = RESP[0]
         this.multi[1] = RESP[1];
-        // console.log(this.multi)
-        // console.log(RESP)
       },
       error: err => { }
     });

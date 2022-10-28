@@ -16,7 +16,7 @@
 
   </div>
 
-  <div class="mhq-row" style="height: calc(100% - 60px);">
+  <div class="mhq-row" style="height: calc(50% - 30px);">
     <ngx-charts-line-chart
     [scheme]="waikiki"
 
@@ -28,6 +28,22 @@
         xAxisLabel="Mês"
         yAxisLabel="Poupança €"
       [results]="multi"
+      (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+    </ngx-charts-line-chart>
+  </div>
+
+  <div class="mhq-row" style="height: calc(50% - 30px);">
+    <ngx-charts-line-chart
+    [scheme]="waikiki"
+
+     [legend]=true
+     [showXAxisLabel]=true
+     [showYAxisLabel]=true
+      [xAxis]=true
+       [yAxis]=true
+        xAxisLabel="Mês"
+        yAxisLabel="Gasto €"
+      [results]="multi2"
       (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
     </ngx-charts-line-chart>
   </div>

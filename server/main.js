@@ -2,7 +2,7 @@ import { dailyTotalAcomulatedSnapshot, monthlySnapshots, dailyCatDetails, dailyS
 import { monthlyTotalAcomulatedSnapshot, yearlySnapshots, monthlyCatDetails, monthlySubCatDetails, monthlyTotalDetails } from './yearlyViewMethods.js';
 import { deleteAllRecurrencies, dettachRecurrency, updateRecurrency, getRecurencyLogs, createTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog } from './treasuryMethods.js';
 import { orderCategories, orderSubCategories, fetchCategories, createNewCategory, deleteCategory, updateCategory, getSubcategorySequence } from './categoriesMethods.js'
-import { savingsGraphSnapshot } from './savingsMethods.js'
+import { savingsGraphSnapshot, generateCatGraphSnapshot } from './savingsMethods.js'
 
 import express from 'express';
 import cors from 'cors';
@@ -52,3 +52,4 @@ APP.post('/deleteallrecurrencies', function (req, res) { return deleteAllRecurre
 
 
 APP.post('/savingsgraphsnapshot', function (req, res) { return savingsGraphSnapshot(req, res); });
+APP.post('/testesnapshot', function (req, res) { return generateCatGraphSnapshot(req, res); });

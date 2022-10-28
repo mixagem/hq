@@ -40,10 +40,10 @@ export function savingsGraphSnapshot(req, res) {
       if (err) { console.error(err.message) }
       else {
 
-        if(result[0].homegoodsum == null){result[0].homegoodsum = 0}
-        if(result[0].homebadsum == null){result[0].homebadsum = 0}
-        if(result[0].cargoodsum == null){result[0].cargoodsum = 0}
-        if(result[0].carbadsum == null){result[0].carbadsum = 0}
+        if (result[0].homegoodsum == null) { result[0].homegoodsum = 0 }
+        if (result[0].homebadsum == null) { result[0].homebadsum = 0 }
+        if (result[0].cargoodsum == null) { result[0].cargoodsum = 0 }
+        if (result[0].carbadsum == null) { result[0].carbadsum = 0 }
 
         homeMonthlyValues[0] = sumToFixed(homeMonthlyValues[0], -result[0].homebadsum, result[0].homegoodsum)
         carMonthlyValues[0] = sumToFixed(carMonthlyValues[0], -result[0].carbadsum, result[0].cargoodsum)
@@ -101,13 +101,16 @@ export function savingsGraphSnapshot(req, res) {
         carAcomulatedValues[i] = sumToFixed(carAcomulatedValues[i - 1], carMonthlyValues[i])
       }
 
+
+      const MONTH = new Date(); MONTH.setMonth(i);
+
       homeSnapshotArray.series.push({
-        name: i,
+        name: MONTH.toLocaleString('default', { month: 'long' }),
         value: homeAcomulatedValues[i]
       })
 
       carSnapshotArray.series.push({
-        name: i,
+        name: MONTH.toLocaleString('default', { month: 'long' }),
         value: carAcomulatedValues[i]
       })
 
@@ -115,6 +118,64 @@ export function savingsGraphSnapshot(req, res) {
 
     console.log(homeSnapshotArray)
     err ? console.error(err.message) : res.send([homeSnapshotArray, carSnapshotArray]);
+    console.log('[C1] treasury logs fetch complete');
+  });
+
+}
+
+export function generateCatGraphSnapshot(req, res) {
+
+  const YEAR = req.body.year;
+  const CAT_IDS = JSON.parse(req.body.cats);
+  const CAT_TITLES = JSON.parse(req.body.titles);
+
+
+  const DATA_INI = new Date('2022-01-01T00:00:00.000Z'); DATA_INI.setFullYear(YEAR); const DATA_INI_MS = DATA_INI.getTime();
+  const DATA_FINI = new Date('2022-01-01T00:00:00.000Z'); DATA_FINI.setFullYear(YEAR + 1); const DATA_FINI_MS = DATA_FINI.getTime();
+
+  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+    if (err) { console.error(err.message); }
+    console.log('[S2] generating cat graph snapshot');
+  });
+
+  // agrupador dos snapshots
+  let snapshotsArray = [];
+
+
+  CAT_IDS.forEach((CAT_ID, i) => {
+    snapshotsArray.push({
+      name: CAT_TITLES[i],
+      series: []
+    });
+
+
+    for (let y = 0; y < 12; y++) {
+
+      const DATA_MENSAL_LOCALE = new Date(DATA_INI_MS); DATA_MENSAL_LOCALE.setFullYear(YEAR, y);
+      snapshotsArray[i].series.push({
+        name: DATA_MENSAL_LOCALE.toLocaleString('default', { month: 'long' }),
+        value: 0,
+      })
+    }
+
+    db.serialize(() => {
+      db.each(`SELECT value, date FROM treasurylog WHERE date >= ${DATA_INI_MS} AND date < ${DATA_FINI_MS} AND cat = '${CAT_ID}' ORDER BY date`, (err, row) => {
+        if (err) { console.error(err.message) }
+        else {
+          if (row.value !== null) {
+            const LOG_DATE = new Date(row.date); const LOG_MONTH = LOG_DATE.getMonth();
+            if (row.type === 'income') { snapshotsArray[i].series[LOG_MONTH].value = sumToFixed(snapshotsArray[i].series[LOG_MONTH].value, -row.value) }
+            else { snapshotsArray[i].series[LOG_MONTH].value = sumToFixed(snapshotsArray[i].series[LOG_MONTH].value, row.value) }
+          }
+        }
+      })
+    })
+
+  });
+
+
+  db.close((err) => {
+    err ? console.error(err.message) : res.send(snapshotsArray);
     console.log('[C1] treasury logs fetch complete');
   });
 
