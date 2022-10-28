@@ -1,0 +1,38 @@
+<div class="mhq-mainform-container">
+
+  <div class="mhq-row mhq-mainform-header">
+
+    <h1>
+      <mat-icon>account_balance</mat-icon>Gráficos bazofes
+    </h1>
+
+
+    <div class="mhq-mainform-actions">
+      <button mat-flat-button color="accent" disabled>
+        <mat-icon>add</mat-icon>Ações
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="mhq-row" style="height: calc(100% - 60px);">
+    <ngx-charts-line-chart
+    [scheme]="waikiki"
+
+     [legend]=true
+     [showXAxisLabel]=true
+     [showYAxisLabel]=true
+      [xAxis]=true
+       [yAxis]=true
+        xAxisLabel="Mês"
+        yAxisLabel="Poupança €"
+      [results]="multi"
+      (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+    </ngx-charts-line-chart>
+  </div>
+
+
+</div>
+
+<!-- [scheme]="colorScheme" -->

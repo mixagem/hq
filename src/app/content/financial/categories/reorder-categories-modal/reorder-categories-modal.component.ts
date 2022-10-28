@@ -14,7 +14,7 @@ import { CategoriesService } from '../categories.service';
 @Component({
   selector: 'mhq-reorder-categories-modal',
   templateUrl: './reorder-categories-modal.component.html',
-  styleUrls: ['./reorder-categories-modal.component.scss','../../../../../assets/styles/mhq-modal.scss']
+  styleUrls: ['./reorder-categories-modal.component.scss', '../../../../../assets/styles/mhq-modal.scss']
 })
 
 export class ReorderCategoriesModalComponent implements OnInit {
@@ -53,22 +53,16 @@ export class ReorderCategoriesModalComponent implements OnInit {
     this.categoriesToOrder.forEach(cat => { categoryOrderArray.push(cat.id) });
 
     const HTTP_PARAMS = new HttpParams().set('newcatorder', JSON.stringify(categoryOrderArray))
-    const CALL = this._http.post('http://localhost:16190/ordercategories', HTTP_PARAMS, { responseType: 'text' });
+    const CALL = this._http.post('http://localhost:16190/ordercategories', HTTP_PARAMS, { responseType: 'json' });
     CALL.subscribe({
       next: (codeReceived) => {
-        switch (Number(codeReceived)) {
-          case 1:
-            this.categoriesService.fetchCategories();
-            const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-            this._mhqSnackbarService.triggerMHQSnackbar(true, 'smile', 're-ordenadas', ['As categorias foram ', ' com sucesso.']);
-            this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/cats']); });
-            this.categoriesService.onInitTriggerCall();
-
-            break;
-
-          case 0: default:
-            this._mhqSnackbarService.triggerMHQSnackbar(false, 'alert', 're-ordenar', ['Algo inesperado ao ', ' as categorias.']);
-        }
+        const RESP = codeReceived as string[];
+        if (RESP[0] === 'MHQERROR') { this._mhqSnackbarService.triggerMHQSnackbar(false, 'sync_problem', 're-ordenar', ['Algo inesperado ao ', ' as categorias.']); return }
+        this.categoriesService.fetchCategories();
+        const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
+        this._mhqSnackbarService.triggerMHQSnackbar(true, 'sync_lock', 're-ordenadas', ['As categorias foram ', ' com sucesso.']);
+        this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/cats']); });
+        this.categoriesService.onInitTriggerCall();
       },
       error: err => this._errorHandlingService.handleError(err)
     });

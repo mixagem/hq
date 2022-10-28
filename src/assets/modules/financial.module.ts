@@ -23,6 +23,9 @@ import { MhqSnackBarComponent } from '../components/mhq-snack-bar/mhq-snack-bar.
 import { BudgetDetailsComponent } from 'src/app/content/financial/budgeting/budget-details/budget-details.component';
 import { NewBudgetComponent } from 'src/app/content/financial/budgeting/new-budget/new-budget.component';
 import { BudgetingComponent } from 'src/app/content/financial/budgeting/budgeting.component';
+import { SavingsComponent } from 'src/app/content/financial/savings/savings.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -44,7 +47,8 @@ import { BudgetingComponent } from 'src/app/content/financial/budgeting/budgetin
     MhqSnackBarComponent,
     NewBudgetComponent,
     BudgetDetailsComponent,
-    BudgetingComponent
+    BudgetingComponent,
+    SavingsComponent
 
   ],
   imports: [
@@ -55,7 +59,9 @@ import { BudgetingComponent } from 'src/app/content/financial/budgeting/budgetin
     HttpClientModule,
     ColorPickerModule,
     NgScrollbarModule,
-    GridViewModule
+    GridViewModule,
+    NgxChartsModule,
+    BrowserAnimationsModule
   ],
   exports: [
     FinancialComponent,
@@ -75,7 +81,8 @@ import { BudgetingComponent } from 'src/app/content/financial/budgeting/budgetin
     GridViewComponent,
     NewBudgetComponent,
     BudgetDetailsComponent,
-    BudgetingComponent
+    BudgetingComponent,
+    SavingsComponent
 
   ]
 })

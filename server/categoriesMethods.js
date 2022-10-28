@@ -128,24 +128,29 @@ export function createNewCategory(req, res) {
   }
 
   function checkComplete() {
-    let currentOrder;
+    let currentOrder = 9998;
 
     DB.serialize(() => {
 
       DB.all(`SELECT MAX(catorder) as max from categories`, (err, resp) => {
         if (err) { dbErrors = true; console.log('[CAT 3] Erro ao carregar o valor da sequência da ordem de categorias'); console.error(err.message); };
-        currentOrder = Number(resp[0].max);
-      })
-        .run(`INSERT INTO categories (title, icon, type, bgcolor, textcolor, active, catorder) VALUES ('${CATEGORY.title}','${CATEGORY.icon}','${CATEGORY.type}','${CATEGORY.bgcolor}','${CATEGORY.textcolor}','${CATEGORY.active}', '${currentOrder + 1}')`, (err) => {
-          if (err) { dbErrors = true; console.log('[CAT 3] Erro na criação da categoria'); console.error(err.message); };
-          console.log('[CAT 3] Categoria => "' + CATEGORY.title + '" criada com sucesso');
+        console.log(Number(resp[0].max))
+
+        DB.serialize(() => {
+          DB.run(`INSERT INTO categories (title, icon, type, bgcolor, textcolor, active, catorder) VALUES ('${CATEGORY.title}','${CATEGORY.icon}','${CATEGORY.type}','${CATEGORY.bgcolor}','${CATEGORY.textcolor}','${CATEGORY.active}', '${currentOrder + 1}')`, (err) => {
+            if (err) { dbErrors = true; console.log('[CAT 3] Erro na criação da categoria'); console.error(err.message); };
+            console.log('[CAT 3] Categoria => "' + CATEGORY.title + '" criada com sucesso');
+          })
+            // obter o id atribuído à categoria introduzida
+            .all(`SELECT * from sqlite_sequence where name='categories'`, (err, resp) => {
+              if (err) { dbErrors = true; console.log('[CAT 3] Erro ao carregar o valor atribuído à categoria'); console.error(err.message); } else {
+                console.log('[CAT 3] A criar subcategorias para a categoria "' + CATEGORY.title + '"'); insertSubcategories(resp[0].seq);
+              }
+            });
         })
-        // obter o id atribuído à categoria introduzida
-        .all(`SELECT * from sqlite_sequence where name='categories'`, (err, resp) => {
-          if (err) { dbErrors = true; console.log('[CAT 3] Erro ao carregar o valor atribuído à categoria'); console.error(err.message); } else {
-            console.log('[CAT 3] A criar subcategorias para a categoria "' + CATEGORY.title + '"'); insertSubcategories(resp[0].seq);
-          }
-        });
+      })
+
+
     });
 
     function insertSubcategories(assignedCategoryID) {

@@ -41,19 +41,24 @@ export class TreasuryService {
     CALL.subscribe({
       next: (codeReceived) => {
         const RESP = codeReceived as ITreasuryLog[];
-        this.treasuryLog = RESP;
-        this.tlogEnum = {}; this.treasuryLog.forEach(tlog => { this.tlogEnum[`${tlog.id}`] = tlog });
-        this._loadingService.treasuryLoadingComplete = true;
 
         if (source === 'saveTreasuryLog') { this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs', LogID]); }); }
 
         if (source === 'deleteTreasuryLog') {
           document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
-          this._timerService.timer = setTimeout(navi.bind(null, this._router), 750);
-          function navi(router: Router): void {
+          this._timerService.timer = setTimeout(() => {
             const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-            router.navigateByUrl('/', { skipLocationChange: true }).then(() => { router.navigate(['/fi/tlogs']); });
-          }
+            this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs']); });
+            this.treasuryLog = RESP;
+            this.tlogEnum = {}; this.treasuryLog.forEach(tlog => { this.tlogEnum[`${tlog.id}`] = tlog });
+            this._loadingService.treasuryLoadingComplete = true;
+
+          }, 750);
+        }
+        else {
+          this.treasuryLog = RESP;
+          this.tlogEnum = {}; this.treasuryLog.forEach(tlog => { this.tlogEnum[`${tlog.id}`] = tlog });
+          this._loadingService.treasuryLoadingComplete = true;
         }
         this.onInitTriggerCall();
       },

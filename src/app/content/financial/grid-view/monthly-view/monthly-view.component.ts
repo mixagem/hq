@@ -62,7 +62,7 @@ export class MonthlyViewComponent implements OnInit {
         break;
 
       case 1:
-        this.gridViewService.monthlyCurrentDate.getMonth() === 0 ? this.gridViewService.monthlyCurrentDate.setFullYear(this.gridViewService.monthlyCurrentDate.getFullYear() + 1, 0) : this.gridViewService.monthlyCurrentDate.setMonth(this.gridViewService.monthlyCurrentDate.getMonth() + 1);
+        this.gridViewService.monthlyCurrentDate.getMonth() === 11 ? this.gridViewService.monthlyCurrentDate.setFullYear(this.gridViewService.monthlyCurrentDate.getFullYear() + 1, 0) : this.gridViewService.monthlyCurrentDate.setMonth(this.gridViewService.monthlyCurrentDate.getMonth() + 1);
         break;
 
       case 0: default:
