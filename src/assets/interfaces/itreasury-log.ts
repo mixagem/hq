@@ -9,5 +9,6 @@ export interface ITreasuryLog {
   obs:string,
   recurrencyid: number,
   nif: boolean,
-  efat: boolean
+  efat: number,
+  efatcheck: boolean
 }

@@ -119,7 +119,7 @@
         </div>
 
         <div class="mhq-input-wrapper mhq-col-2 mhq-checkbox-wrapper">
-          <mat-checkbox *ngIf="treasuryLog.nif" color="primary" disabled [checked]="treasuryLog.efat">E-Fatura validado</mat-checkbox>
+          <mat-checkbox *ngIf="treasuryLog.nif" color="primary" disabled [checked]="treasuryLog.efatcheck">E-Fatura validado</mat-checkbox>
         </div>
 
         <div class="mhq-input-wrapper mhq-col-5">
@@ -272,11 +272,11 @@
         </div>
 
         <div class="mhq-input-wrapper mhq-col-2 mhq-checkbox-wrapper">
-          <mat-checkbox color="primary" [disabled]="tempTreasuryLog.efat" [(ngModel)]="tempTreasuryLog.nif">Tem contribuinte</mat-checkbox>
+          <mat-checkbox color="primary" [disabled]="tempTreasuryLog.efatcheck" [(ngModel)]="tempTreasuryLog.nif">Tem contribuinte</mat-checkbox>
         </div>
 
         <div class="mhq-input-wrapper mhq-col-2 mhq-checkbox-wrapper">
-          <mat-checkbox *ngIf="tempTreasuryLog.nif" color="primary" disabled [(ngModel)]="tempTreasuryLog.efat">E-Fatura validado</mat-checkbox>
+          <mat-checkbox *ngIf="tempTreasuryLog.nif" color="primary" disabled [checked]="tempTreasuryLog.efatcheck">E-Fatura validado</mat-checkbox>
         </div>
 
         <div class="mhq-input-wrapper mhq-col-5">
