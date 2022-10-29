@@ -1,6 +1,6 @@
-<mat-progress-bar *ngIf="true" mode="indeterminate" color="accent"></mat-progress-bar>
+<mat-progress-bar *ngIf="!isMatTableReady" mode="indeterminate" color="accent"></mat-progress-bar>
 
-<div *ngIf="true" class="mhq-mainform-container">
+<div *ngIf="isMatTableReady" class="mhq-mainform-container">
 
   <div class="mhq-row mhq-mainform-header">
     <h1>
@@ -16,7 +16,7 @@
   </div>
 
   <div class="mhq-row mhq-mainform-content">
-    <!-- <table mat-table [dataSource]="dataSource">
+    <table mat-table [dataSource]="dataSource">
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 
@@ -32,12 +32,12 @@
       <ng-container matColumnDef="value">
         <th mat-header-cell *matHeaderCellDef> Valor </th>
       </ng-container>
-    </table> -->
+    </table>
 
-    <!-- <ng-scrollbar style="width:100%">
+    <ng-scrollbar style="width:100%">
       <table mat-table [dataSource]="dataSource">
 
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="viewMode(row.id,row.cat)"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="viewMode(row.id)"></tr>
 
         <ng-container matColumnDef="cat">
           <th mat-header-cell *matHeaderCellDef> Categoria </th>
@@ -62,7 +62,7 @@
         </ng-container>
       </table>
 
-    </ng-scrollbar> -->
+    </ng-scrollbar>
   </div>
 
   <div class="mhq-row mhq-mainform-footer">

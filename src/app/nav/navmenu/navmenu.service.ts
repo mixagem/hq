@@ -79,8 +79,8 @@ export class NavmenuService {
     },{
       isMainTitle: false,
       haveChild: false,
-      name: 'Poupanças',
-      route: '/fi/savings',
+      name: 'Gráficos',
+      route: '/fi/graphs',
       parentEntry: 'fi'
     }
   ]

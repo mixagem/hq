@@ -23,7 +23,7 @@ import { MhqSnackBarComponent } from '../components/mhq-snack-bar/mhq-snack-bar.
 import { BudgetDetailsComponent } from 'src/app/content/financial/budgeting/budget-details/budget-details.component';
 import { NewBudgetComponent } from 'src/app/content/financial/budgeting/new-budget/new-budget.component';
 import { BudgetingComponent } from 'src/app/content/financial/budgeting/budgeting.component';
-import { SavingsComponent } from 'src/app/content/financial/savings/savings.component';
+import { AnalysisComponent } from 'src/app/content/financial/analysis/analysis.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -48,7 +48,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     NewBudgetComponent,
     BudgetDetailsComponent,
     BudgetingComponent,
-    SavingsComponent
+    AnalysisComponent
 
   ],
   imports: [
@@ -82,7 +82,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     NewBudgetComponent,
     BudgetDetailsComponent,
     BudgetingComponent,
-    SavingsComponent
+    AnalysisComponent
 
   ]
 })

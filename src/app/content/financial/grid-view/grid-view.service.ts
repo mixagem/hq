@@ -15,7 +15,7 @@ export class GridViewService {
   constructor() {
     this.monthlyCurrentDate = new Date();
     this.gridSubtitle = '';
-    this.selectedView = 'month';
+    this.selectedView = 'anual';
   }
 
   getMonthDays(year: number, month: number): number {

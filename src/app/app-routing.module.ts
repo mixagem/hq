@@ -13,7 +13,7 @@ import { AnualViewComponent } from './content/financial/grid-view/anual-view/anu
 import { DecadeViewComponent } from './content/financial/grid-view/decade-view/decade-view.component';
 import { GridViewComponent } from './content/financial/grid-view/grid-view.component';
 import { MonthlyViewComponent } from './content/financial/grid-view/monthly-view/monthly-view.component';
-import { SavingsComponent } from './content/financial/savings/savings.component';
+import { AnalysisComponent } from './content/financial/analysis/analysis.component';
 import { NewTreasuryLogComponent } from './content/financial/treasury-log/new-treasury-log/new-treasury-log.component';
 import { TreasuryDetailsComponent } from './content/financial/treasury-log/treasury-details/treasury-details.component';
 import { TreasuryLogComponent } from './content/financial/treasury-log/treasury-log.component';
@@ -45,7 +45,7 @@ const ROUTES: Routes = [
           { path: ':id', component: BudgetDetailsComponent }
         ]
       }, {
-        path: 'savings', component: SavingsComponent
+        path: 'graphs', component: AnalysisComponent
       }
     ]
   }];

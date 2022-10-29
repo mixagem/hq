@@ -1,0 +1,152 @@
+<mat-progress-bar *ngIf="!this.loadingService.categoriesLoadingComplete" mode="indeterminate" color="accent"></mat-progress-bar>
+
+<div *ngIf="this.loadingService.categoriesLoadingComplete" class="mhq-mainform-container">
+
+  <div class="mhq-row mhq-mainform-header">
+
+    <h1>
+      <mat-icon>account_balance</mat-icon>Gráficos bazofes
+    </h1>
+
+
+    <div class="mhq-mainform-actions">
+      <button mat-flat-button color="accent" disabled>
+        <mat-icon>add</mat-icon>Ações
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- <div class="mhq-row" style="height: calc((100% - 60px) * 9 / 12 );">
+    <div class="mhq-col-8" style="display: flex;">
+      <mat-card style="width: 92%;">Simple card</mat-card>
+    </div>
+    <div class="mhq-col-4" style="display: flex; flex-direction: column;">
+      <mat-card style="height:35%">Simple card</mat-card>
+      <mat-card style="height:35%">Simple card</mat-card>
+    </div>
+  </div>
+
+  <div class="mhq-row" style="height: calc((100% - 60px) * 3 / 12);">
+    <div class="mhq-col-4">
+      <mat-card>Simple card</mat-card>
+    </div>
+    <div class="mhq-col-4">
+      <mat-card>Simple card</mat-card>
+    </div>
+    <div class="mhq-col-4">
+      <mat-card>Simple card</mat-card>
+    </div>
+  </div> -->
+
+  <div style="height: calc(100% * 2 / 3 - 40px);padding-top:20px">
+    <mat-grid-list cols="3" rowHeight="50%">
+      <mat-grid-tile colspan=2 rowspan=2>
+        <mat-card style="height: 90%;width: 95%;">
+          <div style="height:100%;width:100%">
+            <ngx-charts-line-chart [scheme]="waikiki" [legend]=true [showXAxisLabel]=true [showYAxisLabel]=true [legendTitle]="''"
+              [xAxis]=true [yAxis]=true xAxisLabel="Mês" yAxisLabel="Poupança €" [results]="graphs[0]"  [tooltipDisabled]=false
+              (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+            </ngx-charts-line-chart>
+          </div>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile colspan=1 rowspan=1>
+        <mat-card>
+
+          <div style="height:100%;width:100%">
+            <ngx-charts-line-chart [scheme]="waikiki" [legend]=true [showXAxisLabel]=true [showYAxisLabel]=true [legendTitle]="''"
+              [xAxis]=true [yAxis]=true xAxisLabel="Mês" yAxisLabel="Gasto €" [results]="graphs[1]"
+              (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+
+            </ngx-charts-line-chart>
+          </div>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile colspan=1 rowspan=1>
+        <mat-card>
+          <div style="height:100%;width:100%">
+            <ngx-charts-area-chart-stacked [scheme]="waikiki" [legend]=true [showXAxisLabel]=true [showYAxisLabel]=true [legendTitle]="''"
+              [xAxis]=true [yAxis]=true xAxisLabel="Mês" yAxisLabel="Gasto €" [results]="graphs[2]"
+              (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+
+            </ngx-charts-area-chart-stacked>
+          </div>
+        </mat-card>
+      </mat-grid-tile>
+      <!-- <mat-grid-tile colspan=1 rowspan=1>
+        <mat-card>
+          <div style="height:100%;width:100%">
+            <ngx-charts-line-chart [scheme]="waikiki" [legend]=true [showXAxisLabel]=true [showYAxisLabel]=true [legendTitle]="''"
+              [xAxis]=true [yAxis]=true xAxisLabel="Mês" yAxisLabel="Gasto €" [results]="graphs[3]"
+              (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+
+            </ngx-charts-line-chart>
+          </div>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile colspan=1 rowspan=1>
+        <mat-card>
+          <div style="height:100%;width:100%">
+            <ngx-charts-line-chart [scheme]="waikiki" [legend]=true [showXAxisLabel]=true [showYAxisLabel]=true [legendTitle]="''"
+              [xAxis]=true [yAxis]=true xAxisLabel="Mês" yAxisLabel="Gasto €" [results]="graphs[1]"
+              (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+
+            </ngx-charts-line-chart>
+          </div>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile colspan=1 rowspan=1>
+        <mat-card>
+          <div style="height:100%;width:100%">
+            <ngx-charts-line-chart [scheme]="waikiki" [legend]=true [showXAxisLabel]=true [showYAxisLabel]=true [legendTitle]="''"
+              [xAxis]=true [yAxis]=true xAxisLabel="Mês" yAxisLabel="Gasto €" [results]="graphs[1]"
+              (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+
+            </ngx-charts-line-chart>
+          </div>
+        </mat-card>
+      </mat-grid-tile> -->
+    </mat-grid-list>
+  </div>
+
+  <div style="height: calc(100% * 1 / 3 - 20px);"></div>
+
+  <!--
+  <div class="mhq-row" style="height: calc(50% - 30px);">
+    <div style="height:100%;width:100%"><ngx-charts-line-chart
+    [scheme]="waikiki"
+
+     [legend]=true
+     [showXAxisLabel]=true
+     [showYAxisLabel]=true [legendTitle]="''"
+      [xAxis]=true
+       [yAxis]=true
+        xAxisLabel="Mês"
+        yAxisLabel="Poupança €"
+      [results]="multi"
+      (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+    </ngx-charts-line-chart></div>
+  </div>
+
+  <div class="mhq-row" style="height: calc(50% - 30px);">
+    <div style="height:100%;width:100%"><ngx-charts-line-chart
+    [scheme]="waikiki"
+
+     [legend]=true
+     [showXAxisLabel]=true
+     [showYAxisLabel]=true [legendTitle]="''"
+      [xAxis]=true
+       [yAxis]=true
+        xAxisLabel="Mês"
+        yAxisLabel="Gasto €"
+      [results]="multi2"
+      (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+    </ngx-charts-line-chart></div>
+  </div> -->
+
+
+</div>
+
+<!-- [scheme]="colorScheme" -->

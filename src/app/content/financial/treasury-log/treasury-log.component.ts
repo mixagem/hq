@@ -38,7 +38,7 @@ export class TreasuryLogComponent implements OnInit {
   }
 
   // navegação para modo de consulta de registo
-  viewMode(logID: number, catID: number): void {
+  viewMode(logID: number): void {
     this.treasuryService.onInitTrigger.complete; this.treasuryService.onInitTrigger = new Subject<any>();
     if (document.querySelector('#mhq-category-details')?.classList.contains('animate__slideOutRight')) { document.querySelector('#mhq-category-details')?.classList.replace('animate__slideOutRight', 'animate__slideInRight') }
     this.router.navigateByUrl('/fi/tlogs', { skipLocationChange: true }).then(() => { this.router.navigate(['/fi/tlogs', logID]); });

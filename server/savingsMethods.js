@@ -8,7 +8,7 @@ export function savingsGraphSnapshot(req, res) {
   const YEAR = JSON.parse(req.body.year);
 
   const DATA_INI = new Date('2022-01-01T00:00:00.000Z'); DATA_INI.setFullYear(YEAR); const DATA_INI_MS = DATA_INI.getTime();
-  const DATA_FINI = new Date('2022-01-01T00:00:00.000Z'); DATA_FINI.setFullYear(YEAR + 1); const DATA_FINI_MS = DATA_FINI.getTime() - 1;
+  const DATA_FINI = new Date('2022-01-01T00:00:00.000Z'); DATA_FINI.setFullYear(YEAR + 2); const DATA_FINI_MS = DATA_FINI.getTime() - 1;
 
   let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
     if (err) { console.error(err.message); }
@@ -25,8 +25,8 @@ export function savingsGraphSnapshot(req, res) {
     series: []
   };
 
-  let homeMonthlyValues = new Array(12).fill(0);
-  let carMonthlyValues = new Array(12).fill(0);
+  let homeMonthlyValues = new Array(24).fill(0);
+  let carMonthlyValues = new Array(24).fill(0);
 
 
   db.serialize(() => {
@@ -60,7 +60,7 @@ export function savingsGraphSnapshot(req, res) {
 
 
         // homeSnapshotArray.series.push({
-        //   date: new Date(savingLog.date).toLocaleString('default', { month: 'long' }),
+        //   date: new Date(savingLog.date).toLocaleString('default', { month: 'short' }).slice(0,-1),
         //   value: acomulated
         // });
       }
@@ -74,7 +74,7 @@ export function savingsGraphSnapshot(req, res) {
 
 
         // homeSnapshotArray.series.push({
-        //   date: new Date(savingLog.date).toLocaleString('default', { month: 'long' }),
+        //   date: new Date(savingLog.date).toLocaleString('default', { month: 'short' }).slice(0,-1),
         //   value: acomulated
         // });
       }
@@ -86,10 +86,10 @@ export function savingsGraphSnapshot(req, res) {
 
   db.close((err) => {
 
-    let homeAcomulatedValues = new Array(12).fill(0);
-    let carAcomulatedValues = new Array(12).fill(0);
+    let homeAcomulatedValues = new Array(24).fill(0);
+    let carAcomulatedValues = new Array(24).fill(0);
 
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 24; i++) {
 
       if (i === 0) {
         homeAcomulatedValues[i] = homeMonthlyValues[i]
@@ -102,15 +102,15 @@ export function savingsGraphSnapshot(req, res) {
       }
 
 
-      const MONTH = new Date(); MONTH.setMonth(i);
+      let MONTH = new Date(DATA_INI_MS); MONTH.setMonth(i);
 
       homeSnapshotArray.series.push({
-        name: MONTH.toLocaleString('default', { month: 'long' }),
+        name: MONTH.toLocaleString('default', { year:'numeric' , month: 'short' }),
         value: homeAcomulatedValues[i]
       })
 
       carSnapshotArray.series.push({
-        name: MONTH.toLocaleString('default', { month: 'long' }),
+        name: MONTH.toLocaleString('default', { year:'numeric', month: 'short' }),
         value: carAcomulatedValues[i]
       })
 
@@ -128,7 +128,7 @@ export function generateCatGraphSnapshot(req, res) {
   const YEAR = req.body.year;
   const CAT_IDS = JSON.parse(req.body.cats);
   const CAT_TITLES = JSON.parse(req.body.titles);
-
+  const CAT_OR_SUBCAT = req.body.type;
 
   const DATA_INI = new Date('2022-01-01T00:00:00.000Z'); DATA_INI.setFullYear(YEAR); const DATA_INI_MS = DATA_INI.getTime();
   const DATA_FINI = new Date('2022-01-01T00:00:00.000Z'); DATA_FINI.setFullYear(YEAR + 1); const DATA_FINI_MS = DATA_FINI.getTime();
@@ -153,13 +153,13 @@ export function generateCatGraphSnapshot(req, res) {
 
       const DATA_MENSAL_LOCALE = new Date(DATA_INI_MS); DATA_MENSAL_LOCALE.setFullYear(YEAR, y);
       snapshotsArray[i].series.push({
-        name: DATA_MENSAL_LOCALE.toLocaleString('default', { month: 'long' }),
+        name: DATA_MENSAL_LOCALE.toLocaleString('default', { month: 'short' }).slice(0,-1),
         value: 0,
       })
     }
 
     db.serialize(() => {
-      db.each(`SELECT value, date FROM treasurylog WHERE date >= ${DATA_INI_MS} AND date < ${DATA_FINI_MS} AND cat = '${CAT_ID}' ORDER BY date`, (err, row) => {
+      db.each(`SELECT value, date FROM treasurylog WHERE date >= ${DATA_INI_MS} AND date < ${DATA_FINI_MS} AND ${CAT_OR_SUBCAT} = '${CAT_ID}' ORDER BY date`, (err, row) => {
         if (err) { console.error(err.message) }
         else {
           if (row.value !== null) {
@@ -175,6 +175,7 @@ export function generateCatGraphSnapshot(req, res) {
 
 
   db.close((err) => {
+    if(CAT_OR_SUBCAT==='subcat'){console.log(snapshotsArray)}
     err ? console.error(err.message) : res.send(snapshotsArray);
     console.log('[C1] treasury logs fetch complete');
   });

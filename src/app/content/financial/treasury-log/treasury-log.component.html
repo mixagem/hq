@@ -36,7 +36,7 @@
     <ng-scrollbar style="width:100%">
       <table mat-table [dataSource]="dataSource">
 
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="viewMode(row.id,row.cat)"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="viewMode(row.id)"></tr>
 
         <ng-container matColumnDef="cat">
           <th mat-header-cell *matHeaderCellDef> Categoria </th>

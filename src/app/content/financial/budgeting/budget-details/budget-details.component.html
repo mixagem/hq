@@ -1,1 +1,283 @@
-<p>budget-details works!</p>
+<div class="mhq-row full-height mhq-mainform-details-wrapper">
+
+  <div class="mhq-mainform-drawer-actions">
+
+    <div class="mhq-quickaction-close" (click)="budgetingService.closeDetails()">
+      <mat-icon>close</mat-icon>
+    </div>
+
+    <div *ngIf="!editingMode" class="mhq-quickaction-default" (click)="editingBudgetLogRecordActions('start')"><button
+        mat-icon-button>
+        <mat-icon>edit</mat-icon>
+      </button></div>
+
+    <div *ngIf="editingMode" class="mhq-quickaction-save" (click)="editingBudgetLogRecordActions('save')"><button
+        mat-icon-button>
+        <mat-icon>save</mat-icon>
+      </button></div>
+
+    <div *ngIf="editingMode" class="mhq-quickaction-delete" (click)="editingBudgetLogRecordActions('end')"><button
+        mat-icon-button>
+        <mat-icon>not_interested</mat-icon>
+      </button></div>
+
+    <div *ngIf="!editingMode" class="mhq-quickaction-default"><button mat-icon-button
+        (click)="budgetingService.addMode(true)">
+        <mat-icon>file_copy</mat-icon>
+      </button></div>
+
+    <div *ngIf="!editingMode" class="mhq-quickaction-default">
+      <!-- <button (click)="openDialog3('300ms','150ms')"
+        mat-icon-button [disabled]="recurrencyFamily.length===0">
+        <mat-icon>link_off</mat-icon>
+      </button> -->
+    </div>
+
+    <!-- <div *ngIf="!editingMode" class="mhq-quickaction-delete" (click)="openDialog('300ms', '150ms')"> -->
+
+    <div *ngIf="!editingMode" class="mhq-quickaction-delete">
+      <button mat-icon-button>
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+
+    <div [ngStyle]="budgetingService.recordBorderStyle"></div>
+
+  </div>
+
+  <div class="mhq-mainform-drawer-content">
+    <mat-progress-bar
+      *ngIf="!this.loadingService.categoriesLoadingComplete || !this.loadingService.budgetingLoadingComplete"
+      mode="indeterminate" color="accent"></mat-progress-bar>
+
+    <!--  v- modo consulta -v -->
+
+    <div class="mhq-wrapper-row"
+      *ngIf="!editingMode && this.loadingService.categoriesLoadingComplete && this.loadingService.budgetingLoadingComplete">
+
+      <h1>
+        <div>
+          <mat-icon>info_outline</mat-icon>Detalhes
+        </div>
+      </h1>
+
+      <div class="mhq-row">
+
+        <div class="mhq-input-wrapper mhq-col-1">
+          <mat-form-field appearance="fill">
+            <mat-label>ID</mat-label>
+            <input matInput disabled [value]="budgetLog.id">
+          </mat-form-field>
+        </div>
+
+        <div class="mhq-input-wrapper mhq-col-8">
+          <mat-form-field appearance="fill">
+            <mat-label>Título</mat-label>
+            <input matInput disabled [value]="budgetLog.title">
+          </mat-form-field>
+        </div>
+
+        <div class="mhq-input-wrapper mhq-col-3">
+          <mat-form-field appearance="fill">
+            <mat-label>Data</mat-label>
+            <input matInput disabled [value]='budgetLog.date | date:"dd/MM/yyyy"'>
+          </mat-form-field>
+        </div>
+
+      </div>
+      <div class="mhq-row">
+
+        <div class="mhq-input-wrapper mhq-col-4 mhq-radio-group">
+          <p>Tipo:</p>
+          <mat-radio-group color="primary" disabled [value]="budgetLog.type">
+            <mat-radio-button value="expense">Despesa</mat-radio-button>
+            <mat-radio-button value="income">Rendimento</mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <div class="mhq-input-wrapper mhq-col-4">
+          <mat-form-field appearance="fill">
+            <mat-label>Categoria</mat-label>
+            <input matInput disabled [value]="categoriesService.catEnum[budgetLog.cat].title">
+          </mat-form-field>
+        </div>
+
+        <div class="mhq-input-wrapper mhq-col-4">
+          <mat-form-field appearance="fill">
+            <mat-label>Sub-categoria</mat-label>
+            <input matInput disabled [value]="categoriesService.subcatEnum[budgetLog.subcat].title">
+          </mat-form-field>
+        </div>
+
+      </div>
+      <div class="mhq-row">
+
+        <div class="mhq-input-wrapper mhq-col-9">
+          <mat-form-field appearance="fill">
+            <mat-label>Observações</mat-label>
+            <textarea matInput disabled [value]="budgetLog.obs"></textarea>
+          </mat-form-field>
+        </div>
+
+        <div class="mhq-input-wrapper mhq-col-3">
+          <mat-form-field appearance="fill">
+            <mat-label>Valor</mat-label>
+            <input matInput disabled [value]="budgetLog | guita">
+          </mat-form-field>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mhq-wrapper-row"
+      *ngIf="!editingMode && this.loadingService.categoriesLoadingComplete && this.loadingService.budgetingLoadingComplete">
+
+      <h1>
+        <div>
+          <mat-icon>info_outline</mat-icon>Recorrências
+        </div>
+      </h1>
+
+      <table *ngIf="recurrencyFamily.length>0 && !editingMode">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Valor</th>
+            <th></th>
+          </tr>
+        </thead>
+      </table>
+
+      <ng-scrollbar *ngIf="recurrencyFamily.length>0 && !editingMode" style="height:100%;width: 100%;">
+        <table>
+          <tbody>
+            <tr *ngFor="let tlog of recurrencyFamily">
+              <td>
+                <div class="mhq-mat-inputs-margin">{{getTlogDateLocale(tlog.date)}}</div>
+              </td>
+              <td>
+                <div class="mhq-mat-inputs-margin">{{tlog | guita:true}}</div>
+              </td>
+              <td>
+                <div class="mhq-mat-inputs-margin"><button mat-icon-button (click)="viewMode(tlog.id,tlog.cat)"
+                    color="primary">
+                    <mat-icon>link</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-scrollbar>
+
+    </div>
+
+    <!--  ^- modo consulta / modo edição -v -->
+
+    <div class="mhq-wrapper-row"
+      *ngIf="editingMode && this.loadingService.categoriesLoadingComplete && this.loadingService.budgetingLoadingComplete">
+
+      <h1>
+        <div>
+          <mat-icon>info_outline</mat-icon>Detalhes
+        </div>
+      </h1>
+
+      <div class="mhq-row">
+
+        <div class="mhq-input-wrapper mhq-col-1">
+          <mat-form-field appearance="fill">
+            <mat-label>ID</mat-label>
+            <input matInput disabled [(ngModel)]="tempBudgetLog.id">
+          </mat-form-field>
+        </div>
+
+        <div class="mhq-input-wrapper mhq-col-8">
+          <mat-form-field appearance="fill">
+            <mat-label>Título</mat-label>
+            <input matInput [(ngModel)]="tempBudgetLog.title">
+          </mat-form-field>
+        </div>
+
+        <div class="mhq-input-wrapper mhq-col-3">
+
+          <mat-form-field appearance="fill">
+            <mat-label>Data</mat-label>
+            <input matInput [matDatepicker]="budgetLogDatepicker" [formControl]="budgetLogDatepickerForm">
+            <mat-datepicker-toggle matSuffix [for]="budgetLogDatepicker"></mat-datepicker-toggle>
+            <mat-datepicker #budgetLogDatepicker></mat-datepicker>
+          </mat-form-field>
+
+        </div>
+
+      </div>
+      <div class="mhq-row">
+
+        <div class="mhq-input-wrapper mhq-col-4 mhq-radio-group">
+          <p>Tipo:</p>
+          <mat-radio-group color="primary" [(ngModel)]="tempBudgetLog.type">
+            <mat-radio-button value="expense">Despesa</mat-radio-button>
+            <mat-radio-button value="income">Rendimento</mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <div class="mhq-input-wrapper mhq-col-4">
+
+          <form class="mhq-cats-form" style="width: 100%;">
+            <mat-form-field>
+              <mat-label>Categoria</mat-label>
+              <mat-select [formControl]="catForm" (selectionChange)="categorySelectChanged($event)">
+                <mat-select-trigger>{{catForm.value}}</mat-select-trigger>
+                <mat-option *ngFor="let option of categoriesList" [value]="option">
+                  <mat-icon
+                    [ngStyle]="{'background-color':categoriesService.catEnum[categoriesService.catTitleEnum[option].id].bgcolor,'color':categoriesService.catEnum[categoriesService.catTitleEnum[option].id].textcolor}">
+                    {{categoriesService.catTitleEnum[option].icon}}</mat-icon>
+                  {{option}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </form>
+
+        </div>
+
+        <div class="mhq-input-wrapper mhq-col-4">
+
+
+          <form class="mhq-subcats-form" style="width: 100%;">
+            <mat-form-field>
+              <mat-label>Sub categoria</mat-label>
+              <mat-select [formControl]="subcatForm">
+                <mat-option *ngFor="let option of subcategoriesList" [value]="option" class="mhq-subcat-select">
+                  {{option}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </form>
+
+
+        </div>
+
+      </div>
+      <div class="mhq-row">
+
+        <div class="mhq-input-wrapper mhq-col-9">
+          <mat-form-field appearance="fill">
+            <mat-label>Obs</mat-label>
+            <textarea matInput [(ngModel)]="tempBudgetLog.obs"></textarea>
+          </mat-form-field>
+        </div>
+
+        <div class="mhq-input-wrapper mhq-col-3">
+          <mat-form-field appearance="fill">
+            <mat-label>Valor</mat-label>
+            <input matInput [(ngModel)]="tempBudgetLog.value">
+          </mat-form-field>
+        </div>
+      </div>
+
+    </div>
+
+
+  </div>
+
+</div>
