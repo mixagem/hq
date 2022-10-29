@@ -1,0 +1,37 @@
+<!-- <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar> -->
+
+<div class="mhq-mainform-container">
+
+  <div class="mhq-row mhq-mainform-header">
+    <h1>
+      <mat-icon>account_balance</mat-icon>E-Fatura
+    </h1>
+
+    <div class="mhq-mainform-actions">
+      <button mat-stroked-button color="primary" disabled>
+        <mat-icon>menu_open</mat-icon>Ações
+      </button>
+      </div>
+  </div>
+
+  <div class="mhq-row mhq-mainform-content" style="flex-direction: row;justify-content: center;padding-top:25px">
+
+    <div *ngFor="let efat of efatura; let i = index" style="width:calc(95% / 6);margin:0px 10px">
+      <mat-card style="padding:0 0 16px;border-top-right-radius: 15px;border-top-left-radius: 15px;">
+
+        <div class="mhq-row" [style]="'border-top-right-radius: 15px;border-top-left-radius: 15px;height:70px;background-color:'+efat.color">
+          <mat-icon
+            style="color:#Fff;font-size:36px;height:100%;width:auto;margin:0px auto 10px;display: flex;          justify-content: center;          align-items: center;">
+            {{efat.icon}}</mat-icon>
+        </div>
+
+        <div>{{efat.title}}</div>
+        <div>{{efat.value}}</div>
+      </mat-card>
+
+    </div>
+
+
+  </div>
+
+</div>

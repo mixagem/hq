@@ -17,6 +17,7 @@ import { AnalysisComponent } from './content/financial/analysis/analysis.compone
 import { NewTreasuryLogComponent } from './content/financial/treasury-log/new-treasury-log/new-treasury-log.component';
 import { TreasuryDetailsComponent } from './content/financial/treasury-log/treasury-details/treasury-details.component';
 import { TreasuryLogComponent } from './content/financial/treasury-log/treasury-log.component';
+import { EfaturaComponent } from './content/financial/efatura/efatura.component';
 
 const ROUTES: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -46,6 +47,8 @@ const ROUTES: Routes = [
         ]
       }, {
         path: 'graphs', component: AnalysisComponent
+      }, {
+        path: 'efat', component: EfaturaComponent
       }
     ]
   }];

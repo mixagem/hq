@@ -61,25 +61,13 @@ export class NavmenuService {
     },{
       isMainTitle: false,
       haveChild: false,
-      name: 'E-Fatura check',
-      route: '/fi/efatcheck',
+      name: 'E-fatura',
+      route: '/fi/efat',
       parentEntry: 'fi'
     },{
       isMainTitle: false,
       haveChild: false,
-      name: 'Análise salarial',
-      route: '/fi/salaryrev',
-      parentEntry: 'fi'
-    },{
-      isMainTitle: false,
-      haveChild: false,
-      name: 'Análise orçamental',
-      route: '/fi/budgetrev',
-      parentEntry: 'fi'
-    },{
-      isMainTitle: false,
-      haveChild: false,
-      name: 'Gráficos',
+      name: 'Análise financeira',
       route: '/fi/graphs',
       parentEntry: 'fi'
     }

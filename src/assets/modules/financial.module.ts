@@ -29,6 +29,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DeleteTreasauryLogModalComponent } from 'src/app/content/financial/treasury-log/treasury-details/delete-treasaury-log-modal/delete-treasaury-log-modal.component';
 import { DettachRecurrencyModalComponent } from 'src/app/content/financial/treasury-log/treasury-details/dettach-recurrency-modal/dettach-recurrency-modal.component';
 import { UpdateRecurrencyModalComponent } from 'src/app/content/financial/treasury-log/treasury-details/update-recurrency-modal/update-recurrency-modal.component';
+import { EfaturaComponent } from 'src/app/content/financial/efatura/efatura.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { UpdateRecurrencyModalComponent } from 'src/app/content/financial/treasu
     DeleteTreasauryLogModalComponent,
     DettachRecurrencyModalComponent,
     UpdateRecurrencyModalComponent,
+    EfaturaComponent
 
   ],
   imports: [
@@ -86,6 +88,7 @@ import { UpdateRecurrencyModalComponent } from 'src/app/content/financial/treasu
     DeleteTreasauryLogModalComponent,
     DettachRecurrencyModalComponent,
     UpdateRecurrencyModalComponent,
+    EfaturaComponent
 
   ]
 })
