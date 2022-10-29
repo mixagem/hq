@@ -14,7 +14,7 @@ import { BudgetingService } from '../budgeting.service';
 
 export type RecurrencyOptions = { active: boolean, type: string, freq: number, date: number }
 
-const DEFAULT_TLOG: ITreasuryLog = { id: 0, title: 'Novo movimento de tesouraria', date: Date.now(), value: 0, cat: 0, subcat: 0, type: 'expense', obs: '', recurrencyid: 0 }
+const DEFAULT_TLOG: ITreasuryLog = { id: 0, title: 'Novo movimento de tesouraria', date: Date.now(), value: 0, cat: 0, subcat: 0, type: 'expense', obs: '', recurrencyid: 0, nif: false, efat: false }
 
 
 @Component({

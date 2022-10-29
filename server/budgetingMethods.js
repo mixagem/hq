@@ -9,7 +9,15 @@ export function fetchBudgetLogs(req, res) {
   let tlogs = [];
 
   db.serialize(() => {
-    db.each(`SELECT * FROM budget ORDER BY date DESC`, (err, tlog) => { err ? console.error(err.message) : tlogs.push(tlog); });
+    db.each(`SELECT * FROM budget ORDER BY date DESC`, (err, tlog) => {
+      if (err) { console.error(err.message) } else {
+
+        tlog.nif === 'true' ? tlog.nif = true : tlog.nif = false; // conversão string para boolean (o sqlite não tem colunas do tipo boolean)
+        tlog.efat === 'true' ? tlog.efat = true : tlog.efat = false; // conversão string para boolean (o sqlite não tem colunas do tipo boolean)
+        tlogs.push(tlog);
+
+      }
+    });
   });
 
   db.close((err) => {
@@ -49,7 +57,7 @@ export function createBudgetlog(req, res) {
 
 
             db.serialize(() => {
-              db.run(`INSERT INTO budget (title, date, value, cat, subcat, type, obs, recurrencyid) VALUES ('${TREASURY_LOG.title}', '${date.getTime()}', '${TREASURY_LOG.value}', '${TREASURY_LOG.cat}', '${TREASURY_LOG.subcat}', '${TREASURY_LOG.type}', '${TREASURY_LOG.obs}', '${recurrencyID}')`, (err, resp) => { err ? console.error(err.message) : console.log('[b4 monthly] budget log created') });
+              db.run(`INSERT INTO budget (title, date, value, cat, subcat, type, obs, recurrencyid, nif, efat) VALUES ('${TREASURY_LOG.title}', '${date.getTime()}', '${TREASURY_LOG.value}', '${TREASURY_LOG.cat}', '${TREASURY_LOG.subcat}', '${TREASURY_LOG.type}', '${TREASURY_LOG.obs}', '${recurrencyID}', '${TREASURY_LOG.nif}', '${TREASURY_LOG.efat}')`, (err, resp) => { err ? console.error(err.message) : console.log('[b4 monthly] budget log created') });
 
               if (i === RECURRENCY_OPTIONS.freq - 1) {
                 db.all(`SELECT * from sqlite_sequence where name='budget'`, (err, resp) => { err ? console.error(err.message) : close(resp[0].seq) });
@@ -62,7 +70,7 @@ export function createBudgetlog(req, res) {
           for (let i = 0; i < RECURRENCY_OPTIONS.freq; i++) {
             date.setFullYear((rYear + i), rMonth, RECURRENCY_OPTIONS.date);
             db.serialize(() => {
-              db.run(`INSERT INTO budget (title, date, value, cat, subcat, type, obs, recurrencyid) VALUES ('${TREASURY_LOG.title}', '${date.getTime()}', '${TREASURY_LOG.value}', '${TREASURY_LOG.cat}', '${TREASURY_LOG.subcat}', '${TREASURY_LOG.type}', '${TREASURY_LOG.obs}', '0')`, (err, resp) => { err ? console.error(err.message) : console.log('[b4 yearly] budget log created') });
+              db.run(`INSERT INTO budget (title, date, value, cat, subcat, type, obs, recurrencyid, nif, efat) VALUES ('${TREASURY_LOG.title}', '${date.getTime()}', '${TREASURY_LOG.value}', '${TREASURY_LOG.cat}', '${TREASURY_LOG.subcat}', '${TREASURY_LOG.type}', '${TREASURY_LOG.obs}', '0', '${TREASURY_LOG.nif}', '${TREASURY_LOG.efat}')`, (err, resp) => { err ? console.error(err.message) : console.log('[b4 yearly] budget log created') });
 
               if (i === RECURRENCY_OPTIONS.freq - 1) {
                 db.all(`SELECT * from sqlite_sequence where name='budget'`, (err, resp) => { err ? console.error(err.message) : close(resp[0].seq) });
@@ -76,7 +84,7 @@ export function createBudgetlog(req, res) {
 
   if (!RECURRENCY_OPTIONS.active) {
     db.serialize(() => {
-      db.run(`INSERT INTO budget (title, date, value, cat, subcat, type, obs, recurrencyid) VALUES ('${TREASURY_LOG.title}', '${TREASURY_LOG.date}', '${TREASURY_LOG.value}', '${TREASURY_LOG.cat}', '${TREASURY_LOG.subcat}', '${TREASURY_LOG.type}', '${TREASURY_LOG.obs}', '0')`, (err, resp) => { err ? console.error(err.message) : console.log('[C4] budget log created') });
+      db.run(`INSERT INTO budget (title, date, value, cat, subcat, type, obs, recurrencyid, nif, efat) VALUES ('${TREASURY_LOG.title}', '${TREASURY_LOG.date}', '${TREASURY_LOG.value}', '${TREASURY_LOG.cat}', '${TREASURY_LOG.subcat}', '${TREASURY_LOG.type}', '${TREASURY_LOG.obs}', '0', '${TREASURY_LOG.nif}', '${TREASURY_LOG.efat}')`, (err, resp) => { err ? console.error(err.message) : console.log('[C4] budget log created') });
       db.all(`SELECT * from sqlite_sequence where name='budget'`, (err, resp) => { err ? console.error(err.message) : close(resp[0].seq) });
     });
   }

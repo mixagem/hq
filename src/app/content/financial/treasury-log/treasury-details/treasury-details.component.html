@@ -107,19 +107,28 @@
       </div>
       <div class="mhq-row">
 
-        <div class="mhq-input-wrapper mhq-col-9">
-          <mat-form-field appearance="fill">
-            <mat-label>Observações</mat-label>
-            <textarea matInput disabled [value]="treasuryLog.obs"></textarea>
-          </mat-form-field>
-        </div>
-
         <div class="mhq-input-wrapper mhq-col-3">
           <mat-form-field appearance="fill">
             <mat-label>Valor</mat-label>
             <input matInput disabled [value]="treasuryLog | guita">
           </mat-form-field>
         </div>
+
+        <div class="mhq-input-wrapper mhq-col-2 mhq-checkbox-wrapper">
+          <mat-checkbox color="primary" disabled [checked]="treasuryLog.nif">Tem contribuinte</mat-checkbox>
+        </div>
+
+        <div class="mhq-input-wrapper mhq-col-2 mhq-checkbox-wrapper">
+          <mat-checkbox *ngIf="treasuryLog.nif" color="primary" disabled [checked]="treasuryLog.efat">E-Fatura validado</mat-checkbox>
+        </div>
+
+        <div class="mhq-input-wrapper mhq-col-5">
+          <mat-form-field appearance="fill">
+            <mat-label>Observações</mat-label>
+            <textarea matInput disabled [value]="treasuryLog.obs"></textarea>
+          </mat-form-field>
+        </div>
+
       </div>
 
     </div>
@@ -255,19 +264,29 @@
       </div>
       <div class="mhq-row">
 
-        <div class="mhq-input-wrapper mhq-col-9">
-          <mat-form-field appearance="fill">
-            <mat-label>Obs</mat-label>
-            <textarea matInput [(ngModel)]="tempTreasuryLog.obs"></textarea>
-          </mat-form-field>
-        </div>
-
         <div class="mhq-input-wrapper mhq-col-3">
           <mat-form-field appearance="fill">
             <mat-label>Valor</mat-label>
             <input matInput [(ngModel)]="tempTreasuryLog.value">
           </mat-form-field>
         </div>
+
+        <div class="mhq-input-wrapper mhq-col-2 mhq-checkbox-wrapper">
+          <mat-checkbox color="primary" [disabled]="tempTreasuryLog.efat" [(ngModel)]="tempTreasuryLog.nif">Tem contribuinte</mat-checkbox>
+        </div>
+
+        <div class="mhq-input-wrapper mhq-col-2 mhq-checkbox-wrapper">
+          <mat-checkbox *ngIf="tempTreasuryLog.nif" color="primary" disabled [(ngModel)]="tempTreasuryLog.efat">E-Fatura validado</mat-checkbox>
+        </div>
+
+        <div class="mhq-input-wrapper mhq-col-5">
+          <mat-form-field appearance="fill">
+            <mat-label>Obs</mat-label>
+            <textarea matInput [(ngModel)]="tempTreasuryLog.obs"></textarea>
+          </mat-form-field>
+        </div>
+
+
       </div>
 
     </div>

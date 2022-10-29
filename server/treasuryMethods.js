@@ -10,7 +10,11 @@ export function fetchTreasuryLogs(req, res) {
   let tlogs = [];
 
   db.serialize(() => {
-    db.each(`SELECT * FROM treasurylog ORDER BY date DESC`, (err, tlog) => { err ? console.error(err.message) : tlogs.push(tlog); });
+    db.each(`SELECT * FROM treasurylog ORDER BY date DESC`, (err, tlog) => { if (err) { console.error(err.message) } else {
+      tlog.nif === 'true' ? tlog.nif = true : tlog.nif = false; // conversão string para boolean (o sqlite não tem colunas do tipo boolean)
+      tlog.efat === 'true' ? tlog.efat = true : tlog.efat = false; // conversão string para boolean (o sqlite não tem colunas do tipo boolean)
+      tlogs.push(tlog);
+     } });
   });
 
   db.close((err) => {
@@ -67,14 +71,13 @@ export function deleteTreasuryLog(req, res) {
 export function updateTreasuryLog(req, res) {
   if (req.body.type === 'tlog') {
     const TREASURY_LOG = JSON.parse(req.body.tlog);
-
     let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
       if (err) { console.error(err.message); }
       console.log(`[C3] updating treasury log "${TREASURY_LOG.title}"`);
     });
 
     db.serialize(() => {
-      db.run(`UPDATE treasurylog SET title='${TREASURY_LOG.title}', date='${TREASURY_LOG.date}', value='${TREASURY_LOG.value}', cat='${TREASURY_LOG.cat}', subcat='${TREASURY_LOG.subcat}', type='${TREASURY_LOG.type}', obs='${TREASURY_LOG.obs}' WHERE id='${TREASURY_LOG.id}'`, (err, resp) => { err ? console.error(err.message) : console.log('[C3] treasury log updated'); });
+      db.run(`UPDATE treasurylog SET title='${TREASURY_LOG.title}', date='${TREASURY_LOG.date}', value='${TREASURY_LOG.value}', cat='${TREASURY_LOG.cat}', subcat='${TREASURY_LOG.subcat}', type='${TREASURY_LOG.type}', obs='${TREASURY_LOG.obs}', nif='${TREASURY_LOG.nif}', efat='${TREASURY_LOG.efat}' WHERE id='${TREASURY_LOG.id}'`, (err, resp) => { err ? console.error(err.message) : console.log('[C3] treasury log updated'); });
     });
 
     db.close((err) => {
@@ -93,7 +96,7 @@ export function updateTreasuryLog(req, res) {
     });
 
     db.serialize(() => {
-      db.run(`UPDATE budget SET title='${BUDGET_LOG.title}', date='${BUDGET_LOG.date}', value='${BUDGET_LOG.value}', cat='${BUDGET_LOG.cat}', subcat='${BUDGET_LOG.subcat}', type='${BUDGET_LOG.type}', obs='${BUDGET_LOG.obs}' WHERE id='${BUDGET_LOG.id}'`, (err, resp) => { err ? console.error(err.message) : console.log('[C3] treasury log updated'); });
+      db.run(`UPDATE budget SET title='${BUDGET_LOG.title}', date='${BUDGET_LOG.date}', value='${BUDGET_LOG.value}', cat='${BUDGET_LOG.cat}', subcat='${BUDGET_LOG.subcat}', type='${BUDGET_LOG.type}', obs='${BUDGET_LOG.obs}', nif='${BUDGET_LOG.nif}', efat='${BUDGET_LOG.efat}' WHERE id='${BUDGET_LOG.id}'`, (err, resp) => { err ? console.error(err.message) : console.log('[C3] treasury log updated'); });
     });
 
     db.close((err) => {
@@ -133,7 +136,7 @@ export function createTreasurylog(req, res) {
 
 
             db.serialize(() => {
-              db.run(`INSERT INTO treasurylog (title, date, value, cat, subcat, type, obs, recurrencyid) VALUES ('${TREASURY_LOG.title}', '${date.getTime()}', '${TREASURY_LOG.value}', '${TREASURY_LOG.cat}', '${TREASURY_LOG.subcat}', '${TREASURY_LOG.type}', '${TREASURY_LOG.obs}', '${recurrencyID}')`, (err, resp) => { err ? console.error(err.message) : console.log('[C4 monthly] treasury log created') });
+              db.run(`INSERT INTO treasurylog (title, date, value, cat, subcat, type, obs, recurrencyid, nif, efat) VALUES ('${TREASURY_LOG.title}', '${date.getTime()}', '${TREASURY_LOG.value}', '${TREASURY_LOG.cat}', '${TREASURY_LOG.subcat}', '${TREASURY_LOG.type}', '${TREASURY_LOG.obs}', '${recurrencyID}', '${BUDGET_LOG.nif}', '${BUDGET_LOG.efat}')`, (err, resp) => { err ? console.error(err.message) : console.log('[C4 monthly] treasury log created') });
 
               if (i === RECURRENCY_OPTIONS.freq - 1) {
                 db.all(`SELECT * from sqlite_sequence where name='treasurylog'`, (err, resp) => { err ? console.error(err.message) : close(resp[0].seq) });
@@ -146,7 +149,7 @@ export function createTreasurylog(req, res) {
           for (let i = 0; i < RECURRENCY_OPTIONS.freq; i++) {
             date.setFullYear((rYear + i), rMonth, RECURRENCY_OPTIONS.date);
             db.serialize(() => {
-              db.run(`INSERT INTO treasurylog (title, date, value, cat, subcat, type, obs, recurrencyid) VALUES ('${TREASURY_LOG.title}', '${date.getTime()}', '${TREASURY_LOG.value}', '${TREASURY_LOG.cat}', '${TREASURY_LOG.subcat}', '${TREASURY_LOG.type}', '${TREASURY_LOG.obs}', '0')`, (err, resp) => { err ? console.error(err.message) : console.log('[C4 yearly] treasury log created') });
+              db.run(`INSERT INTO treasurylog (title, date, value, cat, subcat, type, obs, recurrencyid, nif, efat) VALUES ('${TREASURY_LOG.title}', '${date.getTime()}', '${TREASURY_LOG.value}', '${TREASURY_LOG.cat}', '${TREASURY_LOG.subcat}', '${TREASURY_LOG.type}', '${TREASURY_LOG.obs}', '0', '${BUDGET_LOG.nif}', '${BUDGET_LOG.efat}')`, (err, resp) => { err ? console.error(err.message) : console.log('[C4 yearly] treasury log created') });
 
               if (i === RECURRENCY_OPTIONS.freq - 1) {
                 db.all(`SELECT * from sqlite_sequence where name='treasurylog'`, (err, resp) => { err ? console.error(err.message) : close(resp[0].seq) });
@@ -160,7 +163,7 @@ export function createTreasurylog(req, res) {
 
   if (!RECURRENCY_OPTIONS.active) {
     db.serialize(() => {
-      db.run(`INSERT INTO treasurylog (title, date, value, cat, subcat, type, obs, recurrencyid) VALUES ('${TREASURY_LOG.title}', '${TREASURY_LOG.date}', '${TREASURY_LOG.value}', '${TREASURY_LOG.cat}', '${TREASURY_LOG.subcat}', '${TREASURY_LOG.type}', '${TREASURY_LOG.obs}', '0')`, (err, resp) => { err ? console.error(err.message) : console.log('[C4] treasury log created') });
+      db.run(`INSERT INTO treasurylog (title, date, value, cat, subcat, type, obs, recurrencyid, nif, efat) VALUES ('${TREASURY_LOG.title}', '${TREASURY_LOG.date}', '${TREASURY_LOG.value}', '${TREASURY_LOG.cat}', '${TREASURY_LOG.subcat}', '${TREASURY_LOG.type}', '${TREASURY_LOG.obs}', '0', '${TREASURY_LOG.nif}', '${TREASURY_LOG.efat}' )`, (err, resp) => { err ? console.error(err.message) : console.log('[C4] treasury log created') });
       db.all(`SELECT * from sqlite_sequence where name='treasurylog'`, (err, resp) => { err ? console.error(err.message) : close(resp[0].seq) });
     });
   }
@@ -230,7 +233,7 @@ export function updateRecurrency(req, res) {
 
 
     db.serialize(() => {
-      db.run(`UPDATE treasurylog SET title='${TREASURY_LOG.title}', value='${TREASURY_LOG.value}', cat='${TREASURY_LOG.cat}', subcat='${TREASURY_LOG.subcat}', type='${TREASURY_LOG.type}', obs='${TREASURY_LOG.obs}' WHERE recurrencyid='${TREASURY_LOG.recurrencyid}'`, (err, resp) => { err ? console.error(err.message) : []; });
+      db.run(`UPDATE treasurylog SET title='${TREASURY_LOG.title}', value='${TREASURY_LOG.value}', cat='${TREASURY_LOG.cat}', subcat='${TREASURY_LOG.subcat}', type='${TREASURY_LOG.type}', obs='${TREASURY_LOG.obs}', nif='${TREASURY_LOG.nif}' WHERE recurrencyid='${TREASURY_LOG.recurrencyid}'`, (err, resp) => { err ? console.error(err.message) : []; });
     });
 
     db.close((err) => {
@@ -248,7 +251,7 @@ export function updateRecurrency(req, res) {
 
 
     db.serialize(() => {
-      db.run(`UPDATE budget SET title='${BUDGET_LOG.title}', value='${BUDGET_LOG.value}', cat='${BUDGET_LOG.cat}', subcat='${BUDGET_LOG.subcat}', type='${BUDGET_LOG.type}', obs='${BUDGET_LOG.obs}' WHERE recurrencyid='${BUDGET_LOG.recurrencyid}'`, (err, resp) => { err ? console.error(err.message) : []; });
+      db.run(`UPDATE budget SET title='${BUDGET_LOG.title}', value='${BUDGET_LOG.value}', cat='${BUDGET_LOG.cat}', subcat='${BUDGET_LOG.subcat}', type='${BUDGET_LOG.type}', obs='${BUDGET_LOG.obs}', nif='${BUDGET_LOG.nif}' WHERE recurrencyid='${BUDGET_LOG.recurrencyid}'`, (err, resp) => { err ? console.error(err.message) : []; });
     });
 
     db.close((err) => {
@@ -269,7 +272,7 @@ export function dettachRecurrency(req, res) {
     });
 
     db.serialize(() => {
-      db.run(`UPDATE treasurylog SET title='${TREASURY_LOG.title}', value='${TREASURY_LOG.value}', cat='${TREASURY_LOG.cat}', subcat='${TREASURY_LOG.subcat}', type='${TREASURY_LOG.type}', obs='${TREASURY_LOG.obs}', recurrencyid='0' WHERE id='${TREASURY_LOG.id}'`, (err, resp) => { err ? console.error(err.message) : []; });
+      db.run(`UPDATE treasurylog SET recurrencyid='0' WHERE id='${TREASURY_LOG.id}'`, (err, resp) => { err ? console.error(err.message) : []; });
     });
 
     db.close((err) => {
@@ -286,7 +289,7 @@ export function dettachRecurrency(req, res) {
     });
 
     db.serialize(() => {
-      db.run(`UPDATE budget SET title='${BUDGET_LOG.title}', value='${BUDGET_LOG.value}', cat='${BUDGET_LOG.cat}', subcat='${BUDGET_LOG.subcat}', type='${BUDGET_LOG.type}', obs='${BUDGET_LOG.obs}', recurrencyid='0' WHERE id='${BUDGET_LOG.id}'`, (err, resp) => { err ? console.error(err.message) : []; });
+      db.run(`UPDATE budget SET recurrencyid='0' WHERE id='${BUDGET_LOG.id}'`, (err, resp) => { err ? console.error(err.message) : []; });
     });
 
     db.close((err) => {

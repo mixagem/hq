@@ -105,17 +105,25 @@
       </div>
       <div class="mhq-row">
 
-        <div class="mhq-input-wrapper mhq-col-9">
-          <mat-form-field appearance="fill">
-            <mat-label>Obs</mat-label>
-            <textarea matInput [(ngModel)]="tempBudgetLog.obs"></textarea>
-          </mat-form-field>
-        </div>
-
         <div class="mhq-input-wrapper mhq-col-3">
           <mat-form-field appearance="fill">
             <mat-label>Valor</mat-label>
             <input matInput [(ngModel)]="tempBudgetLog.value">
+          </mat-form-field>
+        </div>
+
+        <div class="mhq-input-wrapper mhq-col-2 mhq-checkbox-wrapper">
+          <mat-checkbox color="primary" disabled>Tem contribuinte</mat-checkbox>
+        </div>
+
+        <div class="mhq-input-wrapper mhq-col-2 mhq-checkbox-wrapper">
+
+        </div>
+
+        <div class="mhq-input-wrapper mhq-col-5">
+          <mat-form-field appearance="fill">
+            <mat-label>Obs</mat-label>
+            <textarea matInput [(ngModel)]="tempBudgetLog.obs"></textarea>
           </mat-form-field>
         </div>
 

@@ -14,7 +14,9 @@ import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 
 export type RecurrencyOptions = { active: boolean, type: string, freq: number, date: number }
 
-const DEFAULT_TLOG: ITreasuryLog = { id: 0, title: 'Novo movimento de tesouraria', date: Date.now(), value: 0, cat: 0, subcat: 0, type: 'expense', obs: '', recurrencyid: 0 }
+const DEFAULT_TLOG: ITreasuryLog = {
+  id: 0, title: 'Novo movimento de tesouraria', date: Date.now(), value: 0, cat: 0, subcat: 0, type: 'expense', obs: '', recurrencyid: 0, nif: false, efat: false
+}
 
 @Component({
   selector: 'mhq-new-treasury-log',
@@ -36,7 +38,7 @@ export class NewTreasuryLogComponent implements OnInit {
   saveComplete: boolean;
 
 
-  constructor(private _errorHandlingService: ErrorHandlingService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, public _router: Router, public _http: HttpClient, private _timerService: TimerService, private _categoriesSnackBarService: MHQSnackBarsService, public loadingService:LoadingService) {
+  constructor(private _errorHandlingService: ErrorHandlingService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, public _router: Router, public _http: HttpClient, private _timerService: TimerService, private _categoriesSnackBarService: MHQSnackBarsService, public loadingService: LoadingService) {
     this.saveComplete = true;
   }
 
@@ -45,7 +47,7 @@ export class NewTreasuryLogComponent implements OnInit {
     this.treasuryService.onInitTrigger.subscribe(x => { this.ngOnInit(); });     // triggers remoto do OnInit
     this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this.loadingService.categoriesLoadingComplete || !this.loadingService.treasuryLoadingComplete) { return }     // loading check
-    
+
     if (this.treasuryService.cloningTreasuryLog) {
       this.tempTreasuryLog = this.treasuryService.activeTreasuryLog;
       this.tempTreasuryLog.id = 0;
