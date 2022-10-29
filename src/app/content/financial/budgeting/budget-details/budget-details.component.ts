@@ -11,17 +11,21 @@ import { MatSelectChange } from '@angular/material/select';
 import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
-import { ThemePalette } from '@angular/material/core';
 import { TreasuryService } from '../../treasury-log/treasury.service';
 import { BudgetingService } from '../budgeting.service';
+import { DeleteTreasauryLogModalComponent } from '../../treasury-log/treasury-details/delete-treasaury-log-modal/delete-treasaury-log-modal.component';
+import { DettachRecurrencyModalComponent } from '../../treasury-log/treasury-details/dettach-recurrency-modal/dettach-recurrency-modal.component';
+import { UpdateRecurrencyModalComponent } from '../../treasury-log/treasury-details/update-recurrency-modal/update-recurrency-modal.component';
 
 @Component({
   selector: 'mhq-budget-details',
   templateUrl: './budget-details.component.html',
-  styleUrls: ['./budget-details.component.scss','../../../../../assets/styles/mhq-mainform-details.scss']
+  styleUrls: ['./budget-details.component.scss', '../../../../../assets/styles/mhq-mainform-details.scss']
 })
 
 export class BudgetDetailsComponent implements OnInit {
+  firstLoadingComplete: boolean;
+
   budgetLogDatepicker: MatDatepicker<any>;   // datepickers
   budgetLogDatepickerForm: FormControl<any>;
   catForm: FormControl   // autocomplete categoria
@@ -37,20 +41,21 @@ export class BudgetDetailsComponent implements OnInit {
   recurrencyFrequency: FormControl<any>;
   recurrencyFamily: ITreasuryLog[];
 
-  constructor(public loadingService:LoadingService, private _errorHandlingService: ErrorHandlingService, private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, public categoriesService: CategoriesService, private _categoriesSnackBarService: MHQSnackBarsService, private _router: Router, public budgetingService: BudgetingService) {
+  constructor(public loadingService: LoadingService, private _errorHandlingService: ErrorHandlingService, private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, public categoriesService: CategoriesService, private _categoriesSnackBarService: MHQSnackBarsService, private _router: Router, public budgetsService: BudgetingService) {
     this.editingMode = false;
+    this.firstLoadingComplete = false;
     this.recurrencyFamily = [];
   }
 
   ngOnInit(): void {
-    this.budgetingService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
-    this.treasuryService.onInitTrigger.subscribe(x => { this.ngOnInit(); });     // triggers remoto do OnInit
-    this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
-    if (!this.loadingService.categoriesLoadingComplete || !this.loadingService.treasuryLoadingComplete|| !this.loadingService.budgetingLoadingComplete) { return }     // loading check
+    // loading check
+    this.budgetsService.onInitTrigger.subscribe(x => { this.ngOnInit(); }); this.treasuryService.onInitTrigger.subscribe(x => { this.ngOnInit(); }); this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
+    if (!this.loadingService.categoriesLoadingComplete || !this.loadingService.treasuryLoadingComplete || !this.loadingService.budgetingLoadingComplete || this.firstLoadingComplete) { return }
+    this.firstLoadingComplete = true;
     this.id = Number(this._route.snapshot.paramMap.get('id')!);
-    this.budgetLog = this.budgetingService.budgetEnum[this.id]
+    this.budgetLog = this.budgetsService.budgetEnum[this.id]
     this.tempBudgetLog = JSON.parse(JSON.stringify(this.budgetLog));
-    this.budgetingService.activeBudgetLog = JSON.parse(JSON.stringify(this.budgetLog));
+    this.budgetsService.activeBudgetLog = JSON.parse(JSON.stringify(this.budgetLog));
     this.budgetLogDatepickerForm = new FormControl(new Date(this.budgetLog.date), [Validators.required]);
     this.catForm = new FormControl(this.categoriesService.catEnum[this.tempBudgetLog.cat].title, [Validators.required]);
     this.subcatForm = new FormControl({ value: this.categoriesService.subcatEnum[this.tempBudgetLog.subcat].title, disabled: true }, [Validators.required]);
@@ -58,7 +63,7 @@ export class BudgetDetailsComponent implements OnInit {
     this.subcatForm.enable();
     this.categoriesService.allCategories.forEach(cat => { this.categoriesList.push(cat.title) });
     // this.getRecurrencyFamily();
-    this.budgetingService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.budgetLog.cat].bgcolor;
+    this.budgetsService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.budgetLog.cat].bgcolor;
   }
 
   getRecurrencyFamily(): void {
@@ -99,10 +104,6 @@ export class BudgetDetailsComponent implements OnInit {
   }
 
 
-  openMissingCategoriesSnackBar(): void {
-    this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'categoria/sub-categoria', ['O par ', 'não se encontra definido.'])
-  }
-
   editingBudgetLogRecordActions(action: string): void {
     switch (action) {
       case 'start':
@@ -115,7 +116,7 @@ export class BudgetDetailsComponent implements OnInit {
         break;
 
       case 'save':
-        if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this.openMissingCategoriesSnackBar(); }
+        if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'categoria/sub-categoria', ['O par ', ' não se encontra definido.']); }
         const CATEGORY = this.categoriesService.catTitleEnum[`${this.catForm.value}`];
         this.tempBudgetLog.date = this.budgetLogDatepickerForm.value.getTime();
         this.tempBudgetLog.cat = CATEGORY.id;
@@ -126,12 +127,11 @@ export class BudgetDetailsComponent implements OnInit {
           return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
         }
 
-        if (this.tempBudgetLog.recurrencyid === 0) {
-          this.saveBudgetLog();
-        }
+        if (this.tempBudgetLog.recurrencyid === 0) { this.saveBudgetLog(); }
+
         if (this.tempBudgetLog.recurrencyid !== 0) {
           this.treasuryService.recurrenyTempTlog = this.tempBudgetLog;
-          // this.openDialog2('300ms', '150ms')
+          this.updateRecurrencyLogModal('300ms', '150ms')
         }
         break;
 
@@ -140,33 +140,33 @@ export class BudgetDetailsComponent implements OnInit {
     }
   }
 
-  // openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
-  //   this._dialog.open(DeleteTreasuryLogConfirmationModal, {
-  //     width: '600px',
-  //     height: '300px',
-  //     enterAnimationDuration,
-  //     exitAnimationDuration,
-  //   });
-  // }
+  deleteTreasuryLogModal(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this._dialog.open(DeleteTreasauryLogModalComponent, {
+      width: '600px',
+      height: '300px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
+  }
 
-  // openDialog2(enterAnimationDuration: string, exitAnimationDuration: string): void {
-  //   this._dialog.open(UpdateRecurrencyLogConfirmationModal, {
-  //     width: '640px',
-  //     height: '320px',
-  //     enterAnimationDuration,
-  //     exitAnimationDuration,
-  //   });
-  // }
+  updateRecurrencyLogModal(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this._dialog.open(UpdateRecurrencyModalComponent, {
+      width: '640px',
+      height: '320px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
+  }
 
-  // openDialog3(enterAnimationDuration: string, exitAnimationDuration: string): void {
-  //   this.treasuryService.recurrenyTempTlog = this.tempTreasuryLog;
-  //   this._dialog.open(DettachRecurrencyConfirmationModal, {
-  //     width: '640px',
-  //     height: '320px',
-  //     enterAnimationDuration,
-  //     exitAnimationDuration,
-  //   });
-  // }
+  dettachRecurrencyModal(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this.budgetsService.recurrenyTempTlog = this.tempBudgetLog;
+    this._dialog.open(DettachRecurrencyModalComponent, {
+      width: '640px',
+      height: '320px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
+  }
 
   refreshSubcategoryList(catID: number = 0, catTitle: string = ''): void {
     let category: IFinancialCategory;

@@ -10,7 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NewCategoryComponent } from 'src/app/content/financial/categories/new-category/new-category.component';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { TreasuryLogComponent } from 'src/app/content/financial/treasury-log/treasury-log.component';
-import { TreasuryDetailsComponent, DeleteTreasuryLogConfirmationModal, UpdateRecurrencyLogConfirmationModal, DettachRecurrencyConfirmationModal } from 'src/app/content/financial/treasury-log/treasury-details/treasury-details.component';
+import { TreasuryDetailsComponent } from 'src/app/content/financial/treasury-log/treasury-details/treasury-details.component';
 import { NewTreasuryLogComponent } from 'src/app/content/financial/treasury-log/new-treasury-log/new-treasury-log.component';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { GuitaPipe } from '../pipes/guita.pipe';
@@ -26,6 +26,9 @@ import { BudgetingComponent } from 'src/app/content/financial/budgeting/budgetin
 import { AnalysisComponent } from 'src/app/content/financial/analysis/analysis.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DeleteTreasauryLogModalComponent } from 'src/app/content/financial/treasury-log/treasury-details/delete-treasaury-log-modal/delete-treasaury-log-modal.component';
+import { DettachRecurrencyModalComponent } from 'src/app/content/financial/treasury-log/treasury-details/dettach-recurrency-modal/dettach-recurrency-modal.component';
+import { UpdateRecurrencyModalComponent } from 'src/app/content/financial/treasury-log/treasury-details/update-recurrency-modal/update-recurrency-modal.component';
 
 @NgModule({
   declarations: [
@@ -35,20 +38,20 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     NewCategoryComponent,
     TreasuryLogComponent,
     TreasuryDetailsComponent,
-    DeleteTreasuryLogConfirmationModal,
     NewTreasuryLogComponent,
     GuitaPipe,
     OverviewDailyDetailsModalComponent,
     DeleteCategoryConfirmationModalComponent,
-    DettachRecurrencyConfirmationModal,
-    UpdateRecurrencyLogConfirmationModal,
     ReorderCategoriesModalComponent,
     GridViewComponent,
     MhqSnackBarComponent,
     NewBudgetComponent,
     BudgetDetailsComponent,
     BudgetingComponent,
-    AnalysisComponent
+    AnalysisComponent,
+    DeleteTreasauryLogModalComponent,
+    DettachRecurrencyModalComponent,
+    UpdateRecurrencyModalComponent,
 
   ],
   imports: [
@@ -69,20 +72,20 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     CategoryDetailsComponent,
     TreasuryLogComponent,
     TreasuryDetailsComponent,
-    DeleteTreasuryLogConfirmationModal,
     NewTreasuryLogComponent,
     GuitaPipe,
     OverviewDailyDetailsModalComponent,
     DeleteCategoryConfirmationModalComponent,
-    DettachRecurrencyConfirmationModal,
-    UpdateRecurrencyLogConfirmationModal,
     ReorderCategoriesModalComponent,
     MhqSnackBarComponent,
     GridViewComponent,
     NewBudgetComponent,
     BudgetDetailsComponent,
     BudgetingComponent,
-    AnalysisComponent
+    AnalysisComponent,
+    DeleteTreasauryLogModalComponent,
+    DettachRecurrencyModalComponent,
+    UpdateRecurrencyModalComponent,
 
   ]
 })

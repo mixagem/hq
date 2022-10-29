@@ -10,12 +10,11 @@ import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { getPTPaginatorIntl } from 'src/assets/modules/matPTPaginator';
-
 registerLocaleData(localePt);
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
 
   imports: [

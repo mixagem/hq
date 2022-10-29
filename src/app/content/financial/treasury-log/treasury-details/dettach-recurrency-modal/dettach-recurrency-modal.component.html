@@ -3,8 +3,10 @@
 </h1>
 
 <div mat-dialog-content class="mhq-modal-content-wrapper">
-  <p>Desancorar o movimento <span>{{treasuryService.activeTreasuryLog.title}}</span> da
+  <p>Desancorar o {{router.url.startsWith('/fi/tlog') ? 'movimento':'orçamento'}}
+    <span>{{treasuryService.activeTreasuryLog.title}}</span> da
     recorrência?</p>
+
 </div>
 
 <div mat-dialog-actions class="mhq-modal-close-actions">

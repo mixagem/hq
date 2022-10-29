@@ -21,18 +21,46 @@ export function fetchTreasuryLogs(req, res) {
 
 // ######> apagar o movimento da bd
 export function deleteTreasuryLog(req, res) {
-  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
-    if (err) { console.error(err.message); }
-    console.log(`[C2] deleting treasury log nº. {${req.body.tlog}}`);
-  });
 
-  db.serialize(() => {
-    db.run(`DELETE FROM treasurylog WHERE id=${req.body.tlog}`, (err, resp) => { err ? console.error(err.message) : console.log(`[C2] treasury log sucessfully deleted.`); });
-  });
+  if (req.body.type === 'tlog') {
 
-  db.close((err) => {
-    err ? console.error(err.message) : res.send('gucci');
-  });
+    const TREASURY_LOG = req.body.tlog;
+
+    let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+      if (err) { console.error(err.message); }
+      console.log(`[C2] deleting treasury log nº. {${TREASURY_LOG}}`);
+    });
+
+    db.serialize(() => {
+      db.run(`DELETE FROM treasurylog WHERE id=${TREASURY_LOG}`, (err, resp) => { err ? console.error(err.message) : console.log(`[C2] treasury log sucessfully deleted.`); });
+    });
+
+    db.close((err) => {
+      err ? console.error(err.message) : res.send('gucci');
+    });
+
+  }
+
+
+  if (req.body.type === 'budget') {
+
+
+    const BUDGET_LOG = req.body.budget;
+
+    let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+      if (err) { console.error(err.message); }
+      console.log(`[C2] deleting budget log nº. {${BUDGET_LOG}}`);
+    });
+
+    db.serialize(() => {
+      db.run(`DELETE FROM budget WHERE id=${BUDGET_LOG}`, (err, resp) => { err ? console.error(err.message) : console.log(`[C2] budget log sucessfully deleted.`); });
+    });
+
+    db.close((err) => {
+      err ? console.error(err.message) : res.send('gucci');
+    });
+
+  }
 }
 
 // ######> atualiza o movimento
@@ -167,40 +195,80 @@ export function updateRecurrency(req, res) {
 }
 
 
-export function dettachRecurrency(req,res){
+export function dettachRecurrency(req, res) {
 
-  const TREASURY_LOG = JSON.parse(req.body.tlog);
+  if (req.body.type === 'tlog') {
+    const TREASURY_LOG = JSON.parse(req.body.tlog);
 
-  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
-    if (err) { console.error(err.message); }
-    console.log(`[C9] detaching movmento from recurrency "${TREASURY_LOG.recurrencyid}"`);
-  });
+    let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+      if (err) { console.error(err.message); }
+      console.log(`[C9] detaching movimento from recurrency "${TREASURY_LOG.recurrencyid}"`);
+    });
 
-  db.serialize(() => {
-    db.run(`UPDATE treasurylog SET title='${TREASURY_LOG.title}', value='${TREASURY_LOG.value}', cat='${TREASURY_LOG.cat}', subcat='${TREASURY_LOG.subcat}', type='${TREASURY_LOG.type}', obs='${TREASURY_LOG.obs}', recurrencyid='0' WHERE id='${TREASURY_LOG.id}'`, (err, resp) => { err ? console.error(err.message) : []; });
-  });
+    db.serialize(() => {
+      db.run(`UPDATE treasurylog SET title='${TREASURY_LOG.title}', value='${TREASURY_LOG.value}', cat='${TREASURY_LOG.cat}', subcat='${TREASURY_LOG.subcat}', type='${TREASURY_LOG.type}', obs='${TREASURY_LOG.obs}', recurrencyid='0' WHERE id='${TREASURY_LOG.id}'`, (err, resp) => { err ? console.error(err.message) : []; });
+    });
 
-  db.close((err) => {
-    err ? console.error(err.message) : res.send('gucci');
-  });
+    db.close((err) => {
+      err ? console.error(err.message) : res.send('gucci');
+    });
+  }
+
+  if (req.body.type === 'budget') {
+    const BUDGET_LOG = JSON.parse(req.body.budget);
+
+    let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+      if (err) { console.error(err.message); }
+      console.log(`[C9] detaching orçamento from recurrency "${BUDGET_LOG.recurrencyid}"`);
+    });
+
+    db.serialize(() => {
+      db.run(`UPDATE budget SET title='${BUDGET_LOG.title}', value='${BUDGET_LOG.value}', cat='${BUDGET_LOG.cat}', subcat='${BUDGET_LOG.subcat}', type='${BUDGET_LOG.type}', obs='${BUDGET_LOG.obs}', recurrencyid='0' WHERE id='${BUDGET_LOG.id}'`, (err, resp) => { err ? console.error(err.message) : []; });
+    });
+
+    db.close((err) => {
+      err ? console.error(err.message) : res.send('gucci');
+    });
+  }
+
+
 
 }
 
-export function deleteAllRecurrencies(req,res){
+export function deleteAllRecurrencies(req, res) {
 
-  const TREASURY_LOG_RECURRENCY_ID = Number(req.body.recurrencyID);
+  if (req.body.type === 'tlog') {
+    const TREASURY_LOG_RECURRENCY_ID = Number(req.body.recurrencyID);
 
-  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
-    if (err) { console.error(err.message); }
-    console.log(`[C10] deletting all movments from recorrency from "${TREASURY_LOG_RECURRENCY_ID}"`);
-  });
+    let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+      if (err) { console.error(err.message); }
+      console.log(`[C10] deletting all movments from recorrency from "${TREASURY_LOG_RECURRENCY_ID}"`);
+    });
 
-  db.serialize(() => {
-    db.run(`DELETE from treasurylog WHERE recurrencyid='${TREASURY_LOG_RECURRENCY_ID}'`, (err, resp) => { err ? console.error(err.message) : []; });
-  });
+    db.serialize(() => {
+      db.run(`DELETE from treasurylog WHERE recurrencyid='${TREASURY_LOG_RECURRENCY_ID}'`, (err, resp) => { err ? console.error(err.message) : []; });
+    });
 
-  db.close((err) => {
-    err ? console.error(err.message) : res.send('gucci');
-  });
+    db.close((err) => {
+      err ? console.error(err.message) : res.send('gucci');
+    });
+  }
+
+  if (req.body.type === 'budget') {
+    const BUDGET_LOG_RECURRENCY_ID = Number(req.body.recurrencyID);
+
+    let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+      if (err) { console.error(err.message); }
+      console.log(`[C10] deletting all orçamentos from recorrency from "${BUDGET_LOG_RECURRENCY_ID}"`);
+    });
+
+    db.serialize(() => {
+      db.run(`DELETE from budget WHERE recurrencyid='${BUDGET_LOG_RECURRENCY_ID}'`, (err, resp) => { err ? console.error(err.message) : []; });
+    });
+
+    db.close((err) => {
+      err ? console.error(err.message) : res.send('gucci');
+    });
+  }
 
 }

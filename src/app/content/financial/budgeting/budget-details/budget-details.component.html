@@ -2,7 +2,7 @@
 
   <div class="mhq-mainform-drawer-actions">
 
-    <div class="mhq-quickaction-close" (click)="budgetingService.closeDetails()">
+    <div class="mhq-quickaction-close" (click)="budgetsService.closeDetails()">
       <mat-icon>close</mat-icon>
     </div>
 
@@ -22,26 +22,27 @@
       </button></div>
 
     <div *ngIf="!editingMode" class="mhq-quickaction-default"><button mat-icon-button
-        (click)="budgetingService.addMode(true)">
+        (click)="budgetsService.addMode(true)">
         <mat-icon>file_copy</mat-icon>
       </button></div>
 
     <div *ngIf="!editingMode" class="mhq-quickaction-default">
-      <!-- <button (click)="openDialog3('300ms','150ms')"
-        mat-icon-button [disabled]="recurrencyFamily.length===0">
+      <button (click)="dettachRecurrencyModal('300ms','150ms')" mat-icon-button
+        [disabled]="recurrencyFamily.length===0">
         <mat-icon>link_off</mat-icon>
-      </button> -->
+      </button>
     </div>
 
-    <!-- <div *ngIf="!editingMode" class="mhq-quickaction-delete" (click)="openDialog('300ms', '150ms')"> -->
 
-    <div *ngIf="!editingMode" class="mhq-quickaction-delete">
+    <div *ngIf="!editingMode" class="mhq-quickaction-delete" (click)="deleteTreasuryLogModal('300ms', '150ms')">
       <button mat-icon-button>
         <mat-icon>delete</mat-icon>
       </button>
     </div>
 
-    <div [ngStyle]="budgetingService.recordBorderStyle"></div>
+    <div [ngStyle]="budgetsService.recordBorderStyle"></div>
+
+
 
   </div>
 
@@ -276,6 +277,7 @@
       </div>
 
     </div>
+
 
 
   </div>

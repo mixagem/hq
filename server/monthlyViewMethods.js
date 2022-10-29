@@ -146,15 +146,16 @@ export function dailyTotalAcomulatedSnapshot(req, res) {
   const YEAR = Number(req.body.year);
   const MONTH_DAYS = Number(req.body.days);
   const DATA_INI = new Date('2022-01-01T00:00:00.000Z'); DATA_INI.setFullYear(YEAR, MONTH); const DATA_INI_MS = DATA_INI.getTime();
-  const DATA_FINI = new Date('2022-01-01T00:00:00.000Z'); DATA_FINI.setFullYear(YEAR, MONTH + 1); const DATA_FINI_MS = DATA_FINI.getTime() - 1;
+  const DATA_FINI = new Date('2022-01-01T00:00:00.000Z'); DATA_FINI.setFullYear(YEAR, MONTH + 1); const DATA_FINI_MS = DATA_FINI.getTime();
 
   let monthlyMovments = [];
   let initialSum = [];
   const DB = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => { err ? console.error(err.message) : console.log('[M5] Generating daily acomulated snapshot') });
   DB.serialize(() => {
-    DB.each(`SELECT * FROM treasurylog WHERE date <= ${DATA_FINI_MS} AND date >= ${DATA_INI_MS}`, (err, row) => { err ? console.error(err.message) : monthlyMovments.push(row) })
-      .all(`SELECT SUM(value) FROM treasurylog WHERE type='income' AND date <= ${DATA_INI_MS - 1}`, (err, row) => { err ? console.error(err.message) : initialSum[0] = Object.values(row[0])[0] })
-      .all(`SELECT SUM(value) FROM treasurylog WHERE type='expense' AND date <= ${DATA_INI_MS - 1}`, (err, row) => { err ? console.error(err.message) : initialSum[1] = Object.values(row[0])[0] })
+    console.log(DATA_INI_MS)
+    DB.each(`SELECT * FROM treasurylog WHERE date < ${DATA_FINI_MS} AND date >= ${DATA_INI_MS}`, (err, row) => { err ? console.error(err.message) : monthlyMovments.push(row) })
+      .all(`SELECT SUM(value) FROM treasurylog WHERE type='income' AND date < ${DATA_INI_MS}`, (err, row) => { err ? console.error(err.message) : initialSum[0] = Object.values(row[0])[0] })
+      .all(`SELECT SUM(value) FROM treasurylog WHERE type='expense' AND date < ${DATA_INI_MS}`, (err, row) => { err ? console.error(err.message) : initialSum[1] = Object.values(row[0])[0] })
   })
 
   DB.close((err) => {
@@ -164,10 +165,7 @@ export function dailyTotalAcomulatedSnapshot(req, res) {
 
   function generateAcomSnapshot() {
     let dailySumAcomEvo = new Array(MONTH_DAYS).fill(0);
-    let initialSumCalculated = 0;
-    initialSum.forEach((sum, i) => { if (sum !== null) { i === 0 ? initialSumCalculated = sumToFixed(initialSumCalculated, sum) : sumToFixed(initialSumCalculated, -sum) } });
-
-    dailySumAcomEvo[0] = sumToFixed(dailySumAcomEvo[0], initialSumCalculated);
+    dailySumAcomEvo[0] = sumToFixed(initialSum[0],-initialSum[1]);
     monthlyMovments.forEach(movement => movement.type === 'expense' ?
       dailySumAcomEvo[new Date(movement.date).getDate() - 1] = sumToFixed(dailySumAcomEvo[new Date(movement.date).getDate() - 1], -movement.value) :
       dailySumAcomEvo[new Date(movement.date).getDate() - 1] = sumToFixed(dailySumAcomEvo[new Date(movement.date).getDate() - 1], movement.value));

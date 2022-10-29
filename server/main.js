@@ -3,7 +3,7 @@ import { dailyTotalAcomulatedSnapshot, monthlySnapshots, dailyCatDetails, dailyS
 import { monthlyTotalAcomulatedSnapshot, yearlySnapshots, monthlyCatDetails, monthlySubCatDetails, monthlyTotalDetails } from './yearlyViewMethods.js';
 import { orderCategories, orderSubCategories, fetchCategories, createNewCategory, deleteCategory, updateCategory, getSubcategorySequence } from './categoriesMethods.js'
 import { deleteAllRecurrencies, dettachRecurrency, updateRecurrency, getRecurencyLogs, createTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog } from './treasuryMethods.js';
-import { deleteAllBudgetRecurrencies, dettachBudgetRecurrency, updateBudgetRecurrency, getBudgetRecurencyLogs, createBudgetlog, updateBudgetLog, fetchBudgetLogs, deleteBudgetLog } from './budgetingMethods.js';
+import {   updateBudgetRecurrency, getBudgetRecurencyLogs, createBudgetlog, updateBudgetLog, fetchBudgetLogs } from './budgetingMethods.js';
 
 import express from 'express';
 import cors from 'cors';
@@ -51,13 +51,13 @@ APP.post('/deleteallrecurrencies', function (req, res) { return deleteAllRecurre
 
 // budgeting
 APP.get('/fetchbudgets', function (req, res) { return fetchBudgetLogs(req, res); });
-APP.post('/deletebudgetlog', function (req, res) { return deleteBudgetLog(req, res); });
+// APP.post('/deletebudgetlog', function (req, res) { return deleteBudgetLog(req, res); });
 APP.post('/updatebudgetlog', function (req, res) { return updateBudgetLog(req, res); });
 APP.post('/createbudgetlog', function (req, res) { return createBudgetlog(req, res); });
 APP.post('/getbudgetrecurencylogs', function (req, res) { return getBudgetRecurencyLogs(req, res); });
 APP.post('/updatebudgetrecurrency', function (req, res) { return updateBudgetRecurrency(req, res); });
-APP.post('/dettachbudgetrecurrency', function (req, res) { return dettachBudgetRecurrency(req, res); });
-APP.post('/deleteallbudgetrecurrencies', function (req, res) { return deleteAllBudgetRecurrencies(req, res); });
+// APP.post('/dettachbudgetrecurrency', function (req, res) { return dettachBudgetRecurrency(req, res); });
+// APP.post('/deleteallbudgetrecurrencies', function (req, res) { return deleteAllBudgetRecurrencies(req, res); });
 
 // savings
 APP.post('/savingsgraphsnapshot', function (req, res) { return savingsGraphSnapshot(req, res); });

@@ -19,21 +19,6 @@ export function fetchBudgetLogs(req, res) {
 }
 
 
-// ######> apagar o movimento da bd
-export function deleteBudgetLog(req, res) {
-  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
-    if (err) { console.error(err.message); }
-    console.log(`[b2] deleting budget log nº. {${req.body.budget}}`);
-  });
-
-  db.serialize(() => {
-    db.run(`DELETE FROM budget WHERE id=${req.body.budget}`, (err, resp) => { err ? console.error(err.message) : console.log(`[B2] budget sucessfully deleted.`); });
-  });
-
-  db.close((err) => {
-    err ? console.error(err.message) : res.send('gucci');
-  });
-}
 
 // ######> atualiza o movimento
 export function updateBudgetLog(req, res) {
@@ -164,43 +149,4 @@ export function updateBudgetRecurrency(req, res) {
   db.close((err) => {
     err ? console.error(err.message) : res.send('gucci');
   });
-}
-
-
-export function dettachBudgetRecurrency(req,res){
-
-  const TREASURY_LOG = JSON.parse(req.body.tlog);
-
-  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
-    if (err) { console.error(err.message); }
-    console.log(`[C9] detaching movmento from recurrency "${TREASURY_LOG.recurrencyid}"`);
-  });
-
-  db.serialize(() => {
-    db.run(`UPDATE budget SET title='${TREASURY_LOG.title}', value='${TREASURY_LOG.value}', cat='${TREASURY_LOG.cat}', subcat='${TREASURY_LOG.subcat}', type='${TREASURY_LOG.type}', obs='${TREASURY_LOG.obs}', recurrencyid='0' WHERE id='${TREASURY_LOG.id}'`, (err, resp) => { err ? console.error(err.message) : []; });
-  });
-
-  db.close((err) => {
-    err ? console.error(err.message) : res.send('gucci');
-  });
-
-}
-
-export function deleteAllBudgetRecurrencies(req,res){
-
-  const TREASURY_LOG_RECURRENCY_ID = Number(req.body.recurrencyID);
-
-  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
-    if (err) { console.error(err.message); }
-    console.log(`[C10] deletting all movments from recorrency from "${TREASURY_LOG_RECURRENCY_ID}"`);
-  });
-
-  db.serialize(() => {
-    db.run(`DELETE from budget WHERE recurrencyid='${TREASURY_LOG_RECURRENCY_ID}'`, (err, resp) => { err ? console.error(err.message) : []; });
-  });
-
-  db.close((err) => {
-    err ? console.error(err.message) : res.send('gucci');
-  });
-
 }
