@@ -25,7 +25,7 @@ export class UpdateRecurrencyModalComponent {
   recurrencyOptions: RecurrencyOptions;
   allRecurrencyOptions: boolean = false;
 
-  constructor(public treasuryService: TreasuryService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, private _categoriesSnackBarService: MHQSnackBarsService, public router: Router, public bugetsService: BudgetingService) {
+  constructor(public treasuryService: TreasuryService,public budgetingService: BudgetingService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, private _categoriesSnackBarService: MHQSnackBarsService, public router: Router, public bugetsService: BudgetingService) {
     this.allRecurrencyOptions = false;
     this.recurrencyOptions = {
       name: 'Opções a alterar', toChange: false, color: 'primary', options: [
@@ -50,24 +50,48 @@ export class UpdateRecurrencyModalComponent {
 
   recurrencyUpdate(update: boolean): void {
 
-    const HTTP_PARAMS = new HttpParams().set('tlog', JSON.stringify(this.treasuryService.recurrenyTempTlog))
+    if (this.router.url.startsWith('/fi/tlog')) {
+      const HTTP_PARAMS = new HttpParams().set('type','tlog').set('tlog', JSON.stringify(this.treasuryService.recurrenyTempTlog))
 
-    let call;
-    if (update) { call = this._http.post('http://localhost:16190/updaterecurrency', HTTP_PARAMS, { responseType: 'text' }) }
-    else { call = this._http.post('http://localhost:16190/updatetreasurylog', HTTP_PARAMS, { responseType: 'text' }) }
+      let call;
+      if (update) { call = this._http.post('http://localhost:16190/updaterecurrency', HTTP_PARAMS, { responseType: 'text' }) }
+      else { call = this._http.post('http://localhost:16190/updatetreasurylog', HTTP_PARAMS, { responseType: 'text' }) }
 
-    call.subscribe({
-      next: codeReceived => {
-        this.treasuryService.fetchTreasuryLog('saveTreasuryLog', this.treasuryService.recurrenyTempTlog.id);
-        const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-        this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', this.treasuryService.recurrenyTempTlog.title, ['O movimento ', ' e respetivas recorrências, foram atualizadas com sucesso.']);
-      },
-      error: err => {
-        this._errorHandlingService.handleError(err);
-        const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-        this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.treasuryService.recurrenyTempTlog.title, ['Ocurreu algo inesperado ao atualizar as recorrências para o movimento ', '.']);
-      }
-    })
+      call.subscribe({
+        next: codeReceived => {
+          this.treasuryService.fetchTreasuryLog('saveTreasuryLog', this.treasuryService.recurrenyTempTlog.id);
+          const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
+          this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', this.treasuryService.recurrenyTempTlog.title, ['O movimento ', ' e respetivas recorrências, foram atualizadas com sucesso.']);
+        },
+        error: err => {
+          this._errorHandlingService.handleError(err);
+          const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
+          this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.treasuryService.recurrenyTempTlog.title, ['Ocurreu algo inesperado ao atualizar as recorrências para o movimento ', '.']);
+        }
+      })
+    }
+
+    if (this.router.url.startsWith('/fi/budget')) {
+      const HTTP_PARAMS = new HttpParams().set('type','budget').set('budget', JSON.stringify(this.budgetingService.recurrenyTempBudgetlog))
+
+      let call;
+      if (update) { call = this._http.post('http://localhost:16190/updaterecurrency', HTTP_PARAMS, { responseType: 'text' }) }
+      else { call = this._http.post('http://localhost:16190/updatetreasurylog', HTTP_PARAMS, { responseType: 'text' }) }
+
+      call.subscribe({
+        next: codeReceived => {
+          this.budgetingService.fetchBudgetLog('saveBudgetLog', this.budgetingService.recurrenyTempBudgetlog.id);
+          const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
+          this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', this.budgetingService.recurrenyTempBudgetlog.title, ['O movimento ', ' e respetivas recorrências, foram atualizadas com sucesso.']);
+        },
+        error: err => {
+          this._errorHandlingService.handleError(err);
+          const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
+          this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.budgetingService.recurrenyTempBudgetlog.title, ['Ocurreu algo inesperado ao atualizar as recorrências para o movimento ', '.']);
+        }
+      })
+    }
+
   }
 }
 

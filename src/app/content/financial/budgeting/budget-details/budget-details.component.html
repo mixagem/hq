@@ -2,7 +2,7 @@
 
   <div class="mhq-mainform-drawer-actions">
 
-    <div class="mhq-quickaction-close" (click)="budgetsService.closeDetails()">
+    <div class="mhq-quickaction-close" (click)="budgetingService.closeDetails()">
       <mat-icon>close</mat-icon>
     </div>
 
@@ -22,25 +22,25 @@
       </button></div>
 
     <div *ngIf="!editingMode" class="mhq-quickaction-default"><button mat-icon-button
-        (click)="budgetsService.addMode(true)">
+        (click)="budgetingService.addMode(true)">
         <mat-icon>file_copy</mat-icon>
       </button></div>
 
     <div *ngIf="!editingMode" class="mhq-quickaction-default">
-      <button (click)="dettachRecurrencyModal('300ms','150ms')" mat-icon-button
+      <button (click)="dettachBudgetRecurrencyModal('300ms','150ms')" mat-icon-button
         [disabled]="recurrencyFamily.length===0">
         <mat-icon>link_off</mat-icon>
       </button>
     </div>
 
 
-    <div *ngIf="!editingMode" class="mhq-quickaction-delete" (click)="deleteTreasuryLogModal('300ms', '150ms')">
+    <div *ngIf="!editingMode" class="mhq-quickaction-delete" (click)="deleteBudgetLogModal('300ms', '150ms')">
       <button mat-icon-button>
         <mat-icon>delete</mat-icon>
       </button>
     </div>
 
-    <div [ngStyle]="budgetsService.recordBorderStyle"></div>
+    <div [ngStyle]="budgetingService.recordBorderStyle"></div>
 
 
 
@@ -160,7 +160,7 @@
                 <div class="mhq-mat-inputs-margin">{{tlog | guita:true}}</div>
               </td>
               <td>
-                <div class="mhq-mat-inputs-margin"><button mat-icon-button (click)="viewMode(tlog.id,tlog.cat)"
+                <div class="mhq-mat-inputs-margin"><button mat-icon-button (click)="viewMode(tlog.id)"
                     color="primary">
                     <mat-icon>link</mat-icon>
                   </button>

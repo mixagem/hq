@@ -15,11 +15,11 @@ import { TreasuryService } from '../../treasury.service';
 export class DeleteTreasauryLogModalComponent {
   haveRecurrency: boolean;
 
-  constructor(public treasuryService: TreasuryService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, public router: Router, public budgetsService: BudgetingService) {
+  constructor(public treasuryService: TreasuryService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, public router: Router, public budgetingService: BudgetingService) {
     if (this.router.url.startsWith('/fi/tlog')){
       this.haveRecurrency = this.treasuryService.activeTreasuryLog.recurrencyid !== 0}
     if (this.router.url.startsWith('/fi/budget')){
-      this.haveRecurrency = this.budgetsService.activeBudgetLog.recurrencyid !== 0}
+      this.haveRecurrency = this.budgetingService.activeBudgetLog.recurrencyid !== 0}
   }
 
   deleteTreasuryLog(): void {
@@ -39,11 +39,11 @@ export class DeleteTreasauryLogModalComponent {
 
 
     if (this.router.url.startsWith('/fi/budget')) {
-      HTTP_PARAMS = new HttpParams().set('type', 'budget').set('tlog', this.budgetsService.activeBudgetLog.id)
+      HTTP_PARAMS = new HttpParams().set('type', 'budget').set('budget', this.budgetingService.activeBudgetLog.id)
       CALL = this._http.post('http://localhost:16190/deletetreasurylog', HTTP_PARAMS, { responseType: 'text' })
 
       CALL.subscribe({
-        next: codeReceived => { this.budgetsService.fetchBudgetLog('deleteBudgetLog'); },
+        next: codeReceived => { this.budgetingService.fetchBudgetLog('deleteBudgetLog'); },
         error: err => this._errorHandlingService.handleError(err)
       })
     }
@@ -66,11 +66,11 @@ export class DeleteTreasauryLogModalComponent {
     }
 
     if (this.router.url.startsWith('/fi/budget')) {
-      HTTP_PARAMS = new HttpParams().set('type','budget').set('recurrencyID', this.budgetsService.activeBudgetLog.recurrencyid)
+      HTTP_PARAMS = new HttpParams().set('type','budget').set('recurrencyID', this.budgetingService.activeBudgetLog.recurrencyid)
       CALL = this._http.post('http://localhost:16190/deleteallrecurrencies', HTTP_PARAMS, { responseType: 'text' })
 
       CALL.subscribe({
-        next: codeReceived => { this.budgetsService.fetchBudgetLog('deleteBudgetLog'); },
+        next: codeReceived => { this.budgetingService.fetchBudgetLog('deleteBudgetLog'); },
         error: err => this._errorHandlingService.handleError(err)
       })
     }

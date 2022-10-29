@@ -65,20 +65,41 @@ export function deleteTreasuryLog(req, res) {
 
 // ######> atualiza o movimento
 export function updateTreasuryLog(req, res) {
-  const TREASURY_LOG = JSON.parse(req.body.tlog);
+  if (req.body.type === 'tlog') {
+    const TREASURY_LOG = JSON.parse(req.body.tlog);
 
-  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
-    if (err) { console.error(err.message); }
-    console.log(`[C3] updating treasury log "${TREASURY_LOG.title}"`);
-  });
+    let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+      if (err) { console.error(err.message); }
+      console.log(`[C3] updating treasury log "${TREASURY_LOG.title}"`);
+    });
 
-  db.serialize(() => {
-    db.run(`UPDATE treasurylog SET title='${TREASURY_LOG.title}', date='${TREASURY_LOG.date}', value='${TREASURY_LOG.value}', cat='${TREASURY_LOG.cat}', subcat='${TREASURY_LOG.subcat}', type='${TREASURY_LOG.type}', obs='${TREASURY_LOG.obs}' WHERE id='${TREASURY_LOG.id}'`, (err, resp) => { err ? console.error(err.message) : console.log('[C3] treasury log updated'); });
-  });
+    db.serialize(() => {
+      db.run(`UPDATE treasurylog SET title='${TREASURY_LOG.title}', date='${TREASURY_LOG.date}', value='${TREASURY_LOG.value}', cat='${TREASURY_LOG.cat}', subcat='${TREASURY_LOG.subcat}', type='${TREASURY_LOG.type}', obs='${TREASURY_LOG.obs}' WHERE id='${TREASURY_LOG.id}'`, (err, resp) => { err ? console.error(err.message) : console.log('[C3] treasury log updated'); });
+    });
 
-  db.close((err) => {
-    err ? console.error(err.message) : res.send('gucci');
-  });
+    db.close((err) => {
+      err ? console.error(err.message) : res.send('gucci');
+    });
+  }
+
+
+  if (req.body.type === 'budget') {
+    console.log('aki')
+    const BUDGET_LOG = JSON.parse(req.body.budget);
+
+    let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+      if (err) { console.error(err.message); }
+      console.log(`[C3] updating treasury log "${BUDGET_LOG.title}"`);
+    });
+
+    db.serialize(() => {
+      db.run(`UPDATE budget SET title='${BUDGET_LOG.title}', date='${BUDGET_LOG.date}', value='${BUDGET_LOG.value}', cat='${BUDGET_LOG.cat}', subcat='${BUDGET_LOG.subcat}', type='${BUDGET_LOG.type}', obs='${BUDGET_LOG.obs}' WHERE id='${BUDGET_LOG.id}'`, (err, resp) => { err ? console.error(err.message) : console.log('[C3] treasury log updated'); });
+    });
+
+    db.close((err) => {
+      err ? console.error(err.message) : res.send('gucci');
+    });
+  }
 }
 
 // ######> adicionar um novo movimento
@@ -154,44 +175,86 @@ export function createTreasurylog(req, res) {
 // ######> adicionar um novo movimento
 export function getRecurencyLogs(req, res) {
 
-  const TREASURY_LOG_ID = JSON.parse(req.body.tlogID);
-  const RECURRENCY_ID = JSON.parse(req.body.recurID);
+  if (req.body.type === 'tlog') {
+    const TREASURY_LOG_ID = JSON.parse(req.body.tlogID);
+    const RECURRENCY_ID = JSON.parse(req.body.recurID);
 
-  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
-    if (err) { console.error(err.message); }
-    console.log(`[C7] fetching recorrencies from id "${RECURRENCY_ID}"`);
-  });
+    let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+      if (err) { console.error(err.message); }
+      console.log(`[C7] fetching recorrencies from id "${RECURRENCY_ID}"`);
+    });
 
-  let tLogsFromRecurrency = [];
+    let tLogsFromRecurrency = [];
 
-  db.serialize(() => {
-    db.each(`SELECT * FROM treasurylog WHERE recurrencyid='${RECURRENCY_ID}' AND NOT id='${TREASURY_LOG_ID}' ORDER BY date DESC`, (err, resp) => { err ? console.error(err.message) : tLogsFromRecurrency.push(resp); });
-  });
+    db.serialize(() => {
+      db.each(`SELECT * FROM treasurylog WHERE recurrencyid='${RECURRENCY_ID}' AND NOT id='${TREASURY_LOG_ID}' ORDER BY date DESC`, (err, resp) => { err ? console.error(err.message) : tLogsFromRecurrency.push(resp); });
+    });
 
-  db.close((err) => {
-    err ? console.error(err.message) : res.send(tLogsFromRecurrency);
-  });
+    db.close((err) => {
+      err ? console.error(err.message) : res.send(tLogsFromRecurrency);
+    });
+  }
+
+  if (req.body.type === 'budget') {
+    const BUDGET_LOG_ID = JSON.parse(req.body.budgetID);
+    const RECURRENCY_ID = JSON.parse(req.body.recurID);
+
+    let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+      if (err) { console.error(err.message); }
+      console.log(`[C7] fetching recorrencies from id "${RECURRENCY_ID}"`);
+    });
+
+    let tLogsFromRecurrency = [];
+
+    db.serialize(() => {
+      db.each(`SELECT * FROM budget WHERE recurrencyid='${RECURRENCY_ID}' AND NOT id='${BUDGET_LOG_ID}' ORDER BY date DESC`, (err, resp) => { err ? console.error(err.message) : tLogsFromRecurrency.push(resp); });
+    });
+
+    db.close((err) => {
+      err ? console.error(err.message) : res.send(tLogsFromRecurrency);
+    });
+  }
 }
 
 
 // ######> adicionar um novo movimento
 export function updateRecurrency(req, res) {
 
-  const TREASURY_LOG = JSON.parse(req.body.tlog);
+  if (req.body.type === 'tlog') {
+    const TREASURY_LOG = JSON.parse(req.body.tlog);
 
-  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
-    if (err) { console.error(err.message); }
-    console.log(`[C8] updatinmg recorrencies from id "${TREASURY_LOG.recurrencyid}"`);
-  });
+    let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+      if (err) { console.error(err.message); }
+      console.log(`[C8] updatinmg recorrencies from id "${TREASURY_LOG.recurrencyid}"`);
+    });
 
 
-  db.serialize(() => {
-    db.run(`UPDATE treasurylog SET title='${TREASURY_LOG.title}', value='${TREASURY_LOG.value}', cat='${TREASURY_LOG.cat}', subcat='${TREASURY_LOG.subcat}', type='${TREASURY_LOG.type}', obs='${TREASURY_LOG.obs}' WHERE recurrencyid='${TREASURY_LOG.recurrencyid}'`, (err, resp) => { err ? console.error(err.message) : []; });
-  });
+    db.serialize(() => {
+      db.run(`UPDATE treasurylog SET title='${TREASURY_LOG.title}', value='${TREASURY_LOG.value}', cat='${TREASURY_LOG.cat}', subcat='${TREASURY_LOG.subcat}', type='${TREASURY_LOG.type}', obs='${TREASURY_LOG.obs}' WHERE recurrencyid='${TREASURY_LOG.recurrencyid}'`, (err, resp) => { err ? console.error(err.message) : []; });
+    });
 
-  db.close((err) => {
-    err ? console.error(err.message) : res.send('gucci');
-  });
+    db.close((err) => {
+      err ? console.error(err.message) : res.send('gucci');
+    });
+  }
+
+  if (req.body.type === 'budget') {
+    const BUDGET_LOG = JSON.parse(req.body.budget);
+
+    let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+      if (err) { console.error(err.message); }
+      console.log(`[C8] updatinmg recorrencies from id "${BUDGET_LOG.recurrencyid}"`);
+    });
+
+
+    db.serialize(() => {
+      db.run(`UPDATE budget SET title='${BUDGET_LOG.title}', value='${BUDGET_LOG.value}', cat='${BUDGET_LOG.cat}', subcat='${BUDGET_LOG.subcat}', type='${BUDGET_LOG.type}', obs='${BUDGET_LOG.obs}' WHERE recurrencyid='${BUDGET_LOG.recurrencyid}'`, (err, resp) => { err ? console.error(err.message) : []; });
+    });
+
+    db.close((err) => {
+      err ? console.error(err.message) : res.send('gucci');
+    });
+  }
 }
 
 

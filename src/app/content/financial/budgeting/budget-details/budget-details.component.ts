@@ -11,7 +11,6 @@ import { MatSelectChange } from '@angular/material/select';
 import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
-import { TreasuryService } from '../../treasury-log/treasury.service';
 import { BudgetingService } from '../budgeting.service';
 import { DeleteTreasauryLogModalComponent } from '../../treasury-log/treasury-details/delete-treasaury-log-modal/delete-treasaury-log-modal.component';
 import { DettachRecurrencyModalComponent } from '../../treasury-log/treasury-details/dettach-recurrency-modal/dettach-recurrency-modal.component';
@@ -41,7 +40,7 @@ export class BudgetDetailsComponent implements OnInit {
   recurrencyFrequency: FormControl<any>;
   recurrencyFamily: ITreasuryLog[];
 
-  constructor(public loadingService: LoadingService, private _errorHandlingService: ErrorHandlingService, private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, public categoriesService: CategoriesService, private _categoriesSnackBarService: MHQSnackBarsService, private _router: Router, public budgetsService: BudgetingService) {
+  constructor(public loadingService: LoadingService, private _errorHandlingService: ErrorHandlingService, private _route: ActivatedRoute, private _dialog: MatDialog, private _http: HttpClient, public categoriesService: CategoriesService, private _categoriesSnackBarService: MHQSnackBarsService, private _router: Router, public budgetingService: BudgetingService) {
     this.editingMode = false;
     this.firstLoadingComplete = false;
     this.recurrencyFamily = [];
@@ -49,26 +48,26 @@ export class BudgetDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     // loading check
-    this.budgetsService.onInitTrigger.subscribe(x => { this.ngOnInit(); }); this.treasuryService.onInitTrigger.subscribe(x => { this.ngOnInit(); }); this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
-    if (!this.loadingService.categoriesLoadingComplete || !this.loadingService.treasuryLoadingComplete || !this.loadingService.budgetingLoadingComplete || this.firstLoadingComplete) { return }
+    this.budgetingService.onInitTrigger.subscribe(x => { this.ngOnInit(); }); this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
+    if (!this.loadingService.categoriesLoadingComplete|| !this.loadingService.budgetingLoadingComplete || this.firstLoadingComplete) { return }
     this.firstLoadingComplete = true;
     this.id = Number(this._route.snapshot.paramMap.get('id')!);
-    this.budgetLog = this.budgetsService.budgetEnum[this.id]
+    this.budgetLog = this.budgetingService.budgetEnum[this.id]
     this.tempBudgetLog = JSON.parse(JSON.stringify(this.budgetLog));
-    this.budgetsService.activeBudgetLog = JSON.parse(JSON.stringify(this.budgetLog));
+    this.budgetingService.activeBudgetLog = JSON.parse(JSON.stringify(this.budgetLog));
     this.budgetLogDatepickerForm = new FormControl(new Date(this.budgetLog.date), [Validators.required]);
     this.catForm = new FormControl(this.categoriesService.catEnum[this.tempBudgetLog.cat].title, [Validators.required]);
     this.subcatForm = new FormControl({ value: this.categoriesService.subcatEnum[this.tempBudgetLog.subcat].title, disabled: true }, [Validators.required]);
     this.categoriesService.catEnum[this.tempBudgetLog.cat].subcats.forEach((subcat: { title: string; }) => { this.subcategoriesList.push(subcat.title) });
     this.subcatForm.enable();
     this.categoriesService.allCategories.forEach(cat => { this.categoriesList.push(cat.title) });
-    // this.getRecurrencyFamily();
-    this.budgetsService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.budgetLog.cat].bgcolor;
+    this.getRecurrencyFamily();
+    this.budgetingService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.budgetLog.cat].bgcolor;
   }
 
   getRecurrencyFamily(): void {
     if (this.budgetLog.recurrencyid === 0) { return }
-    const HTTP_PARAMS = new HttpParams().set('tlogID', this.budgetLog.id).set('recurID', this.budgetLog.recurrencyid)
+    const HTTP_PARAMS = new HttpParams().set('type','budget').set('budgetID', this.budgetLog.id).set('recurID', this.budgetLog.recurrencyid)
     const CALL = this._http.post('http://localhost:16190/getrecurencylogs', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
@@ -87,12 +86,12 @@ export class BudgetDetailsComponent implements OnInit {
   }
 
   saveBudgetLog(): void {
-    const HTTP_PARAMS = new HttpParams().set('tlog', JSON.stringify(this.tempBudgetLog))
+    const HTTP_PARAMS = new HttpParams().set('type','budget').set('budget', JSON.stringify(this.tempBudgetLog))
     const CALL = this._http.post('http://localhost:16190/updatetreasurylog', HTTP_PARAMS, { responseType: 'text' })
 
     CALL.subscribe({
       next: codeReceived => {
-        this.treasuryService.fetchTreasuryLog('saveTreasuryLog', this.tempBudgetLog.id);
+        this.budgetingService.fetchBudgetLog('saveBudgetLog', this.tempBudgetLog.id);
         this.editingMode = false;
         this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', this.tempBudgetLog.title, ['O movimento ', ' foi atualizado com sucesso.']);
       },
@@ -121,7 +120,7 @@ export class BudgetDetailsComponent implements OnInit {
         this.tempBudgetLog.date = this.budgetLogDatepickerForm.value.getTime();
         this.tempBudgetLog.cat = CATEGORY.id;
         this.tempBudgetLog.subcat = this.categoriesService.subcatTitleEnum[`${this.subcatForm.value}`].id;
-        this.treasuryService.recordBorderStyle['background-color'] = CATEGORY.bgcolor;
+        this.budgetingService.recordBorderStyle['background-color'] = CATEGORY.bgcolor;
         this.tempBudgetLog.value = Number(this.tempBudgetLog.value.toString().replace(',', '.')); // conversão de vírgulas para pontos
         if (!this.tempBudgetLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) {
           return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
@@ -130,8 +129,8 @@ export class BudgetDetailsComponent implements OnInit {
         if (this.tempBudgetLog.recurrencyid === 0) { this.saveBudgetLog(); }
 
         if (this.tempBudgetLog.recurrencyid !== 0) {
-          this.treasuryService.recurrenyTempTlog = this.tempBudgetLog;
-          this.updateRecurrencyLogModal('300ms', '150ms')
+          this.budgetingService.recurrenyTempBudgetlog = this.tempBudgetLog;
+          this.updateBudgetRecurrencyLogModal('300ms', '150ms')
         }
         break;
 
@@ -140,7 +139,7 @@ export class BudgetDetailsComponent implements OnInit {
     }
   }
 
-  deleteTreasuryLogModal(enterAnimationDuration: string, exitAnimationDuration: string): void {
+  deleteBudgetLogModal(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this._dialog.open(DeleteTreasauryLogModalComponent, {
       width: '600px',
       height: '300px',
@@ -149,7 +148,7 @@ export class BudgetDetailsComponent implements OnInit {
     });
   }
 
-  updateRecurrencyLogModal(enterAnimationDuration: string, exitAnimationDuration: string): void {
+  updateBudgetRecurrencyLogModal(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this._dialog.open(UpdateRecurrencyModalComponent, {
       width: '640px',
       height: '320px',
@@ -158,8 +157,8 @@ export class BudgetDetailsComponent implements OnInit {
     });
   }
 
-  dettachRecurrencyModal(enterAnimationDuration: string, exitAnimationDuration: string): void {
-    this.budgetsService.recurrenyTempTlog = this.tempBudgetLog;
+  dettachBudgetRecurrencyModal(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this.budgetingService.recurrenyTempBudgetlog = this.tempBudgetLog;
     this._dialog.open(DettachRecurrencyModalComponent, {
       width: '640px',
       height: '320px',
@@ -186,8 +185,8 @@ export class BudgetDetailsComponent implements OnInit {
     event.checked ? this.recurrencyFrequency.enable() : this.recurrencyFrequency.disable();
   }
 
-  viewMode(logID: number, catID: number): void {
-    this._router.navigateByUrl('/fi/tlogs', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs', logID]); });
+  viewMode(logID: number): void {
+    this._router.navigateByUrl('/fi/budget', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/budget', logID]); });
   }
 
 

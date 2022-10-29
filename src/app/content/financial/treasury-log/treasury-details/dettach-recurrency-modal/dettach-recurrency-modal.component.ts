@@ -40,19 +40,19 @@ export class DettachRecurrencyModalComponent {
     }
 
     if (this.router.url.startsWith('/fi/budget')) {
-      HTTP_PARAMS = new HttpParams().set('type', 'budget').set('budget', JSON.stringify(this.bugetsService.recurrenyTempTlog));
+      HTTP_PARAMS = new HttpParams().set('type', 'budget').set('budget', JSON.stringify(this.bugetsService.recurrenyTempBudgetlog));
       CALL = this._http.post('http://localhost:16190/dettachrecurrency', HTTP_PARAMS, { responseType: 'text' });
 
       CALL!.subscribe({
         next: codeReceived => {
-          this.bugetsService.fetchBudgetLog('saveBudgetLog', this.bugetsService.recurrenyTempTlog.id);
+          this.bugetsService.fetchBudgetLog('saveBudgetLog', this.bugetsService.recurrenyTempBudgetlog.id);
           const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-          this._snackBarService.triggerMHQSnackbar(true, 'save_as', this.bugetsService.recurrenyTempTlog.title, ['O orçamento ', ' foi removido da recorrência com sucesso.']);
+          this._snackBarService.triggerMHQSnackbar(true, 'save_as', this.bugetsService.recurrenyTempBudgetlog.title, ['O orçamento ', ' foi removido da recorrência com sucesso.']);
         },
         error: err => {
           this._errorHandlingService.handleError(err);
           const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-          this._snackBarService.triggerMHQSnackbar(false, 'report', this.bugetsService.recurrenyTempTlog.title, ['Ocorreu algo inesperado ao atualizar o orçamento ', '.']);
+          this._snackBarService.triggerMHQSnackbar(false, 'report', this.bugetsService.recurrenyTempBudgetlog.title, ['Ocorreu algo inesperado ao atualizar o orçamento ', '.']);
         }
       })
     }

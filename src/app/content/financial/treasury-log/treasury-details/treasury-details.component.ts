@@ -68,7 +68,7 @@ export class TreasuryDetailsComponent implements OnInit {
 
   getRecurrencyFamily(): void {
     if (this.tempTreasuryLog.recurrencyid === 0) { return }
-    const HTTP_PARAMS = new HttpParams().set('tlogID', this.tempTreasuryLog.id).set('recurID', this.tempTreasuryLog.recurrencyid)
+    const HTTP_PARAMS = new HttpParams().set('type','tlog').set('tlogID', this.tempTreasuryLog.id).set('recurID', this.tempTreasuryLog.recurrencyid)
     const CALL = this._http.post('http://localhost:16190/getrecurencylogs', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
@@ -83,7 +83,7 @@ export class TreasuryDetailsComponent implements OnInit {
   }
 
   saveTreasurylog(): void {
-    const HTTP_PARAMS = new HttpParams().set('tlog', JSON.stringify(this.tempTreasuryLog))
+    const HTTP_PARAMS = new HttpParams().set('type','tlog').set('tlog', JSON.stringify(this.tempTreasuryLog))
     const CALL = this._http.post('http://localhost:16190/updatetreasurylog', HTTP_PARAMS, { responseType: 'text' })
 
     CALL.subscribe({
@@ -117,7 +117,7 @@ export class TreasuryDetailsComponent implements OnInit {
         this.tempTreasuryLog.cat = CATEGORY.id;
         this.tempTreasuryLog.subcat = this.categoriesService.subcatTitleEnum[`${this.subcatForm.value}`].id;
         this.treasuryService.recordBorderStyle['background-color'] = CATEGORY.bgcolor;
-        
+
         this.tempTreasuryLog.value = Number(this.tempTreasuryLog.value.toString().replace(',', '.')); // conversão de vírgulas para pontos
         if (!this.tempTreasuryLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) { return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']); }
 

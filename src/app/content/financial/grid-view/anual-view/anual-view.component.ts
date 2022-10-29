@@ -29,7 +29,7 @@ export class AnualViewComponent implements OnInit {
   activeCategories: IFinancialCategory[] // lista de categorias ativas
   areCategoriesReady: boolean; // estado de recepção das categorias ativas
 
-  constructor(private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, public categoriesService: CategoriesService, private _treasuryService: TreasuryService, private _loadingService: LoadingService, public gridViewService: GridViewService, private _dialog: MatDialog) {
+  constructor(private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, public categoriesService: CategoriesService, private _loadingService: LoadingService, public gridViewService: GridViewService, private _dialog: MatDialog) {
     this.gridReady = false;
     this.areCategoriesReady = false;
     this.yearlySnapshots = { categories: {}, subcategories: {}, daily: [] } // inicializar a var
@@ -38,10 +38,9 @@ export class AnualViewComponent implements OnInit {
     this.gridSubtitle = '';
   }
 
-  ngOnInit(): void {
-    this._treasuryService.onInitTrigger.subscribe(x => { this.ngOnInit(); });     // triggers remoto do OnInit
+  ngOnInit(): void {   // triggers remoto do OnInit
     this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
-    if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.treasuryLoadingComplete) { return }
+    if (!this._loadingService.categoriesLoadingComplete ) { return }
     this.placeholder = new Array(12).fill(0);
     this.activeCategories = [...this.categoriesService.allCategories].filter(category => category.active);
     this.yearlyGridSubtitleGenerator();

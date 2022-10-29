@@ -21,22 +21,22 @@ export class BudgetingComponent implements OnInit {
   dataSource: MatTableDataSource<ITreasuryLog>;  // datasource para tabela
   displayedColumns: string[];   // array com as colunas da tabela
 
-  constructor(public budgetsService: BudgetingService, public treasuryService: TreasuryService, public categoriesService: CategoriesService, public router: Router, private _loadingService: LoadingService) {
+  constructor(public budgetingService: BudgetingService, public treasuryService: TreasuryService, public categoriesService: CategoriesService, public router: Router, private _loadingService: LoadingService) {
     this.isMatTableReady = false;
     this.firstLoadingComplete = false;
   }
 
   @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
-    if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.treasuryLoadingComplete) { return }
+    if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.budgetingLoadingComplete) { return }
     this.dataSource.paginator = paginator;
   }
 
   ngOnInit(): void {
-    this.treasuryService.onInitTrigger.subscribe(x => { this.ngOnInit(); }); this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); }); this.budgetsService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
-    if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.treasuryLoadingComplete || !this._loadingService.treasuryLoadingComplete || this.firstLoadingComplete) { return }     // loading check
+    this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); }); this.budgetingService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
+    if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.budgetingLoadingComplete || this.firstLoadingComplete) { return }     // loading check
 
     this.firstLoadingComplete = true;
-    this.dataSource = new MatTableDataSource<ITreasuryLog>(this.budgetsService.budgetLog);     // incializar tabela
+    this.dataSource = new MatTableDataSource<ITreasuryLog>(this.budgetingService.budgetLog);     // incializar tabela
     this.displayedColumns = ['cat', 'title', 'date', 'value'];
     this.isMatTableReady = true;
   }
@@ -44,7 +44,7 @@ export class BudgetingComponent implements OnInit {
   // navegação para modo de consulta de registo
   viewMode(budgetID: number): void {
     console.log('view mode trigger')
-    this.budgetsService.onInitTrigger.complete; this.budgetsService.onInitTrigger = new Subject<any>();
+    this.budgetingService.onInitTrigger.complete; this.budgetingService.onInitTrigger = new Subject<any>();
     if (document.querySelector('#mhq-budget-details')?.classList.contains('animate__slideOutRight')) { document.querySelector('#mhq-budget-details')?.classList.replace('animate__slideOutRight', 'animate__slideInRight') }
     this.router.navigateByUrl('/fi/budget', { skipLocationChange: true }).then(() => { this.router.navigate(['/fi/budget', budgetID]); });
   }

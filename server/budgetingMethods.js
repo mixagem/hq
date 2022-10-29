@@ -18,26 +18,6 @@ export function fetchBudgetLogs(req, res) {
   });
 }
 
-
-
-// ######> atualiza o movimento
-export function updateBudgetLog(req, res) {
-  const TREASURY_LOG = JSON.parse(req.body.budget);
-
-  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
-    if (err) { console.error(err.message); }
-    console.log(`[b3] updating budget log "${TREASURY_LOG.title}"`);
-  });
-
-  db.serialize(() => {
-    db.run(`UPDATE budget SET title='${TREASURY_LOG.title}', date='${TREASURY_LOG.date}', value='${TREASURY_LOG.value}', cat='${TREASURY_LOG.cat}', subcat='${TREASURY_LOG.subcat}', type='${TREASURY_LOG.type}', obs='${TREASURY_LOG.obs}' WHERE id='${TREASURY_LOG.id}'`, (err, resp) => { err ? console.error(err.message) : console.log('[b3] budget log updated'); });
-  });
-
-  db.close((err) => {
-    err ? console.error(err.message) : res.send('gucci');
-  });
-}
-
 // ######> adicionar um novo movimento
 export function createBudgetlog(req, res) {
   const TREASURY_LOG = JSON.parse(req.body.budget);
@@ -106,47 +86,4 @@ export function createBudgetlog(req, res) {
       err ? console.error(err.message) : res.send(newTlogID.toString());
     });
   }
-}
-
-// ######> adicionar um novo movimento
-export function getBudgetRecurencyLogs(req, res) {
-
-  const TREASURY_LOG_ID = JSON.parse(req.body.tlogID);
-  const RECURRENCY_ID = JSON.parse(req.body.recurID);
-
-  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
-    if (err) { console.error(err.message); }
-    console.log(`[b7] fetching recorrencies from id "${RECURRENCY_ID}"`);
-  });
-
-  let budgetLogsFromRecurrency = [];
-
-  db.serialize(() => {
-    db.each(`SELECT * FROM budget WHERE recurrencyid='${RECURRENCY_ID}' AND NOT id='${TREASURY_LOG_ID}' ORDER BY date DESC`, (err, resp) => { err ? console.error(err.message) : budgetLogsFromRecurrency.push(resp); });
-  });
-
-  db.close((err) => {
-    err ? console.error(err.message) : res.send(budgetLogsFromRecurrency);
-  });
-}
-
-
-// ######> adicionar um novo movimento
-export function updateBudgetRecurrency(req, res) {
-
-  const TREASURY_LOG = JSON.parse(req.body.tlog);
-
-  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
-    if (err) { console.error(err.message); }
-    console.log(`[b8] updatinmg recorrencies from id "${TREASURY_LOG.recurrencyid}"`);
-  });
-
-
-  db.serialize(() => {
-    db.run(`UPDATE budget SET title='${TREASURY_LOG.title}', value='${TREASURY_LOG.value}', cat='${TREASURY_LOG.cat}', subcat='${TREASURY_LOG.subcat}', type='${TREASURY_LOG.type}', obs='${TREASURY_LOG.obs}' WHERE recurrencyid='${TREASURY_LOG.recurrencyid}'`, (err, resp) => { err ? console.error(err.message) : []; });
-  });
-
-  db.close((err) => {
-    err ? console.error(err.message) : res.send('gucci');
-  });
 }

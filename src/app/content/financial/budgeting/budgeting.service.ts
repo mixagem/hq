@@ -24,7 +24,7 @@ export class BudgetingService {
   activeBudgetLog: ITreasuryLog;   // clone do movimento  atualmente em consulta
   cloningBudgetLog: Boolean;   // boolean que indica se é duplicação ou intrudução nova
   recurrencyFreq: recurencyFrequency[] // opções frequencia recurrencia
-  recurrenyTempTlog: ITreasuryLog
+  recurrenyTempBudgetlog: ITreasuryLog
 
   constructor(private _errorHandlingService: ErrorHandlingService, private _http: HttpClient, private _router: Router, private _loadingService: LoadingService, private _timerService: TimerService) {
     this.cloningBudgetLog = false;
@@ -44,13 +44,13 @@ export class BudgetingService {
         next: (codeReceived) => {
           const RESP = codeReceived as ITreasuryLog[];
 
-          if (source === 'saveBudgetLog') { this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs', LogID]); }); }
+          if (source === 'saveBudgetLog') { this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/budget', LogID]); }); }
 
           if (source === 'deleteBudgetLog') {
-            document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
+            document.querySelector('#mhq-budget-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
             this._timerService.timer = setTimeout(() => {
               const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-              this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs']); });
+              this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/budget']); });
               this.budgetLog = RESP;
               this.budgetEnum = {}; this.budgetLog.forEach(tlog => { this.budgetEnum[`${tlog.id}`] = tlog });
               this._loadingService.budgetingLoadingComplete = true;
@@ -71,7 +71,7 @@ export class BudgetingService {
     // inicia o modo de introdução / duplicação
     addMode(cloningBudgetLog: boolean): void {
       this.cloningBudgetLog = cloningBudgetLog;
-      this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs/add']); });
+      this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/budget/add']); });
     }
 
     // fecha a gaveta e volta para o modo de listagem
