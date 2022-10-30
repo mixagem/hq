@@ -3,6 +3,6 @@ export enum EFaturaEnum {
   'food',
   'gym',
   'barber',
-  'helth',
+  'health',
   'bus'
 }

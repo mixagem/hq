@@ -15,6 +15,7 @@ import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 import { DeleteTreasauryLogModalComponent } from './delete-treasaury-log-modal/delete-treasaury-log-modal.component';
 import { UpdateRecurrencyModalComponent } from './update-recurrency-modal/update-recurrency-modal.component';
 import { DettachRecurrencyModalComponent } from './dettach-recurrency-modal/dettach-recurrency-modal.component';
+import { EfaturaService } from '../../efatura/efatura.service';
 
 @Component({
   selector: 'mhq-treasury-details',
@@ -31,6 +32,8 @@ export class TreasuryDetailsComponent implements OnInit {
   categoriesList: string[] = [];// autocomplete categoria
   subcatForm: FormControl  // autocomplete sub categoria
   subcategoriesList: string[] = [];// autocomplete sub categoria
+  efatForm: number   // autocomplete efatura
+  efatsList: any[] = [];// autocomplete efatura
   id: number;   // id do movimento em consulta
   treasuryLog: ITreasuryLog;   // clone do movimento utilizada em consulta
   tempTreasuryLog: ITreasuryLog;  // clone do moviment utilizada no modo edição
@@ -40,7 +43,7 @@ export class TreasuryDetailsComponent implements OnInit {
   recurrencyFrequency: FormControl<any>;// recorrencia
   recurrencyFamily: ITreasuryLog[];// recorrencia
 
-  constructor(public loadingService: LoadingService, private _errorHandlingService: ErrorHandlingService, private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, public categoriesService: CategoriesService, private _categoriesSnackBarService: MHQSnackBarsService, private _router: Router) {
+  constructor(public loadingService: LoadingService, private _errorHandlingService: ErrorHandlingService, private _route: ActivatedRoute, public treasuryService: TreasuryService, private _dialog: MatDialog, private _http: HttpClient, public categoriesService: CategoriesService, private _categoriesSnackBarService: MHQSnackBarsService, private _router: Router, public efaturaService: EfaturaService) {
     this.editingMode = false;
     this.firstLoadingComplete = false;
     this.recurrencyFamily = [];
@@ -59,6 +62,8 @@ export class TreasuryDetailsComponent implements OnInit {
     this.treasuryLogDatepickerForm = new FormControl(new Date(this.treasuryLog.date), [Validators.required]);
     this.catForm = new FormControl(this.categoriesService.catEnum[this.tempTreasuryLog.cat].title, [Validators.required]);
     this.subcatForm = new FormControl({ value: this.categoriesService.subcatEnum[this.tempTreasuryLog.subcat].title, disabled: true }, [Validators.required]);
+    for (let i = 0; i < Object.keys(this.efaturaService.efaturaEnum).length; i++) { this.efatsList.push({ title: this.efaturaService.efaturaEnum[i].title, value: i }) }
+    this.efatForm = this.efatsList[this.tempTreasuryLog.efat].value;
     this.categoriesService.catEnum[this.tempTreasuryLog.cat].subcats.forEach((subcat: { title: string; }) => { this.subcategoriesList.push(subcat.title) });
     this.subcatForm.enable();
     this.categoriesService.allCategories.forEach(cat => { this.categoriesList.push(cat.title) });
@@ -68,7 +73,7 @@ export class TreasuryDetailsComponent implements OnInit {
 
   getRecurrencyFamily(): void {
     if (this.tempTreasuryLog.recurrencyid === 0) { return }
-    const HTTP_PARAMS = new HttpParams().set('type','tlog').set('tlogID', this.tempTreasuryLog.id).set('recurID', this.tempTreasuryLog.recurrencyid)
+    const HTTP_PARAMS = new HttpParams().set('type', 'tlog').set('tlogID', this.tempTreasuryLog.id).set('recurID', this.tempTreasuryLog.recurrencyid)
     const CALL = this._http.post('http://localhost:16190/getrecurencylogs', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
@@ -83,7 +88,7 @@ export class TreasuryDetailsComponent implements OnInit {
   }
 
   saveTreasurylog(): void {
-    const HTTP_PARAMS = new HttpParams().set('type','tlog').set('tlog', JSON.stringify(this.tempTreasuryLog))
+    const HTTP_PARAMS = new HttpParams().set('type', 'tlog').set('tlog', JSON.stringify(this.tempTreasuryLog))
     const CALL = this._http.post('http://localhost:16190/updatetreasurylog', HTTP_PARAMS, { responseType: 'text' })
 
     CALL.subscribe({
@@ -116,6 +121,7 @@ export class TreasuryDetailsComponent implements OnInit {
         this.tempTreasuryLog.date = this.treasuryLogDatepickerForm.value.getTime();
         this.tempTreasuryLog.cat = CATEGORY.id;
         this.tempTreasuryLog.subcat = this.categoriesService.subcatTitleEnum[`${this.subcatForm.value}`].id;
+        this.tempTreasuryLog.efat = this.efatForm;
         this.treasuryService.recordBorderStyle['background-color'] = CATEGORY.bgcolor;
 
         this.tempTreasuryLog.value = Number(this.tempTreasuryLog.value.toString().replace(',', '.')); // conversão de vírgulas para pontos

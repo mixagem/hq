@@ -12,7 +12,7 @@ export function fetchTreasuryLogs(req, res) {
   db.serialize(() => {
     db.each(`SELECT * FROM treasurylog ORDER BY date DESC`, (err, tlog) => { if (err) { console.error(err.message) } else {
       tlog.nif === 'true' ? tlog.nif = true : tlog.nif = false; // conversão string para boolean (o sqlite não tem colunas do tipo boolean)
-      tlog.efatcheck === 'true' ? tlog.efat = true : tlog.efat = false; // conversão string para boolean (o sqlite não tem colunas do tipo boolean)
+      tlog.efatcheck === 'true' ? tlog.efatcheck = true : tlog.efatcheck = false; // conversão string para boolean (o sqlite não tem colunas do tipo boolean)
       tlogs.push(tlog);
      } });
   });

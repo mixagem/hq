@@ -31,6 +31,11 @@
         <mat-icon>link_off</mat-icon>
       </button></div>
 
+    <!-- <div *ngIf="!editingMode" class="mhq-quickaction-default"><button (click)="dettachRecurrencyModal('300ms','150ms')"
+        mat-icon-button [disabled]="recurrencyFamily.length===0">
+        <mat-icon>link_off</mat-icon>
+      </button></div> -->
+
     <div *ngIf="!editingMode" class="mhq-quickaction-delete" (click)="deleteTreasuryLogModal('300ms', '150ms')"><button
         mat-icon-button>
         <mat-icon>delete</mat-icon>
@@ -50,10 +55,23 @@
     <div class="mhq-wrapper-row"
       *ngIf="!editingMode && this.loadingService.categoriesLoadingComplete && this.loadingService.treasuryLoadingComplete">
 
-      <h1>
+      <h1 style="display: flex;justify-content: space-between;">
         <div>
           <mat-icon>info_outline</mat-icon>Detalhes
         </div>
+        <mat-chip-list style="padding-right: 20px;" *ngIf="treasuryLog.nif">
+          <mat-chip style="background-color:#000;color:#fff" *ngIf="!treasuryLog.efatcheck">
+            <mat-icon style="padding-left:5px;padding-right:10px;color:#fff;">{{efaturaService.efaturaEnum[treasuryLog.efat].icon}}</mat-icon>
+            <span style="padding-right:5px;">Por verificar</span>
+          </mat-chip>
+          <mat-chip *ngIf="treasuryLog.efatcheck"
+            [style]="'color:#fff;background-color:'+efaturaService.efaturaEnum[treasuryLog.efat].color">
+            <mat-icon style="padding-left:5px;padding-right:10px;color:#fff;">{{efaturaService.efaturaEnum[treasuryLog.efat].icon}}
+            </mat-icon>
+            <span style="padding-right:5px;">Verificado</span>
+          </mat-chip>
+        </mat-chip-list>
+
       </h1>
 
       <div class="mhq-row">
@@ -65,7 +83,7 @@
           </mat-form-field>
         </div>
 
-        <div class="mhq-input-wrapper mhq-col-8">
+        <div class="mhq-input-wrapper mhq-col-5">
           <mat-form-field appearance="fill">
             <mat-label>Título</mat-label>
             <input matInput disabled [value]="treasuryLog.title">
@@ -78,6 +96,20 @@
             <input matInput disabled [value]='treasuryLog.date | date:"dd/MM/yyyy"'>
           </mat-form-field>
         </div>
+
+
+
+        <div class="mhq-input-wrapper mhq-col-3">
+          <mat-form-field appearance="fill">
+            <mat-label>Valor</mat-label>
+            <input matInput disabled [value]="treasuryLog | guita">
+          </mat-form-field>
+        </div>
+
+        <!-- <div class="mhq-input-wrapper mhq-col-2 mhq-checkbox-wrapper">
+          <mat-checkbox *ngIf="!treasuryLog.nif" color="primary" disabled [checked]="treasuryLog.efatcheck">E-Fatura validado</mat-checkbox>
+        </div> -->
+
 
       </div>
       <div class="mhq-row">
@@ -107,10 +139,11 @@
       </div>
       <div class="mhq-row">
 
-        <div class="mhq-input-wrapper mhq-col-3">
+
+        <div class="mhq-input-wrapper mhq-col-6">
           <mat-form-field appearance="fill">
-            <mat-label>Valor</mat-label>
-            <input matInput disabled [value]="treasuryLog | guita">
+            <mat-label>Observações</mat-label>
+            <textarea matInput disabled [value]="treasuryLog.obs"></textarea>
           </mat-form-field>
         </div>
 
@@ -118,17 +151,12 @@
           <mat-checkbox color="primary" disabled [checked]="treasuryLog.nif">Tem contribuinte</mat-checkbox>
         </div>
 
-        <div class="mhq-input-wrapper mhq-col-2 mhq-checkbox-wrapper">
-          <mat-checkbox *ngIf="treasuryLog.nif" color="primary" disabled [checked]="treasuryLog.efatcheck">E-Fatura validado</mat-checkbox>
-        </div>
-
-        <div class="mhq-input-wrapper mhq-col-5">
+        <div class="mhq-input-wrapper mhq-col-4">
           <mat-form-field appearance="fill">
-            <mat-label>Observações</mat-label>
-            <textarea matInput disabled [value]="treasuryLog.obs"></textarea>
+            <mat-label>Categoria E-Fatura</mat-label>
+            <input matInput disabled [value]="efaturaService.efaturaEnum[treasuryLog.efat].title">
           </mat-form-field>
         </div>
-
       </div>
 
     </div>
@@ -196,7 +224,7 @@
           </mat-form-field>
         </div>
 
-        <div class="mhq-input-wrapper mhq-col-8">
+        <div class="mhq-input-wrapper mhq-col-5">
           <mat-form-field appearance="fill">
             <mat-label>Título</mat-label>
             <input matInput [(ngModel)]="tempTreasuryLog.title">
@@ -212,6 +240,13 @@
             <mat-datepicker #treasuryLogDatepicker></mat-datepicker>
           </mat-form-field>
 
+        </div>
+
+        <div class="mhq-input-wrapper mhq-col-3">
+          <mat-form-field appearance="fill">
+            <mat-label>Valor</mat-label>
+            <input matInput [(ngModel)]="tempTreasuryLog.value">
+          </mat-form-field>
         </div>
 
       </div>
@@ -264,22 +299,7 @@
       </div>
       <div class="mhq-row">
 
-        <div class="mhq-input-wrapper mhq-col-3">
-          <mat-form-field appearance="fill">
-            <mat-label>Valor</mat-label>
-            <input matInput [(ngModel)]="tempTreasuryLog.value">
-          </mat-form-field>
-        </div>
-
-        <div class="mhq-input-wrapper mhq-col-2 mhq-checkbox-wrapper">
-          <mat-checkbox color="primary" [disabled]="tempTreasuryLog.efatcheck" [(ngModel)]="tempTreasuryLog.nif">Tem contribuinte</mat-checkbox>
-        </div>
-
-        <div class="mhq-input-wrapper mhq-col-2 mhq-checkbox-wrapper">
-          <mat-checkbox *ngIf="tempTreasuryLog.nif" color="primary" disabled [checked]="tempTreasuryLog.efatcheck">E-Fatura validado</mat-checkbox>
-        </div>
-
-        <div class="mhq-input-wrapper mhq-col-5">
+        <div class="mhq-input-wrapper mhq-col-6">
           <mat-form-field appearance="fill">
             <mat-label>Obs</mat-label>
             <textarea matInput [(ngModel)]="tempTreasuryLog.obs"></textarea>
@@ -287,11 +307,36 @@
         </div>
 
 
+        <div class="mhq-input-wrapper mhq-col-2 mhq-checkbox-wrapper">
+          <mat-checkbox color="primary" [disabled]="tempTreasuryLog.efatcheck" [(ngModel)]="tempTreasuryLog.nif">Tem
+            contribuinte</mat-checkbox>
+        </div>
+
+        <div class="mhq-input-wrapper mhq-col-4">
+          <mat-form-field appearance="fill">
+            <!-- <mat-label>Categoria EFatura</mat-label>
+            <input matInput disabled [value]="efaturaService.efaturaEnum[treasuryLog.efat].title"> -->
+            <mat-label>Categoria E-Fatura</mat-label>
+            <mat-select [(value)]="efatForm">
+              <mat-select-trigger>{{efaturaService.efaturaEnum[efatForm].title}}</mat-select-trigger>
+              <mat-option *ngFor="let efat of efatsList" [value]="efat.value">
+
+                <mat-icon
+                [ngStyle]="{'background-color':efaturaService.efaturaEnum[efat.value].color,'color':'#fff'}">
+                {{efaturaService.efaturaEnum[efat.value].icon}}</mat-icon>
+
+
+                {{efat.title}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
       </div>
+
 
     </div>
 
-
   </div>
+
 
 </div>

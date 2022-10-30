@@ -64,8 +64,9 @@ export function insertMultipleEFatura(req, res) {
   });
 
   TREASURY_LOG_ARRAY.forEach(TLOG => {
+
     // INSERT INTO efatura (tlogid, efatcat, value) VALUES ('${TLOG.id}', '${TLOG.efatcat}', '${TLOG.value}')
-    // UPDATE treasury SET efatcat = '${TLOG.efatcat}' WHERE id = '${TLOG.id}'
+    // UPDATE treasury SET efatcat = '${TLOG.efatcat}',  WHERE id = '${TLOG.id}'
   });
 
 

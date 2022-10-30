@@ -31,7 +31,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import {MatGridListModule} from '@angular/material/grid-list';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   imports: [
@@ -68,7 +69,8 @@ import {MatGridListModule} from '@angular/material/grid-list';
     MatDividerModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatGridListModule
+    MatGridListModule,
+    MatChipsModule
   ],
 
   exports: [
@@ -104,7 +106,8 @@ import {MatGridListModule} from '@angular/material/grid-list';
     MatDividerModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatGridListModule
+    MatGridListModule,
+    MatChipsModule
   ]
 })
 export class MaterialImportsModule { }
