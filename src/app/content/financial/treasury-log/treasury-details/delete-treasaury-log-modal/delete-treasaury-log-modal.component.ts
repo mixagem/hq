@@ -17,7 +17,7 @@ export class DeleteTreasauryLogModalComponent {
 
   constructor(public treasuryService: TreasuryService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, public router: Router, public budgetingService: BudgetingService) {
     if (this.router.url.startsWith('/fi/tlog')){
-      this.haveRecurrency = this.treasuryService.activeTreasuryLog.recurrencyid !== 0}
+      this.haveRecurrency = this.treasuryService.activeTLog.recurrencyid !== 0}
     if (this.router.url.startsWith('/fi/budget')){
       this.haveRecurrency = this.budgetingService.activeBudgetLog.recurrencyid !== 0}
   }
@@ -28,11 +28,11 @@ export class DeleteTreasauryLogModalComponent {
     let CALL: Observable<string>;
 
     if (this.router.url.startsWith('/fi/tlog')) {
-      HTTP_PARAMS = new HttpParams().set('type', 'tlog').set('tlog', this.treasuryService.activeTreasuryLog.id)
+      HTTP_PARAMS = new HttpParams().set('type', 'tlog').set('tlog', this.treasuryService.activeTLog.id)
       CALL = this._http.post('http://localhost:16190/deletetreasurylog', HTTP_PARAMS, { responseType: 'text' })
 
       CALL.subscribe({
-        next: codeReceived => { this.treasuryService.fetchTreasuryLog('deleteTreasuryLog'); },
+        next: codeReceived => { this.treasuryService.fetchTreasuryLog('deleteTLog'); },
         error: err => this._errorHandlingService.handleError(err)
       })
     }
@@ -56,11 +56,11 @@ export class DeleteTreasauryLogModalComponent {
     let CALL: Observable<string>;
 
     if (this.router.url.startsWith('/fi/tlog')) {
-      HTTP_PARAMS = new HttpParams().set('type','tlog').set('recurrencyID', this.treasuryService.activeTreasuryLog.recurrencyid)
+      HTTP_PARAMS = new HttpParams().set('type','tlog').set('recurrencyID', this.treasuryService.activeTLog.recurrencyid)
       CALL = this._http.post('http://localhost:16190/deleteallrecurrencies', HTTP_PARAMS, { responseType: 'text' })
 
       CALL.subscribe({
-        next: codeReceived => { this.treasuryService.fetchTreasuryLog('deleteTreasuryLog'); },
+        next: codeReceived => { this.treasuryService.fetchTreasuryLog('deleteTLog'); },
         error: err => this._errorHandlingService.handleError(err)
       })
     }

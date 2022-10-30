@@ -51,7 +51,7 @@ export class UpdateRecurrencyModalComponent {
   recurrencyUpdate(update: boolean): void {
 
     if (this.router.url.startsWith('/fi/tlog')) {
-      const HTTP_PARAMS = new HttpParams().set('type','tlog').set('tlog', JSON.stringify(this.treasuryService.recurrenyTempTlog))
+      const HTTP_PARAMS = new HttpParams().set('type','tlog').set('tlog', JSON.stringify(this.treasuryService.activeTLog))
 
       let call;
       if (update) { call = this._http.post('http://localhost:16190/updaterecurrency', HTTP_PARAMS, { responseType: 'text' }) }
@@ -59,14 +59,14 @@ export class UpdateRecurrencyModalComponent {
 
       call.subscribe({
         next: codeReceived => {
-          this.treasuryService.fetchTreasuryLog('saveTreasuryLog', this.treasuryService.recurrenyTempTlog.id);
+          this.treasuryService.fetchTreasuryLog('saveTLog', this.treasuryService.activeTLog.id);
           const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-          this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', this.treasuryService.recurrenyTempTlog.title, ['O movimento ', ' e respetivas recorrências, foram atualizadas com sucesso.']);
+          this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', this.treasuryService.activeTLog.title, ['O movimento ', ' e respetivas recorrências, foram atualizadas com sucesso.']);
         },
         error: err => {
           this._errorHandlingService.handleError(err);
           const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-          this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.treasuryService.recurrenyTempTlog.title, ['Ocurreu algo inesperado ao atualizar as recorrências para o movimento ', '.']);
+          this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.treasuryService.activeTLog.title, ['Ocurreu algo inesperado ao atualizar as recorrências para o movimento ', '.']);
         }
       })
     }

@@ -16,7 +16,7 @@ export class GridViewComponent {
 
   navigationFix(target: string): void {
     this._categoriesService.cloningCategory = false;
-    this._treasuryService.cloningTreasuryLog = false;
+    this._treasuryService.cloningTLog = false;
     this.router.navigateByUrl(`/fi/${target}`, { skipLocationChange: true }).then(() => { this.router.navigate([`/fi/${target}/add`]); });
   }
 }

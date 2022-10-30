@@ -22,19 +22,19 @@ export class DettachRecurrencyModalComponent {
     let CALL: Observable<string>;
 
     if (this.router.url.startsWith('/fi/tlog')) {
-      HTTP_PARAMS = new HttpParams().set('type', 'tlog').set('tlog', JSON.stringify(this.treasuryService.recurrenyTempTlog));
+      HTTP_PARAMS = new HttpParams().set('type', 'tlog').set('tlog', JSON.stringify(this.treasuryService.activeTLog));
       CALL = this._http.post('http://localhost:16190/dettachrecurrency', HTTP_PARAMS, { responseType: 'text' });
 
       CALL!.subscribe({
         next: codeReceived => {
-          this.treasuryService.fetchTreasuryLog('saveTreasuryLog', this.treasuryService.recurrenyTempTlog.id);
+          this.treasuryService.fetchTreasuryLog('saveTLog', this.treasuryService.activeTLog.id);
           const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-          this._snackBarService.triggerMHQSnackbar(true, 'save_as', this.treasuryService.recurrenyTempTlog.title, ['O movimento ', ' foi removido da recorrência com sucesso.']);
+          this._snackBarService.triggerMHQSnackbar(true, 'save_as', this.treasuryService.activeTLog.title, ['O movimento ', ' foi removido da recorrência com sucesso.']);
         },
         error: err => {
           this._errorHandlingService.handleError(err);
           const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-          this._snackBarService.triggerMHQSnackbar(false, 'report', this.treasuryService.recurrenyTempTlog.title, ['Ocorreu algo inesperado ao atualizar o movimento ', '.']);
+          this._snackBarService.triggerMHQSnackbar(false, 'report', this.treasuryService.activeTLog.title, ['Ocorreu algo inesperado ao atualizar o movimento ', '.']);
         }
       })
     }

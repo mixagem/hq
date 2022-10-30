@@ -4,7 +4,7 @@
 
 <div mat-dialog-content class="mhq-modal-content-wrapper">
 
-  <p *ngIf="router.url.startsWith('/fi/tlog')">Eliminar o movimento <b>{{treasuryService.activeTreasuryLog.title}}</b> ?</p>
+  <p *ngIf="router.url.startsWith('/fi/tlog')">Eliminar o movimento <b>{{treasuryService.activeTLog.title}}</b> ?</p>
   <p *ngIf="router.url.startsWith('/fi/budget')">Eliminar o orçamento <b>{{budgetingService.activeBudgetLog.title}}</b> ?</p>
 
   <mat-slide-toggle #doubleCheckToggle style="margin-top:15px" [disabled]="!haveRecurrency"

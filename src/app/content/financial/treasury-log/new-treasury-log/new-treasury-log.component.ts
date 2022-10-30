@@ -48,8 +48,8 @@ export class NewTreasuryLogComponent implements OnInit {
     this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this.loadingService.categoriesLoadingComplete || !this.loadingService.treasuryLoadingComplete) { return }     // loading check
 
-    if (this.treasuryService.cloningTreasuryLog) {
-      this.tempTreasuryLog = this.treasuryService.activeTreasuryLog;
+    if (this.treasuryService.cloningTLog) {
+      this.tempTreasuryLog = this.treasuryService.activeTLog;
       this.tempTreasuryLog.id = 0;
       this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.tempTreasuryLog.cat].bgcolor
 
@@ -58,7 +58,7 @@ export class NewTreasuryLogComponent implements OnInit {
       this.treasuryService.recordBorderStyle['background-color'] = 'rgb(0,0,0)';
     }
     this.treasuryLogDatepickerForm = new FormControl(new Date(this.tempTreasuryLog.date), [Validators.required]);
-    if (this.treasuryService.cloningTreasuryLog) {
+    if (this.treasuryService.cloningTLog) {
       this.refreshSubcategoryList(this.tempTreasuryLog.cat);
       this.catForm = new FormControl(this.categoriesService.catEnum[this.tempTreasuryLog.cat].title, [Validators.required]);
       this.subcatForm = new FormControl(this.categoriesService.subcatEnum[this.tempTreasuryLog.subcat].title, [Validators.required]);
@@ -114,7 +114,7 @@ export class NewTreasuryLogComponent implements OnInit {
     CALL.subscribe({
       next: codeReceived => {
         this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.tempTreasuryLog.cat].bgcolor
-        this.treasuryService.fetchTreasuryLog('saveTreasuryLog', Number(codeReceived));
+        this.treasuryService.fetchTreasuryLog('saveTLog', Number(codeReceived));
         RECURRENCY_OPTIONS.active ? this._categoriesSnackBarService.triggerMHQSnackbar(true, 'playlist_add', this.tempTreasuryLog.title, ['Os movimentos ', ' foram criados com sucesso.']) : this._categoriesSnackBarService.triggerMHQSnackbar(true, 'playlist_add', this.tempTreasuryLog.title, ['O movimento ', ' foi criado com sucesso.']); // dispara a snackbar
         this.saveComplete = true;
       },

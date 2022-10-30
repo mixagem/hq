@@ -1,64 +1,68 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { Router } from '@angular/router';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
 import { ErrorHandlingService, LoadingService, TimerService } from 'src/assets/services/misc.service';
 
-type RecordBorderStyle = { "background-color": string }
-type recurencyFrequency = { "string": string, "value": string }
+type TLogTable = { [key: string]: ITreasuryLog };
+type RecordBorderStyle = { "background-color": string };
+type FetchOptions = 'saveTLog' | 'deleteTLog' | 'loadTLog';
+type recurencyFrequency = { "string": string, "value": string };
 
-const REC_FREQ: recurencyFrequency[] = [{ string: "Mensal", value: "m" }, { string: "Anual", value: "a" }]
+const REC_FREQ: recurencyFrequency[] = [{ string: "Mensal", value: "m" }, { string: "Anual", value: "a" }];
 
 @Injectable({ providedIn: 'root' })
 
 export class TreasuryService {
-  tlogEnum: any; // enum
-  loadingComplete: Boolean; // boolean com o estado do loading dos movimentos da bd
-  onInitTrigger: Subject<any>;   //trigger para onInit
+
+  recurrencyFreq: recurencyFrequency[] = [...REC_FREQ]; // opções frequencia recurrencia
+
+  tLogTable: TLogTable; // movimentos vindos da bd
+  cloningTLog: Boolean;   // boolean que indica se é duplicação ou intrudução novo registo
+  activeTLog: ITreasuryLog;   // clone do movimento  atualmente em consulta. recebe o objeto quando acede em consulta, e é utilizado noutros componentes (tipo modals)
   recordBorderStyle: RecordBorderStyle;   // cor a ser utilizada no border dos detalhes da categoria/movimento tesouraria
-  treasuryLog: ITreasuryLog[];   // arrays para os movimentos  existentes em bd
-  activeTreasuryLog: ITreasuryLog;   // clone do movimento  atualmente em consulta
-  cloningTreasuryLog: Boolean;   // boolean que indica se é duplicação ou intrudução nova
-  recurrencyFreq: recurencyFrequency[] // opções frequencia recurrencia
-  recurrenyTempTlog: ITreasuryLog
+
+  onInitTrigger: Subject<any>;   //trigger para onInit
 
   constructor(private _errorHandlingService: ErrorHandlingService, private _http: HttpClient, private _router: Router, private _loadingService: LoadingService, private _timerService: TimerService) {
-    this.cloningTreasuryLog = false;
-    this.fetchTreasuryLog();
+    this.cloningTLog = false;
     this.onInitTrigger = new Subject<any>();
-    this.recurrencyFreq = REC_FREQ;
-    this.recordBorderStyle = { "background-color": "rgb(0,0,0)" }
+    this.recordBorderStyle = { "background-color": "rgb(0,0,0)" };
+    this.fetchTreasuryLog();
   }
 
   onInitTriggerCall(): void { this.onInitTrigger.next(''); this.onInitTrigger.complete; this.onInitTrigger = new Subject<any>(); }
 
 
   // vai á bd buscar os movimentos
-  fetchTreasuryLog(source: string = '', LogID?: number): void {
+  fetchTreasuryLog(source: FetchOptions = 'loadTLog', LogID?: number): void {
     const CALL = this._http.get('http://localhost:16190/fetchtreasurylogs');
 
     CALL.subscribe({
       next: (codeReceived) => {
         const RESP = codeReceived as ITreasuryLog[];
 
-        if (source === 'saveTreasuryLog') { this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs', LogID]); }); }
+        switch (source) {
 
-        if (source === 'deleteTreasuryLog') {
-          document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
-          this._timerService.timer = setTimeout(() => {
-            const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-            this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs']); });
-            this.treasuryLog = RESP;
-            this.tlogEnum = {}; this.treasuryLog.forEach(tlog => { this.tlogEnum[`${tlog.id}`] = tlog });
+          case 'saveTLog':
+            this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs', LogID]); });
+            break;
+
+          case 'deleteTLog':
+            document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
+            this._timerService.timer = setTimeout(() => {
+              const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
+              this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs']); });
+              this.tLogTable = {}; RESP.forEach(tlog => { this.tLogTable[`'${tlog.id}'`] = tlog; });
+              this._loadingService.treasuryLoadingComplete = true;
+            }, 750);
+            break;
+
+          case 'loadTLog': default:
+            this.tLogTable = {}; RESP.forEach(tlog => { this.tLogTable[`'${tlog.id}'`] = tlog });
             this._loadingService.treasuryLoadingComplete = true;
 
-          }, 750);
-        }
-        else {
-          this.treasuryLog = RESP;
-          this.tlogEnum = {}; this.treasuryLog.forEach(tlog => { this.tlogEnum[`${tlog.id}`] = tlog });
-          this._loadingService.treasuryLoadingComplete = true;
         }
         this.onInitTriggerCall();
       },
@@ -67,15 +71,15 @@ export class TreasuryService {
   }
 
   // inicia o modo de introdução / duplicação
-  addMode(cloningTreasuryLog: boolean): void {
-    this.cloningTreasuryLog = cloningTreasuryLog;
+  addMode(cloningTLog: boolean): void {
+    this.cloningTLog = cloningTLog;
     this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs/add']); });
   }
 
   // fecha a gaveta e volta para o modo de listagem
   closeDetails(): void {
-    document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight')
-    this._timerService.timer = setTimeout(navi.bind(null, this._router), 750)
-    function navi(router: Router): void { router.navigate(['/fi/tlogs']) }
+    document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
+    this._timerService.timer = setTimeout(navi.bind(null, this._router), 750);
+    function navi(router: Router): void { router.navigate(['/fi/tlogs']); };
   }
 }
