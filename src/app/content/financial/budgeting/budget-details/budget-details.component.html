@@ -2,7 +2,7 @@
 
   <div class="mhq-mainform-drawer-actions">
 
-    <div class="mhq-quickaction-close" (click)="budgetingService.closeDetails()">
+    <div class="mhq-quickaction-close" (click)="budgetService.closeDetails()">
       <mat-icon>close</mat-icon>
     </div>
 
@@ -22,7 +22,7 @@
       </button></div>
 
     <div *ngIf="!editingMode" class="mhq-quickaction-default"><button mat-icon-button
-        (click)="budgetingService.addMode(true)">
+        (click)="budgetService.addMode(true)">
         <mat-icon>file_copy</mat-icon>
       </button></div>
 
@@ -40,7 +40,7 @@
       </button>
     </div>
 
-    <div [ngStyle]="budgetingService.recordBorderStyle"></div>
+    <div [ngStyle]="budgetService.recordBorderStyle"></div>
 
 
 
@@ -237,7 +237,7 @@
           <form class="mhq-cats-form" style="width: 100%;">
             <mat-form-field>
               <mat-label>Categoria</mat-label>
-              <mat-select [formControl]="catForm" (selectionChange)="categorySelectChanged($event)">
+              <mat-select [formControl]="catForm" (selectionChange)="catChanged($event)">
                 <mat-select-trigger>{{catForm.value}}</mat-select-trigger>
                 <mat-option *ngFor="let option of categoriesList" [value]="option">
                   <mat-icon

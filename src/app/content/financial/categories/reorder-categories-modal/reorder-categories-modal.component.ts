@@ -94,7 +94,7 @@ export class ReorderCategoriesModalComponent implements OnInit {
     });
   }
 
-  categorySelectChanged(event: MatSelectChange): void {
+  catChanged(event: MatSelectChange): void {
     const CATEGORY: IFinancialCategory = this.categoriesService.catTitleEnum[event.value];
     this.subCategoriesToOrder = [];
     CATEGORY.subcats.forEach(subcat => { this.subCategoriesToOrder.push(subcat) });

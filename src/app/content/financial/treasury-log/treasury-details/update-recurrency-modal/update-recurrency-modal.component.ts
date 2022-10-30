@@ -1,57 +1,68 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { ThemePalette } from '@angular/material/core';
 import { Router } from '@angular/router';
-import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
-import { ErrorHandlingService } from 'src/assets/services/misc.service';
-import { BudgetingService } from '../../../budgeting/budgeting.service';
+import { Component } from '@angular/core';
+import { ThemePalette } from '@angular/material/core';
 import { TreasuryService } from '../../treasury.service';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { BudgetingService } from '../../../budgeting/budgeting.service';
+import { ErrorHandlingService } from 'src/assets/services/misc.service';
+import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
 
-export type RecurrencyOptions = {
-  name: string;
-  toChange: boolean;
-  color: ThemePalette;
-  options?: RecurrencyOptions[];
+type RecurrencyOptions = { name: string; toChange: boolean; color: ThemePalette; value?: string, options?: RecurrencyOptions[]; }
+
+const RECURRENCY_OPTIONS: RecurrencyOptions = {
+  name: 'Campos a alterar', toChange: false, color: 'warn', options: [
+    { name: 'Título', toChange: false, color: 'primary', value: 'title' },
+    { name: 'Valor', toChange: false, color: 'primary', value: 'value' },
+    { name: 'Tipo', toChange: false, color: 'primary', value: 'type' },
+    { name: 'Categoria + Subcategoria', toChange: false, color: 'primary', value: 'cat' },
+    { name: 'Observações', toChange: false, color: 'primary', value: 'obs' },
+    { name: 'Tem contribuinte', toChange: false, color: 'primary', value: 'nif' },
+    { name: 'Categoria E-Fatura', toChange: false, color: 'primary', value: 'efat' }
+  ]
 }
-
 
 @Component({
   selector: 'mhq-update-recurrency-modal',
   templateUrl: './update-recurrency-modal.component.html',
   styleUrls: ['../../../../../../assets/styles/mhq-modal.scss']
 })
+
 export class UpdateRecurrencyModalComponent {
 
   recurrencyOptions: RecurrencyOptions;
   allRecurrencyOptions: boolean = false;
 
-  constructor(public treasuryService: TreasuryService,public budgetingService: BudgetingService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, private _categoriesSnackBarService: MHQSnackBarsService, public router: Router, public bugetsService: BudgetingService) {
+  constructor(private _treasuryService: TreasuryService, private _budgetService: BudgetingService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, private _categoriesSnackBarService: MHQSnackBarsService, private _router: Router) {
     this.allRecurrencyOptions = false;
-    this.recurrencyOptions = {
-      name: 'Opções a alterar', toChange: false, color: 'primary', options: [
-        { name: 'Título', toChange: false, color: 'primary' },
-        { name: 'Valor', toChange: false, color: 'primary' }
-      ]
-    }
+    this.recurrencyOptions = JSON.parse(JSON.stringify(RECURRENCY_OPTIONS))
   }
 
-  updateRecurrencyStatus() { this.allRecurrencyOptions = this.recurrencyOptions.options != null && this.recurrencyOptions.options.every(option => option.toChange); }
 
-  getRecurrencyOptionsStatus() {
+  // atualiza a seta caso estaam todos selecionados
+  updateRecurrencyStatus(): void { this.allRecurrencyOptions = this.recurrencyOptions.options != null && this.recurrencyOptions.options.every(option => option.toChange); }
+
+  //atualiza estado da setinha intermitente da checklist
+  getRecurrencyOptionsStatus(): boolean {
     if (this.recurrencyOptions.options == null) { return false; }
     return this.recurrencyOptions.options.filter(option => option.toChange).length > 0 && !this.allRecurrencyOptions;
   }
 
-  wantAllRecurrencyOptions(toChange: boolean) {
-    this.allRecurrencyOptions = toChange;
+  // alterar todas as opções
+  wantAllRecurrencyOptions(toChange: boolean): void {
     if (this.recurrencyOptions.options == null) { return; }
+    this.allRecurrencyOptions = toChange;
     this.recurrencyOptions.options.forEach(option => (option.toChange = toChange));
   }
 
+  // envio para bd
   recurrencyUpdate(update: boolean): void {
 
-    if (this.router.url.startsWith('/fi/tlog')) {
-      const HTTP_PARAMS = new HttpParams().set('type','tlog').set('tlog', JSON.stringify(this.treasuryService.activeTLog))
+    // v- granda estalo de nome maré
+    let selectedFieldsToMassUpdate: string[] = [];
+    this.recurrencyOptions.options!.forEach(options => { if (options.toChange) { selectedFieldsToMassUpdate.push(options.value!) } });
+
+    if (this._router.url.startsWith('/fi/tlog')) {
+      const HTTP_PARAMS = new HttpParams().set('type', 'tlog').set('tlog', JSON.stringify(this._treasuryService.activeTLog)).set('fields', JSON.stringify(selectedFieldsToMassUpdate))
 
       let call;
       if (update) { call = this._http.post('http://localhost:16190/updaterecurrency', HTTP_PARAMS, { responseType: 'text' }) }
@@ -59,20 +70,21 @@ export class UpdateRecurrencyModalComponent {
 
       call.subscribe({
         next: codeReceived => {
-          this.treasuryService.fetchTreasuryLog('saveTLog', this.treasuryService.activeTLog.id);
+          this._treasuryService.fetchTreasuryLog('saveTLog', this._treasuryService.activeTLog.id);
           const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-          this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', this.treasuryService.activeTLog.title, ['O movimento ', ' e respetivas recorrências, foram atualizadas com sucesso.']);
+          if (update) { this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', this._treasuryService.activeTLog.title, ['O movimento ', ' e respetivas recorrências, foram atualizadas com sucesso.']) } else { this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', this._treasuryService.activeTLog.title, ['O movimento ', ' foi atualizado com sucesso.']) };
         },
         error: err => {
           this._errorHandlingService.handleError(err);
           const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-          this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.treasuryService.activeTLog.title, ['Ocurreu algo inesperado ao atualizar as recorrências para o movimento ', '.']);
+          if (update) { this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this._treasuryService.activeTLog.title, ['Ocorreu algo inesperado ao atualizar as recorrências associadas ao movimento ', '.']); } else { this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this._treasuryService.activeTLog.title, ['Ocorreu algo inesperado ao atualizar o movimento ', '.']); }
+
         }
       })
     }
 
-    if (this.router.url.startsWith('/fi/budget')) {
-      const HTTP_PARAMS = new HttpParams().set('type','budget').set('budget', JSON.stringify(this.budgetingService.recurrenyTempBudgetlog))
+    if (this._router.url.startsWith('/fi/budget')) {
+      const HTTP_PARAMS = new HttpParams().set('type', 'budget').set('budget', JSON.stringify(this._budgetService.recurrenyTempBudgetlog)).set('fields', JSON.stringify(selectedFieldsToMassUpdate))
 
       let call;
       if (update) { call = this._http.post('http://localhost:16190/updaterecurrency', HTTP_PARAMS, { responseType: 'text' }) }
@@ -80,14 +92,14 @@ export class UpdateRecurrencyModalComponent {
 
       call.subscribe({
         next: codeReceived => {
-          this.budgetingService.fetchBudgetLog('saveBudgetLog', this.budgetingService.recurrenyTempBudgetlog.id);
+          this._budgetService.fetchBudgetLog('saveBudgetLog', this._budgetService.recurrenyTempBudgetlog.id);
           const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-          this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', this.budgetingService.recurrenyTempBudgetlog.title, ['O movimento ', ' e respetivas recorrências, foram atualizadas com sucesso.']);
+          if (update) { this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', this._treasuryService.activeTLog.title, ['O movimento ', ' e respetivas recorrências, foram atualizadas com sucesso.']) } else { this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', this._treasuryService.activeTLog.title, ['O movimento ', ' foi atualizado com sucesso.']) };
         },
         error: err => {
           this._errorHandlingService.handleError(err);
           const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-          this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.budgetingService.recurrenyTempBudgetlog.title, ['Ocurreu algo inesperado ao atualizar as recorrências para o movimento ', '.']);
+          if (update) { this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this._treasuryService.activeTLog.title, ['Ocorreu algo inesperado ao atualizar as recorrências associadas ao movimento ', '.']); } else { this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this._treasuryService.activeTLog.title, ['Ocorreu algo inesperado ao atualizar o movimento ', '.']); }
         }
       })
     }

@@ -6,17 +6,16 @@
       <mat-icon>close</mat-icon>
     </div>
 
-    <div *ngIf="!editingMode" class="mhq-quickaction-default" (click)="editingTreasuryLogRecordActions('start')"><button
+    <div *ngIf="!editingMode" class="mhq-quickaction-default" (click)="tLogRecordActions('edit')"><button
         mat-icon-button>
         <mat-icon>edit</mat-icon>
       </button></div>
 
-    <div *ngIf="editingMode" class="mhq-quickaction-save" (click)="editingTreasuryLogRecordActions('save')"><button
-        mat-icon-button>
+    <div *ngIf="editingMode" class="mhq-quickaction-save" (click)="tLogRecordActions('save')"><button mat-icon-button>
         <mat-icon>save</mat-icon>
       </button></div>
 
-    <div *ngIf="editingMode" class="mhq-quickaction-delete" (click)="editingTreasuryLogRecordActions('end')"><button
+    <div *ngIf="editingMode" class="mhq-quickaction-delete" (click)="tLogRecordActions('cancel')"><button
         mat-icon-button>
         <mat-icon>not_interested</mat-icon>
       </button></div>
@@ -36,7 +35,7 @@
         <mat-icon>receipt_long</mat-icon>
       </button></div>
 
-    <div *ngIf="!editingMode" class="mhq-quickaction-delete" (click)="deleteTreasuryLogModal('300ms', '150ms')"><button
+    <div *ngIf="!editingMode" class="mhq-quickaction-delete" (click)="deleteTLogModal('300ms', '150ms')"><button
         mat-icon-button>
         <mat-icon>delete</mat-icon>
       </button></div>
@@ -104,11 +103,6 @@
             <input matInput disabled [value]="tLog | guita">
           </mat-form-field>
         </div>
-
-        <!-- <div class="mhq-input-wrapper mhq-col-2 mhq-checkbox-wrapper">
-          <mat-checkbox *ngIf="!tLog.nif" color="primary" disabled [checked]="tLog.efatcheck">E-Fatura validado</mat-checkbox>
-        </div> -->
-
 
       </div>
       <div class="mhq-row">
@@ -189,8 +183,7 @@
                 <div class="mhq-mat-inputs-margin">{{tlog | guita:true}}</div>
               </td>
               <td>
-                <div class="mhq-mat-inputs-margin"><button mat-icon-button (click)="viewMode(tlog.id,tlog.cat)"
-                    color="primary">
+                <div class="mhq-mat-inputs-margin"><button mat-icon-button (click)="viewMode(tlog.id)" color="primary">
                     <mat-icon>link</mat-icon>
                   </button>
                 </div>
@@ -232,9 +225,9 @@
 
           <mat-form-field appearance="fill">
             <mat-label>Data</mat-label>
-            <input matInput [matDatepicker]="treasuryLogDatepicker" [formControl]="treasuryLogDatepickerForm">
-            <mat-datepicker-toggle matSuffix [for]="treasuryLogDatepicker"></mat-datepicker-toggle>
-            <mat-datepicker #treasuryLogDatepicker></mat-datepicker>
+            <input matInput [matDatepicker]="tLogDatepicker" [formControl]="tLogDatepickerForm">
+            <mat-datepicker-toggle matSuffix [for]="tLogDatepicker"></mat-datepicker-toggle>
+            <mat-datepicker #tLogDatepicker></mat-datepicker>
           </mat-form-field>
 
         </div>
@@ -262,7 +255,7 @@
           <form class="mhq-cats-form" style="width: 100%;">
             <mat-form-field>
               <mat-label>Categoria</mat-label>
-              <mat-select [formControl]="catForm" (selectionChange)="categorySelectChanged($event)">
+              <mat-select [formControl]="catForm" (selectionChange)="catChanged($event)">
                 <mat-select-trigger>{{categoriesService.catEnum[catForm.value].title}}</mat-select-trigger>
                 <mat-option *ngFor="let option of categoriesList" [value]="option.value">
                   <mat-icon
@@ -284,7 +277,7 @@
               <mat-label>Sub categoria</mat-label>
               <mat-select [formControl]="subcatForm">
                 <mat-select-trigger>{{subcatForm.value!== '' ? categoriesService.subcatEnum[subcatForm.value].title :
-                  []}}</mat-select-trigger>
+                  ''}}</mat-select-trigger>
                 <mat-option *ngFor="let option of subcategoriesList" [value]="option.value" class="mhq-subcat-select">
                   {{option.title}}
                 </mat-option>
@@ -307,16 +300,15 @@
 
 
         <div class="mhq-input-wrapper mhq-col-2 mhq-checkbox-wrapper">
-          <mat-checkbox color="primary" [disabled]="tempTLog.efatcheck" [(ngModel)]="tempTLog.nif" (change)="nifStatus($event)">Tem
+          <mat-checkbox color="primary" [disabled]="tempTLog.efatcheck" [(ngModel)]="tempTLog.nif"
+            (change)="nifStatus($event)">Tem
             contribuinte</mat-checkbox>
         </div>
 
         <div class="mhq-input-wrapper mhq-col-4">
           <mat-form-field appearance="fill">
-            <!-- <mat-label>Categoria EFatura</mat-label>
-            <input matInput disabled [value]="efaturaService.efaturaEnum[tLog.efat].title"> -->
             <mat-label>Categoria E-Fatura</mat-label>
-            <mat-select [formControl]="efatForm" >
+            <mat-select [formControl]="efatForm">
               <mat-select-trigger>{{efaturaService.efaturaEnum[efatForm.value].title}}</mat-select-trigger>
               <mat-option *ngFor="let efat of efatsList" [value]="efat.value">
 

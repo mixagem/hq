@@ -47,6 +47,8 @@ export class TreasuryService {
 
           case 'saveTLog':
             this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs', LogID]); });
+            this.tLogTable = {}; RESP.forEach(tlog => { this.tLogTable[`'${tlog.id}'`] = tlog; });
+            this._loadingService.treasuryLoadingComplete = true;
             break;
 
           case 'deleteTLog':

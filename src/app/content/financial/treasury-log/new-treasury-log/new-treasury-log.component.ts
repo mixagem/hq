@@ -10,9 +10,13 @@ import { ErrorHandlingService, LoadingService, TimerService } from 'src/assets/s
 import { MatSelectChange } from '@angular/material/select';
 import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
+import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
+import { EfaturaService } from '../../efatura/efatura.service';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
-export type RecurrencyOptions = { active: boolean, type: string, freq: number, date: number }
+type RecurrencyOptions = { active: boolean, type: string, freq: number, date: number }
+type SelectEnum = { title: string, value: number }
+type RecordActions = 'save' | 'cancel'
 
 const DEFAULT_TLOG: ITreasuryLog = {
   id: 0, title: 'Novo movimento de tesouraria', date: Date.now(), value: 0, cat: 0, subcat: 0, type: 'expense', obs: '', recurrencyid: 0, nif: false, efat: 0, efatcheck: false
@@ -25,123 +29,129 @@ const DEFAULT_TLOG: ITreasuryLog = {
 })
 
 export class NewTreasuryLogComponent implements OnInit {
-  tempTreasuryLog: ITreasuryLog;
-  treasuryLogDatepicker: MatDatepicker<any>;   // datepicker
-  treasuryLogDatepickerForm: FormControl<any>;
-  catForm: FormControl   // autocomplete categoria
-  categoriesList: string[] = [];
-  subcatForm: FormControl  // autocomplete sub categoria
-  subcategoriesList: string[] = [];
+  firstLoadingComplete: boolean;
+
+  tempTLog: ITreasuryLog;
+
+  tLogDatepicker: MatDatepicker<any>;   // datepickers
+  tLogDatepickerForm: FormControl<any>; // datepickers
+
+  catForm: FormControl                  // autocomplete categoria
+  categoriesList: SelectEnum[] = [];    // autocomplete categoria
+
+  subcatForm: FormControl               // autocomplete sub categoria
+  subcategoriesList: SelectEnum[] = []; // autocomplete sub categoria
+
+  efatForm: FormControl                 // autocomplete efatura
+  efatsList: SelectEnum[] = [];         // autocomplete efatura
+
   recurrency: boolean   // recorrencia
   recurrencyType: string;
   recurrencyFrequency: FormControl<any>;
   saveComplete: boolean;
 
 
-  constructor(private _errorHandlingService: ErrorHandlingService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, public _router: Router, public _http: HttpClient, private _timerService: TimerService, private _categoriesSnackBarService: MHQSnackBarsService, public loadingService: LoadingService) {
+  constructor(private _errorHandlingService: ErrorHandlingService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, private _router: Router, private _http: HttpClient, private _timerService: TimerService, private _categoriesSnackBarService: MHQSnackBarsService, public loadingService: LoadingService, public efaturaService: EfaturaService) {
     this.saveComplete = true;
   }
 
   ngOnInit(): void {
 
-    this.treasuryService.onInitTrigger.subscribe(x => { this.ngOnInit(); });     // triggers remoto do OnInit
-    this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
-    if (!this.loadingService.categoriesLoadingComplete || !this.loadingService.treasuryLoadingComplete) { return }     // loading check
+    this.treasuryService.onInitTrigger.subscribe(x => { this.ngOnInit(); }); this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
+    if (!this.loadingService.categoriesLoadingComplete || !this.loadingService.treasuryLoadingComplete || this.firstLoadingComplete) { return }     // loading check
+    this.firstLoadingComplete = true;
 
     if (this.treasuryService.cloningTLog) {
-      this.tempTreasuryLog = this.treasuryService.activeTLog;
-      this.tempTreasuryLog.id = 0;
-      this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.tempTreasuryLog.cat].bgcolor
-
+      this.tempTLog = JSON.parse(JSON.stringify(this.treasuryService.activeTLog));
+      this.tempTLog.id = 0;
+      this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.tempTLog.cat].bgcolor
+      this.catForm = new FormControl(this.tempTLog.cat, [Validators.required]);
+      this.subcatForm = new FormControl(this.tempTLog.subcat, [Validators.required]);
+      this.efatForm = new FormControl(this.tempTLog.efat, [Validators.required]);
+      this.refreshSubcategoryList(this.tempTLog.cat);
     } else {
-      this.tempTreasuryLog = JSON.parse(JSON.stringify(DEFAULT_TLOG))
+      this.tempTLog = JSON.parse(JSON.stringify(DEFAULT_TLOG))
       this.treasuryService.recordBorderStyle['background-color'] = 'rgb(0,0,0)';
-    }
-    this.treasuryLogDatepickerForm = new FormControl(new Date(this.tempTreasuryLog.date), [Validators.required]);
-    if (this.treasuryService.cloningTLog) {
-      this.refreshSubcategoryList(this.tempTreasuryLog.cat);
-      this.catForm = new FormControl(this.categoriesService.catEnum[this.tempTreasuryLog.cat].title, [Validators.required]);
-      this.subcatForm = new FormControl(this.categoriesService.subcatEnum[this.tempTreasuryLog.subcat].title, [Validators.required]);
-    } else {
-      this.catForm = new FormControl('', [Validators.required]);
+      this.catForm = new FormControl({ value: '', disabled: false }, [Validators.required]);
       this.subcatForm = new FormControl({ value: '', disabled: true }, [Validators.required]);
+      this.efatForm = new FormControl({ value: 0, disabled: true }, [Validators.required]);
     }
-    this.categoriesService.allCategories.forEach(cat => { this.categoriesList.push(cat.title) });
+
+    this.tLogDatepickerForm = new FormControl(new Date(this.tempTLog.date), [Validators.required]);
+
+    this.efatsList = [];
+    for (let i = 0; i < Object.keys(this.efaturaService.efaturaEnum).length; i++) { this.efatsList.push({ title: this.efaturaService.efaturaEnum[i].title, value: i }) }
+
+    this.categoriesList = [];
+    for (let i = 0; i < Object.keys(this.categoriesService.catEnum).length; i++) {
+      this.categoriesList.push({
+        title: this.categoriesService.catEnum[Object.keys(this.categoriesService.catEnum)[i]].title,
+        value: this.categoriesService.catEnum[Object.keys(this.categoriesService.catEnum)[i]].id
+      })
+    }
+
     this.recurrencyFrequency = new FormControl({ value: '', disabled: true }, [Validators.required, Validators.min(2)]);
   }
 
-  openMissingCategoriesSnackBar(): void {
-    this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'categoria/sub-categoria', ['O par ', 'não se encontra definido.'])
-  }
-
-  newTreasuryLogRecordActions(action: string): void {
+  newTLogRecordActions(action: RecordActions): void {
     switch (action) {
       case 'save':
-        if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this.openMissingCategoriesSnackBar() }
-        if (!this.recurrencyFrequency.disabled && !this.recurrencyFrequency.valid) { return this.openMissingCategoriesSnackBar() }
-        const CAT = this.categoriesService.catTitleEnum[`${this.catForm.value}`];
-        this.tempTreasuryLog.date = this.treasuryLogDatepickerForm.value.getTime();
-        this.tempTreasuryLog.cat = CAT.id;
-        this.tempTreasuryLog.subcat = this.categoriesService.subcatTitleEnum[`${this.subcatForm.value}`].id;
-        this.tempTreasuryLog.value = Number(this.tempTreasuryLog.value.toString().replace(',', '.'))
-        if (!this.tempTreasuryLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) {
-          return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
-        }
-        this.createTreasurylog();
+        if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'categoria/sub-categoria', ['O par ', ' não se encontra definido.']) }
+        if (!this.recurrencyFrequency.disabled && !this.recurrencyFrequency.valid) { return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'recorrências', ['As ', ' não se encontram bem definidas.']) }
+
+        this.tempTLog.date = this.tLogDatepickerForm.value.getTime();
+        this.tempTLog.cat = this.catForm.value;
+        this.tempTLog.subcat = this.subcatForm.value;
+        this.tempTLog.value = Number(this.tempTLog.value.toString().replace(',', '.'))
+        if (!this.tempTLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) { return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']); }
+        this.createTLog();
         break;
 
-      case 'end': default:
+      case 'cancel': default:
         document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
         this._timerService.timer = setTimeout(navi.bind(null, this._router), 750)
-        function navi(router: Router): void {
-          router.navigate(['/fi/tlogs'])
-        }
+        function navi(router: Router): void { router.navigate(['/fi/tlogs']) }
     }
   }
 
-  createTreasurylog(): void {
+  createTLog(): void {
     const RECURRENCY_OPTIONS: RecurrencyOptions = {
       active: this.recurrency,
       type: this.recurrencyType,
       freq: this.recurrencyFrequency.value,
-      date: new Date(this.tempTreasuryLog.date).getDate()
+      date: new Date(this.tempTLog.date).getDate()
     }
-    const HTTP_PARAMS = new HttpParams().set('tlog', JSON.stringify(this.tempTreasuryLog)).set('recurrency', JSON.stringify(RECURRENCY_OPTIONS));
+    const HTTP_PARAMS = new HttpParams().set('tlog', JSON.stringify(this.tempTLog)).set('recurrency', JSON.stringify(RECURRENCY_OPTIONS));
     const CALL = this._http.post('http://localhost:16190/createtreasurylog', HTTP_PARAMS, { responseType: 'text' });
 
     this.saveComplete = false;
 
     CALL.subscribe({
       next: codeReceived => {
-        this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.tempTreasuryLog.cat].bgcolor
+        this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.tempTLog.cat].bgcolor
         this.treasuryService.fetchTreasuryLog('saveTLog', Number(codeReceived));
-        RECURRENCY_OPTIONS.active ? this._categoriesSnackBarService.triggerMHQSnackbar(true, 'playlist_add', this.tempTreasuryLog.title, ['Os movimentos ', ' foram criados com sucesso.']) : this._categoriesSnackBarService.triggerMHQSnackbar(true, 'playlist_add', this.tempTreasuryLog.title, ['O movimento ', ' foi criado com sucesso.']); // dispara a snackbar
+        RECURRENCY_OPTIONS.active ? this._categoriesSnackBarService.triggerMHQSnackbar(true, 'playlist_add', this.tempTLog.title, ['Os movimentos ', ' foram criados com sucesso.']) : this._categoriesSnackBarService.triggerMHQSnackbar(true, 'playlist_add', this.tempTLog.title, ['O movimento ', ' foi criado com sucesso.']); // dispara a snackbar
         this.saveComplete = true;
       },
       error: err => {
         this._errorHandlingService.handleError(err);
-        RECURRENCY_OPTIONS.active ? this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.tempTreasuryLog.title, ['Ocurreu algo inesperado ao criar os movimentos ', '.']) : this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.tempTreasuryLog.title, ['Ocurreu algo inesperado ao criar o movimento ', '.']); // dispara a snackbar
+        RECURRENCY_OPTIONS.active ? this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.tempTLog.title, ['Ocorreu algo inesperado ao criar os movimentos ', '.']) : this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.tempTLog.title, ['Ocorreu algo inesperado ao criar o movimento ', '.']); // dispara a snackbar
         this.saveComplete = true;
       }
     })
   }
 
-  refreshSubcategoryList(catID: number = 0, catTitle: string = ''): void {
-    let category: IFinancialCategory;
-    if (catID !== 0) { category = this.categoriesService.catEnum[catID]; }
-    if (catTitle !== '') { category = this.categoriesService.catTitleEnum[`${catTitle}`] }
-
+  refreshSubcategoryList(catID: number): void {
     this.subcategoriesList = [];
-    category!.subcats.forEach(subcat => { this.subcategoriesList.push(subcat.title) });
+    this.categoriesService.catEnum[catID].subcats.forEach((subcat: IFinancialSubCategory) => { this.subcategoriesList.push({ title: subcat.title, value: subcat.id }) });
   }
 
-  categorySelectChanged(event: MatSelectChange): void {
-    this.refreshSubcategoryList(0, event.value);
+  catChanged(event: MatSelectChange): void {
+    this.refreshSubcategoryList(event.value);
     this.subcatForm.setValue('');
-    this.subcategoriesList.length > 0 ? this.subcatForm.enable() : this.subcatForm.disable();
+    Object.keys(this.subcategoriesList).length > 0 ? this.subcatForm.enable() : this.subcatForm.disable();
   }
 
-  recurrencyToggle(event: MatSlideToggleChange): void {
-    event.checked ? this.recurrencyFrequency.enable() : this.recurrencyFrequency.disable();
-  }
+  nifStatus(event: MatCheckboxChange): void { event.checked ? this.efatForm.enable() : this.efatForm.disable() };
+  recurrencyToggle(event: MatSlideToggleChange): void { event.checked ? this.recurrencyFrequency.enable() : this.recurrencyFrequency.disable(); };
 }

@@ -2,7 +2,7 @@
 
   <div class="mhq-mainform-drawer-actions">
 
-    <div class="mhq-quickaction-close" (click)="budgetingService.closeDetails()">
+    <div class="mhq-quickaction-close" (click)="budgetService.closeDetails()">
       <mat-icon>close</mat-icon>
     </div>
 
@@ -14,7 +14,7 @@
         <mat-icon>not_interested</mat-icon>
       </button></div>
 
-    <div [ngStyle]="budgetingService.recordBorderStyle"></div>
+    <div [ngStyle]="budgetService.recordBorderStyle"></div>
 
   </div>
 
@@ -72,7 +72,7 @@
           <form class="mhq-cats-form" style="width: 100%;">
             <mat-form-field>
               <mat-label>Categoria</mat-label>
-              <mat-select [formControl]="catForm" (selectionChange)="categorySelectChanged($event)">
+              <mat-select [formControl]="catForm" (selectionChange)="catChanged($event)">
                 <mat-select-trigger>{{catForm.value}}</mat-select-trigger>
                 <mat-option *ngFor="let option of categoriesList" [value]="option">
                   <mat-icon
@@ -145,7 +145,7 @@
           <mat-form-field appearance="fill">
             <mat-label>Frequência da recorrência</mat-label>
             <mat-select [disabled]="!recurrency" [(ngModel)]="recurrencyType">
-              <mat-option *ngFor="let freq of budgetingService.recurrencyFreq" [value]="freq.value">
+              <mat-option *ngFor="let freq of budgetService.recurrencyFreq" [value]="freq.value">
                 {{freq.string}}
               </mat-option>
             </mat-select>

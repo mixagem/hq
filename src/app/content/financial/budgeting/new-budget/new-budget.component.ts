@@ -36,26 +36,26 @@ export class NewBudgetComponent implements OnInit {
   saveComplete: boolean;
 
 
-  constructor(private _errorHandlingService: ErrorHandlingService, public categoriesService: CategoriesService, public budgetingService: BudgetingService, public _router: Router, public _http: HttpClient, private _timerService: TimerService, private _categoriesSnackBarService: MHQSnackBarsService, public loadingService: LoadingService) {
+  constructor(private _errorHandlingService: ErrorHandlingService, public categoriesService: CategoriesService, public budgetService: BudgetingService, public _router: Router, public _http: HttpClient, private _timerService: TimerService, private _categoriesSnackBarService: MHQSnackBarsService, public loadingService: LoadingService) {
     this.saveComplete = true;
   }
 
   ngOnInit(): void {
 
-    this.budgetingService.onInitTrigger.subscribe(x => { this.ngOnInit(); }); this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
+    this.budgetService.onInitTrigger.subscribe(x => { this.ngOnInit(); }); this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this.loadingService.categoriesLoadingComplete || !this.loadingService.budgetingLoadingComplete) { return }     // loading check
 
-    if (this.budgetingService.cloningBudgetLog) {
-      this.tempBudgetLog = this.budgetingService.activeBudgetLog;
+    if (this.budgetService.cloningBudgetLog) {
+      this.tempBudgetLog = this.budgetService.activeBudgetLog;
       this.tempBudgetLog.id = 0;
-      this.budgetingService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.tempBudgetLog.cat].bgcolor
+      this.budgetService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.tempBudgetLog.cat].bgcolor
 
     } else {
       this.tempBudgetLog = JSON.parse(JSON.stringify(DEFAULT_TLOG))
-      this.budgetingService.recordBorderStyle['background-color'] = 'rgb(0,0,0)';
+      this.budgetService.recordBorderStyle['background-color'] = 'rgb(0,0,0)';
     }
     this.budgetLogDatepickerForm = new FormControl(new Date(this.tempBudgetLog.date), [Validators.required]);
-    if (this.budgetingService.cloningBudgetLog) {
+    if (this.budgetService.cloningBudgetLog) {
       this.refreshSubcategoryList(this.tempBudgetLog.cat);
       this.catForm = new FormControl(this.categoriesService.catEnum[this.tempBudgetLog.cat].title, [Validators.required]);
       this.subcatForm = new FormControl(this.categoriesService.subcatEnum[this.tempBudgetLog.subcat].title, [Validators.required]);
@@ -110,14 +110,14 @@ export class NewBudgetComponent implements OnInit {
 
     CALL.subscribe({
       next: codeReceived => {
-        this.budgetingService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.tempBudgetLog.cat].bgcolor
-        this.budgetingService.fetchBudgetLog('saveBudgetLog', Number(codeReceived));
+        this.budgetService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.tempBudgetLog.cat].bgcolor
+        this.budgetService.fetchBudgetLog('saveBudgetLog', Number(codeReceived));
         RECURRENCY_OPTIONS.active ? this._categoriesSnackBarService.triggerMHQSnackbar(true, 'playlist_add', this.tempBudgetLog.title, ['Os movimentos ', ' foram criados com sucesso.']) : this._categoriesSnackBarService.triggerMHQSnackbar(true, 'playlist_add', this.tempBudgetLog.title, ['O movimento ', ' foi criado com sucesso.']); // dispara a snackbar
         this.saveComplete = true;
       },
       error: err => {
         this._errorHandlingService.handleError(err);
-        RECURRENCY_OPTIONS.active ? this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.tempBudgetLog.title, ['Ocurreu algo inesperado ao criar os movimentos ', '.']) : this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.tempBudgetLog.title, ['Ocurreu algo inesperado ao criar o movimento ', '.']); // dispara a snackbar
+        RECURRENCY_OPTIONS.active ? this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.tempBudgetLog.title, ['Ocorreu algo inesperado ao criar os movimentos ', '.']) : this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.tempBudgetLog.title, ['Ocorreu algo inesperado ao criar o movimento ', '.']); // dispara a snackbar
         this.saveComplete = true;
       }
     })
@@ -132,7 +132,7 @@ export class NewBudgetComponent implements OnInit {
     category!.subcats.forEach(subcat => { this.subcategoriesList.push(subcat.title) });
   }
 
-  categorySelectChanged(event: MatSelectChange): void {
+  catChanged(event: MatSelectChange): void {
     this.refreshSubcategoryList(0, event.value);
     this.subcatForm.setValue('');
     this.subcategoriesList.length > 0 ? this.subcatForm.enable() : this.subcatForm.disable();

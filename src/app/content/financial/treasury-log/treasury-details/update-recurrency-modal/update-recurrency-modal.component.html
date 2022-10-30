@@ -4,10 +4,10 @@
 
 <div mat-dialog-content class="mhq-modal-content-wrapper">
 
-  <p>Atualizar os restantes movimentos desta recorrência com as alterações efetuadas?</p>
+  <p>Atualizar as restantes recorrências associadas a este movimento?</p>
 
   <div style="padding:10px 0 0 20px;">
-    <mat-checkbox [checked]="allRecurrencyOptions" color="primary" [indeterminate]="getRecurrencyOptionsStatus()"
+    <mat-checkbox [checked]="allRecurrencyOptions" [color]="recurrencyOptions.color" [indeterminate]="getRecurrencyOptionsStatus()"
       (change)="wantAllRecurrencyOptions($event.checked)">
       {{recurrencyOptions.name}}
     </mat-checkbox>

@@ -21,7 +21,7 @@ export class BudgetingComponent implements OnInit {
   dataSource: MatTableDataSource<ITreasuryLog>;  // datasource para tabela
   displayedColumns: string[];   // array com as colunas da tabela
 
-  constructor(public budgetingService: BudgetingService, public treasuryService: TreasuryService, public categoriesService: CategoriesService, public router: Router, private _loadingService: LoadingService) {
+  constructor(public budgetService: BudgetingService, public treasuryService: TreasuryService, public categoriesService: CategoriesService, public router: Router, private _loadingService: LoadingService) {
     this.isMatTableReady = false;
     this.firstLoadingComplete = false;
   }
@@ -32,11 +32,11 @@ export class BudgetingComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); }); this.budgetingService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
+    this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); }); this.budgetService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.budgetingLoadingComplete || this.firstLoadingComplete) { return }     // loading check
 
     this.firstLoadingComplete = true;
-    this.dataSource = new MatTableDataSource<ITreasuryLog>(this.budgetingService.budgetLog);     // incializar tabela
+    this.dataSource = new MatTableDataSource<ITreasuryLog>(this.budgetService.budgetLog);     // incializar tabela
     this.displayedColumns = ['cat', 'title', 'date', 'value'];
     this.isMatTableReady = true;
   }
@@ -44,7 +44,7 @@ export class BudgetingComponent implements OnInit {
   // navegação para modo de consulta de registo
   viewMode(budgetID: number): void {
     console.log('view mode trigger')
-    this.budgetingService.onInitTrigger.complete; this.budgetingService.onInitTrigger = new Subject<any>();
+    this.budgetService.onInitTrigger.complete; this.budgetService.onInitTrigger = new Subject<any>();
     if (document.querySelector('#mhq-budget-details')?.classList.contains('animate__slideOutRight')) { document.querySelector('#mhq-budget-details')?.classList.replace('animate__slideOutRight', 'animate__slideInRight') }
     this.router.navigateByUrl('/fi/budget', { skipLocationChange: true }).then(() => { this.router.navigate(['/fi/budget', budgetID]); });
   }

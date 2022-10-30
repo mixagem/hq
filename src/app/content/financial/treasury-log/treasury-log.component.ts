@@ -25,22 +25,24 @@ export class TreasuryLogComponent implements OnInit {
     this.firstLoadingComplete = false;
   }
 
-  @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
-    if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.treasuryLoadingComplete) { return }
-    this.dataSource.paginator = paginator;
-  }
-
   ngOnInit(): void {
+    // loading check
     this.treasuryService.onInitTrigger.subscribe(x => { this.ngOnInit(); }); this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.treasuryLoadingComplete || this.firstLoadingComplete) { return }
     this.firstLoadingComplete = true;
 
+    // modo lista
     let dataSourceArray = [];
     for (let i = 0; i < Object.keys(this.treasuryService.tLogTable).length; i++) { dataSourceArray.push(this.treasuryService.tLogTable[Object.keys(this.treasuryService.tLogTable)[i]]) }
-    this.dataSource = new MatTableDataSource<ITreasuryLog>(dataSourceArray);     // incializar tabela
-    dataSourceArray = []; // libertar memoria
+    this.dataSource = new MatTableDataSource<ITreasuryLog>(dataSourceArray);
+    dataSourceArray = [];
     this.displayedColumns = ['cat', 'title', 'date', 'value'];
     this.isMatTableReady = true;
+  }
+
+  @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
+    if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.treasuryLoadingComplete) { return }
+    this.dataSource.paginator = paginator;
   }
 
   // navegação para modo de consulta de registo

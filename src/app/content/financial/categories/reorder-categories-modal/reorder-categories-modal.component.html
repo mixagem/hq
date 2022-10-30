@@ -27,7 +27,7 @@
             </div>
 
           </div>
-      
+
       </ng-scrollbar>
     </mat-tab>
 
@@ -37,7 +37,7 @@
           <form class="mhq-cats-form" style="width: 100%;height: 55px;">
             <mat-form-field>
               <mat-label>Categoria</mat-label>
-              <mat-select [formControl]="catForm" (selectionChange)="categorySelectChanged($event)">
+              <mat-select [formControl]="catForm" (selectionChange)="catChanged($event)">
                 <mat-select-trigger>{{catForm.value}}</mat-select-trigger>
                 <mat-option *ngFor="let option of categoriesList" [value]="option">
                   <mat-icon

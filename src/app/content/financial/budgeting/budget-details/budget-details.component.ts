@@ -40,7 +40,7 @@ export class BudgetDetailsComponent implements OnInit {
   recurrencyFrequency: FormControl<any>;
   recurrencyFamily: ITreasuryLog[];
 
-  constructor(public loadingService: LoadingService, private _errorHandlingService: ErrorHandlingService, private _route: ActivatedRoute, private _dialog: MatDialog, private _http: HttpClient, public categoriesService: CategoriesService, private _categoriesSnackBarService: MHQSnackBarsService, private _router: Router, public budgetingService: BudgetingService) {
+  constructor(public loadingService: LoadingService, private _errorHandlingService: ErrorHandlingService, private _route: ActivatedRoute, private _dialog: MatDialog, private _http: HttpClient, public categoriesService: CategoriesService, private _categoriesSnackBarService: MHQSnackBarsService, private _router: Router, public budgetService: BudgetingService) {
     this.editingMode = false;
     this.firstLoadingComplete = false;
     this.recurrencyFamily = [];
@@ -48,13 +48,13 @@ export class BudgetDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     // loading check
-    this.budgetingService.onInitTrigger.subscribe(x => { this.ngOnInit(); }); this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
+    this.budgetService.onInitTrigger.subscribe(x => { this.ngOnInit(); }); this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this.loadingService.categoriesLoadingComplete|| !this.loadingService.budgetingLoadingComplete || this.firstLoadingComplete) { return }
     this.firstLoadingComplete = true;
     this.id = Number(this._route.snapshot.paramMap.get('id')!);
-    this.budgetLog = this.budgetingService.budgetEnum[this.id]
+    this.budgetLog = this.budgetService.budgetEnum[this.id]
     this.tempBudgetLog = JSON.parse(JSON.stringify(this.budgetLog));
-    this.budgetingService.activeBudgetLog = JSON.parse(JSON.stringify(this.budgetLog));
+    this.budgetService.activeBudgetLog = JSON.parse(JSON.stringify(this.budgetLog));
     this.budgetLogDatepickerForm = new FormControl(new Date(this.budgetLog.date), [Validators.required]);
     this.catForm = new FormControl(this.categoriesService.catEnum[this.tempBudgetLog.cat].title, [Validators.required]);
     this.subcatForm = new FormControl({ value: this.categoriesService.subcatEnum[this.tempBudgetLog.subcat].title, disabled: true }, [Validators.required]);
@@ -62,7 +62,7 @@ export class BudgetDetailsComponent implements OnInit {
     this.subcatForm.enable();
     this.categoriesService.allCategories.forEach(cat => { this.categoriesList.push(cat.title) });
     this.getRecurrencyFamily();
-    this.budgetingService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.budgetLog.cat].bgcolor;
+    this.budgetService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.budgetLog.cat].bgcolor;
   }
 
   getRecurrencyFamily(): void {
@@ -91,13 +91,13 @@ export class BudgetDetailsComponent implements OnInit {
 
     CALL.subscribe({
       next: codeReceived => {
-        this.budgetingService.fetchBudgetLog('saveBudgetLog', this.tempBudgetLog.id);
+        this.budgetService.fetchBudgetLog('saveBudgetLog', this.tempBudgetLog.id);
         this.editingMode = false;
         this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', this.tempBudgetLog.title, ['O movimento ', ' foi atualizado com sucesso.']);
       },
       error: err => {
         this._errorHandlingService.handleError(err);
-        this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.tempBudgetLog.title, ['Ocurreu algo inesperado ao atualizar o movimento ', '.']);
+        this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.tempBudgetLog.title, ['Ocorreu algo inesperado ao atualizar o movimento ', '.']);
       }
     })
   }
@@ -120,7 +120,7 @@ export class BudgetDetailsComponent implements OnInit {
         this.tempBudgetLog.date = this.budgetLogDatepickerForm.value.getTime();
         this.tempBudgetLog.cat = CATEGORY.id;
         this.tempBudgetLog.subcat = this.categoriesService.subcatTitleEnum[`${this.subcatForm.value}`].id;
-        this.budgetingService.recordBorderStyle['background-color'] = CATEGORY.bgcolor;
+        this.budgetService.recordBorderStyle['background-color'] = CATEGORY.bgcolor;
         this.tempBudgetLog.value = Number(this.tempBudgetLog.value.toString().replace(',', '.')); // conversão de vírgulas para pontos
         if (!this.tempBudgetLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) {
           return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
@@ -129,7 +129,7 @@ export class BudgetDetailsComponent implements OnInit {
         if (this.tempBudgetLog.recurrencyid === 0) { this.saveBudgetLog(); }
 
         if (this.tempBudgetLog.recurrencyid !== 0) {
-          this.budgetingService.recurrenyTempBudgetlog = this.tempBudgetLog;
+          this.budgetService.recurrenyTempBudgetlog = this.tempBudgetLog;
           this.updateBudgetRecurrencyLogModal('300ms', '150ms')
         }
         break;
@@ -158,7 +158,7 @@ export class BudgetDetailsComponent implements OnInit {
   }
 
   dettachBudgetRecurrencyModal(enterAnimationDuration: string, exitAnimationDuration: string): void {
-    this.budgetingService.recurrenyTempBudgetlog = this.tempBudgetLog;
+    this.budgetService.recurrenyTempBudgetlog = this.tempBudgetLog;
     this._dialog.open(DettachRecurrencyModalComponent, {
       width: '640px',
       height: '320px',
@@ -175,7 +175,7 @@ export class BudgetDetailsComponent implements OnInit {
     category!.subcats.forEach(subcat => { this.subcategoriesList.push(subcat.title) });
   }
 
-  categorySelectChanged(event: MatSelectChange): void {
+  catChanged(event: MatSelectChange): void {
     this.refreshSubcategoryList(0, event.value);
     this.subcatForm.setValue('');
     this.subcategoriesList.length > 0 ? this.subcatForm.enable() : this.subcatForm.disable();
