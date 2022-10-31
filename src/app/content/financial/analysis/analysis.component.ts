@@ -49,7 +49,7 @@ export class AnalysisComponent implements OnInit {
     this.getYearlySavingSnapshotsForGraphs();
     this.getSnapshotForGraphs('cat', 2023, [1, 2], 2);
     this.getSnapshotForGraphs('cat', 2023, [3, 4], 3);
-    this.getSnapshotForGraphs('subcat', 2023, [7, 8, 9, 10], 4);
+    // this.getSnapshotForGraphs('subcat', 2023, [7, 8, 9, 10], 4);
   }
 
   getSnapshotForGraphs(type: string, year: number, catids: number[], graph: number): void {

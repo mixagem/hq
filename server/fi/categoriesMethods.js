@@ -286,20 +286,25 @@ export function updateCategory(req, res) {
     console.log('[CAT 7] A verificar a existência de conflitos para o título da categoria');
 
     if (categoryDB.length !== 0 && categoryDB[0].id !== CATEGORY.id) { console.log('[CAT 7] O título => "' + CATEGORY.title + '" já se encontra em uso.'); otherErrors.push('O título <b>' + CATEGORY.title + '</b> já se encontra em uso por uma outra categoria.') }
-    const QUERY = `SELECT * FROM subcategories WHERE LOWER(title) IN `;
-    let queryExtra = '';
 
-    CATEGORY.subcats.forEach((subcat, i) => {
-      if (i === 0) { queryExtra += '(' };
-      queryExtra += `'${subcat.title.toLowerCase()}'`;
-      if (i === CATEGORY.subcats.length - 1) { queryExtra += ')' } else { queryExtra += ',' };
-    });
+    if (CATEGORY.subcats.length !== 0) {
+      const QUERY = `SELECT * FROM subcategories WHERE LOWER(title) IN `;
+      let queryExtra = '';
 
-    DB.all(`${QUERY}${queryExtra}`, (err, resp) => {
+      CATEGORY.subcats.forEach((subcat, i) => {
+        if (i === 0) { queryExtra += '(' };
+        queryExtra += `'${subcat.title.toLowerCase()}'`;
+        if (i === CATEGORY.subcats.length - 1) { queryExtra += ')' } else { queryExtra += ',' };
+      });
 
-      if (err) { dbErrors = true; console.log('[CAT 7] Erro ao obter a lista de títulos das subcategorias'); console.error(err.message); };
-      categorySubTitleCheck(resp);
-    });
+      DB.all(`${QUERY}${queryExtra}`, (err, resp) => {
+
+        if (err) { dbErrors = true; console.log('[CAT 7] Erro ao obter a lista de títulos das subcategorias'); console.error(err.message); };
+        categorySubTitleCheck(resp);
+      });
+    } else {
+      categorySubTitleCheck([])
+    }
   }
 
   function categorySubTitleCheck(subcategory) {
@@ -352,7 +357,7 @@ export function updateCategory(req, res) {
     DB.close((err) => {
       if (err || dbErrors) {
         console.log('[CAT 7] Erro ao carregar terminar ligação com a BD'); console.error(err.message); res.send(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']);
-      } else { res.send(['A categoria <b>' + CATEGORY.title + '</b> e espetivas subcategorias foram atualizadas com sucesso.']); console.log('[CAT 7] Categoria "' + CATEGORY.title + '" e respetivas subcategorias atualizadas com sucesso') }
+      } else { res.send(['A categoria <b>' + CATEGORY.title + '</b> e respetivas subcategorias foram atualizadas com sucesso.']); console.log('[CAT 7] Categoria "' + CATEGORY.title + '" e respetivas subcategorias atualizadas com sucesso') }
     });
 
   }

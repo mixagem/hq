@@ -1,4 +1,5 @@
-<mat-progress-bar *ngIf="!this.loadingService.categoriesLoadingComplete" mode="indeterminate" color="accent"></mat-progress-bar>
+<mat-progress-bar *ngIf="!this.loadingService.categoriesLoadingComplete" mode="indeterminate" color="accent">
+</mat-progress-bar>
 
 <div *ngIf="this.loadingService.categoriesLoadingComplete" class="mhq-mainform-container">
 
@@ -40,25 +41,28 @@
     </div>
   </div> -->
 
-  <div style="height: calc(100% * 2 / 3 - 40px);padding-top:15px">
+  <div style="height: calc(100% * 7 / 12 - (40px * 7 / 12));padding-top:15px">
     <mat-grid-list cols="3" rowHeight="50%">
       <mat-grid-tile colspan=2 rowspan=2>
         <mat-card style="height: 90%;width: 95%;">
-          <div style="height:100%;width:100%">
-            <ngx-charts-line-chart [scheme]="waikiki" [legend]=true [showXAxisLabel]=true [showYAxisLabel]=true [legendTitle]="''"
-              [xAxis]=true [yAxis]=true xAxisLabel="Mês" yAxisLabel="Poupança €" [results]="graphs[0]"  [tooltipDisabled]=false
-              (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+          <div style="height:45px;font-size:20px;font-weight:600;text-align: center;color:var(--mhq-waikiki-pcolor-1)">
+            Evolução poupanças</div>
+          <div style="height:calc(100% - 45px);width:100%">
+            <ngx-charts-line-chart [scheme]="waikiki" [legend]=false [showXAxisLabel]=false [showYAxisLabel]=false
+              [xAxis]=true [yAxis]=true [results]="graphs[0]" [tooltipDisabled]=false (select)="onSelect($event)"
+              (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
             </ngx-charts-line-chart>
           </div>
         </mat-card>
       </mat-grid-tile>
       <mat-grid-tile colspan=1 rowspan=1>
         <mat-card>
-
-          <div style="height:100%;width:100%">
-            <ngx-charts-line-chart [scheme]="waikiki" [legend]=true [showXAxisLabel]=true [showYAxisLabel]=true [legendTitle]="''"
-              [xAxis]=true [yAxis]=true xAxisLabel="Mês" yAxisLabel="Gasto €" [results]="graphs[1]"
-              (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+          <div style="height:35px;text-align: center;font-weight:600;color:var(--mhq-waikiki-pcolor-1)">Salários vs
+            Poupanças - 2023</div>
+          <div style="height:calc(100% - 35px);width:100%">
+            <ngx-charts-line-chart [scheme]="waikiki" [legend]=false [showXAxisLabel]=false [showYAxisLabel]=false
+              [xAxis]=true [yAxis]=true [results]="graphs[1]" (select)="onSelect($event)"
+              (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
 
             </ngx-charts-line-chart>
           </div>
@@ -66,10 +70,12 @@
       </mat-grid-tile>
       <mat-grid-tile colspan=1 rowspan=1>
         <mat-card>
-          <div style="height:100%;width:100%">
-            <ngx-charts-area-chart-stacked [scheme]="waikiki" [legend]=true [showXAxisLabel]=true [showYAxisLabel]=true [legendTitle]="''"
-              [xAxis]=true [yAxis]=true xAxisLabel="Mês" yAxisLabel="Gasto €" [results]="graphs[2]"
-              (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+          <div style="height:35px;text-align: center;font-weight:600;color:var(--mhq-waikiki-pcolor-1)">Gastos fixos &
+            variáveis - 2023</div>
+          <div style="height:calc(100% - 35px);width:100%">
+            <ngx-charts-area-chart-stacked [scheme]="waikiki" [legend]=false [showXAxisLabel]=false
+              [showYAxisLabel]=false [xAxis]=true [yAxis]=true [results]="graphs[2]" (select)="onSelect($event)"
+              (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
 
             </ngx-charts-area-chart-stacked>
           </div>
@@ -111,7 +117,35 @@
     </mat-grid-list>
   </div>
 
-  <div style="height: calc(100% * 1 / 3 - 20px);"></div>
+  <div style="height: calc(100% * 5 / 12 - (40px * 5 / 12));" *ngIf="false">
+
+
+    <mat-grid-list cols="4" rowHeight="100%">
+      <mat-grid-tile colspan=1>
+        <mat-card style="height: 70%;width: 87%;">
+          card1
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile colspan=1>
+        <mat-card style="height: 70%;width: 87%;">
+          card2
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile colspan=1>
+        <mat-card style="height: 70%;width: 87%;">
+          card3
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile colspan=1>
+        <mat-card style="height: 70%;width: 87%;">
+          card4
+        </mat-card>
+      </mat-grid-tile>
+    </mat-grid-list>
+
+
+
+  </div>
 
   <!--
   <div class="mhq-row" style="height: calc(50% - 30px);">

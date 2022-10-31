@@ -92,3 +92,39 @@ table {
     padding: 0;
   }
 }
+
+.mhq-no-treasurylogs {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 500;
+  div {
+    border-radius: 50%;
+    background: var(--mhq-waikiki-acolor-3);
+    width: 85px;
+    height: 85px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 25px;
+    mat-icon {
+      vertical-align: middle;
+      font-size: 48px;
+      width: auto;
+      height: auto;
+      color: var(--mhq-dark-text);
+    }
+  }
+  p {
+    color: var(--mhq-waikiki-pcolor-1);
+    margin: 0;
+    font-weight: 600;
+    span {
+      padding: 5px 10px;
+      margin-left: 5px;
+      border-radius: 5px;
+    }
+  }
+}
+

@@ -100,7 +100,7 @@ export class TreasuryDetailsComponent implements OnInit {
           return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'warning_amber', '', [ERROR_CODE[1], '']);
         }
         const RESP = codeReceived as ITreasuryLog[];
-        console.log(RESP)
+
         this.recurrencyFamily = RESP
       },
       error: err => {

@@ -55,7 +55,7 @@ export class AnualViewComponent implements OnInit {
   }
 
   monthLocale(month: number): string {
-    const TEMP_DATE = new Date(); TEMP_DATE.setMonth(month);
+    const TEMP_DATE = new Date(Date.now()); TEMP_DATE.setMonth(month,1);
     return TEMP_DATE.toLocaleString('default', { month: 'long' });
   }
 

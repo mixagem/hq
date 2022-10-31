@@ -22,6 +22,7 @@ mat-form-field {
   width: 95%;
 }
 
+
 @font-face {
   font-family: "HK Grotesk";
   src: url("assets/fonts/HKGrotesk-SemiBold.woff2") format("woff2"),
@@ -78,9 +79,8 @@ mat-form-field {
 
 .animate__animated.animate__slideInRight,
 .animate__animated.animate__slideOutRight {
-  --animate-duration: .75s;
+  --animate-duration: 0.75s;
 }
-
 
 /* ########## Start - mhq grids ##########*/
 .mhq-row {

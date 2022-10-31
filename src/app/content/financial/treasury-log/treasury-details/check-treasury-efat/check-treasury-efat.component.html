@@ -12,7 +12,7 @@
 
     <div class="mhq-col-6" style="display: flex;    justify-content: flex-end">
       <mat-chip-list>
-        <mat-chip style="background-color:#000;color:#fff">
+        <mat-chip [style]="'background-color:'+efaturaService.efaturaTable[treasuryService.activeTLog.efat].color+';color:#fff'">
           <mat-icon style="padding-left:5px;padding-right:10px;color:#fff;box-sizing: content-box;">
             {{efaturaService.efaturaTable[treasuryService.activeTLog.efat].icon}}</mat-icon>
           <span style="padding-right:5px;">{{efaturaService.efaturaTable[treasuryService.activeTLog.efat].title}}</span>
