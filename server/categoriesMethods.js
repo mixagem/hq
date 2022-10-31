@@ -64,9 +64,8 @@ export function getSubcategorySequence(req, res) {
   });
 }
 
-// ######>  adiciona à bd uma nova categoria, e respetivas subcategorias
+// ######>  adiciona uma nova categoria, e respetivas subcategorias  à bd
 export function createNewCategory(req, res) {
-  console.log('---------------------------')
 
   let CATEGORY; try { CATEGORY = JSON.parse(req.body.category); } catch { console.log('[CAT 3] Erro ao fazer parse da categoria'); return res.send(['MHQERROR', 'O objeto enviado pela aplicação não está corretamente parametrizado.']) }
 
@@ -75,7 +74,7 @@ export function createNewCategory(req, res) {
   let otherErrors = [];
   const DB = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
     if (err) { dbErrors = true; console.error(err.message); console.log('[CAT 3] Erro ao ligar à bd'); };
-
+    console.log('---------------------------')
     console.log('[CAT 3] A criar categoria => "' + CATEGORY.title + '"');
   });
 
@@ -86,22 +85,33 @@ export function createNewCategory(req, res) {
   });
 
   function categoryTitleCheck(categoryDB) {
-    console.log('[CAT 3] A verificar a existência de conflitos para o título da categoria');
+    console.log('[CAT 3] A verificar a existência de conflitos para os títulos da categoria/subcategorias');
 
     if (categoryDB.length !== 0 && categoryDB[0].id !== CATEGORY.id) { console.log('[CAT 3] O título => "' + CATEGORY.title + '" já se encontra em uso.'); otherErrors.push('O título <b>' + CATEGORY.title + '</b> já se encontra em uso por uma outra categoria.') }
-    const QUERY = `SELECT * FROM subcategories`;
+    const QUERY = `SELECT * FROM subcategories WHERE lower(title) IN `;
     let queryExtra = '';
 
-    CATEGORY.subcats.forEach((subcat, i) => { i === 0 ? queryExtra += ` WHERE lower(title) = '${subcat.title.toLowerCase()}'` : queryExtra += ` OR lower(title) = '${subcat.title.toLowerCase()}'` });
-    DB.all(`${QUERY}${queryExtra}`, (err, resp) => {
+    if (CATEGORY.subcats.length !== 0) {
 
-      if (err) { dbErrors = true; console.log('[CAT 3] Erro ao obter a lista de títulos das subcategorias'); console.error(err.message); };
-      categorySubTitleCheck(resp);
-    });
+      CATEGORY.subcats.forEach((subcat, i) => {
+        if (i === 0) { queryExtra += '(' };
+        queryExtra += `'${subcat.title.toLowerCase()}'`;
+        if (i === CATEGORY.subcats.length - 1) { queryExtra += ')' } else { queryExtra += ',' };
+      });
+
+      DB.all(`${QUERY}${queryExtra}`, (err, resp) => {
+
+        if (err) { dbErrors = true; console.log('[CAT 3] Erro ao obter a lista de títulos das subcategorias'); console.error(err.message); };
+        categorySubTitleCheck(resp);
+      });
+    }
+    else {
+      categorySubTitleCheck([]);
+    }
 
   }
 
-  function categorySubTitleCheck(subcategory) {
+  function categorySubTitleCheck(subcategoryArray) {
     console.log('[CAT 3] A verificar a existência de conflitos para o título das subcategorias');
     let tempSubcatsTitles = [] // titulos das subcategorias recebidas do front end
     for (let y = 0; y < CATEGORY.subcats.length; y++) {
@@ -113,10 +123,10 @@ export function createNewCategory(req, res) {
       tempSubcatsTitles.push(CATEGORY.subcats[y].title.toLowerCase());
     };
 
-    for (let z = 0; z < subcategory.length; z++) {
-      if (tempSubcatsTitles.includes(subcategory[z].title.toLowerCase()) && subcategory[z].maincatid !== CATEGORY.id) {
-        console.log('[CAT 3] O título => "' + subcategory[z].title + '" já se encontra em uso por outra subcategoria');
-        otherErrors.push('O título <b>' + subcategory[z].title + '</b> já se encontra em uso por uma outra subcategoria.');
+    for (let z = 0; z < subcategoryArray.length; z++) {
+      if (tempSubcatsTitles.includes(subcategoryArray[z].title.toLowerCase()) && subcategoryArray[z].maincatid !== CATEGORY.id) {
+        console.log('[CAT 3] O título => "' + subcategoryArray[z].title + '" já se encontra em uso por outra subcategoria');
+        otherErrors.push('O título <b>' + subcategoryArray[z].title + '</b> já se encontra em uso por uma outra subcategoria.');
         break;
       }
     };
@@ -134,10 +144,10 @@ export function createNewCategory(req, res) {
 
       DB.all(`SELECT MAX(catorder) as max from categories`, (err, resp) => {
         if (err) { dbErrors = true; console.log('[CAT 3] Erro ao carregar o valor da sequência da ordem de categorias'); console.error(err.message); };
-        console.log(Number(resp[0].max))
+        currentOrder = Number(resp[0].max) + 1;
 
         DB.serialize(() => {
-          DB.run(`INSERT INTO categories (title, icon, type, bgcolor, textcolor, active, catorder) VALUES ('${CATEGORY.title}','${CATEGORY.icon}','${CATEGORY.type}','${CATEGORY.bgcolor}','${CATEGORY.textcolor}','${CATEGORY.active}', '${currentOrder + 1}')`, (err) => {
+          DB.run(`INSERT INTO categories (title, icon, type, bgcolor, textcolor, active, catorder) VALUES ('${CATEGORY.title}','${CATEGORY.icon}','${CATEGORY.type}','${CATEGORY.bgcolor}','${CATEGORY.textcolor}','${CATEGORY.active}', '${currentOrder}')`, (err) => {
             if (err) { dbErrors = true; console.log('[CAT 3] Erro na criação da categoria'); console.error(err.message); };
             console.log('[CAT 3] Categoria => "' + CATEGORY.title + '" criada com sucesso');
           })
@@ -192,7 +202,7 @@ export function deleteCategory(req, res) {
 
   db.close((err) => {
     if (err || dbErrors) { console.log('[CAT 4] Erro ao carregar terminar ligação com a BD'); console.error(err.message); res.send(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']); } else {
-      console.log('[CAT 4] Categoria => "' + CATEGORY.title + '" eliminada com sucesso'); res.send(['A categoria <b>' + CATEGORY.title + '</b> foi removida com sucesso.'])
+      console.log('[CAT 4] Categoria => "' + CATEGORY.title + '" eliminada com sucesso'); res.send(['A categoria <b>' + CATEGORY.title + '</b> foi eliminada com sucesso.'])
     }
   });
 
@@ -219,7 +229,7 @@ export function orderCategories(req, res) {
   });
 
   DB.close((err) => {
-    if (err || dbErrors) { console.log('[CAT 5] Erro ao carregar terminar ligação com a BD'); console.error(err.message); res.send(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']); }
+    if (err || dbErrors) { console.log('[CAT 5] Erro ao terminar ligação com a BD'); console.error(err.message); res.send(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']); }
     else { console.log('[CAT 5] Categorias re-ordenadas com sucesso'); res.send(['Categorias <b>re-ordenadas</b> com sucesso.']) } // desenvolver tratamento de erro do lado do front end
   });
 }
@@ -227,7 +237,7 @@ export function orderCategories(req, res) {
 // ######>  re-ordenação de subcategorias
 export function orderSubCategories(req, res) {
   console.log('---------------------------')
-  let NEW_SUBCAT_ORDER; try { NEW_SUBCAT_ORDER = JSON.parse(req.body.newsubcatorder); } catch { console.log('[CAT 5] Erro ao fazer parse da ordenação das subcategorias'); return res.send(['MHQERROR', 'O objeto enviado pela aplicação não está corretamente parametrizado.']) }
+  let NEW_SUBCAT_ORDER; try { NEW_SUBCAT_ORDER = JSON.parse(req.body.newsubcatorder); } catch { console.log('[CAT 6] Erro ao fazer parse da ordenação das subcategorias'); return res.send(['MHQERROR', 'O objeto enviado pela aplicação não está corretamente parametrizado.']) }
 
 
   let dbErrors = false;
@@ -262,7 +272,7 @@ export function updateCategory(req, res) {
   let dbErrors = false;
 
   const DB = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
-    if (err) { dbErrors = true; console.error(err.message); console.log('[CAT 6] Erro ao ligar à bd'); };
+    if (err) { dbErrors = true; console.error(err.message); console.log('[CAT 7] Erro ao ligar à bd'); };
     console.log('[CAT 7] A atualizar a categoria => "' + CATEGORY.title + '"');
   });
 
@@ -272,16 +282,19 @@ export function updateCategory(req, res) {
     categoryTitleCheck(resp);
   });
 
-  // DB.all(`SELECT * FROM categories WHERE lower(title) ='${CATEGORY.title.toLowerCase()}'`, (err, resp) => { err ? console.error(err.message) : categoryTitleCheck(resp, CATEGORY, DB) }); // array
-
   function categoryTitleCheck(categoryDB) {
     console.log('[CAT 7] A verificar a existência de conflitos para o título da categoria');
 
     if (categoryDB.length !== 0 && categoryDB[0].id !== CATEGORY.id) { console.log('[CAT 7] O título => "' + CATEGORY.title + '" já se encontra em uso.'); otherErrors.push('O título <b>' + CATEGORY.title + '</b> já se encontra em uso por uma outra categoria.') }
-    const QUERY = `SELECT * FROM subcategories`;
+    const QUERY = `SELECT * FROM subcategories WHERE LOWER(title) IN `;
     let queryExtra = '';
 
-    CATEGORY.subcats.forEach((subcat, i) => { i === 0 ? queryExtra += ` WHERE lower(title) = '${subcat.title.toLowerCase()}'` : queryExtra += ` OR lower(title) = '${subcat.title.toLowerCase()}'` });
+    CATEGORY.subcats.forEach((subcat, i) => {
+      if (i === 0) { queryExtra += '(' };
+      queryExtra += `'${subcat.title.toLowerCase()}'`;
+      if (i === CATEGORY.subcats.length - 1) { queryExtra += ')' } else { queryExtra += ',' };
+    });
+
     DB.all(`${QUERY}${queryExtra}`, (err, resp) => {
 
       if (err) { dbErrors = true; console.log('[CAT 7] Erro ao obter a lista de títulos das subcategorias'); console.error(err.message); };

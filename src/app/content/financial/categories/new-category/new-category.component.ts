@@ -70,7 +70,7 @@ export class NewCategoryComponent implements OnInit {
           this.categoriesService.recordBorderStyle['background-color'] = this.tempCat.bgcolor;
           this._mhqSnackbarService.triggerMHQSnackbar(true, 'playlist_add', this.tempCat.title, ['A categoria ', ' foi criada com sucesso.']);
         } else {
-          this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', '', [`${RESP.slice(1).join('<br>')}`, '']);
+          this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', '', [`${RESP.slice(1).join('<br>')}`, '']);
         }
       },
       error: err => this._errorHandlingService.handleError(err)

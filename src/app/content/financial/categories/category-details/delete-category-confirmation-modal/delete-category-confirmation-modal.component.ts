@@ -19,7 +19,7 @@ export class DeleteCategoryConfirmationModalComponent {
   deleteCat(): void {
     // passar esta validação para o backend -v
     for (let i = 0; i < Object.keys(this._treasuryService.tLogTable).length; i++) {
-      if (this._treasuryService.tLogTable[Object.keys(this._treasuryService.tLogTable)[i]].cat === this.categoriesService.activeCat.id) { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'report', this.categoriesService.activeCat.title, ['Não é possível remover a categoria ', ', devido à existência de movimentos associados a esta.']); }
+      if (this._treasuryService.tLogTable[Object.keys(this._treasuryService.tLogTable)[i]].cat === this.categoriesService.activeCat.id) { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', this.categoriesService.activeCat.title, ['Não é possível remover a categoria ', ', devido à existência de movimentos associados a esta.']); }
     }
 
     const HTTP_PARAMS = new HttpParams().set('cat', JSON.stringify(this.categoriesService.activeCat))
@@ -27,7 +27,7 @@ export class DeleteCategoryConfirmationModalComponent {
     CALL.subscribe({
       next: codeReceived => {
         const RESP = codeReceived as string[];
-        if (RESP[0] === 'MHQERROR') { this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', '', [RESP[0], '']) }
+        if (RESP[0] === 'MHQERROR') { this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', '', [RESP[1], '']) }
         else { this._mhqSnackbarService.triggerMHQSnackbar(true, 'recycling', '', [RESP[0], '']) }
         this.categoriesService.fetchCategories('deleteCat');
       },

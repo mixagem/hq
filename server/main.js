@@ -1,9 +1,8 @@
 import { savingsGraphSnapshot, generateCatGraphSnapshot } from './savingsMethods.js'
-import { createBudgetlog,  fetchBudgetLogs } from './budgetingMethods.js';
 import { dailyTotalAcomulatedSnapshot, monthlySnapshots, dailyCatDetails, dailySubCatDetails, dailyTotalDetails } from './monthlyViewMethods.js';
 import { monthlyTotalAcomulatedSnapshot, yearlySnapshots, monthlyCatDetails, monthlySubCatDetails, monthlyTotalDetails } from './yearlyViewMethods.js';
 import { orderCategories, orderSubCategories, fetchCategories, createNewCategory, deleteCategory, updateCategory, getSubcategorySequence } from './categoriesMethods.js'
-import { deleteAllRecurrencies, dettachRecurrency, updateRecurrency, getRecurencyLogs, createTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog } from './treasuryMethods.js';
+import { deleteAllRecurrencies, dettachRecurrency, updateRecurrency, getRecurencyLogs, createTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog, createBudgetlog, fetchBudgetLogs } from './treasuryMethods.js';
 
 
 import express from 'express';
@@ -42,7 +41,9 @@ APP.post('/ordersubcategories', function (req, res) { return orderSubCategories(
 
 // treasury / budget
 APP.get('/fetchtreasurylogs', function (req, res) { return fetchTreasuryLogs(req, res); });
+APP.get('/fetchbudgets', function (req, res) { return fetchBudgetLogs(req, res); });
 APP.post('/createtreasurylog', function (req, res) { return createTreasurylog(req, res); });
+APP.post('/createbudgetlog', function (req, res) { return createBudgetlog(req, res); });
 APP.post('/deletetreasurylog', function (req, res) { return deleteTreasuryLog(req, res); });
 APP.post('/updatetreasurylog', function (req, res) { return updateTreasuryLog(req, res); });
 APP.post('/getrecurencylogs', function (req, res) { return getRecurencyLogs(req, res); });
@@ -51,8 +52,6 @@ APP.post('/dettachrecurrency', function (req, res) { return dettachRecurrency(re
 APP.post('/deleteallrecurrencies', function (req, res) { return deleteAllRecurrencies(req, res); });
 
 // budgeting
-APP.get('/fetchbudgets', function (req, res) { return fetchBudgetLogs(req, res); });
-APP.post('/createbudgetlog', function (req, res) { return createBudgetlog(req, res); });
 
 // savings
 APP.post('/savingsgraphsnapshot', function (req, res) { return savingsGraphSnapshot(req, res); });

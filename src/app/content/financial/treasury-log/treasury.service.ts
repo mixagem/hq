@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
 import { ErrorHandlingService, LoadingService, TimerService } from 'src/assets/services/misc.service';
+import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
 
 type TLogTable = { [key: string]: ITreasuryLog };
 type RecordBorderStyle = { "background-color": string };
@@ -25,7 +26,7 @@ export class TreasuryService {
 
   onInitTrigger: Subject<any>;   //trigger para onInit
 
-  constructor(private _errorHandlingService: ErrorHandlingService, private _http: HttpClient, private _router: Router, private _loadingService: LoadingService, private _timerService: TimerService) {
+  constructor(private _errorHandlingService: ErrorHandlingService, private _http: HttpClient, private _router: Router, private _loadingService: LoadingService, private _timerService: TimerService, private _mhqSnackbarService: MHQSnackBarsService) {
     this.cloningTLog = false;
     this.onInitTrigger = new Subject<any>();
     this.recordBorderStyle = { "background-color": "rgb(0,0,0)" };
@@ -41,13 +42,14 @@ export class TreasuryService {
 
     CALL.subscribe({
       next: (codeReceived) => {
+        const ERROR_CODE = codeReceived as string[];
+        if (ERROR_CODE[0] === 'MHQERROR') { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', ERROR_CODE[1], ['', '']); }
         const RESP = codeReceived as ITreasuryLog[];
 
         this.tLogTable = {}; RESP.forEach(tlog => { this.tLogTable[`'${tlog.id}'`] = tlog; });
         this._loadingService.treasuryLoadingComplete = true;
 
         switch (source) {
-
           case 'saveTLog':
             this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs', LogID]); });
             break;
@@ -60,7 +62,6 @@ export class TreasuryService {
             }, 750);
             break;
         }
-
 
         this.onInitTriggerCall();
       },

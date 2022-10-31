@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
+import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
 import { ErrorHandlingService, LoadingService, TimerService } from 'src/assets/services/misc.service';
 
 type RecordBorderStyle = { "background-color": string }
@@ -26,7 +27,7 @@ export class BudgetingService {
   recurrencyFreq: recurencyFrequency[] // opções frequencia recurrencia
   recurrenyTempBudgetlog: ITreasuryLog
 
-  constructor(private _errorHandlingService: ErrorHandlingService, private _http: HttpClient, private _router: Router, private _loadingService: LoadingService, private _timerService: TimerService) {
+  constructor(private _errorHandlingService: ErrorHandlingService, private _http: HttpClient, private _router: Router, private _loadingService: LoadingService, private _timerService: TimerService, private _mhqSnackbarService : MHQSnackBarsService) {
     this.cloningBudgetLog = false;
     this.fetchBudgetLog();
     this.onInitTrigger = new Subject<any>();
@@ -42,6 +43,8 @@ export class BudgetingService {
 
       CALL.subscribe({
         next: (codeReceived) => {
+          const ERROR_CODE = codeReceived as string[];
+          if (ERROR_CODE[0] === 'MHQERROR') { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', ERROR_CODE[1], ['', '']); }
           const RESP = codeReceived as ITreasuryLog[];
 
           if (source === 'saveBudgetLog') { this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/budget', LogID]); }); }

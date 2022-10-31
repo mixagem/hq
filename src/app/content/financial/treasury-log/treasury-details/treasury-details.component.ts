@@ -94,6 +94,10 @@ export class TreasuryDetailsComponent implements OnInit {
 
     CALL.subscribe({
       next: codeReceived => {
+        const ERROR_CODE = codeReceived as string[];
+        if(ERROR_CODE[0]==='MHQERROR'){
+          return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'warning_amber', '', [ERROR_CODE[1], '']);
+        }
         const RESP = codeReceived as ITreasuryLog[];
         this.recurrencyFamily = RESP
       },
@@ -105,17 +109,22 @@ export class TreasuryDetailsComponent implements OnInit {
 
   saveTLog(): void {
     const HTTP_PARAMS = new HttpParams().set('type', 'tlog').set('tlog', JSON.stringify(this.tempTLog))
-    const CALL = this._http.post('http://localhost:16190/updatetreasurylog', HTTP_PARAMS, { responseType: 'text' })
+    const CALL = this._http.post('http://localhost:16190/updatetreasurylog', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
       next: codeReceived => {
-        this.treasuryService.fetchTreasuryLog('saveTLog', this.id);
-        this.editingMode = false;
-        this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', this.tempTLog.title, ['O movimento ', ' foi atualizado com sucesso.']);
+        const RESP = codeReceived as string[];
+        if (RESP[0] !== 'MHQERROR') {
+          this.treasuryService.fetchTreasuryLog('saveTLog', this.id);
+          this.editingMode = false;
+          this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', '', [RESP[0], '']);
+        }
+        else {
+          this._categoriesSnackBarService.triggerMHQSnackbar(false, 'warning_amber', '', [RESP[1], '']);
+        }
       },
       error: err => {
         this._errorHandlingService.handleError(err);
-        this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.tempTLog.title, ['Ocorreu algo inesperado ao atualizar o movimento ', '.']);
       }
     })
   }

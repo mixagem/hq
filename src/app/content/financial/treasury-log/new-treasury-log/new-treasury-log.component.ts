@@ -121,21 +121,26 @@ export class NewTreasuryLogComponent implements OnInit {
       date: new Date(this.tempTLog.date).getDate()
     }
     const HTTP_PARAMS = new HttpParams().set('tlog', JSON.stringify(this.tempTLog)).set('recurrency', JSON.stringify(RECURRENCY_OPTIONS));
-    const CALL = this._http.post('http://localhost:16190/createtreasurylog', HTTP_PARAMS, { responseType: 'text' });
+    const CALL = this._http.post('http://localhost:16190/createtreasurylog', HTTP_PARAMS, { responseType: 'json' });
 
     this.saveComplete = false;
 
     CALL.subscribe({
       next: codeReceived => {
-        this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catTable[`'${this.tempTLog.cat}'`].bgcolor
-        this.treasuryService.fetchTreasuryLog('saveTLog', Number(codeReceived));
-        RECURRENCY_OPTIONS.active ? this._categoriesSnackBarService.triggerMHQSnackbar(true, 'playlist_add', this.tempTLog.title, ['Os movimentos ', ' foram criados com sucesso.']) : this._categoriesSnackBarService.triggerMHQSnackbar(true, 'playlist_add', this.tempTLog.title, ['O movimento ', ' foi criado com sucesso.']); // dispara a snackbar
-        this.saveComplete = true;
+        const RESP = codeReceived as string[];
+
+        if (RESP[0] !== 'MHQERROR') {
+          // this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catTable[`'${this.tempTLog.cat}'`].bgcolor
+          this.treasuryService.fetchTreasuryLog('saveTLog', Number(RESP[0]));
+          this._categoriesSnackBarService.triggerMHQSnackbar(true, 'playlist_add', '', [RESP[1], '']);
+          this.saveComplete = true;
+        } else {
+          this._categoriesSnackBarService.triggerMHQSnackbar(false, 'warning_amber', '', [RESP[1], '']);
+        }
+
       },
       error: err => {
         this._errorHandlingService.handleError(err);
-        RECURRENCY_OPTIONS.active ? this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.tempTLog.title, ['Ocorreu algo inesperado ao criar os movimentos ', '.']) : this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.tempTLog.title, ['Ocorreu algo inesperado ao criar o movimento ', '.']); // dispara a snackbar
-        this.saveComplete = true;
       }
     })
   }

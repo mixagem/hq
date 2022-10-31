@@ -71,7 +71,7 @@ export class CategoryDetailsComponent implements OnInit {
           this.categoriesService.fetchCategories('saveCat', this.id); // atualiza o modo listagem / consulta
           this.categoriesService.recordBorderStyle['background-color'] = this.tempCat.bgcolor; // atualiza a cor do border da gaveta com a nova cor da categoria
           this.editingMode = false; // termina o modo de edição
-          this._mhqSnackbarService.triggerMHQSnackbar(true, 'save_as', this.tempCat.title, ['A categoria ', ' foi atualizada com sucesso.']); // dispara a snackbar
+          this._mhqSnackbarService.triggerMHQSnackbar(true, 'save_as', '', [RESP[0],'']); // dispara a snackbar
         }
         else {
           this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', '', [`${RESP.slice(1).join('<br>')}`, '']);

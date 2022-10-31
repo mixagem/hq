@@ -49,7 +49,7 @@ export class BudgetDetailsComponent implements OnInit {
   ngOnInit(): void {
     // loading check
     this.budgetService.onInitTrigger.subscribe(x => { this.ngOnInit(); }); this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
-    if (!this.loadingService.categoriesLoadingComplete|| !this.loadingService.budgetingLoadingComplete || this.firstLoadingComplete) { return }
+    if (!this.loadingService.categoriesLoadingComplete || !this.loadingService.budgetingLoadingComplete || this.firstLoadingComplete) { return }
     this.firstLoadingComplete = true;
     this.id = Number(this._route.snapshot.paramMap.get('id')!);
     this.budgetLog = this.budgetService.budgetEnum[this.id]
@@ -60,7 +60,7 @@ export class BudgetDetailsComponent implements OnInit {
     this.subcatForm = new FormControl({ value: this.categoriesService.subcatTable[this.tempBudgetLog.subcat].title, disabled: true }, [Validators.required]);
     this.categoriesService.catTable[`'${this.tempBudgetLog.cat}'`].subcats.forEach((subcat: { title: string; }) => { this.subcategoriesList.push(subcat.title) });
     this.subcatForm.enable();
-    for(let i = 0; i < Object.keys(this.categoriesService.catTable).length; i++){
+    for (let i = 0; i < Object.keys(this.categoriesService.catTable).length; i++) {
       this.catList.push(this.categoriesService.catTable[Object.keys(this.categoriesService.catTable)[i]].title)
     }
     // this.categoriesService.allCategories.forEach(cat => { this.catList.push(cat.title) });
@@ -70,11 +70,15 @@ export class BudgetDetailsComponent implements OnInit {
 
   getRecurrencyFamily(): void {
     if (this.budgetLog.recurrencyid === 0) { return }
-    const HTTP_PARAMS = new HttpParams().set('type','budget').set('budgetID', this.budgetLog.id).set('recurID', this.budgetLog.recurrencyid)
+    const HTTP_PARAMS = new HttpParams().set('type', 'budget').set('budgetID', this.budgetLog.id).set('recurID', this.budgetLog.recurrencyid)
     const CALL = this._http.post('http://localhost:16190/getrecurencylogs', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
       next: codeReceived => {
+        const ERROR_CODE = codeReceived as string[];
+        if (ERROR_CODE[0] === 'MHQERROR') {
+          return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'warning_amber', '', [ERROR_CODE[1], '']);
+        }
         const RESP = codeReceived as ITreasuryLog[];
         this.recurrencyFamily = RESP
       },
@@ -89,18 +93,22 @@ export class BudgetDetailsComponent implements OnInit {
   }
 
   saveBudgetLog(): void {
-    const HTTP_PARAMS = new HttpParams().set('type','budget').set('budget', JSON.stringify(this.tempBudgetLog))
-    const CALL = this._http.post('http://localhost:16190/updatetreasurylog', HTTP_PARAMS, { responseType: 'text' })
+    const HTTP_PARAMS = new HttpParams().set('type', 'budget').set('budget', JSON.stringify(this.tempBudgetLog))
+    const CALL = this._http.post('http://localhost:16190/updatetreasurylog', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
       next: codeReceived => {
-        this.budgetService.fetchBudgetLog('saveBudgetLog', this.tempBudgetLog.id);
-        this.editingMode = false;
-        this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', this.tempBudgetLog.title, ['O movimento ', ' foi atualizado com sucesso.']);
+        const RESP = codeReceived as string[];
+        if (RESP[0] !== 'MHQERROR') {
+          this.budgetService.fetchBudgetLog('saveBudgetLog', this.tempBudgetLog.id);
+          this.editingMode = false;
+          this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', '', [RESP[0], '']);
+        }
+        else { this._categoriesSnackBarService.triggerMHQSnackbar(false, 'warning_amber', '', [RESP[1], '']); }
+
       },
       error: err => {
         this._errorHandlingService.handleError(err);
-        this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.tempBudgetLog.title, ['Ocorreu algo inesperado ao atualizar o movimento ', '.']);
       }
     })
   }

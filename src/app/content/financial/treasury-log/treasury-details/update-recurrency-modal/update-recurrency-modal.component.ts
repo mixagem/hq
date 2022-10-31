@@ -65,20 +65,23 @@ export class UpdateRecurrencyModalComponent {
       const HTTP_PARAMS = new HttpParams().set('type', 'tlog').set('tlog', JSON.stringify(this._treasuryService.activeTLog)).set('fields', JSON.stringify(selectedFieldsToMassUpdate))
 
       let call;
-      if (update) { call = this._http.post('http://localhost:16190/updaterecurrency', HTTP_PARAMS, { responseType: 'text' }) }
-      else { call = this._http.post('http://localhost:16190/updatetreasurylog', HTTP_PARAMS, { responseType: 'text' }) }
+      if (update) { call = this._http.post('http://localhost:16190/updaterecurrency', HTTP_PARAMS, { responseType: 'json' }) }
+      else { call = this._http.post('http://localhost:16190/updatetreasurylog', HTTP_PARAMS, { responseType: 'json' }) }
 
       call.subscribe({
         next: codeReceived => {
-          this._treasuryService.fetchTreasuryLog('saveTLog', this._treasuryService.activeTLog.id);
-          const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-          if (update) { this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', this._treasuryService.activeTLog.title, ['O movimento ', ' e respetivas recorrências, foram atualizadas com sucesso.']) } else { this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', this._treasuryService.activeTLog.title, ['O movimento ', ' foi atualizado com sucesso.']) };
+          const RESP = codeReceived as string[];
+          if (RESP[0] !== 'MHQERROR') {
+            this._treasuryService.fetchTreasuryLog('saveTLog', this._treasuryService.activeTLog.id);
+            const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
+            this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', '', [RESP[0], '']);
+          }
+          else {
+            this._categoriesSnackBarService.triggerMHQSnackbar(false, 'warning_amber', '', [RESP[1], '']);
+          }
         },
         error: err => {
           this._errorHandlingService.handleError(err);
-          const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-          if (update) { this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this._treasuryService.activeTLog.title, ['Ocorreu algo inesperado ao atualizar as recorrências associadas ao movimento ', '.']); } else { this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this._treasuryService.activeTLog.title, ['Ocorreu algo inesperado ao atualizar o movimento ', '.']); }
-
         }
       })
     }
@@ -87,19 +90,23 @@ export class UpdateRecurrencyModalComponent {
       const HTTP_PARAMS = new HttpParams().set('type', 'budget').set('budget', JSON.stringify(this._budgetService.recurrenyTempBudgetlog)).set('fields', JSON.stringify(selectedFieldsToMassUpdate))
 
       let call;
-      if (update) { call = this._http.post('http://localhost:16190/updaterecurrency', HTTP_PARAMS, { responseType: 'text' }) }
-      else { call = this._http.post('http://localhost:16190/updatetreasurylog', HTTP_PARAMS, { responseType: 'text' }) }
+      if (update) { call = this._http.post('http://localhost:16190/updaterecurrency', HTTP_PARAMS, { responseType: 'json' }) }
+      else { call = this._http.post('http://localhost:16190/updatetreasurylog', HTTP_PARAMS, { responseType: 'json' }) }
 
       call.subscribe({
         next: codeReceived => {
-          this._budgetService.fetchBudgetLog('saveBudgetLog', this._budgetService.recurrenyTempBudgetlog.id);
-          const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-          if (update) { this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', this._treasuryService.activeTLog.title, ['O movimento ', ' e respetivas recorrências, foram atualizadas com sucesso.']) } else { this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', this._treasuryService.activeTLog.title, ['O movimento ', ' foi atualizado com sucesso.']) };
+          const RESP = codeReceived as string[];
+          if (RESP[0] !== 'MHQERROR') {
+            this._budgetService.fetchBudgetLog('saveBudgetLog', this._budgetService.recurrenyTempBudgetlog.id);
+            const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
+            this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', '', [RESP[0], '']);
+          }
+          else {
+            this._categoriesSnackBarService.triggerMHQSnackbar(false, 'warning_amber', '', [RESP[1], '']);
+          }
         },
         error: err => {
           this._errorHandlingService.handleError(err);
-          const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-          if (update) { this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this._treasuryService.activeTLog.title, ['Ocorreu algo inesperado ao atualizar as recorrências associadas ao movimento ', '.']); } else { this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this._treasuryService.activeTLog.title, ['Ocorreu algo inesperado ao atualizar o movimento ', '.']); }
         }
       })
     }

@@ -65,7 +65,7 @@ export class ReorderCategoriesModalComponent implements OnInit {
         if (RESP[0] === 'MHQERROR') { this._mhqSnackbarService.triggerMHQSnackbar(false, 'sync_problem', 're-ordenar', ['Algo inesperado ao ', ' as categorias.']); return }
         this.categoriesService.fetchCategories('reorderCat');
         const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-        this._mhqSnackbarService.triggerMHQSnackbar(true, 'sync_lock', 're-ordenadas', ['As categorias foram ', ' com sucesso.']);
+        this._mhqSnackbarService.triggerMHQSnackbar(true, 'sync_lock', '', [RESP[0],'']);
       },
       error: err => this._errorHandlingService.handleError(err)
     });
@@ -81,11 +81,11 @@ export class ReorderCategoriesModalComponent implements OnInit {
       next: (codeReceived) => {
         const RESP = codeReceived as string[];
 
-        if (RESP[0] === 'MHQERROR') { this._mhqSnackbarService.triggerMHQSnackbar(false, 'alert', 're-ordenar', ['Algo inesperado ao ', ' as sub-categorias.']); return }
+        if (RESP[0] === 'MHQERROR') { this._mhqSnackbarService.triggerMHQSnackbar(false, 'sync_problem', 're-ordenar', ['Algo inesperado ao ', ' as sub-categorias.']); return }
 
         this.categoriesService.fetchCategories();
         const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-        this._mhqSnackbarService.triggerMHQSnackbar(true, 'smile', 're-ordenadas', ['As sub-categorias foram ', ' com sucesso.']);
+        this._mhqSnackbarService.triggerMHQSnackbar(true, 'sync_lock', '', [RESP[0],'']);
 
       },
       error: err => this._errorHandlingService.handleError(err)
