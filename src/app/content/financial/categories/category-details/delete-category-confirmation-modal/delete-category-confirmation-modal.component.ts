@@ -16,18 +16,20 @@ export class DeleteCategoryConfirmationModalComponent {
 
   constructor(private _mhqSnackbarService: MHQSnackBarsService, public categoriesService: CategoriesService, private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, private _treasuryService: TreasuryService) { }
 
-  deleteCategory(): void {
+  deleteCat(): void {
+    // passar esta validação para o backend -v
     for (let i = 0; i < Object.keys(this._treasuryService.tLogTable).length; i++) {
-      if (this._treasuryService.tLogTable[Object.keys(this._treasuryService.tLogTable)[i]].cat === this.categoriesService.activePreviewCategory.id) { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'report', this.categoriesService.activePreviewCategory.title, ['Não é possível remover a categoria ', ', devido à existência de movimentos associados a esta.']); }
+      if (this._treasuryService.tLogTable[Object.keys(this._treasuryService.tLogTable)[i]].cat === this.categoriesService.activeCat.id) { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'report', this.categoriesService.activeCat.title, ['Não é possível remover a categoria ', ', devido à existência de movimentos associados a esta.']); }
     }
-    const HTTP_PARAMS = new HttpParams().set('cat', JSON.stringify(this.categoriesService.activePreviewCategory))
+
+    const HTTP_PARAMS = new HttpParams().set('cat', JSON.stringify(this.categoriesService.activeCat))
     const CALL = this._http.post('http://localhost:16190/deletecategory', HTTP_PARAMS, { responseType: 'json' })
     CALL.subscribe({
       next: codeReceived => {
         const RESP = codeReceived as string[];
         if (RESP[0] === 'MHQERROR') { this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', '', [RESP[0], '']) }
         else { this._mhqSnackbarService.triggerMHQSnackbar(true, 'recycling', '', [RESP[0], '']) }
-        this.categoriesService.fetchCategories('deleteCategory');
+        this.categoriesService.fetchCategories('deleteCat');
       },
       error: err => this._errorHandlingService.handleError(err)
     })

@@ -42,7 +42,13 @@ export class MonthlyViewComponent implements OnInit {
     this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this._loadingService.categoriesLoadingComplete) { return }
     this.placeholder = new Array(this.gridViewService.getMonthDays(this.gridViewService.monthlyCurrentDate.getFullYear(), this.gridViewService.monthlyCurrentDate.getMonth())).fill(0);
-    this.activeCategories = [...this.categoriesService.allCategories].filter(category => category.active);
+    this.activeCategories = [];
+    for (let i = 0; i < Object.keys(this.categoriesService.catTable).length; i++) {
+      if (this.categoriesService.catTable[Object.keys(this.categoriesService.catTable)[i]].active) {
+        this.activeCategories.push(this.categoriesService.catTable[Object.keys(this.categoriesService.catTable)[i]])
+      }
+    }
+    // this.activeCategories = [...this.categoriesService.allCategories].filter(category => category.active);
     this.monthlyGridSubtitleGenerator();
     this.areCategoriesReady = true;
   }
@@ -166,12 +172,12 @@ export class MonthlyViewComponent implements OnInit {
     switch (source) {
       case 'category':
         this.gridViewService.source = source;
-        this.gridViewService.titleForDetails = `${this.categoriesService.catEnum[catOrSubcat!].title} @ ${day}/${this.gridViewService.monthlyCurrentDate.toLocaleString('default', { month: 'long' })}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
+        this.gridViewService.titleForDetails = `${this.categoriesService.catTable[`'${catOrSubcat!}'`].title} @ ${day}/${this.gridViewService.monthlyCurrentDate.toLocaleString('default', { month: 'long' })}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
         break;
 
       case 'subcategory':
         this.gridViewService.source = source;
-        this.gridViewService.titleForDetails = `${this.categoriesService.subcatEnum[catOrSubcat!].title} @ ${day}/${this.gridViewService.monthlyCurrentDate.toLocaleString('default', { month: 'long' })}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
+        this.gridViewService.titleForDetails = `${this.categoriesService.subcatTable[catOrSubcat!].title} @ ${day}/${this.gridViewService.monthlyCurrentDate.toLocaleString('default', { month: 'long' })}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
         break;
 
       case 'daily':

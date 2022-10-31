@@ -7,6 +7,9 @@ import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-cate
 import { ErrorHandlingService, LoadingService, TimerService } from 'src/assets/services/misc.service';
 import { MHQSnackBarsService } from '../../../../../assets/services/mhq-snackbar.service';
 
+type RecordActions = 'save' | 'cancel'
+
+
 const DEFAULT_FICATEGORY: IFinancialCategory = { id: 0, type: 'expense', title: 'Nova categoria', icon: 'dns', bgcolor: 'rgb(0,0,0)', textcolor: 'rgb(255,255,255)', subcats: [], active: false, order: 0 };
 const DEFAULT_FISUBCATEGORY: IFinancialSubCategory = { id: Date.now(), maincatid: 0, title: 'Nova sub-categoria', budget: 0, active: false, order: 0 };
 
@@ -17,65 +20,60 @@ const DEFAULT_FISUBCATEGORY: IFinancialSubCategory = { id: Date.now(), maincatid
 })
 
 export class NewCategoryComponent implements OnInit {
-  tempFiCategory: IFinancialCategory;
+  tempCat: IFinancialCategory;
 
-  constructor(public categoriesService: CategoriesService, private _http: HttpClient, private _router: Router, private _timerService: TimerService, private _mhqSnackbarService: MHQSnackBarsService, private _errorHandlingService: ErrorHandlingService, public loadingService:LoadingService) { }
+  constructor(public categoriesService: CategoriesService, private _http: HttpClient, private _router: Router, private _timerService: TimerService, private _mhqSnackbarService: MHQSnackBarsService, private _errorHandlingService: ErrorHandlingService, public loadingService: LoadingService) { }
 
   ngOnInit(): void {
     this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this.loadingService.categoriesLoadingComplete) { return }     // loading check
 
     // cria a categoria temporária de acordo com o tipo de introdução
-    if (this.categoriesService.cloningCategory) {
-      this.tempFiCategory = { ...this.categoriesService.activePreviewCategory }; // caso seja duplicação de um registo
-      this.tempFiCategory.id = 0; // é preciso resetar o id (apenas influência visualmente, na chamada à bd eu ignoro este campo)
+    if (this.categoriesService.cloningCat) {
+      this.tempCat = { ...this.categoriesService.activeCat }; // caso seja duplicação de um registo
+      this.tempCat.id = 0; // é preciso resetar o id (apenas influência visualmente, na chamada à bd eu ignoro este campo)
     } else {
-      this.tempFiCategory = JSON.parse(JSON.stringify(DEFAULT_FICATEGORY)); // o rest operator não tava a bombar fixe aqui
+      this.tempCat = JSON.parse(JSON.stringify(DEFAULT_FICATEGORY)); // o rest operator não tava a bombar fixe aqui
     }
-    this.categoriesService.recordBorderStyle['background-color'] = this.tempFiCategory.bgcolor;
+    this.categoriesService.recordBorderStyle['background-color'] = this.tempCat.bgcolor;
   }
 
   // ações de registo
-  newCategoryRecordActions(action: string): void {
+  catRecordActions(action: RecordActions): void {
     switch (action) {
       case 'save':
-        if (this.categoriesService.headerInputsValidation(this.tempFiCategory)) { this.createNewCategory(); }
+        if (this.categoriesService.headerInputsValidation(this.tempCat)) { this.createCat(); }
         break;
 
-      case 'end': default:
+      case 'cancel': default:
         document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
-        this._timerService.timer = setTimeout(navi.bind(null, this._router), 750);
-        function navi(router: Router): void { router.navigate(['/fi/cats']) };
+
+        this._timerService.timer = setTimeout(() => {
+          this._router.navigate(['/fi/cats']);
+        }, 750);
     }
   }
 
-  // adicionar sub-categoria à categoria temporária
-  createSubcategory(): void {
-    this.tempFiCategory.subcats.push({ ...DEFAULT_FISUBCATEGORY });
-  }
-
-  // remover sub-categoria da categoria temporária
-  deleteSubcategory(subcatIndex: number): void {
-    this.tempFiCategory.subcats = this.tempFiCategory.subcats.filter((subcat, i) => subcatIndex !== i);
-  }
-
   // concluí o modo de introdução (manda para bd, faz fresh à listagem e à gaveta)
-  createNewCategory(): void {
-    const HTTP_PARAMS = new HttpParams().set('category', JSON.stringify(this.tempFiCategory));
+  createCat(): void {
+    const HTTP_PARAMS = new HttpParams().set('category', JSON.stringify(this.tempCat));
     const CALL = this._http.post('http://localhost:16190/createnewcategory', HTTP_PARAMS, { responseType: 'json' });
     CALL.subscribe({
       next: codeReceived => {
         const RESP = codeReceived as string[];
 
         if (RESP[0] !== 'MHQERROR') {
-          this.categoriesService.fetchCategories('saveCategory', Number(codeReceived));
-          this.categoriesService.recordBorderStyle['background-color'] = this.tempFiCategory.bgcolor;
-          this._mhqSnackbarService.triggerMHQSnackbar(true, 'playlist_add', this.tempFiCategory.title, ['A categoria ', ' foi criada com sucesso.']);
+          this.categoriesService.fetchCategories('saveCat', Number(RESP[0]));
+          this.categoriesService.recordBorderStyle['background-color'] = this.tempCat.bgcolor;
+          this._mhqSnackbarService.triggerMHQSnackbar(true, 'playlist_add', this.tempCat.title, ['A categoria ', ' foi criada com sucesso.']);
         } else {
-          this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', '', [`${RESP.slice(1).join('<br>')}`,'']);
+          this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', '', [`${RESP.slice(1).join('<br>')}`, '']);
         }
       },
       error: err => this._errorHandlingService.handleError(err)
     })
   }
+
+  createSubcat(): void { this.tempCat.subcats.push({ ...DEFAULT_FISUBCATEGORY }); }
+  deleteSubcat(subcatIndex: number): void { this.tempCat.subcats = this.tempCat.subcats.filter((subcat, i) => subcatIndex !== i); }
 }

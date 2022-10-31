@@ -21,7 +21,7 @@
       </button></div>
 
     <div *ngIf="!editingMode" class="mhq-quickaction-default"><button mat-icon-button
-        (click)="treasuryService.addMode(true)">
+        (click)="treasuryService.createNewRecord(true)">
         <mat-icon>file_copy</mat-icon>
       </button></div>
 
@@ -118,14 +118,14 @@
         <div class="mhq-input-wrapper mhq-col-4">
           <mat-form-field appearance="fill">
             <mat-label>Categoria</mat-label>
-            <input matInput disabled [value]="categoriesService.catEnum[tLog.cat].title">
+            <input matInput disabled [value]="categoriesService.catTable['\''+tLog.cat+'\''].title">
           </mat-form-field>
         </div>
 
         <div class="mhq-input-wrapper mhq-col-4">
           <mat-form-field appearance="fill">
             <mat-label>Sub-categoria</mat-label>
-            <input matInput disabled [value]="categoriesService.subcatEnum[tLog.subcat].title">
+            <input matInput disabled [value]="categoriesService.subcatTable[tLog.subcat].title">
           </mat-form-field>
         </div>
 
@@ -256,11 +256,11 @@
             <mat-form-field>
               <mat-label>Categoria</mat-label>
               <mat-select [formControl]="catForm" (selectionChange)="catChanged($event)">
-                <mat-select-trigger>{{categoriesService.catEnum[catForm.value].title}}</mat-select-trigger>
-                <mat-option *ngFor="let option of categoriesList" [value]="option.value">
+                <mat-select-trigger>{{categoriesService.catTable['\''+catForm.value+'\''].title}}</mat-select-trigger>
+                <mat-option *ngFor="let option of catList" [value]="option.value">
                   <mat-icon
-                    [ngStyle]="{'background-color':categoriesService.catEnum[option.value].bgcolor,'color':categoriesService.catEnum[option.value].textcolor}">
-                    {{categoriesService.catEnum[option.value].icon}}</mat-icon>
+                    [ngStyle]="{'background-color':categoriesService.catTable['\''+option.value+'\''].bgcolor,'color':categoriesService.catTable['\''+option.value+'\''].textcolor}">
+                    {{categoriesService.catTable['\''+option.value+'\''].icon}}</mat-icon>
                   {{option.title}}
                 </mat-option>
               </mat-select>
@@ -276,7 +276,7 @@
             <mat-form-field>
               <mat-label>Sub categoria</mat-label>
               <mat-select [formControl]="subcatForm">
-                <mat-select-trigger>{{subcatForm.value!== '' ? categoriesService.subcatEnum[subcatForm.value].title :
+                <mat-select-trigger>{{subcatForm.value!== '' ? categoriesService.subcatTable[subcatForm.value].title :
                   ''}}</mat-select-trigger>
                 <mat-option *ngFor="let option of subcategoriesList" [value]="option.value" class="mhq-subcat-select">
                   {{option.title}}

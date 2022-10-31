@@ -69,7 +69,7 @@ export class BudgetingService {
     }
 
     // inicia o modo de introdução / duplicação
-    addMode(cloningBudgetLog: boolean): void {
+    createNewRecord(cloningBudgetLog: boolean): void {
       this.cloningBudgetLog = cloningBudgetLog;
       this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/budget/add']); });
     }

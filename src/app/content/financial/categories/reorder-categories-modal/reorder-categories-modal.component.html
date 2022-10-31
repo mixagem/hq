@@ -3,14 +3,14 @@
 </h1>
 
 <div mat-dialog-content class="mhq-modal-content-wrapper">
-  <mat-tab-group style="height: 100%" (selectedTabChange)="changedTab($event)">
+  <mat-tab-group style="height: 100%" (selectedTabChange)="tabChanged($event)">
 
     <mat-tab label="Categorias">
       <ng-scrollbar>
           <div style="height: calc(100% - 75px);padding:30px 25px" class="mhq-row">
 
             <div class="mhq-col-1">
-              <div *ngFor="let x of categoriesToOrder; let i = index;"
+              <div *ngFor="let x of catsToOrder; let i = index;"
                 style="color:var(--mhq-waikiki-acolor-1);font-weight:500;display:flex;justify-content:flex-start;align-items:center;height: 40px;font-size:18px">
                 {{i+1}}</div>
             </div>
@@ -18,7 +18,7 @@
             <div class="mhq-col-11">
               <div cdkDropList class="mhq-background-box" (cdkDropListDropped)="catDrop($event)">
                 <div class="mhq-category-box" [style]="'border-bottom: solid 1px '+cat.bgcolor"
-                  *ngFor="let cat of categoriesToOrder" cdkDrag>
+                  *ngFor="let cat of catsToOrder" cdkDrag>
                   <div class="mhq-category-box-preview" *cdkDragPlaceholder></div>
                   <mat-icon [style]="'background-color:'+cat.bgcolor+';color:'+cat.textcolor">{{cat.icon}}</mat-icon>
                   <span>{{cat.title}}</span>
@@ -39,10 +39,10 @@
               <mat-label>Categoria</mat-label>
               <mat-select [formControl]="catForm" (selectionChange)="catChanged($event)">
                 <mat-select-trigger>{{catForm.value}}</mat-select-trigger>
-                <mat-option *ngFor="let option of categoriesList" [value]="option">
+                <mat-option *ngFor="let option of catList" [value]="option">
                   <mat-icon
-                    [ngStyle]="{'background-color':categoriesService.catEnum[categoriesService.catTitleEnum[option].id].bgcolor,'color':categoriesService.catEnum[categoriesService.catTitleEnum[option].id].textcolor}">
-                    {{categoriesService.catTitleEnum[option].icon}}</mat-icon>
+                    [ngStyle]="{'background-color':categoriesService.catTable['\''+option.value+'\''].bgcolor,'color':categoriesService.catTable['\''+option.value+'\''].textcolor}">
+                    {{categoriesService.catTable['\''+option.value+'\''].icon}}</mat-icon>
                   {{option}}
                 </mat-option>
               </mat-select>
@@ -50,17 +50,17 @@
           </form>
 
           <ng-scrollbar style="height :calc(100% - 55px)">
-            <div class="mhq-row" *ngIf="subCategoriesToOrder.length>1">
+            <div class="mhq-row" *ngIf="subCatsToOrder.length>1">
               <div class="mhq-col-1">
-                <div *ngFor="let x of subCategoriesToOrder; let i = index;"
+                <div *ngFor="let x of subCatsToOrder; let i = index;"
                   style="color:var(--mhq-waikiki-acolor-1);font-weight:500;display:flex;justify-content:flex-start;align-items:center;height: 40px;font-size:18px">
                   {{i+1}}</div>
               </div>
 
               <div class="mhq-col-11">
                 <div cdkDropList class="mhq-background-box" (cdkDropListDropped)="subcatDrop($event)">
-                  <div class="mhq-category-box" *ngFor="let subcat of subCategoriesToOrder" cdkDrag
-                    [style]="'border-bottom:solid 1px '+categoriesService.catEnum[subcat.maincatid].bgcolor">
+                  <div class="mhq-category-box" *ngFor="let subcat of subCatsToOrder" cdkDrag
+                    [style]="'border-bottom:solid 1px '+categoriesService.catTable['\''+subcat.maincatid+'\''].bgcolor">
                     <div class="mhq-category-box-preview" *cdkDragPlaceholder></div>
                     <p style="padding-left:20px">{{subcat.title}}</p>
                   </div>
@@ -77,10 +77,10 @@
 </div>
 
 <div mat-dialog-actions class="mhq-modal-close-actions">
-  <button *ngIf="tabIndex === 0" mat-stroked-button color="primary" (click)="saveCategoriesOrder()">Re-ordenar
+  <button *ngIf="tabIndex === 0" mat-stroked-button color="primary" (click)="saveCatsOrder()">Re-ordenar
     categorias</button>
-  <button *ngIf="tabIndex === 1" [disabled]="catForm.invalid || subCategoriesToOrder.length <= 1" mat-stroked-button
-    color="primary" (click)="saveSubCategoriesOrder()">Re-ordenar
+  <button *ngIf="tabIndex === 1" [disabled]="catForm.invalid || subCatsToOrder.length <= 1" mat-stroked-button
+    color="primary" (click)="saveSubcatsOrder()">Re-ordenar
     sub-categorias</button>
   <button mat-stroked-button mat-dialog-close color="warn">Cancelar</button>
 </div>

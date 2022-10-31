@@ -16,7 +16,7 @@
       </button>
 
       <mat-menu #categoriesExtraActions="matMenu">
-        <button mat-menu-item (click)="openOrderingModal('300ms','150ms')">
+        <button mat-menu-item (click)="openOrderingModal('300ms','150ms')" [disabled]="!catsExist()">
           <mat-icon>low_priority</mat-icon>
           <span>Re-ordenar categorias</span>
         </button>
@@ -24,7 +24,15 @@
     </div>
   </div>
 
-  <div class="mhq-row mhq-mainform-content">
+  <div class="mhq-row mhq-mainform-content" *ngIf="!catsExist()">
+
+
+    Aida não existem categorias, adicionar categoria
+
+
+  </div>
+
+  <div class="mhq-row mhq-mainform-content" *ngIf="catsExist()">
     <table class="mhq-categories-table" mat-table [dataSource]="dataSource">
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -72,7 +80,7 @@
   </ng-scrollbar>
   </div>
 
-  <div class="mhq-row mhq-mainform-footer">
+  <div class="mhq-row mhq-mainform-footer" *ngIf="catsExist()">
     <mat-paginator #paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
   </div>
 </div>

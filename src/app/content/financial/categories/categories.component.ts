@@ -16,6 +16,9 @@ import { Subject } from 'rxjs';
 })
 
 export class CategoriesComponent implements OnInit {
+  firstLoadingComplete: boolean;
+
+
   isMatTableReady: Boolean; // estado da construção da tabela (vem depois da comunicação à bd)
   dataSource: MatTableDataSource<IFinancialCategory>;  // datasource para tabela
   displayedColumns: string[];  // colunas da tabela
@@ -32,17 +35,21 @@ export class CategoriesComponent implements OnInit {
   ngOnInit(): void {
     //loading check
     this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
-    if (!this._loadingService.categoriesLoadingComplete) { return }
+    if (!this._loadingService.categoriesLoadingComplete || this.firstLoadingComplete) { return }
+    this.firstLoadingComplete = true;
+
+    let categories = [];
+    for (let i = 0; i < Object.keys(this.categoriesService.catTable).length; i++) { categories.push(this.categoriesService.catTable[Object.keys(this.categoriesService.catTable)[i]]) }
 
     //construção mainform
-    this.dataSource = new MatTableDataSource<IFinancialCategory>([...this.categoriesService.allCategories]);
+    this.dataSource = new MatTableDataSource<IFinancialCategory>(categories);
     this.displayedColumns = ['icon', 'title', 'type', 'active'];
     this.isMatTableReady = true;
+    categories = [];
   }
 
   // (onclick) modo consulta
   viewRecordDetails(categoryID: number): void {
-
     this.categoriesService.onInitTrigger.complete; this.categoriesService.onInitTrigger = new Subject<any>();
     //fix para quando consulta-mos enquanto a animção do fecho da gaveta está a fechar -v
     if (document.querySelector('#mhq-category-details')?.classList.contains('animate__slideOutRight')) { document.querySelector('#mhq-category-details')?.classList.replace('animate__slideOutRight', 'animate__slideInRight') }
@@ -50,7 +57,6 @@ export class CategoriesComponent implements OnInit {
   }
 
   // re-order categories action
-  openOrderingModal(enterAnimationDuration: string, exitAnimationDuration: string): void {
-    this._matDialog.open(ReorderCategoriesModalComponent, { width: '700px', height: '75vh', enterAnimationDuration, exitAnimationDuration, });
-  }
+  openOrderingModal(enterAnimationDuration: string, exitAnimationDuration: string): void { this._matDialog.open(ReorderCategoriesModalComponent, { width: '700px', height: '75vh', enterAnimationDuration, exitAnimationDuration, }); }
+  catsExist(): boolean { return Object.keys(this.categoriesService.catTable).length > 0 ? true : false }
 }

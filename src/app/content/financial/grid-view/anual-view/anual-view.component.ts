@@ -40,9 +40,17 @@ export class AnualViewComponent implements OnInit {
 
   ngOnInit(): void {   // triggers remoto do OnInit
     this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
-    if (!this._loadingService.categoriesLoadingComplete ) { return }
+    if (!this._loadingService.categoriesLoadingComplete) { return }
     this.placeholder = new Array(12).fill(0);
-    this.activeCategories = [...this.categoriesService.allCategories].filter(category => category.active);
+
+    this.activeCategories = [];
+    for (let i = 0; i < Object.keys(this.categoriesService.catTable).length; i++) {
+      if (this.categoriesService.catTable[Object.keys(this.categoriesService.catTable)[i]].active) {
+        this.activeCategories.push(this.categoriesService.catTable[Object.keys(this.categoriesService.catTable)[i]])
+      }
+    }
+
+    // this.activeCategories = [...this.categoriesService.allCategories].filter(category => category.active);
     this.yearlyGridSubtitleGenerator();
     this.areCategoriesReady = true;
     this.gridViewService.selectedView = 'anual';
@@ -177,17 +185,17 @@ export class AnualViewComponent implements OnInit {
 
       case 'category':
         this.gridViewService.source = source;
-        this.gridViewService.titleForDetails = `${this.categoriesService.catEnum[catOrSubcat!].title} @ ${new Date(1970,month,1).toLocaleString('default', { month: 'long' })}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
+        this.gridViewService.titleForDetails = `${this.categoriesService.catTable[`'${catOrSubcat!}'`].title} @ ${new Date(1970, month, 1).toLocaleString('default', { month: 'long' })}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
         break;
 
       case 'subcategory':
         this.gridViewService.source = source;
-        this.gridViewService.titleForDetails = `${this.categoriesService.subcatEnum[catOrSubcat!].title} @ ${new Date(1970,month,1).toLocaleString('default', { month: 'long' })}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
+        this.gridViewService.titleForDetails = `${this.categoriesService.subcatTable[catOrSubcat!].title} @ ${new Date(1970, month, 1).toLocaleString('default', { month: 'long' })}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
         break;
 
       case 'daily':
         this.gridViewService.source = source;
-        this.gridViewService.titleForDetails = `Resumo de movimentos @ ${new Date(1970,month,1).toLocaleString('default', { month: 'long' })}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
+        this.gridViewService.titleForDetails = `Resumo de movimentos @ ${new Date(1970, month, 1).toLocaleString('default', { month: 'long' })}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
         break;
     }
 

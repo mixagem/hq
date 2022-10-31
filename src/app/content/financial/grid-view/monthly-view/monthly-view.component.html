@@ -76,7 +76,7 @@
 
           <!-- loop para categorias  -->
           <div *ngFor="let cat of activeCategories" class="mhq-grid-active-category">
-            <div class="mhq-grid-category-title" [ngStyle]="{'background-color':categoriesService.catEnum[cat.id].bgcolor,'color':categoriesService.catEnum[cat.id].textcolor}">
+            <div class="mhq-grid-category-title" [ngStyle]="{'background-color':categoriesService.catTable['\''+cat.id+'\''].bgcolor,'color':categoriesService.catTable['\''+cat.id+'\''].textcolor}">
               <mat-icon>{{cat.icon}}</mat-icon>{{cat.title}}
             </div>
 
@@ -84,7 +84,7 @@
 
             <div *ngFor="let subcat of cat.subcats; let i = index;"
               [ngClass]="subcat.active? isLastSubcat(cat,i) :'mhq-inactive-subcategory'"
-              class="mhq-grid-subcategory-title" [ngStyle]="{'background-color':categoriesService.catEnum[cat.id].bgcolor,'color':categoriesService.catEnum[cat.id].textcolor}">
+              class="mhq-grid-subcategory-title" [ngStyle]="{'background-color':categoriesService.catTable['\''+cat.id+'\''].bgcolor,'color':categoriesService.catTable['\''+cat.id+'\''].textcolor}">
               {{subcat.title}}
             </div>
 
@@ -119,7 +119,7 @@
 
             <!-- celulas da categoria -->
             <div class="mhq-row">
-              <div *ngFor="let x of placeholder; let i = index;" [ngStyle]="{'background-color':categoriesService.catEnum[cat.id].bgcolor,'color':categoriesService.catEnum[cat.id].textcolor}"
+              <div *ngFor="let x of placeholder; let i = index;" [ngStyle]="{'background-color':categoriesService.catTable['\''+cat.id+'\''].bgcolor,'color':categoriesService.catTable['\''+cat.id+'\''].textcolor}"
                 class="mhq-category-summary"
                 [ngClass]="monthlySnapshots.categories[cat.id][i] === 0? 'mhq-cat-cell-null':'mhq-cat-cell-not-null'"
                 (click)="showDailyCatDetails(cat.id,i+1)">
@@ -132,7 +132,7 @@
             <div class="mhq-row" *ngFor="let subcat of cat.subcats">
               <div *ngFor="let x of placeholder; let i = index;" style="width:100%;">
                 <div *ngIf="subcat.active" class="mhq-active-subcat-cell"
-                  [ngStyle]="{'background-color':categoriesService.catEnum[cat.id].bgcolor,'color':categoriesService.catEnum[cat.id].textcolor}"
+                  [ngStyle]="{'background-color':categoriesService.catTable['\''+cat.id+'\''].bgcolor,'color':categoriesService.catTable['\''+cat.id+'\''].textcolor}"
                   [ngClass]="monthlySnapshots.subcategories[subcat.id][i]===0? 'mhq-null-cell':''"
                   (click)="showDailySubCatDetails(subcat.id,i+1)">
                   <span>{{monthlySnapshots.subcategories[subcat.id][i] | number:'1.2-2':'pt'}}</span>

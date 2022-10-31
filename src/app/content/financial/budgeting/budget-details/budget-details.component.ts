@@ -28,7 +28,7 @@ export class BudgetDetailsComponent implements OnInit {
   budgetLogDatepicker: MatDatepicker<any>;   // datepickers
   budgetLogDatepickerForm: FormControl<any>;
   catForm: FormControl   // autocomplete categoria
-  categoriesList: string[] = [];
+  catList: string[] = [];
   subcatForm: FormControl  // autocomplete sub categoria
   subcategoriesList: string[] = [];
   id: number;   // id do movimento em consulta
@@ -56,13 +56,16 @@ export class BudgetDetailsComponent implements OnInit {
     this.tempBudgetLog = JSON.parse(JSON.stringify(this.budgetLog));
     this.budgetService.activeBudgetLog = JSON.parse(JSON.stringify(this.budgetLog));
     this.budgetLogDatepickerForm = new FormControl(new Date(this.budgetLog.date), [Validators.required]);
-    this.catForm = new FormControl(this.categoriesService.catEnum[this.tempBudgetLog.cat].title, [Validators.required]);
-    this.subcatForm = new FormControl({ value: this.categoriesService.subcatEnum[this.tempBudgetLog.subcat].title, disabled: true }, [Validators.required]);
-    this.categoriesService.catEnum[this.tempBudgetLog.cat].subcats.forEach((subcat: { title: string; }) => { this.subcategoriesList.push(subcat.title) });
+    this.catForm = new FormControl(this.categoriesService.catTable[`'${this.tempBudgetLog.cat}'`].title, [Validators.required]);
+    this.subcatForm = new FormControl({ value: this.categoriesService.subcatTable[this.tempBudgetLog.subcat].title, disabled: true }, [Validators.required]);
+    this.categoriesService.catTable[`'${this.tempBudgetLog.cat}'`].subcats.forEach((subcat: { title: string; }) => { this.subcategoriesList.push(subcat.title) });
     this.subcatForm.enable();
-    this.categoriesService.allCategories.forEach(cat => { this.categoriesList.push(cat.title) });
+    for(let i = 0; i < Object.keys(this.categoriesService.catTable).length; i++){
+      this.catList.push(this.categoriesService.catTable[Object.keys(this.categoriesService.catTable)[i]].title)
+    }
+    // this.categoriesService.allCategories.forEach(cat => { this.catList.push(cat.title) });
     this.getRecurrencyFamily();
-    this.budgetService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.budgetLog.cat].bgcolor;
+    this.budgetService.recordBorderStyle['background-color'] = this.categoriesService.catTable[`'${this.tempBudgetLog.cat}'`].bgcolor;
   }
 
   getRecurrencyFamily(): void {
@@ -108,19 +111,19 @@ export class BudgetDetailsComponent implements OnInit {
       case 'start':
         this.tempBudgetLog = JSON.parse(JSON.stringify(this.budgetLog));
         this.refreshSubcategoryList(this.tempBudgetLog.cat);
-        this.catForm = new FormControl(this.categoriesService.catEnum[this.tempBudgetLog.cat].title, [Validators.required]);
-        this.subcatForm = new FormControl(this.categoriesService.subcatEnum[this.tempBudgetLog.subcat].title, [Validators.required]);
+        this.catForm = new FormControl(this.categoriesService.catTable[`'${this.tempBudgetLog.cat}'`].title, [Validators.required]);
+        this.subcatForm = new FormControl(this.categoriesService.subcatTable[this.tempBudgetLog.subcat].title, [Validators.required]);
         this.subcategoriesList.length > 0 ? this.subcatForm.enable() : this.subcatForm.disable();
         this.editingMode = true;
         break;
 
       case 'save':
         if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'categoria/sub-categoria', ['O par ', ' não se encontra definido.']); }
-        const CATEGORY = this.categoriesService.catTitleEnum[`${this.catForm.value}`];
+        // const CATEGORY = this.categoriesService.catTitleEnum[`${this.catForm.value}`];
         this.tempBudgetLog.date = this.budgetLogDatepickerForm.value.getTime();
-        this.tempBudgetLog.cat = CATEGORY.id;
-        this.tempBudgetLog.subcat = this.categoriesService.subcatTitleEnum[`${this.subcatForm.value}`].id;
-        this.budgetService.recordBorderStyle['background-color'] = CATEGORY.bgcolor;
+        // this.tempBudgetLog.cat = CATEGORY.id;
+        // this.tempBudgetLog.subcat = this.categoriesService.subcatTitleEnum[`${this.subcatForm.value}`].id;
+        // this.budgetService.recordBorderStyle['background-color'] = CATEGORY.bgcolor;
         this.tempBudgetLog.value = Number(this.tempBudgetLog.value.toString().replace(',', '.')); // conversão de vírgulas para pontos
         if (!this.tempBudgetLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) {
           return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
@@ -169,8 +172,8 @@ export class BudgetDetailsComponent implements OnInit {
 
   refreshSubcategoryList(catID: number = 0, catTitle: string = ''): void {
     let category: IFinancialCategory;
-    if (catID !== 0) { category = this.categoriesService.catEnum[catID]; }
-    if (catTitle !== '') { category = this.categoriesService.catTitleEnum[`${catTitle}`] }
+    if (catID !== 0) { category = this.categoriesService.catTable[`'${catID}'`]; }
+    // if (catTitle !== '') { category = this.categoriesService.catTitleEnum[`${catTitle}`] }
     this.subcategoriesList = [];
     category!.subcats.forEach(subcat => { this.subcategoriesList.push(subcat.title) });
   }

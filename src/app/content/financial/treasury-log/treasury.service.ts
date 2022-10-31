@@ -43,12 +43,13 @@ export class TreasuryService {
       next: (codeReceived) => {
         const RESP = codeReceived as ITreasuryLog[];
 
+        this.tLogTable = {}; RESP.forEach(tlog => { this.tLogTable[`'${tlog.id}'`] = tlog; });
+        this._loadingService.treasuryLoadingComplete = true;
+
         switch (source) {
 
           case 'saveTLog':
             this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs', LogID]); });
-            this.tLogTable = {}; RESP.forEach(tlog => { this.tLogTable[`'${tlog.id}'`] = tlog; });
-            this._loadingService.treasuryLoadingComplete = true;
             break;
 
           case 'deleteTLog':
@@ -56,16 +57,11 @@ export class TreasuryService {
             this._timerService.timer = setTimeout(() => {
               const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
               this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs']); });
-              this.tLogTable = {}; RESP.forEach(tlog => { this.tLogTable[`'${tlog.id}'`] = tlog; });
-              this._loadingService.treasuryLoadingComplete = true;
             }, 750);
             break;
-
-          case 'loadTLog': default:
-            this.tLogTable = {}; RESP.forEach(tlog => { this.tLogTable[`'${tlog.id}'`] = tlog });
-            this._loadingService.treasuryLoadingComplete = true;
-
         }
+
+
         this.onInitTriggerCall();
       },
       error: err => this._errorHandlingService.handleError(err)
@@ -73,7 +69,7 @@ export class TreasuryService {
   }
 
   // inicia o modo de introdução / duplicação
-  addMode(cloningTLog: boolean): void {
+  createNewRecord(cloningTLog: boolean): void {
     this.cloningTLog = cloningTLog;
     this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/tlogs/add']); });
   }

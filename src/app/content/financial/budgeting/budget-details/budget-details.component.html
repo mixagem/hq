@@ -22,7 +22,7 @@
       </button></div>
 
     <div *ngIf="!editingMode" class="mhq-quickaction-default"><button mat-icon-button
-        (click)="budgetService.addMode(true)">
+        (click)="budgetService.createNewRecord(true)">
         <mat-icon>file_copy</mat-icon>
       </button></div>
 
@@ -99,14 +99,14 @@
         <div class="mhq-input-wrapper mhq-col-4">
           <mat-form-field appearance="fill">
             <mat-label>Categoria</mat-label>
-            <input matInput disabled [value]="categoriesService.catEnum[budgetLog.cat].title">
+            <input matInput disabled [value]="categoriesService.catTable['\''+budgetLog.cat+'\''].title">
           </mat-form-field>
         </div>
 
         <div class="mhq-input-wrapper mhq-col-4">
           <mat-form-field appearance="fill">
             <mat-label>Sub-categoria</mat-label>
-            <input matInput disabled [value]="categoriesService.subcatEnum[budgetLog.subcat].title">
+            <input matInput disabled [value]="categoriesService.subcatTable[budgetLog.subcat].title">
           </mat-form-field>
         </div>
 
@@ -239,10 +239,10 @@
               <mat-label>Categoria</mat-label>
               <mat-select [formControl]="catForm" (selectionChange)="catChanged($event)">
                 <mat-select-trigger>{{catForm.value}}</mat-select-trigger>
-                <mat-option *ngFor="let option of categoriesList" [value]="option">
-                  <mat-icon
-                    [ngStyle]="{'background-color':categoriesService.catEnum[categoriesService.catTitleEnum[option].id].bgcolor,'color':categoriesService.catEnum[categoriesService.catTitleEnum[option].id].textcolor}">
-                    {{categoriesService.catTitleEnum[option].icon}}</mat-icon>
+                <mat-option *ngFor="let option of catList" [value]="option">
+                  <!-- <mat-icon
+                    [ngStyle]="{'background-color':categoriesService.catTable[categoriesService.catTitleEnum[option].id].bgcolor,'color':categoriesService.catTable[categoriesService.catTitleEnum[option].id].textcolor}">
+                    {{categoriesService.catTitleEnum[option].icon}}</mat-icon> -->
                   {{option}}
                 </mat-option>
               </mat-select>

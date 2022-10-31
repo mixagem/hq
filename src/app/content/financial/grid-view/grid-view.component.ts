@@ -15,7 +15,7 @@ export class GridViewComponent {
   constructor(public gridViewService: GridViewService, private _categoriesService: CategoriesService, public router: Router, private _treasuryService: TreasuryService) { }
 
   navigationFix(target: string): void {
-    this._categoriesService.cloningCategory = false;
+    this._categoriesService.cloningCat = false;
     this._treasuryService.cloningTLog = false;
     this.router.navigateByUrl(`/fi/${target}`, { skipLocationChange: true }).then(() => { this.router.navigate([`/fi/${target}/add`]); });
   }

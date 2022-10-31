@@ -30,7 +30,7 @@ type RecordActions = 'edit' | 'save' | 'cancel'
 export class TreasuryDetailsComponent implements OnInit {
   firstLoadingComplete: boolean;
 
-  id: string;             // id do movimento em consulta
+  id: number;             // id do movimento em consulta
   tLog: ITreasuryLog;     // clone do movimento utilizado no modo de consulta
   tempTLog: ITreasuryLog; // clone do movimento utilizado no modo edição
   editingMode: boolean;   // boolean com o estado do modo de edição
@@ -39,7 +39,7 @@ export class TreasuryDetailsComponent implements OnInit {
   tLogDatepickerForm: FormControl<any>; // datepickers
 
   catForm: FormControl                  // autocomplete categoria
-  categoriesList: SelectEnum[] = [];    // autocomplete categoria
+  catList: SelectEnum[] = [];    // autocomplete categoria
 
   subcatForm: FormControl               // autocomplete sub categoria
   subcategoriesList: SelectEnum[] = []; // autocomplete sub categoria
@@ -64,7 +64,7 @@ export class TreasuryDetailsComponent implements OnInit {
     if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.treasuryLoadingComplete || this.firstLoadingComplete) { return }
     this.firstLoadingComplete = true;
 
-    this.id = this._route.snapshot.paramMap.get('id')!;
+    this.id = Number(this._route.snapshot.paramMap.get('id'))!;
     this.tLog = this.treasuryService.tLogTable[`'${this.id}'`];
     this.tempTLog = JSON.parse(JSON.stringify(this.tLog));
     this.treasuryService.activeTLog = JSON.parse(JSON.stringify(this.tLog));
@@ -72,19 +72,19 @@ export class TreasuryDetailsComponent implements OnInit {
 
     this.tLogDatepickerForm = new FormControl(new Date(this.tLog.date), [Validators.required]);
 
-    this.categoriesList = [];
-    for (let i = 0; i < Object.keys(this.categoriesService.catEnum).length; i++) { this.categoriesList.push({ title: this.categoriesService.catEnum[Object.keys(this.categoriesService.catEnum)[i]].title, value: this.categoriesService.catEnum[Object.keys(this.categoriesService.catEnum)[i]].id }) }
+    this.catList = [];
+    for (let i = 0; i < Object.keys(this.categoriesService.catTable).length; i++) { this.catList.push({ title: this.categoriesService.catTable[Object.keys(this.categoriesService.catTable)[i]].title, value: this.categoriesService.catTable[Object.keys(this.categoriesService.catTable)[i]].id }) }
     this.catForm = new FormControl(this.tempTLog.cat, [Validators.required]);
 
     this.subcategoriesList = [];
-    this.categoriesService.catEnum[this.tempTLog.cat].subcats.forEach((subcat: { title: string; id: number }) => { this.subcategoriesList.push({ title: subcat.title, value: subcat.id }) });
+    this.categoriesService.catTable[`'${this.tempTLog.cat}'`].subcats.forEach((subcat: { title: string; id: number }) => { this.subcategoriesList.push({ title: subcat.title, value: subcat.id }) });
     this.subcatForm = new FormControl({ value: this.tempTLog.subcat, disabled: false }, [Validators.required]);
 
     this.efatsList = [];
     for (let i = 0; i < Object.keys(this.efaturaService.efaturaEnum).length; i++) { this.efatsList.push({ title: this.efaturaService.efaturaEnum[i].title, value: i }) }
     this.efatForm = new FormControl({ value: this.tempTLog.efat, disabled: !this.tempTLog.nif || this.tempTLog.efatcheck }, [Validators.required]);
 
-    this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.tLog.cat].bgcolor;
+    this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catTable[`'${this.tLog.cat}'`].bgcolor;
   }
 
   getRecurrencyFamily(): void {
@@ -109,7 +109,7 @@ export class TreasuryDetailsComponent implements OnInit {
 
     CALL.subscribe({
       next: codeReceived => {
-        this.treasuryService.fetchTreasuryLog('saveTLog', this.tempTLog.id);
+        this.treasuryService.fetchTreasuryLog('saveTLog', this.id);
         this.editingMode = false;
         this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', this.tempTLog.title, ['O movimento ', ' foi atualizado com sucesso.']);
       },
@@ -137,7 +137,7 @@ export class TreasuryDetailsComponent implements OnInit {
         this.tempTLog.cat = this.catForm.value;
         this.tempTLog.subcat = this.subcatForm.value;
         this.tempTLog.efat = this.efatForm.value;
-        this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[`${this.catForm.value}`].bgcolor;
+        this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catTable[`'${this.catForm.value}'`].bgcolor;
 
         this.tempTLog.value = Number(this.tempTLog.value.toString().replace(',', '.')); // conversão de vírgulas para pontos
         if (!this.tempTLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) { return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']); }
@@ -158,7 +158,7 @@ export class TreasuryDetailsComponent implements OnInit {
 
   refreshSubcategoryList(catID: number): void {
     this.subcategoriesList = [];
-    this.categoriesService.catEnum[catID].subcats.forEach((subcat: IFinancialSubCategory) => { this.subcategoriesList.push({ title: subcat.title, value: subcat.id }) });
+    this.categoriesService.catTable[`'${catID}'`].subcats.forEach((subcat: IFinancialSubCategory) => { this.subcategoriesList.push({ title: subcat.title, value: subcat.id }) });
   }
 
   catChanged(event: MatSelectChange): void {

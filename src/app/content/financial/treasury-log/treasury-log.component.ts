@@ -51,4 +51,8 @@ export class TreasuryLogComponent implements OnInit {
     if (document.querySelector('#mhq-category-details')?.classList.contains('animate__slideOutRight')) { document.querySelector('#mhq-category-details')?.classList.replace('animate__slideOutRight', 'animate__slideInRight') }
     this.router.navigateByUrl('/fi/tlogs', { skipLocationChange: true }).then(() => { this.router.navigate(['/fi/tlogs', logID]); });
   }
+
+  tLogsExist() {
+    return Object.keys(this.treasuryService.tLogTable).length > 0 ? true : false
+  }
 }

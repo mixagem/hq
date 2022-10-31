@@ -5,17 +5,17 @@
 <div mat-dialog-content class="mhq-modal-content-wrapper">
 
   <p>Tens a certeza que queres remover a categoria <span class="mhq-category-modal-label"
-    [style]="'background-color:'+categoriesService.activePreviewCategory.bgcolor+';color:'+categoriesService.activePreviewCategory.textcolor">{{categoriesService.activePreviewCategory.title}}</span>
+    [style]="'background-color:'+categoriesService.activeCat.bgcolor+';color:'+categoriesService.activeCat.textcolor">{{categoriesService.activeCat.title}}</span>
   e respetivas sub-categorias?</p>
   <ng-scrollbar>
     <ul>
-      <li *ngFor="let subcat of categoriesService.activePreviewCategory.subcats">{{subcat.title}}</li>
+      <li *ngFor="let subcat of categoriesService.activeCat.subcats">{{subcat.title}}</li>
     </ul>
   </ng-scrollbar>
 
 </div>
 
 <div mat-dialog-actions class="mhq-modal-close-actions">
-  <button mat-flat-button color="warn" (click)="deleteCategory()">Remover categoria</button>
+  <button mat-flat-button color="warn" (click)="deleteCat()">Remover categoria</button>
   <button mat-stroked-button mat-dialog-close color="primary">Cancelar</button>
 </div>

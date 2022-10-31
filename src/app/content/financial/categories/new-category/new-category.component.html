@@ -6,11 +6,11 @@
       <mat-icon>close</mat-icon>
     </div>
 
-    <div class="mhq-quickaction-save" (click)="newCategoryRecordActions('save')"><button mat-icon-button>
+    <div class="mhq-quickaction-save" (click)="catRecordActions('save')"><button mat-icon-button>
         <mat-icon>save</mat-icon>
       </button></div>
 
-    <div class="mhq-quickaction-delete" (click)="newCategoryRecordActions('end')"><button mat-icon-button>
+    <div class="mhq-quickaction-delete" (click)="catRecordActions('cancel')"><button mat-icon-button>
         <mat-icon>not_interested</mat-icon>
       </button></div>
 
@@ -37,26 +37,26 @@
         <div class="mhq-input-wrapper mhq-col-1">
           <mat-form-field appearance="fill">
             <mat-label>ID</mat-label>
-            <input matInput disabled [value]="tempFiCategory.id">
+            <input matInput disabled [value]="tempCat.id">
           </mat-form-field>
         </div>
 
         <div class="mhq-input-wrapper mhq-col-8">
           <mat-form-field appearance="fill">
             <mat-label>Título</mat-label>
-            <input matInput [(ngModel)]="tempFiCategory.title">
+            <input matInput [(ngModel)]="tempCat.title">
           </mat-form-field>
         </div>
 
         <div class="mhq-input-wrapper mhq-col-1">
           <mat-form-field appearance="fill">
             <mat-label>Icon</mat-label>
-            <input matInput [(ngModel)]="tempFiCategory.icon">
+            <input matInput [(ngModel)]="tempCat.icon">
           </mat-form-field>
         </div>
 
         <div class="mhq-input-wrapper mhq-col-2 mhq-checkbox-wrapper">
-          <mat-checkbox color="primary" [(ngModel)]="tempFiCategory.active">Ativa</mat-checkbox>
+          <mat-checkbox color="primary" [(ngModel)]="tempCat.active">Ativa</mat-checkbox>
         </div>
 
       </div>
@@ -65,7 +65,7 @@
 
         <div class="mhq-input-wrapper mhq-col-4 mhq-radio-group">
           <p>Tipo:</p>
-          <mat-radio-group color="primary" [(ngModel)]="tempFiCategory.type">
+          <mat-radio-group color="primary" [(ngModel)]="tempCat.type">
             <mat-radio-button value="expense">Despesa</mat-radio-button>
             <mat-radio-button value="income">Rendimento</mat-radio-button>
           </mat-radio-group>
@@ -76,7 +76,7 @@
             <mat-label>Cor fundo etiqueta</mat-label>
             <input matInput [cpPosition]="'bottom'" [cpOutputFormat]="'rgba'" [cpAlphaChannel]="'disabled'"
               [cpPositionOffset]="'5%'" [cpPositionRelativeToArrow]="true" [cpCancelButton]="true" [cpOKButton]="true"
-              [cpSaveClickOutside]="true" [(colorPicker)]="tempFiCategory.bgcolor" [(ngModel)]="tempFiCategory.bgcolor">
+              [cpSaveClickOutside]="true" [(colorPicker)]="tempCat.bgcolor" [(ngModel)]="tempCat.bgcolor">
           </mat-form-field>
         </div>
 
@@ -85,8 +85,8 @@
             <mat-label>Cor texto etiqueta</mat-label>
             <input matInput [cpPosition]="'bottom'" [cpOutputFormat]="'rgba'" [cpAlphaChannel]="'disabled'"
               [cpPositionOffset]="'5%'" [cpPositionRelativeToArrow]="true" [cpCancelButton]="true" [cpOKButton]="true"
-              [cpSaveClickOutside]="true" [(colorPicker)]="tempFiCategory.textcolor"
-              [(ngModel)]="tempFiCategory.textcolor">
+              [cpSaveClickOutside]="true" [(colorPicker)]="tempCat.textcolor"
+              [(ngModel)]="tempCat.textcolor">
           </mat-form-field>
         </div>
 
@@ -102,16 +102,16 @@
         </div>
       </h1>
 
-      <div *ngIf="tempFiCategory.subcats.length===0" class="mhq-row mhq-no-subcategories">
+      <div *ngIf="tempCat.subcats.length===0" class="mhq-row mhq-no-subcategories">
 
-        <div (click)="createSubcategory()">
+        <div (click)="createSubcat()">
           <mat-icon>add</mat-icon>
         </div>
         <p>Carrega para adicionar uma nova sub-categoria</p>
 
       </div>
 
-      <table *ngIf="tempFiCategory.subcats.length>0">
+      <table *ngIf="tempCat.subcats.length>0">
         <thead>
           <tr>
             <th>Título</th>
@@ -121,10 +121,10 @@
           </tr>
         </thead>
       </table>
-      <ng-scrollbar *ngIf="tempFiCategory.subcats.length>0" style="height: 100%;width: 100%;">
+      <ng-scrollbar *ngIf="tempCat.subcats.length>0" style="height: 100%;width: 100%;">
         <table id="edit-table">
           <tbody>
-            <tr *ngFor="let tempsubcat of tempFiCategory.subcats; let i = index;">
+            <tr *ngFor="let tempsubcat of tempCat.subcats; let i = index;">
               <td>
                 <mat-form-field appearance="fill">
                   <input matInput [(ngModel)]="tempsubcat.title">
@@ -140,7 +140,7 @@
                   <mat-checkbox color="primary" [(ngModel)]="tempsubcat.active"></mat-checkbox>
                 </div>
               </td>
-              <td (click)="deleteSubcategory(i)">
+              <td (click)="deleteSubcat(i)">
                 <div class="mhq-mat-inputs-margin">
                   <button mat-icon-button color="warn">
                     <mat-icon>delete</mat-icon>
@@ -149,7 +149,7 @@
               </td>
             </tr>
             <tr>
-              <td class="mhq-add-subcat-cell" colspan="6" (click)="createSubcategory()">
+              <td class="mhq-add-subcat-cell" colspan="6" (click)="createSubcat()">
                 <div class="mhq-add-subcat"><mat-icon>add</mat-icon>adicionar sub-categoria</div>
               </td>
             </tr>

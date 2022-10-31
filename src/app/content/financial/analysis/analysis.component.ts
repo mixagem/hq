@@ -56,8 +56,8 @@ export class AnalysisComponent implements OnInit {
   getSnapshotForGraphs(type: string, year: number, catids: number[], graph: number): void {
     // ano, categorias, subcategorias
     const CAT_TITLES: string[] = [];
-    if (type === 'cat') { catids.forEach(catID => { CAT_TITLES.push(this._categoriesService.catEnum[catID].title) }); }
-    if (type === 'subcat') { catids.forEach(subcatID => { CAT_TITLES.push(this._categoriesService.subcatEnum[subcatID].title) }); }
+    if (type === 'cat') { catids.forEach(catID => { CAT_TITLES.push(this._categoriesService.catTable[`'${catID}'`].title) }); }
+    if (type === 'subcat') { catids.forEach(subcatID => { CAT_TITLES.push(this._categoriesService.subcatTable[subcatID].title) }); }
 
     const HTTP_PARAMS = new HttpParams().set('year', year).set('type', type).set('cats', JSON.stringify(catids)).set('titles', JSON.stringify(CAT_TITLES));
     const CALL = this._http.post('http://localhost:16190/testesnapshot', HTTP_PARAMS, { responseType: 'json' });

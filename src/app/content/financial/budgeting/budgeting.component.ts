@@ -43,7 +43,6 @@ export class BudgetingComponent implements OnInit {
 
   // navegação para modo de consulta de registo
   viewMode(budgetID: number): void {
-    console.log('view mode trigger')
     this.budgetService.onInitTrigger.complete; this.budgetService.onInitTrigger = new Subject<any>();
     if (document.querySelector('#mhq-budget-details')?.classList.contains('animate__slideOutRight')) { document.querySelector('#mhq-budget-details')?.classList.replace('animate__slideOutRight', 'animate__slideInRight') }
     this.router.navigateByUrl('/fi/budget', { skipLocationChange: true }).then(() => { this.router.navigate(['/fi/budget', budgetID]); });

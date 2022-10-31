@@ -3,41 +3,41 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
+import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
 import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
 import { ErrorHandlingService, LoadingService, TimerService } from 'src/assets/services/misc.service';
 
+type CatTable = { [key: string]: IFinancialCategory };
+type SubcatTable = { [key: string]: IFinancialSubCategory };
 type RecordBorderStyle = { "background-color": string }
+type FetchOptions = 'saveCat' | 'deleteCat' | 'loadCat' | 'reorderCat'
 
 @Injectable({ providedIn: 'root' })
 
 export class CategoriesService {
-  // enums
-  catEnum: any;
-  subcatEnum: any;
-  catTitleEnum: any;
-  subcatTitleEnum: any;
 
-  currentSubcategoryDBSequence: number; // valor da sequencia de subcategorias da BD
-  onInitTrigger: Subject<any>; // trigger para onInit
+  catTable: CatTable;
+  subcatTable: SubcatTable;
+  cloningCat: Boolean;  // boolean para verificar se é duplicada ou é criada nova categoria
+  activeCat: IFinancialCategory; // clone da categoria atualmente em consulta utilizado para a duplicação
   recordBorderStyle: RecordBorderStyle;// estilo a ser aplicado na gaveta do registo
-  allCategories: IFinancialCategory[];  // categorias existentes em bd
-  cloningCategory: Boolean;  // boolean para verificar se é duplicada ou é criada nova categoria
-  activePreviewCategory: IFinancialCategory; // clone da categoria atualmente em consulta utilizado para a duplicação
+
+  onInitTrigger: Subject<any>; // trigger para onInit
+  currentSubcategoryDBSequence: number; // valor da sequencia de subcategorias da BD
 
   constructor(private _mhqSnackbarService: MHQSnackBarsService, private _http: HttpClient, private _router: Router, private _timerService: TimerService, private _loadingService: LoadingService, private _errorHandlingService: ErrorHandlingService) {
-    this.allCategories = [];
-    this.cloningCategory = false;
+    this.cloningCat = false;
     this.onInitTrigger = new Subject<any>(); // trigger para onInit do componente
     this.recordBorderStyle = { "background-color": 'rgb(0,0,0)' };
-    this.catEnum = {}; this.subcatEnum = {}; this.catTitleEnum = {}; this.subcatTitleEnum = {};
+    this.catTable = {}; this.subcatTable = {};
     this.fetchCategories(); // vai buscar à bd as categorias e movimentos existentes. quando concluído, passa o loadingComplete = true
   }
 
   // trigger para onInit do componente
-  onInitTriggerCall(): void { this.onInitTrigger.next(''); this.onInitTrigger.complete; this.onInitTrigger = new Subject<any>();}
+  onInitTriggerCall(): void { this.onInitTrigger.next(''); this.onInitTrigger.complete; this.onInitTrigger = new Subject<any>(); }
 
   // vai á bd buscar as categorias + atualiza o modo de listagem e o registo em consulta
-  fetchCategories(source: string = '', catID?: number): void {
+  fetchCategories(source: FetchOptions = 'loadCat', catID?: number): void {
     const CALL = this._http.get('http://localhost:16190/fetchcats', { responseType: 'json' });
 
     CALL.subscribe({
@@ -46,31 +46,32 @@ export class CategoriesService {
         if (ERROR_CODE[0] === 'MHQERROR') { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', ERROR_CODE[1], ['', '']); }
         const RESP = codeReceived as IFinancialCategory[];
 
-        this.allCategories = RESP;
-        this.allCategories.forEach(cat => {
-          this.catEnum[`${cat.id}`] = cat;
-          this.catTitleEnum[`${cat.title}`] = cat;
-          cat.subcats.forEach(subcat => {
-            this.subcatEnum[`${subcat.id}`] = subcat;
-            cat.subcats.forEach(subcat => { this.subcatTitleEnum[`${subcat.title}`] = subcat });
-          });
+        this.catTable = {};
+        RESP.forEach(cat => {
+          this.catTable[`'${cat.id}'`] = cat;
+          cat.subcats.forEach(subcat => { this.subcatTable[`${subcat.id}`] = subcat; });
         });
-
         this._loadingService.categoriesLoadingComplete = true; // loading das categorias pronto
 
+        switch (source) {
 
-        // encaminha para o registo em consulta
-        if (source === 'saveCategory') { this._router.navigateByUrl('/fi/cats', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/cats', catID]); }); }
+          case 'saveCat':
+            this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/cats', catID]); });
+            break;
 
-        // fecha a gaveta e envia para o modo de listagem
-        if (source === 'deleteCategory') {
-          document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
-          this._timerService.timer = setTimeout(navi.bind(null, this._router), 750);
-          function navi(router: Router): void {
-            const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-            router.navigateByUrl('/', { skipLocationChange: true }).then(() => { router.navigate(['/fi/cats']); });
-          }
+          case 'deleteCat':
+            document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
+            this._timerService.timer = setTimeout(() => {
+              const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
+              this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/cats']); });
+            }, 750);
+            break;
+
+          case 'reorderCat':
+            this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/cats']); });
+            break;
         }
+
         this.onInitTriggerCall();
       },
       error: err => this._errorHandlingService.handleError(err)
@@ -78,23 +79,9 @@ export class CategoriesService {
   }
 
   // abre a gaveta do registo e encaminha para o  modo de introdução
-  createNewRecord(cloningCategory: boolean): void {
-    this.cloningCategory = cloningCategory;
+  createNewRecord(cloningCat: boolean): void {
+    this.cloningCat = cloningCat;
     this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/cats/add']); });
-  }
-
-  // método para obter o último id utilizado nas categorias em bd
-  getCurrentSubcategoriesSequence(): void {
-    const CALL = this._http.get('http://localhost:16190/currentsubcategorysequence', { responseType: 'json' });
-    CALL.subscribe({
-      next: (codeReceived) => {
-        const RESP = codeReceived as string[];
-        if (RESP[0] === 'MHQERROR') { this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', RESP[1], ['', '']); location} else {
-          this.currentSubcategoryDBSequence = Number(RESP[0]);
-        }
-      },
-      error: err => { this._errorHandlingService.handleError(err);}
-    });
   }
 
   // fecha a gaveta do registo
@@ -104,24 +91,38 @@ export class CategoriesService {
     function navi(router: Router): void { router.navigate(['/fi/cats']) }
   }
 
-  headerInputsValidation(tempFiCategory: IFinancialCategory): boolean {
-    if (tempFiCategory.icon.includes(' ')) {
+  // método para obter o último id utilizado nas categorias em bd
+  getCurrentSubcategoriesSequence(): void {
+    const CALL = this._http.get('http://localhost:16190/currentsubcategorysequence', { responseType: 'json' });
+    CALL.subscribe({
+      next: (codeReceived) => {
+        const RESP = codeReceived as string[];
+        if (RESP[0] === 'MHQERROR') { this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', RESP[1], ['', '']); location } else {
+          this.currentSubcategoryDBSequence = Number(RESP[0]);
+        }
+      },
+      error: err => { this._errorHandlingService.handleError(err); }
+    });
+  }
+
+  headerInputsValidation(tempCat: IFinancialCategory): boolean {
+    if (tempCat.icon.includes(' ')) {
       this._mhqSnackbarService.triggerMHQSnackbar(false, 'report', 'Icon', ['O ', ' encontra-se incorretamente definido.']);
       return false;
     }
     // não consegui utilizar o formControl com o ColorPicker
-    if (tempFiCategory.bgcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
+    if (tempCat.bgcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
       this._mhqSnackbarService.triggerMHQSnackbar(false, 'report', 'Cor etiqueta', ['A ', ' encontra-se incorretamente definida.']);
       return false;
     }
     // não consegui utilizar o formControl com o ColorPicker
-    if (tempFiCategory.textcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
+    if (tempCat.textcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
       this._mhqSnackbarService.triggerMHQSnackbar(false, 'report', 'Cor texto', ['A ', ' encontra-se incorretamente definida.']);
       return false;
     }
-    // não consegui utilizar o formControl para números indeterminados de inputs
+    // formControl para números indeterminados de inputs dá muita trabalho
     let areSubcatsBugdgetCorrect = true;
-    tempFiCategory.subcats.forEach(subcat => {
+    tempCat.subcats.forEach(subcat => {
       if (!subcat.budget.toString().match(/^[0-9]*$/g)) {
         areSubcatsBugdgetCorrect = false;
       }

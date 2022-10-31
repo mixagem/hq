@@ -37,7 +37,7 @@ export class NewTreasuryLogComponent implements OnInit {
   tLogDatepickerForm: FormControl<any>; // datepickers
 
   catForm: FormControl                  // autocomplete categoria
-  categoriesList: SelectEnum[] = [];    // autocomplete categoria
+  catList: SelectEnum[] = [];    // autocomplete categoria
 
   subcatForm: FormControl               // autocomplete sub categoria
   subcategoriesList: SelectEnum[] = []; // autocomplete sub categoria
@@ -64,7 +64,7 @@ export class NewTreasuryLogComponent implements OnInit {
     if (this.treasuryService.cloningTLog) {
       this.tempTLog = JSON.parse(JSON.stringify(this.treasuryService.activeTLog));
       this.tempTLog.id = 0;
-      this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.tempTLog.cat].bgcolor
+      this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catTable[`'${this.tempTLog.cat}'`].bgcolor
       this.catForm = new FormControl(this.tempTLog.cat, [Validators.required]);
       this.subcatForm = new FormControl(this.tempTLog.subcat, [Validators.required]);
       this.efatForm = new FormControl(this.tempTLog.efat, [Validators.required]);
@@ -82,18 +82,18 @@ export class NewTreasuryLogComponent implements OnInit {
     this.efatsList = [];
     for (let i = 0; i < Object.keys(this.efaturaService.efaturaEnum).length; i++) { this.efatsList.push({ title: this.efaturaService.efaturaEnum[i].title, value: i }) }
 
-    this.categoriesList = [];
-    for (let i = 0; i < Object.keys(this.categoriesService.catEnum).length; i++) {
-      this.categoriesList.push({
-        title: this.categoriesService.catEnum[Object.keys(this.categoriesService.catEnum)[i]].title,
-        value: this.categoriesService.catEnum[Object.keys(this.categoriesService.catEnum)[i]].id
+    this.catList = [];
+    for (let i = 0; i < Object.keys(this.categoriesService.catTable).length; i++) {
+      this.catList.push({
+        title: this.categoriesService.catTable[Object.keys(this.categoriesService.catTable)[i]].title,
+        value: this.categoriesService.catTable[Object.keys(this.categoriesService.catTable)[i]].id
       })
     }
 
     this.recurrencyFrequency = new FormControl({ value: '', disabled: true }, [Validators.required, Validators.min(2)]);
   }
 
-  newTLogRecordActions(action: RecordActions): void {
+  tLogRecordActions(action: RecordActions): void {
     switch (action) {
       case 'save':
         if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'categoria/sub-categoria', ['O par ', ' não se encontra definido.']) }
@@ -109,8 +109,9 @@ export class NewTreasuryLogComponent implements OnInit {
 
       case 'cancel': default:
         document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
-        this._timerService.timer = setTimeout(navi.bind(null, this._router), 750)
-        function navi(router: Router): void { router.navigate(['/fi/tlogs']) }
+        this._timerService.timer = setTimeout(() => {
+          this._router.navigate(['/fi/tlogs']);
+        }, 750);
     }
   }
 
@@ -128,7 +129,7 @@ export class NewTreasuryLogComponent implements OnInit {
 
     CALL.subscribe({
       next: codeReceived => {
-        this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catEnum[this.tempTLog.cat].bgcolor
+        this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catTable[`'${this.tempTLog.cat}'`].bgcolor
         this.treasuryService.fetchTreasuryLog('saveTLog', Number(codeReceived));
         RECURRENCY_OPTIONS.active ? this._categoriesSnackBarService.triggerMHQSnackbar(true, 'playlist_add', this.tempTLog.title, ['Os movimentos ', ' foram criados com sucesso.']) : this._categoriesSnackBarService.triggerMHQSnackbar(true, 'playlist_add', this.tempTLog.title, ['O movimento ', ' foi criado com sucesso.']); // dispara a snackbar
         this.saveComplete = true;
@@ -143,7 +144,7 @@ export class NewTreasuryLogComponent implements OnInit {
 
   refreshSubcategoryList(catID: number): void {
     this.subcategoriesList = [];
-    this.categoriesService.catEnum[catID].subcats.forEach((subcat: IFinancialSubCategory) => { this.subcategoriesList.push({ title: subcat.title, value: subcat.id }) });
+    this.categoriesService.catTable[`'${catID}'`].subcats.forEach((subcat: IFinancialSubCategory) => { this.subcategoriesList.push({ title: subcat.title, value: subcat.id }) });
   }
 
   catChanged(event: MatSelectChange): void {

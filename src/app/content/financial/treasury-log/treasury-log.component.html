@@ -8,13 +8,21 @@
     </h1>
 
     <div class="mhq-mainform-actions">
-      <button mat-flat-button color="accent" (click)="treasuryService.addMode(false)">
+      <button mat-flat-button color="accent" (click)="treasuryService.createNewRecord(false)">
         <mat-icon>add</mat-icon>Adicionar movimento
       </button>
     </div>
   </div>
 
-  <div class="mhq-row mhq-mainform-content">
+  <div class="mhq-row mhq-mainform-content" *ngIf="!tLogsExist()">
+
+
+    Aida não existem movimentos, adicionar movimento
+
+
+  </div>
+
+  <div class="mhq-row mhq-mainform-content" *ngIf="tLogsExist()">
     <table mat-table [dataSource]="dataSource">
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -41,10 +49,10 @@
         <ng-container matColumnDef="cat">
           <th mat-header-cell *matHeaderCellDef> Categoria </th>
           <td mat-cell *matCellDef="let element"
-            [ngStyle]="{'background-color':categoriesService.catEnum[element.cat].bgcolor,'color':categoriesService.catEnum[element.cat].textcolor}">
+            [ngStyle]="{'background-color':categoriesService.catTable['\''+element.cat+'\''].bgcolor,'color':categoriesService.catTable['\''+element.cat+'\''].textcolor}">
             <div>
-              <mat-icon>{{categoriesService.catEnum[element.cat].icon}}</mat-icon>
-              <span>{{categoriesService.subcatEnum[element.subcat].title}}</span>
+              <mat-icon>{{categoriesService.catTable['\''+element.cat+'\''].icon}}</mat-icon>
+              <span>{{categoriesService.subcatTable[element.subcat].title}}</span>
             </div>
           </td>
         </ng-container>
@@ -64,7 +72,7 @@
     </ng-scrollbar>
   </div>
 
-  <div class="mhq-row mhq-mainform-footer">
+  <div class="mhq-row mhq-mainform-footer" *ngIf="tLogsExist()">
     <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
   </div>
 </div>
