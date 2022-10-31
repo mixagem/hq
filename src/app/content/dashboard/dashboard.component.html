@@ -3,29 +3,43 @@
   <div style="width: 50%;overflow-y: auto;word-wrap: break-word;">
     DeleteCategoryConfirmationModalComponent -> passar função para backend<br>
     <ol>
-      <li>
-        <ul>CSS/HTML rework
-          <li>Grid view</li>
-          <li>Snackbars</li>
-        </ul>
-      </li>
+
       <li>
         <ul>Typescript review
-          <li>Tesouraria</li>
           <li>Grid view</li>
         </ul>
-      </li>
-
-
+      </li><br>
       <li>
-        <ul>Features
-          <li>recorrencias v2.1 -> edição em massa com opções</li>
+        <ul>Budgeting
+          <li>Typescript redo</li>
+          <li>Novas features (tonar em despesa legit)</li>
+          <li>Filtro grid view para incluir orçamentos</li>
+        </ul>
+      </li><br>
+      <li>
+        <ul>API
+          <li>Revisao códio servidor</li>
+          <li>Tratamento erros (snackbar)</li>
+        </ul>
+      </li><br>
+      <li>
+        <ul>Efatura
+          <li>Modal para validar a fatura (ecrã movimentos)</li>
+          <li>snapshots a ir buscar o valor à bd</li>
+        </ul>
+      </li><br>
+      <li>Ecrã Análises rethink
+      </li><br>
+      <li>
+        <ul>Outros
           <li>fix input manual da data ecrã movimentos tesouraria (quando é escrito á mão, só aceita a syntax americana)
           </li>
           <li>grid view - decada view</li>
-
+          <li>uniformizar snackbars</li>
         </ul>
-      </li>
+      </li><br>
+      <li>CSS/HTML revisão total
+      </li><br>
     </ol>
 
     <!--
@@ -39,29 +53,6 @@
 
     <h1>thinkerbox</h1>
 
-    <h3>orçamentos</h3>
-    -- mainform igual aos movimentos de tesouraria, mas apenas para registos de orçamentos<br>
-    -- ações do registo: tornar despesa de budget em despesa legit<br>
-    -- atualizar ovewview: adicionar categoria sumatório para despesas em orçamento (adicionar filtro para
-    mostrar/ocultar)<br>
-    <h3>efatura check</h3>
-    -- criar 2 tabuladores: 1 modo listagem, 1 modo análises ()
-    -- modo listagem consiste num filtro de todos os movimentos, que tenham nif incluido<br>
-    -- modo análises consiste em snapshots das várias categorias do efatura (estes snapshots têm o valor da categoria, e
-    o valor dedutivel para irs)<br>
-    -- ações do registo: marcar como validado (fazer select com base nas categorias do efatura)<br>
-    -- ações mainform: validar em massa (abre assistente para validar faturas em massa) <br>
-    -- atualizar tesouraria: adicionar campos "nif incluido" e "identificativo fatura"<br>
-    <h3>Análise salarial</h3>
-    -- graficos (procurar biblioteca 🚀) a mostrar as varias cenas com alterações de salários <br>
-    -- tabela de referencia com taxas iva, e projecção para salários e tals.<br>
-    <h3>Análise orçamental</h3>
-    -- relatório de despesas identificadas como off-budget<br>
-    -- sumatório de off-budgets mais diferença do orçamento para o real. no final, valor a ser enviado para poupança<br>
-    -- gráfico snapshot a mostrar a evolução dos off-budget (0) vs realizado (poder ser positivo, ou negativo)<br><br>
-    <br>
-    <h3>poupanças</h3>
-    -- graficos a mostrar as varias poupanças e sua evolução (e projeção) <br>
 
     <h1>fase 2 - agenda</h1>
     - remover submenu agenda (ficar apenas menu principal)<br>

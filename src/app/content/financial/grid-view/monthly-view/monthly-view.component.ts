@@ -7,7 +7,6 @@ import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
 import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
 import { ErrorHandlingService, LoadingService } from 'src/assets/services/misc.service';
 import { CategoriesService } from '../../categories/categories.service';
-import { TreasuryService } from '../../treasury-log/treasury.service';
 import { GridViewService } from '../grid-view.service';
 import { OverviewDailyDetailsModalComponent } from './overview-daily-details-modal/overview-daily-details-modal.component';
 
@@ -19,6 +18,7 @@ export type MonthlySnapshots = { categories: any, subcategories: any, daily: num
   styleUrls: ['./monthly-view.component.scss']
 })
 export class MonthlyViewComponent implements OnInit {
+  firstLoadingComplete: Boolean;
 
   gridSubtitle: string;
   gridReady: boolean; // variável com o estado de recepção do snapshot
@@ -29,6 +29,7 @@ export class MonthlyViewComponent implements OnInit {
   areCategoriesReady: boolean; // estado de recepção das categorias ativas
 
   constructor(private _http: HttpClient, private _errorHandlingService: ErrorHandlingService, public categoriesService: CategoriesService, private _loadingService: LoadingService, public gridViewService: GridViewService, private _dialog: MatDialog) {
+    this.firstLoadingComplete = false;
     this.gridReady = false;
     this.areCategoriesReady = false;
     this.monthlySnapshots = { categories: {}, subcategories: {}, daily: [] } // inicializar a var
@@ -40,7 +41,8 @@ export class MonthlyViewComponent implements OnInit {
 
   ngOnInit(): void {   // triggers remoto do OnInit
     this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
-    if (!this._loadingService.categoriesLoadingComplete) { return }
+    if (!this._loadingService.categoriesLoadingComplete || this.firstLoadingComplete) { return }
+    this.firstLoadingComplete = true;
     this.placeholder = new Array(this.gridViewService.getMonthDays(this.gridViewService.monthlyCurrentDate.getFullYear(), this.gridViewService.monthlyCurrentDate.getMonth())).fill(0);
     this.activeCategories = [];
     for (let i = 0; i < Object.keys(this.categoriesService.catTable).length; i++) {

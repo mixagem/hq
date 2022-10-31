@@ -20,13 +20,18 @@ const DEFAULT_FISUBCATEGORY: IFinancialSubCategory = { id: Date.now(), maincatid
 })
 
 export class NewCategoryComponent implements OnInit {
+  firstLoadingComplete: boolean;
+
   tempCat: IFinancialCategory;
 
-  constructor(public categoriesService: CategoriesService, private _http: HttpClient, private _router: Router, private _timerService: TimerService, private _mhqSnackbarService: MHQSnackBarsService, private _errorHandlingService: ErrorHandlingService, public loadingService: LoadingService) { }
+  constructor(public categoriesService: CategoriesService, private _http: HttpClient, private _router: Router, private _timerService: TimerService, private _mhqSnackbarService: MHQSnackBarsService, private _errorHandlingService: ErrorHandlingService, public loadingService: LoadingService) {
+    this.firstLoadingComplete = false;
+  }
 
   ngOnInit(): void {
     this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
-    if (!this.loadingService.categoriesLoadingComplete) { return }     // loading check
+    if (!this.loadingService.categoriesLoadingComplete || this.firstLoadingComplete) { return }
+    this.firstLoadingComplete = true;  // loading check
 
     // cria a categoria temporária de acordo com o tipo de introdução
     if (this.categoriesService.cloningCat) {
@@ -35,6 +40,7 @@ export class NewCategoryComponent implements OnInit {
     } else {
       this.tempCat = JSON.parse(JSON.stringify(DEFAULT_FICATEGORY)); // o rest operator não tava a bombar fixe aqui
     }
+
     this.categoriesService.recordBorderStyle['background-color'] = this.tempCat.bgcolor;
   }
 
@@ -47,10 +53,7 @@ export class NewCategoryComponent implements OnInit {
 
       case 'cancel': default:
         document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
-
-        this._timerService.timer = setTimeout(() => {
-          this._router.navigate(['/fi/cats']);
-        }, 750);
+        this._timerService.timer = setTimeout(() => { this._router.navigate(['/fi/cats']); }, 750);
     }
   }
 

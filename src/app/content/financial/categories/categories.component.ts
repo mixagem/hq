@@ -18,7 +18,6 @@ import { Subject } from 'rxjs';
 export class CategoriesComponent implements OnInit {
   firstLoadingComplete: boolean;
 
-
   isMatTableReady: Boolean; // estado da construção da tabela (vem depois da comunicação à bd)
   dataSource: MatTableDataSource<IFinancialCategory>;  // datasource para tabela
   displayedColumns: string[];  // colunas da tabela

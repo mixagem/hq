@@ -142,10 +142,6 @@
 
           <div class="mhq-grid-totals-cells-wrapper">
             <div class="mhq-row mhq-grid-active-category">
-              <!-- <div *ngFor="let x of placeholder; let i = index;" class="mhq-category-summary"
-                [ngClass]="yearlySnapshots.daily[i]===0? 'mhq-null-cell':''" (click)="showMonthlySumDetails(i)">
-                {{yearlySnapshots.daily[i] === 0? '' : yearlySnapshots.daily[i] |
-                number:'1.2-2':'pt'}}</div> -->
               <div *ngFor="let x of placeholder; let i = index;" class="mhq-category-summary"
                 [ngClass]="yearlySnapshots.daily[i]===0? 'mhq-null-cell':''" (click)="showMonthlySumDetails(i)">
                 {{yearlySnapshots.daily[i] === 0? '' : yearlySnapshots.daily[i] |

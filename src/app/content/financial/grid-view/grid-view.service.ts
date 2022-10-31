@@ -10,7 +10,7 @@ export class GridViewService {
   monthlyCurrentDate: Date;
   treasuryLogsForDetails: ITreasuryLog[];
   titleForDetails: string;
-  source:string;
+  source: string;
 
   constructor() {
     this.monthlyCurrentDate = new Date();
@@ -18,9 +18,7 @@ export class GridViewService {
     this.selectedView = 'anual';
   }
 
-  getMonthDays(year: number, month: number): number {
-    return new Date(year, month+1, 0).getDate();
-  };
+  getMonthDays(year: number, month: number): number { return new Date(year, month + 1, 0).getDate(); };
 
 
 }

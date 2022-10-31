@@ -27,7 +27,7 @@ export class ReorderCategoriesModalComponent implements OnInit {
   catList: SelectEnum[] = [];
   tabIndex: number; // tabulador atual
 
-  constructor(private _router: Router, private _mhqSnackbarService: MHQSnackBarsService, private _errorHandlingService: ErrorHandlingService, private _http: HttpClient, public categoriesService: CategoriesService) { }
+  constructor(private _mhqSnackbarService: MHQSnackBarsService, private _errorHandlingService: ErrorHandlingService, private _http: HttpClient, public categoriesService: CategoriesService) { }
 
   ngOnInit(): void {
     this.catsToOrder = [];
@@ -76,19 +76,17 @@ export class ReorderCategoriesModalComponent implements OnInit {
     this.subCatsToOrder.forEach(subcat => { subCategoryOrderArray.push(subcat.id) });
 
     const HTTP_PARAMS = new HttpParams().set('newsubcatorder', JSON.stringify(subCategoryOrderArray))
-    const CALL = this._http.post('http://localhost:16190/ordersubcategories', HTTP_PARAMS, { responseType: 'text' });
+    const CALL = this._http.post('http://localhost:16190/ordersubcategories', HTTP_PARAMS, { responseType: 'json' });
     CALL.subscribe({
       next: (codeReceived) => {
-        switch (Number(codeReceived)) {
-          case 1:
-            this.categoriesService.fetchCategories();
-            const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-            this._mhqSnackbarService.triggerMHQSnackbar(true, 'smile', 're-ordenadas', ['As sub-categorias foram ', ' com sucesso.']);
-            break;
+        const RESP = codeReceived as string[];
 
-          case 0: default:
-            this._mhqSnackbarService.triggerMHQSnackbar(false, 'alert', 're-ordenar', ['Algo inesperado ao ', ' as sub-categorias.']);
-        }
+        if (RESP[0] === 'MHQERROR') { this._mhqSnackbarService.triggerMHQSnackbar(false, 'alert', 're-ordenar', ['Algo inesperado ao ', ' as sub-categorias.']); return }
+
+        this.categoriesService.fetchCategories();
+        const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
+        this._mhqSnackbarService.triggerMHQSnackbar(true, 'smile', 're-ordenadas', ['As sub-categorias foram ', ' com sucesso.']);
+
       },
       error: err => this._errorHandlingService.handleError(err)
     });

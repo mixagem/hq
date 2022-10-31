@@ -109,9 +109,7 @@ export class NewTreasuryLogComponent implements OnInit {
 
       case 'cancel': default:
         document.querySelector('#mhq-category-details')?.classList.replace('animate__slideInRight', 'animate__slideOutRight');
-        this._timerService.timer = setTimeout(() => {
-          this._router.navigate(['/fi/tlogs']);
-        }, 750);
+        this._timerService.timer = setTimeout(() => { this._router.navigate(['/fi/tlogs']); }, 750);
     }
   }
 
