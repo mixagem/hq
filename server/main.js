@@ -1,8 +1,8 @@
-import { savingsGraphSnapshot, generateCatGraphSnapshot } from './savingsMethods.js'
-import { dailyTotalAcomulatedSnapshot, monthlySnapshots, dailyCatDetails, dailySubCatDetails, dailyTotalDetails } from './monthlyViewMethods.js';
-import { monthlyTotalAcomulatedSnapshot, yearlySnapshots, monthlyCatDetails, monthlySubCatDetails, monthlyTotalDetails } from './yearlyViewMethods.js';
-import { orderCategories, orderSubCategories, fetchCategories, createNewCategory, deleteCategory, updateCategory, getSubcategorySequence } from './categoriesMethods.js'
-import { deleteAllRecurrencies, dettachRecurrency, updateRecurrency, getRecurencyLogs, createTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog, createBudgetlog, fetchBudgetLogs } from './treasuryMethods.js';
+import { savingsGraphSnapshot, generateCatGraphSnapshot } from './fi/analysisMethods.js'
+import { dailyTotalAcomulatedSnapshot, monthlySnapshots, dailyCatDetails, dailySubCatDetails, dailyTotalDetails } from './fi/grid-view/monthlyViewMethods.js';
+import { monthlyTotalAcomulatedSnapshot, yearlySnapshots, monthlyCatDetails, monthlySubCatDetails, monthlyTotalDetails } from './fi/grid-view/yearlyViewMethods.js';
+import { orderCategories, orderSubCategories, fetchCategories, createNewCategory, deleteCategory, updateCategory, getSubcategorySequence } from './fi/categoriesMethods.js'
+import { deleteAllRecurrencies, dettachRecurrency, updateRecurrency, getRecurencyLogs, createTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog, createBudgetlog, fetchBudgetLogs } from './fi/treasuryMethods.js';
 
 
 import express from 'express';
@@ -16,19 +16,22 @@ APP.use(cors());
 APP.use(express.urlencoded({ extended: true }));
 APP.listen(PORT, () => console.log(".: MI HQ - Listening on port 16190 :."));
 
+
+// finance -V
+
 // grid :: yearly-view
 APP.post('/monthlysumevo', function (req, res) { return monthlyTotalAcomulatedSnapshot(req, res); }); //snapshot
 APP.post('/monthlycatsevo', function (req, res) { return yearlySnapshots(req, res); }); //snapshot
 APP.post('/monthlydetails', function (req, res) { return monthlyTotalDetails(req, res) })
 APP.post('/monthlycatdetails', function (req, res) { return monthlyCatDetails(req, res) })
 APP.post('/monthlysubcatdetails', function (req, res) { return monthlySubCatDetails(req, res) })
-
 // grid :: monthly-view
 APP.post('/dailysumevo', function (req, res) { return dailyTotalAcomulatedSnapshot(req, res); }); //snapshot
 APP.post('/dailycatsevo', function (req, res) { return monthlySnapshots(req, res); }); //snapshot
 APP.post('/dailydetails', function (req, res) { return dailyTotalDetails(req, res) })
 APP.post('/dailycatdetails', function (req, res) { return dailyCatDetails(req, res) })
 APP.post('/dailysubcatdetails', function (req, res) { return dailySubCatDetails(req, res) })
+
 
 // categories
 APP.get('/fetchcats', function (req, res) { return fetchCategories(req, res); });
@@ -51,8 +54,6 @@ APP.post('/updaterecurrency', function (req, res) { return updateRecurrency(req,
 APP.post('/dettachrecurrency', function (req, res) { return dettachRecurrency(req, res); });
 APP.post('/deleteallrecurrencies', function (req, res) { return deleteAllRecurrencies(req, res); });
 
-// budgeting
-
-// savings
+// analysis
 APP.post('/savingsgraphsnapshot', function (req, res) { return savingsGraphSnapshot(req, res); });
 APP.post('/testesnapshot', function (req, res) { return generateCatGraphSnapshot(req, res); });
