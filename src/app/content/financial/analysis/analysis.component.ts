@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { ScaleType } from '@swimlane/ngx-charts';
 import { LoadingService } from 'src/assets/services/misc.service';
 import { CategoriesService } from '../categories/categories.service';
-import { TreasuryService } from '../treasury-log/treasury.service';
 
 
 export type SavingsSnapshot = {

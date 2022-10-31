@@ -57,15 +57,13 @@ const EFATURA_CATEGORIES: EFaturaCategoryList = {
   }
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 
 export class EfaturaService {
 
   efaturaTable: EFaturaCategoryList;
 
   constructor() {
-    this.efaturaTable = {...EFATURA_CATEGORIES};
+    this.efaturaTable = { ...EFATURA_CATEGORIES };
   }
 }

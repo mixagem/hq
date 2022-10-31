@@ -102,17 +102,18 @@ export function monthlySnapshots(req, res) {
     });
 
     function generateSnapshots() {
-      monthlyMovments.forEach(movement => {
-        if (movement.type === 'expense') {
-          generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getDate()) - 1] = sumToFixed(generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getDate()) - 1], -movement.value);
-          if (subCategoryList.includes(movement.subcat)) { generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getDate()) - 1] = sumToFixed(generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getDate()) - 1], -movement.value) }
-        }
-        else {
-          generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getDate()) - 1] = sumToFixed(generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getDate()) - 1], movement.value);
-          if (subCategoryList.includes(movement.subcat)) { generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getDate()) - 1] = sumToFixed(generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getDate()) - 1], movement.value) };
-        }
-      })
-
+      if (categoryList.length !== 0) {
+        monthlyMovments.forEach(movement => {
+          if (movement.type === 'expense') {
+            generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getDate()) - 1] = sumToFixed(generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getDate()) - 1], -movement.value);
+            if (subCategoryList.includes(movement.subcat)) { generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getDate()) - 1] = sumToFixed(generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getDate()) - 1], -movement.value) }
+          }
+          else {
+            generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getDate()) - 1] = sumToFixed(generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getDate()) - 1], movement.value);
+            if (subCategoryList.includes(movement.subcat)) { generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getDate()) - 1] = sumToFixed(generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getDate()) - 1], movement.value) };
+          }
+        })
+      }
       let monthlyMovmentsNotFiltered = []
       let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => { if (err) { console.error(err.message); } });
       db.serialize(() => {
@@ -163,7 +164,7 @@ export function dailyTotalAcomulatedSnapshot(req, res) {
 
   function generateAcomSnapshot() {
     let dailySumAcomEvo = new Array(MONTH_DAYS).fill(0);
-    dailySumAcomEvo[0] = sumToFixed(initialSum[0],-initialSum[1]);
+    dailySumAcomEvo[0] = sumToFixed(initialSum[0], -initialSum[1]);
     monthlyMovments.forEach(movement => movement.type === 'expense' ?
       dailySumAcomEvo[new Date(movement.date).getDate() - 1] = sumToFixed(dailySumAcomEvo[new Date(movement.date).getDate() - 1], -movement.value) :
       dailySumAcomEvo[new Date(movement.date).getDate() - 1] = sumToFixed(dailySumAcomEvo[new Date(movement.date).getDate() - 1], movement.value));

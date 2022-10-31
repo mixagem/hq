@@ -57,10 +57,10 @@
           <mat-icon>info_outline</mat-icon>Detalhes
         </div>
         <mat-chip-list style="padding-right: 20px;" *ngIf="tLog.nif">
-          <mat-chip style="background-color:#000;color:#fff" *ngIf="!tLog.efatcheck">
-            <mat-icon style="padding-left:5px;padding-right:10px;color:#fff;">
+          <mat-chip style="color:#000;background-color:transparent;border:2px solid #000" *ngIf="!tLog.efatcheck">
+            <mat-icon style="padding-left:5px;padding-right:10px;color:#000;">
               {{efaturaService.efaturaTable[tLog.efat].icon}}</mat-icon>
-            <span style="padding-right:5px;">Por verificar</span>
+            <span style="padding-right:5px;font-weight: 600;">Por verificar</span>
           </mat-chip>
           <mat-chip *ngIf="tLog.efatcheck"
             [style]="'color:#fff;background-color:'+efaturaService.efaturaTable[tLog.efat].color">
@@ -69,6 +69,7 @@
             </mat-icon>
             <span style="padding-right:5px;">Verificado</span>
           </mat-chip>
+
         </mat-chip-list>
 
       </h1>
@@ -205,13 +206,23 @@
           <mat-icon>info_outline</mat-icon>Detalhes
         </div>
 
-        <mat-chip-list style="padding-right: 20px;" *ngIf="tLog.efatcheck">
-          <mat-chip [style]="'color:#fff;background-color:'+efaturaService.efaturaTable[tLog.efat].color">
+        <mat-chip-list style="padding-right: 20px;" >
+
+          <mat-chip [style]="'background-color:var(--mhq-waikiki-acolor-1);color:#fff;'">
+            <mat-icon style="padding-left:5px;padding-right:10px;color:#fff;">
+              edit
+            </mat-icon>
+            <span style="padding-right:5px;font-weight: 600;">Em edição</span>
+          </mat-chip>
+
+          <mat-chip [style]="'color:#fff;background-color:'+efaturaService.efaturaTable[tLog.efat].color" *ngIf="tLog.efatcheck">
             <mat-icon style="padding-left:5px;padding-right:10px;color:#fff;">
               {{efaturaService.efaturaTable[tLog.efat].icon}}
             </mat-icon>
             <span style="padding-right:5px;">Verificado</span>
           </mat-chip>
+
+
         </mat-chip-list>
       </h1>
 
@@ -235,7 +246,8 @@
 
           <mat-form-field appearance="fill">
             <mat-label>Data</mat-label>
-            <input matInput [matDatepicker]="tLogDatepicker" [formControl]="tLogDatepickerForm" [disabled]="tempTLog.efatcheck">
+            <input matInput [matDatepicker]="tLogDatepicker" [formControl]="tLogDatepickerForm"
+              [disabled]="tempTLog.efatcheck">
             <mat-datepicker-toggle matSuffix [for]="tLogDatepicker"></mat-datepicker-toggle>
             <mat-datepicker #tLogDatepicker></mat-datepicker>
           </mat-form-field>
@@ -245,7 +257,7 @@
         <div class="mhq-input-wrapper mhq-col-3">
           <mat-form-field appearance="fill">
             <mat-label>Valor</mat-label>
-            <input matInput [(ngModel)]="tempTLog.value"[disabled]="tempTLog.efatcheck">
+            <input matInput [(ngModel)]="tempTLog.value" [disabled]="tempTLog.efatcheck">
           </mat-form-field>
         </div>
 

@@ -104,26 +104,27 @@ export function yearlySnapshots(req, res) {
     });
 
     function generateSnapshots() {
-      yearlyMovments.forEach(movement => {
-        if (movement.type === 'expense') {
-          generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getMonth())] =
-            sumToFixed(generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getMonth())], - movement.value)
+      if (categoryList.length !== 0) {
+        yearlyMovments.forEach(movement => {
+          if (movement.type === 'expense') {
+            generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getMonth())] =
+              sumToFixed(generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getMonth())], - movement.value)
 
-          if (subCategoryList.includes(movement.subcat)) {
-            generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getMonth())] =
-              sumToFixed(generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getMonth())], - movement.value);
-          };
+            if (subCategoryList.includes(movement.subcat)) {
+              generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getMonth())] =
+                sumToFixed(generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getMonth())], - movement.value);
+            };
 
-        } else {
-          generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getMonth())] =
-            sumToFixed(generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getMonth())], movement.value);
-          if (subCategoryList.includes(movement.subcat)) {
-            generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getMonth())] =
-              sumToFixed(generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getMonth())], movement.value);
-          };
-        }
-      })
-
+          } else {
+            generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getMonth())] =
+              sumToFixed(generatedCategorySnapshots[`${movement.cat}`][Number(new Date(movement.date).getMonth())], movement.value);
+            if (subCategoryList.includes(movement.subcat)) {
+              generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getMonth())] =
+                sumToFixed(generatedSubCategorySnapshots[`${movement.subcat}`][Number(new Date(movement.date).getMonth())], movement.value);
+            };
+          }
+        })
+      }
       let yearlyMovmentsNotFiltered = []
       let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => { if (err) { console.error(err.message); } });
       db.serialize(() => {

@@ -57,6 +57,7 @@ APP.post('/dailysubcatdetails', function (req, res) { return dailySubCatDetails(
 // efatura
 // APP.post('/savingsgraphsnapshot', function (req, res) { return savingsGraphSnapshot(req, res); });
 APP.post('/insertefatura', function (req, res) { return insertEFatura(req, res); });
+APP.get('/efaturasnapshots', function (req, res) { return fetchEFaturaSnapshots(req, res); });
 
 // analysis
 APP.post('/savingsgraphsnapshot', function (req, res) { return savingsGraphSnapshot(req, res); });

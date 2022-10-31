@@ -36,7 +36,6 @@ export function savingsGraphSnapshot(req, res) {
     (SELECT SUM(value)FROM treasurylog WHERE date < ${DATA_INI_MS} AND cat = '2' AND subcat = '4' AND type = 'income') as carbadsum,
     (SELECT SUM(value)FROM treasurylog WHERE date < ${DATA_INI_MS} AND cat = '2' AND subcat = '4' AND type = 'expense') as cargoodsum`, (err, result) => {
 
-      console.log(DATA_INI_MS)
       if (err) { console.error(err.message) }
       else {
 
@@ -116,9 +115,8 @@ export function savingsGraphSnapshot(req, res) {
 
     }
 
-    console.log(homeSnapshotArray)
     err ? console.error(err.message) : res.send([homeSnapshotArray, carSnapshotArray]);
-    console.log('[C1] treasury logs fetch complete');
+    console.log('[S1] complete');
   });
 
 }
@@ -175,9 +173,8 @@ export function generateCatGraphSnapshot(req, res) {
 
 
   db.close((err) => {
-    if(CAT_OR_SUBCAT==='subcat'){console.log(snapshotsArray)}
     err ? console.error(err.message) : res.send(snapshotsArray);
-    console.log('[C1] treasury logs fetch complete');
+    console.log('[S2] complete');
   });
 
 }

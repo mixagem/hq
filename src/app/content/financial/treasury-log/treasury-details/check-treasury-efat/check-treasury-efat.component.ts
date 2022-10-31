@@ -19,8 +19,7 @@ export class CheckTreasuryEfatComponent implements OnInit {
     this.ivaValue = 0;
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
   insertEFatura(): void {
 

@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
 import { ErrorHandlingService, LoadingService, TimerService } from 'src/assets/services/misc.service';
 import { MHQSnackBarsService } from '../../../../../assets/services/mhq-snackbar.service';
+import { Subject } from 'rxjs';
 
 type RecordActions = 'save' | 'cancel'
 
@@ -32,7 +33,7 @@ export class NewCategoryComponent implements OnInit {
     this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this.loadingService.categoriesLoadingComplete || this.firstLoadingComplete) { return }
     this.firstLoadingComplete = true;  // loading check
-
+    this.categoriesService.onInitTrigger.complete; this.categoriesService.onInitTrigger = new Subject<any>();
     // cria a categoria temporária de acordo com o tipo de introdução
     if (this.categoriesService.cloningCat) {
       this.tempCat = { ...this.categoriesService.activeCat }; // caso seja duplicação de um registo

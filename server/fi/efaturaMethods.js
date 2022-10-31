@@ -2,32 +2,30 @@ import sqlite3 from 'sqlite3';
 
 export function fetchEFaturaSnapshots(req, res) {
 
-
   let dbErrors = false;
   const DB = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
-    if (err) { dbErrors = true; console.error(err.message); console.log('[EFATURA 1] Erro ao ligar à bd'); };
+    if (err) { dbErrors = true; console.error(err.message); console.log('[EFAT 1] Erro ao ligar à bd'); };
     console.log('---------------------------')
-    console.log('[EFATURA 1] A buscar snapshots efatura');
+    console.log('[EFAT 1] A gerar snapshots efatura');
   });
 
   let eFaturas = [];
   DB.serialize(() => {
     for (let i = 1; i <= 6; i++) {
       DB.all(`SELECT SUM(value) AS sum FROM efatura WHERE efatcat='${i}'`, (err, resp) => {
-        if (err) { dbErrors = true; console.log('[EFAT 1] Erro ao carregar o valor da sequência de subcategorias'); console.error(err.message); } else {
+        if (err) { dbErrors = true; console.log('[EFAT 1] Erro ao gerar snapshots efatura'); console.error(err.message); } else {
           if (resp[0].sum === null) { eFaturas.push(0) } else { eFaturas.push(resp[0].sum) }
         }
       })
     }
   })
+
   DB.close((err) => {
-    if (err || dbErrors) { console.error(err.message); console.log('[EFATURA 1 Erro ao encerrar a ligação à bd'); res.send(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']); }
-    else { res.send(eFaturas); console.log('[EFAT 1] donezo') }
+    if (err || dbErrors) { console.error(err.message); console.log('[EFAT 1 Erro ao encerrar a ligação à bd'); res.send(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']); }
+    else { res.send(eFaturas); console.log('[EFAT 1] Snapshots efatura gerados com sucesso') }
   });
 
-
 }
-
 
 export function insertEFatura(req, res) {
 
@@ -37,7 +35,7 @@ export function insertEFatura(req, res) {
   const DB = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
     if (err) { dbErrors = true; console.error(err.message); console.log('[EFAT 2] Erro ao ligar à bd'); };
     console.log('---------------------------')
-    console.log('[EFAT 2] A introduzior efatura');
+    console.log('[EFAT 2] A introduzir efatura');
   });
 
 

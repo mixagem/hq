@@ -1,5 +1,9 @@
 
-import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
+import { ErrorHandlingService } from 'src/assets/services/misc.service';
+import { EfaturaService } from './efatura.service';
 
 
 @Component({
@@ -7,15 +11,35 @@ import { Component } from '@angular/core';
   templateUrl: './efatura.component.html',
   styleUrls: ['./efatura.component.scss', '../../../../assets/styles/mhq-mainform.scss']
 })
-export class EfaturaComponent {
+export class EfaturaComponent implements OnInit {
 
-  efatura = [{ title: 'Despesas gerais familiares', 'value': 250 , icon:'family_restroom', color:'#48c1da'},
-  { title: 'Restaurante e alojamento', 'value': 14.86, icon:'restaurant', color:'#febc17' },
-  { title: 'Ginásios', 'value': 0 , icon:'fitness_center', color:'#942192'},
-  { title: 'Cabeleireiros', 'value': 3.74, icon:'content_cut', color:'#a98ddf' },
-  { title: 'Saúde', 'value': 0 , icon:'medical_information', color:'#ff5a59'},
-  { title: 'Passes mensais', 'value': 0 , icon:'directions_bus', color:'#309ffa'}]
+  eFaturaSnapshots: number[];
+  snapshotsReady: boolean;
 
+  constructor(public eFaturaService:EfaturaService, private _http: HttpClient, private _mhqSnackbarService: MHQSnackBarsService, private _errorHandlingService: ErrorHandlingService) {
+    this.eFaturaSnapshots = [];
+    this.snapshotsReady = false;
+  }
+  ngOnInit(): void {
+    this.fetchEFaturaSnapshots();
+  }
 
+  fetchEFaturaSnapshots(): void {
+
+    const CALL = this._http.get('http://localhost:16190/efaturasnapshots', { responseType: 'json' })
+
+    CALL.subscribe({
+      next: codeReceived => {
+        const ERROR_CODE = codeReceived as string[];
+        if (ERROR_CODE[0] === 'MHQERROR') {
+          return this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', '', [ERROR_CODE[1], '']);
+        }
+        const RESP = codeReceived as number[];
+        this.eFaturaSnapshots = RESP;
+        this.snapshotsReady = true;
+      },
+      error: err => this._errorHandlingService.handleError(err)
+    })
+  }
 }
 

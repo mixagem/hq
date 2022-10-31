@@ -103,6 +103,7 @@ export class NewTreasuryLogComponent implements OnInit {
         this.tempTLog.date = this.tLogDatepickerForm.value.getTime();
         this.tempTLog.cat = this.catForm.value;
         this.tempTLog.subcat = this.subcatForm.value;
+        this.tempTLog.efat = this.efatForm.value;
         this.tempTLog.value = Number(this.tempTLog.value.toString().replace(',', '.'))
         if (!this.tempTLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) { return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'warning_amber', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']); }
         this.createTLog();
