@@ -70,7 +70,7 @@ export class NewBudgetComponent implements OnInit {
   }
 
   openMissingCategoriesSnackBar(): void {
-    this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'categoria/sub-categoria', ['O par ', 'não se encontra definido.'])
+    this._categoriesSnackBarService.triggerMHQSnackbar(false, 'warning_amber', 'categoria/sub-categoria', ['O par ', 'não se encontra definido.'])
   }
 
   newBudgetLogRecordActions(action: string): void {
@@ -84,7 +84,7 @@ export class NewBudgetComponent implements OnInit {
         // this.tempBudgetLog.subcat = this.categoriesService.subcatTitleEnum[`${this.subcatForm.value}`].id;
         this.tempBudgetLog.value = Number(this.tempBudgetLog.value.toString().replace(',', '.'))
         if (!this.tempBudgetLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) {
-          return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
+          return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'warning_amber', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
         }
         this.createBugetLog();
         break;
@@ -119,7 +119,7 @@ export class NewBudgetComponent implements OnInit {
       },
       error: err => {
         this._errorHandlingService.handleError(err);
-        RECURRENCY_OPTIONS.active ? this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.tempBudgetLog.title, ['Ocorreu algo inesperado ao criar os movimentos ', '.']) : this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', this.tempBudgetLog.title, ['Ocorreu algo inesperado ao criar o movimento ', '.']); // dispara a snackbar
+        RECURRENCY_OPTIONS.active ? this._categoriesSnackBarService.triggerMHQSnackbar(false, 'warning_amber', this.tempBudgetLog.title, ['Ocorreu algo inesperado ao criar os movimentos ', '.']) : this._categoriesSnackBarService.triggerMHQSnackbar(false, 'warning_amber', this.tempBudgetLog.title, ['Ocorreu algo inesperado ao criar o movimento ', '.']); // dispara a snackbar
         this.saveComplete = true;
       }
     })

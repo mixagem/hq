@@ -98,7 +98,6 @@ export function monthlySnapshots(req, res) {
     });
 
     db.close((err) => {
-      console.log(monthlyMovments)
       err ? console.error(err.message) : generateSnapshots();
     });
 
@@ -152,7 +151,6 @@ export function dailyTotalAcomulatedSnapshot(req, res) {
   let initialSum = [];
   const DB = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => { err ? console.error(err.message) : console.log('[M5] Generating daily acomulated snapshot') });
   DB.serialize(() => {
-    console.log(DATA_INI_MS)
     DB.each(`SELECT * FROM treasurylog WHERE date < ${DATA_FINI_MS} AND date >= ${DATA_INI_MS}`, (err, row) => { err ? console.error(err.message) : monthlyMovments.push(row) })
       .all(`SELECT SUM(value) FROM treasurylog WHERE type='income' AND date < ${DATA_INI_MS}`, (err, row) => { err ? console.error(err.message) : initialSum[0] = Object.values(row[0])[0] })
       .all(`SELECT SUM(value) FROM treasurylog WHERE type='expense' AND date < ${DATA_INI_MS}`, (err, row) => { err ? console.error(err.message) : initialSum[1] = Object.values(row[0])[0] })

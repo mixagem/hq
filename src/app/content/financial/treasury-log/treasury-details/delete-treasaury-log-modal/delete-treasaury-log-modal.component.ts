@@ -33,7 +33,7 @@ export class DeleteTreasauryLogModalComponent {
       CALL.subscribe({
         next: codeReceived => {
           const ERROR_CODE = codeReceived as string[];
-          if (ERROR_CODE[0] === 'MHQERROR') { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', ERROR_CODE[1], ['', '']); }
+          if (ERROR_CODE[0] === 'MHQERROR') { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', ERROR_CODE[1], ['', '']); }
 
           this._mhqSnackbarService.triggerMHQSnackbar(true, 'recycling', '', [ERROR_CODE[0], ''])
           this.treasuryService.fetchTreasuryLog('deleteTLog');
@@ -49,7 +49,7 @@ export class DeleteTreasauryLogModalComponent {
       CALL.subscribe({
         next: codeReceived => {
           const ERROR_CODE = codeReceived as string[];
-          if (ERROR_CODE[0] === 'MHQERROR') { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', ERROR_CODE[1], ['', '']); }
+          if (ERROR_CODE[0] === 'MHQERROR') { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', ERROR_CODE[1], ['', '']); }
           else {
             this.budgetService.fetchBudgetLog('deleteBudgetLog');
             this._mhqSnackbarService.triggerMHQSnackbar(true, 'recycling', '', [ERROR_CODE[0], ''])
@@ -77,7 +77,7 @@ export class DeleteTreasauryLogModalComponent {
             this.treasuryService.fetchTreasuryLog('deleteTLog');
             this._mhqSnackbarService.triggerMHQSnackbar(true, 'recycling', '', [RESP[0], '']);
           }
-          else { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', RESP[1], ['', '']); }
+          else { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', RESP[1], ['', '']); }
         },
         error: err => this._errorHandlingService.handleError(err)
       })
@@ -95,7 +95,7 @@ export class DeleteTreasauryLogModalComponent {
             this.budgetService.fetchBudgetLog('deleteBudgetLog');
             this._mhqSnackbarService.triggerMHQSnackbar(true, 'recycling', '', [RESP[0], '']);
           }
-          else { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', RESP[1], ['', '']); }
+          else { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', RESP[1], ['', '']); }
         },
         error: err => this._errorHandlingService.handleError(err)
       })

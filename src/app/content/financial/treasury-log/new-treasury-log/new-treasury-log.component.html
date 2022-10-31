@@ -133,11 +133,11 @@
           <mat-form-field appearance="fill">
             <mat-label>Categoria E-Fatura</mat-label>
             <mat-select [formControl]="efatForm">
-              <mat-select-trigger>{{efaturaService.efaturaEnum[efatForm.value].title}}</mat-select-trigger>
+              <mat-select-trigger>{{efaturaService.efaturaTable[efatForm.value].title}}</mat-select-trigger>
               <mat-option *ngFor="let efat of efatsList" [value]="efat.value">
 
-                <mat-icon [ngStyle]="{'background-color':efaturaService.efaturaEnum[efat.value].color,'color':'#fff'}">
-                  {{efaturaService.efaturaEnum[efat.value].icon}}</mat-icon>
+                <mat-icon [ngStyle]="{'background-color':efaturaService.efaturaTable[efat.value].color,'color':'#fff'}">
+                  {{efaturaService.efaturaTable[efat.value].icon}}</mat-icon>
 
 
                 {{efat.title}}

@@ -51,7 +51,7 @@ export function fetchBudgetLogs(req, res) {
 
   DB.close((err) => {
     if (err || dbErrors) { console.error(err.message); console.log('[BUD 1] Erro ao encerrar a ligação à bd'); res.send(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']); }
-    else { res.send(tlogs); console.log('[BUD 1] => ' + budgets.length + ' orçamentos carregados com sucesso'); }
+    else { res.send(budgets); console.log('[BUD 1] => ' + budgets.length + ' orçamentos carregados com sucesso'); }
   });
 }
 
@@ -353,7 +353,7 @@ export function getRecurencyLogs(req, res) {
   if (req.body.type === 'tlog') {
     const TREASURY_LOG_ID = req.body.tlogID;
     const RECURRENCY_ID = req.body.recurID;
-
+    
     let dbErrors = false;
     const DB = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
       if (err) { dbErrors = true; console.error(err.message); console.log(`[TRE 5] Erro ao ligar à bd'`); }

@@ -126,7 +126,7 @@ export class BudgetDetailsComponent implements OnInit {
         break;
 
       case 'save':
-        if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'categoria/sub-categoria', ['O par ', ' não se encontra definido.']); }
+        if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'warning_amber', 'categoria/sub-categoria', ['O par ', ' não se encontra definido.']); }
         // const CATEGORY = this.categoriesService.catTitleEnum[`${this.catForm.value}`];
         this.tempBudgetLog.date = this.budgetLogDatepickerForm.value.getTime();
         // this.tempBudgetLog.cat = CATEGORY.id;
@@ -134,7 +134,7 @@ export class BudgetDetailsComponent implements OnInit {
         // this.budgetService.recordBorderStyle['background-color'] = CATEGORY.bgcolor;
         this.tempBudgetLog.value = Number(this.tempBudgetLog.value.toString().replace(',', '.')); // conversão de vírgulas para pontos
         if (!this.tempBudgetLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) {
-          return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
+          return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'warning_amber', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']);
         }
 
         if (this.tempBudgetLog.recurrencyid === 0) { this.saveBudgetLog(); }

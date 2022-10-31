@@ -1,3 +1,5 @@
+
+import localePt from '@angular/common/locales/pt';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -7,7 +9,6 @@ import { NavModule } from 'src/assets/modules/nav.module';
 import { AppContentModule } from 'src/assets/modules/app-content.module';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { registerLocaleData } from '@angular/common';
-import localePt from '@angular/common/locales/pt';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { getPTPaginatorIntl } from 'src/assets/modules/matPTPaginator';
 registerLocaleData(localePt);

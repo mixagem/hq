@@ -74,7 +74,7 @@ export class CategoryDetailsComponent implements OnInit {
           this._mhqSnackbarService.triggerMHQSnackbar(true, 'save_as', '', [RESP[0],'']); // dispara a snackbar
         }
         else {
-          this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', '', [`${RESP.slice(1).join('<br>')}`, '']);
+          this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', '', [`${RESP.slice(1).join('<br>')}`, '']);
         }
       },
       error: err => this._errorHandlingService.handleError(err)

@@ -44,7 +44,7 @@ export class BudgetingService {
       CALL.subscribe({
         next: (codeReceived) => {
           const ERROR_CODE = codeReceived as string[];
-          if (ERROR_CODE[0] === 'MHQERROR') { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', ERROR_CODE[1], ['', '']); }
+          if (ERROR_CODE[0] === 'MHQERROR') { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', ERROR_CODE[1], ['', '']); }
           const RESP = codeReceived as ITreasuryLog[];
 
           if (source === 'saveBudgetLog') { this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigate(['/fi/budget', LogID]); }); }

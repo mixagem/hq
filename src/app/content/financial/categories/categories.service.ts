@@ -43,7 +43,7 @@ export class CategoriesService {
     CALL.subscribe({
       next: (codeReceived) => {
         const ERROR_CODE = codeReceived as string[];
-        if (ERROR_CODE[0] === 'MHQERROR') { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', ERROR_CODE[1], ['', '']); }
+        if (ERROR_CODE[0] === 'MHQERROR') { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', ERROR_CODE[1], ['', '']); }
         const RESP = codeReceived as IFinancialCategory[];
 
         this.catTable = {};
@@ -97,7 +97,7 @@ export class CategoriesService {
     CALL.subscribe({
       next: (codeReceived) => {
         const RESP = codeReceived as string[];
-        if (RESP[0] === 'MHQERROR') { this._mhqSnackbarService.triggerMHQSnackbar(false, 'report_problem', RESP[1], ['', '']); location } else {
+        if (RESP[0] === 'MHQERROR') { this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', RESP[1], ['', '']); location } else {
           this.currentSubcategoryDBSequence = Number(RESP[0]);
         }
       },
@@ -107,17 +107,17 @@ export class CategoriesService {
 
   headerInputsValidation(tempCat: IFinancialCategory): boolean {
     if (tempCat.icon.includes(' ')) {
-      this._mhqSnackbarService.triggerMHQSnackbar(false, 'report', 'Icon', ['O ', ' encontra-se incorretamente definido.']);
+      this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', 'Icon', ['O ', ' encontra-se incorretamente definido.']);
       return false;
     }
     // não consegui utilizar o formControl com o ColorPicker
     if (tempCat.bgcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
-      this._mhqSnackbarService.triggerMHQSnackbar(false, 'report', 'Cor etiqueta', ['A ', ' encontra-se incorretamente definida.']);
+      this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', 'Cor etiqueta', ['A ', ' encontra-se incorretamente definida.']);
       return false;
     }
     // não consegui utilizar o formControl com o ColorPicker
     if (tempCat.textcolor.match(/^rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)*$/g) === null) {
-      this._mhqSnackbarService.triggerMHQSnackbar(false, 'report', 'Cor texto', ['A ', ' encontra-se incorretamente definida.']);
+      this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', 'Cor texto', ['A ', ' encontra-se incorretamente definida.']);
       return false;
     }
     // formControl para números indeterminados de inputs dá muita trabalho
@@ -128,7 +128,7 @@ export class CategoriesService {
       }
     });
     if (!areSubcatsBugdgetCorrect) {
-      this._mhqSnackbarService.triggerMHQSnackbar(false, 'report', 'Orçamento', ['Existem sub-categorias para as quais o ', ' se encontra incorretamente definido.']);
+      this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', 'Orçamento', ['Existem sub-categorias para as quais o ', ' se encontra incorretamente definido.']);
       return false;
     }
     return true;

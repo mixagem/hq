@@ -64,6 +64,7 @@ export class NewTreasuryLogComponent implements OnInit {
     if (this.treasuryService.cloningTLog) {
       this.tempTLog = JSON.parse(JSON.stringify(this.treasuryService.activeTLog));
       this.tempTLog.id = 0;
+      this.tempTLog.efatcheck = false;
       this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catTable[`'${this.tempTLog.cat}'`].bgcolor
       this.catForm = new FormControl(this.tempTLog.cat, [Validators.required]);
       this.subcatForm = new FormControl(this.tempTLog.subcat, [Validators.required]);
@@ -80,7 +81,7 @@ export class NewTreasuryLogComponent implements OnInit {
     this.tLogDatepickerForm = new FormControl(new Date(this.tempTLog.date), [Validators.required]);
 
     this.efatsList = [];
-    for (let i = 0; i < Object.keys(this.efaturaService.efaturaEnum).length; i++) { this.efatsList.push({ title: this.efaturaService.efaturaEnum[i].title, value: i }) }
+    for (let i = 0; i < Object.keys(this.efaturaService.efaturaTable).length; i++) { this.efatsList.push({ title: this.efaturaService.efaturaTable[i].title, value: i }) }
 
     this.catList = [];
     for (let i = 0; i < Object.keys(this.categoriesService.catTable).length; i++) {
@@ -96,14 +97,14 @@ export class NewTreasuryLogComponent implements OnInit {
   tLogRecordActions(action: RecordActions): void {
     switch (action) {
       case 'save':
-        if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'categoria/sub-categoria', ['O par ', ' não se encontra definido.']) }
-        if (!this.recurrencyFrequency.disabled && !this.recurrencyFrequency.valid) { return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'recorrências', ['As ', ' não se encontram bem definidas.']) }
+        if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'warning_amber', 'categoria/sub-categoria', ['O par ', ' não se encontra definido.']) }
+        if (!this.recurrencyFrequency.disabled && !this.recurrencyFrequency.valid) { return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'warning_amber', 'recorrências', ['As ', ' não se encontram bem definidas.']) }
 
         this.tempTLog.date = this.tLogDatepickerForm.value.getTime();
         this.tempTLog.cat = this.catForm.value;
         this.tempTLog.subcat = this.subcatForm.value;
         this.tempTLog.value = Number(this.tempTLog.value.toString().replace(',', '.'))
-        if (!this.tempTLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) { return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']); }
+        if (!this.tempTLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) { return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'warning_amber', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']); }
         this.createTLog();
         break;
 

@@ -17,6 +17,7 @@ import { DettachRecurrencyModalComponent } from './dettach-recurrency-modal/dett
 import { EfaturaService } from '../../efatura/efatura.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
+import { CheckTreasuryEfatComponent } from './check-treasury-efat/check-treasury-efat.component';
 
 type SelectEnum = { title: string, value: number }
 type RecordActions = 'edit' | 'save' | 'cancel'
@@ -81,7 +82,7 @@ export class TreasuryDetailsComponent implements OnInit {
     this.subcatForm = new FormControl({ value: this.tempTLog.subcat, disabled: false }, [Validators.required]);
 
     this.efatsList = [];
-    for (let i = 0; i < Object.keys(this.efaturaService.efaturaEnum).length; i++) { this.efatsList.push({ title: this.efaturaService.efaturaEnum[i].title, value: i }) }
+    for (let i = 0; i < Object.keys(this.efaturaService.efaturaTable).length; i++) { this.efatsList.push({ title: this.efaturaService.efaturaTable[i].title, value: i }) }
     this.efatForm = new FormControl({ value: this.tempTLog.efat, disabled: !this.tempTLog.nif || this.tempTLog.efatcheck }, [Validators.required]);
 
     this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catTable[`'${this.tLog.cat}'`].bgcolor;
@@ -99,6 +100,7 @@ export class TreasuryDetailsComponent implements OnInit {
           return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'warning_amber', '', [ERROR_CODE[1], '']);
         }
         const RESP = codeReceived as ITreasuryLog[];
+        console.log(RESP)
         this.recurrencyFamily = RESP
       },
       error: err => {
@@ -141,7 +143,7 @@ export class TreasuryDetailsComponent implements OnInit {
         break;
 
       case 'save':
-        if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'categoria/sub-categoria', ['O par ', 'não se encontra definido.']) }
+        if (this.catForm.errors || this.subcatForm.errors || this.subcatForm.value === '' || this.subcatForm.disabled) { return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'warning_amber', 'categoria/sub-categoria', ['O par ', 'não se encontra definido.']) }
         this.tempTLog.date = this.tLogDatepickerForm.value.getTime();
         this.tempTLog.cat = this.catForm.value;
         this.tempTLog.subcat = this.subcatForm.value;
@@ -149,7 +151,7 @@ export class TreasuryDetailsComponent implements OnInit {
         this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catTable[`'${this.catForm.value}'`].bgcolor;
 
         this.tempTLog.value = Number(this.tempTLog.value.toString().replace(',', '.')); // conversão de vírgulas para pontos
-        if (!this.tempTLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) { return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'report', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']); }
+        if (!this.tempTLog.value.toString().match(/^[0-9]*\.?[0-9]{0,2}$/g)) { return this._categoriesSnackBarService.triggerMHQSnackbar(false, 'warning_amber', 'Valor', ['O campo ', ' encontra-se incorretamente definido.']); }
 
         if (this.tempTLog.recurrencyid === 0) { this.saveTLog(); }
 
@@ -178,6 +180,10 @@ export class TreasuryDetailsComponent implements OnInit {
 
   deleteTLogModal(enterAnimationDuration: string, exitAnimationDuration: string): void {
     this._dialog.open(DeleteTreasauryLogModalComponent, { width: '600px', height: '300px', enterAnimationDuration, exitAnimationDuration, });
+  }
+
+  efatCheckModal(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this._dialog.open(CheckTreasuryEfatComponent, { width: '600px', height: '300px', enterAnimationDuration, exitAnimationDuration, });
   }
 
   updateRecurrencyModal(enterAnimationDuration: string, exitAnimationDuration: string): void {

@@ -1,0 +1,42 @@
+<h1 mat-dialog-title class="mhq-modal-header">
+  <mat-icon>receipt_long</mat-icon>Validar movimento
+</h1>
+
+<div mat-dialog-content class="mhq-modal-content-wrapper">
+
+  {{treasuryService.activeTLog.title}}
+
+  <div *ngIf="efaturaService.efaturaTable[treasuryService.activeTLog.efat].usesIVAToCalc">
+    <mat-form-field appearance="fill">
+      <mat-label>Valor IVA</mat-label>
+      <input matInput [(ngModel)]="ivaValue">
+    </mat-form-field>
+
+    <div class="mhq-deduction-preview">
+      {{treasuryService.activeTLog.type === 'income'?
+      - ivaValue * efaturaService.efaturaTable[treasuryService.activeTLog.efat].calcPercentage :
+      ivaValue * efaturaService.efaturaTable[treasuryService.activeTLog.efat].calcPercentage}}
+    </div>
+  </div>
+
+  <div *ngIf="!efaturaService.efaturaTable[treasuryService.activeTLog.efat].usesIVAToCalc">
+    <div class="mhq-deduction-preview">
+      {{treasuryService.activeTLog.type === 'income'?
+      - treasuryService.activeTLog.value * efaturaService.efaturaTable[treasuryService.activeTLog.efat].calcPercentage :
+      treasuryService.activeTLog.value * efaturaService.efaturaTable[treasuryService.activeTLog.efat].calcPercentage}}
+    </div>
+  </div>
+
+</div>
+
+<div mat-dialog-actions class="mhq-modal-close-actions">
+  <button mat-flat-button color="primary" (click)="insertEFatura()">Validar</button>
+  <button mat-stroked-button mat-dialog-close color="warn">Cancelar</button>
+</div>
+<!--
+  35% das gerasi -> max 250
+  15% da saude - > max 1000
+  15% DO IVA do restaurante -> max 250
+  15% DO IVA do ginasio -> max 250
+  15% DO IVA do cabeleireiros -> max 250
+  100% DO IVA dos passes -> max 250 -->

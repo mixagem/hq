@@ -30,6 +30,7 @@ import { DeleteTreasauryLogModalComponent } from 'src/app/content/financial/trea
 import { DettachRecurrencyModalComponent } from 'src/app/content/financial/treasury-log/treasury-details/dettach-recurrency-modal/dettach-recurrency-modal.component';
 import { UpdateRecurrencyModalComponent } from 'src/app/content/financial/treasury-log/treasury-details/update-recurrency-modal/update-recurrency-modal.component';
 import { EfaturaComponent } from 'src/app/content/financial/efatura/efatura.component';
+import { CheckTreasuryEfatComponent } from 'src/app/content/financial/treasury-log/treasury-details/check-treasury-efat/check-treasury-efat.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { EfaturaComponent } from 'src/app/content/financial/efatura/efatura.comp
     DeleteTreasauryLogModalComponent,
     DettachRecurrencyModalComponent,
     UpdateRecurrencyModalComponent,
-    EfaturaComponent
+    EfaturaComponent,
+    CheckTreasuryEfatComponent
 
   ],
   imports: [
@@ -88,7 +90,8 @@ import { EfaturaComponent } from 'src/app/content/financial/efatura/efatura.comp
     DeleteTreasauryLogModalComponent,
     DettachRecurrencyModalComponent,
     UpdateRecurrencyModalComponent,
-    EfaturaComponent
+    EfaturaComponent,
+    CheckTreasuryEfatComponent
 
   ]
 })
