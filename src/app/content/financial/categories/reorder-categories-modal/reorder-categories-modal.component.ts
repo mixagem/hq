@@ -5,10 +5,10 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Router } from '@angular/router';
-import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
-import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
-import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
-import { ErrorHandlingService } from 'src/assets/services/misc.service';
+import { IFinancialCategory } from 'src/shared/interfaces/ifinancial-category';
+import { IFinancialSubCategory } from 'src/shared/interfaces/ifinancial-sub-category';
+import { MHQSnackBarsService } from 'src/shared/services/mhq-snackbar.service';
+import { ErrorHandlingService } from 'src/shared/services/misc.service';
 import { CategoriesService } from '../categories.service';
 
 type SelectEnum = { title: string, value: number }
@@ -16,7 +16,7 @@ type SelectEnum = { title: string, value: number }
 @Component({
   selector: 'mhq-reorder-categories-modal',
   templateUrl: './reorder-categories-modal.component.html',
-  styleUrls: ['./reorder-categories-modal.component.scss', '../../../../../assets/styles/mhq-modal.scss']
+  styleUrls: ['./reorder-categories-modal.component.scss', '../../../../../shared/styles/mhq-modal.scss']
 })
 
 export class ReorderCategoriesModalComponent implements OnInit {

@@ -2,9 +2,9 @@ import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
-import { ErrorHandlingService, LoadingService, TimerService } from 'src/assets/services/misc.service';
-import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
+import { ITreasuryLog } from 'src/shared/interfaces/itreasury-log';
+import { ErrorHandlingService, LoadingService, TimerService } from 'src/shared/services/misc.service';
+import { MHQSnackBarsService } from 'src/shared/services/mhq-snackbar.service';
 
 type TLogTable = { [key: string]: ITreasuryLog };
 type RecordBorderStyle = { "background-color": string };

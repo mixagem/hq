@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MonthlyViewComponent } from './monthly-view/monthly-view.component';
 import { AnualViewComponent } from './anual-view/anual-view.component';
 import { DecadeViewComponent } from './decade-view/decade-view.component';
-import { MaterialImportsModule } from 'src/assets/modules/material-imports.module';
+import { MaterialImportsModule } from 'src/shared/modules/material-imports.module';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { RouterModule } from '@angular/router';
 

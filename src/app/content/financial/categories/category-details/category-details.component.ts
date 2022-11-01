@@ -1,20 +1,20 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
-import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
+import { IFinancialCategory } from 'src/shared/interfaces/ifinancial-category';
+import { IFinancialSubCategory } from 'src/shared/interfaces/ifinancial-sub-category';
 import { CategoriesService } from '../categories.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteCategoryConfirmationModalComponent } from './delete-category-confirmation-modal/delete-category-confirmation-modal.component';
-import { ErrorHandlingService, LoadingService } from 'src/assets/services/misc.service';
-import { MHQSnackBarsService } from '../../../../../assets/services/mhq-snackbar.service';
+import { ErrorHandlingService, LoadingService } from 'src/shared/services/misc.service';
+import { MHQSnackBarsService } from '../../../../../shared/services/mhq-snackbar.service';
 
 type RecordActions = 'edit' | 'save' | 'cancel'
 
 @Component({
   selector: 'mhq-category-details',
   templateUrl: './category-details.component.html',
-  styleUrls: ['../../../../../assets/styles/mhq-mainform-details.scss']
+  styleUrls: ['../../../../../shared/styles/mhq-mainform-details.scss']
 })
 
 export class CategoryDetailsComponent implements OnInit {

@@ -6,7 +6,7 @@ import { TreasuryService } from '../treasury-log/treasury.service';
 @Component({
   selector: 'mhq-grid-view',
   templateUrl: './grid-view.component.html',
-  styleUrls: ['../../../../assets/styles/mhq-mainform.scss']
+  styleUrls: ['../../../../shared/styles/mhq-mainform.scss']
 })
 
 export class GridViewComponent {

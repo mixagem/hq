@@ -31,7 +31,7 @@
               "node_modules/angular-calendar/css/angular-calendar.css",
 
               "src/styles.scss",
-              "src/assets/styles/waikiki-theme.scss"
+              "src/shared/styles/waikiki-theme.scss"
             ],
             "scripts": []
           },
@@ -41,12 +41,12 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumError": "8kb"
                 }
               ],
               "fileReplacements": [
@@ -100,7 +100,7 @@
             ],
             "styles": [
               "node_modules/angular-calendar/css/angular-calendar.css",
-      
+
               "src/styles.scss"
             ],
             "scripts": []

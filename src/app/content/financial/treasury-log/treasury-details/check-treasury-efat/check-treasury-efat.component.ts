@@ -1,15 +1,15 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
-import { ErrorHandlingService } from 'src/assets/services/misc.service';
+import { MHQSnackBarsService } from 'src/shared/services/mhq-snackbar.service';
+import { ErrorHandlingService } from 'src/shared/services/misc.service';
 import { EfaturaService } from '../../../efatura/efatura.service';
 import { TreasuryService } from '../../treasury.service';
 
 @Component({
   selector: 'mhq-check-treasury-efat',
   templateUrl: './check-treasury-efat.component.html',
-  styleUrls: ['./check-treasury-efat.component.scss', '../../../../../../assets/styles/mhq-modal.scss']
+  styleUrls: ['./check-treasury-efat.component.scss', '../../../../../../shared/styles/mhq-modal.scss']
 })
 export class CheckTreasuryEfatComponent implements OnInit {
 

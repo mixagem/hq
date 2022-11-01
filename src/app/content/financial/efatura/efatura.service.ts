@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IEfaturaCategory } from 'src/assets/interfaces/iefatura-category';
+import { IEfaturaCategory } from 'src/shared/interfaces/iefatura-category';
 
 export type EFaturaCategoryList = {
   [key: number]: IEfaturaCategory

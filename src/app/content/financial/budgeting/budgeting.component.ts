@@ -3,8 +3,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
-import { LoadingService } from 'src/assets/services/misc.service';
+import { ITreasuryLog } from 'src/shared/interfaces/itreasury-log';
+import { LoadingService } from 'src/shared/services/misc.service';
 import { CategoriesService } from '../categories/categories.service';
 import { TreasuryService } from '../treasury-log/treasury.service';
 import { BudgetingService } from './budgeting.service';
@@ -12,7 +12,7 @@ import { BudgetingService } from './budgeting.service';
 @Component({
   selector: 'mhq-budgeting',
   templateUrl: './budgeting.component.html',
-  styleUrls: ['./budgeting.component.scss', '../../../../assets/styles/mhq-mainform.scss']
+  styleUrls: ['./budgeting.component.scss', '../../../../shared/styles/mhq-mainform.scss']
 })
 export class BudgetingComponent implements OnInit {
   firstLoadingComplete: boolean;

@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
+import { ITreasuryLog } from 'src/shared/interfaces/itreasury-log';
 import { CategoriesService } from '../../categories/categories.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { TreasuryService } from '../treasury.service';
 import { MatDatepicker } from '@angular/material/datepicker';
-import { ErrorHandlingService, LoadingService, TimerService } from 'src/assets/services/misc.service';
+import { ErrorHandlingService, LoadingService, TimerService } from 'src/shared/services/misc.service';
 import { MatSelectChange } from '@angular/material/select';
-import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
+import { MHQSnackBarsService } from 'src/shared/services/mhq-snackbar.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
+import { IFinancialSubCategory } from 'src/shared/interfaces/ifinancial-sub-category';
 import { EfaturaService } from '../../efatura/efatura.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
@@ -25,7 +25,7 @@ const DEFAULT_TLOG: ITreasuryLog = {
 @Component({
   selector: 'mhq-new-treasury-log',
   templateUrl: './new-treasury-log.component.html',
-  styleUrls: ['../../../../../assets/styles/mhq-mainform-details.scss']
+  styleUrls: ['../../../../../shared/styles/mhq-mainform-details.scss']
 })
 
 export class NewTreasuryLogComponent implements OnInit {

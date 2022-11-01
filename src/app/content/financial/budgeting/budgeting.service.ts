@@ -2,9 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
-import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
-import { ErrorHandlingService, LoadingService, TimerService } from 'src/assets/services/misc.service';
+import { ITreasuryLog } from 'src/shared/interfaces/itreasury-log';
+import { MHQSnackBarsService } from 'src/shared/services/mhq-snackbar.service';
+import { ErrorHandlingService, LoadingService, TimerService } from 'src/shared/services/misc.service';
 
 type RecordBorderStyle = { "background-color": string }
 type recurencyFrequency = { "string": string, "value": string }

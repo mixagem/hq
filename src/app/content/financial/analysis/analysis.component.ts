@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ScaleType } from '@swimlane/ngx-charts';
-import { LoadingService } from 'src/assets/services/misc.service';
+import { LoadingService } from 'src/shared/services/misc.service';
 import { CategoriesService } from '../categories/categories.service';
 
 
@@ -17,7 +17,7 @@ export type SavingsSnapshot = {
 @Component({
   selector: 'mhq-analysis',
   templateUrl: './analysis.component.html',
-  styleUrls: ['./analysis.component.scss', '../../../../assets/styles/mhq-mainform.scss']
+  styleUrls: ['./analysis.component.scss', '../../../../shared/styles/mhq-mainform.scss']
 })
 
 

@@ -19,7 +19,6 @@ import { DeleteCategoryConfirmationModalComponent } from 'src/app/content/financ
 import { GridViewComponent } from 'src/app/content/financial/grid-view/grid-view.component';
 import { GridViewModule } from 'src/app/content/financial/grid-view/grid-view.module';
 import { ReorderCategoriesModalComponent } from 'src/app/content/financial/categories/reorder-categories-modal/reorder-categories-modal.component';
-import { MhqSnackBarComponent } from '../components/mhq-snack-bar/mhq-snack-bar.component';
 import { BudgetDetailsComponent } from 'src/app/content/financial/budgeting/budget-details/budget-details.component';
 import { NewBudgetComponent } from 'src/app/content/financial/budgeting/new-budget/new-budget.component';
 import { BudgetingComponent } from 'src/app/content/financial/budgeting/budgeting.component';
@@ -31,6 +30,7 @@ import { DettachRecurrencyModalComponent } from 'src/app/content/financial/treas
 import { UpdateRecurrencyModalComponent } from 'src/app/content/financial/treasury-log/treasury-details/update-recurrency-modal/update-recurrency-modal.component';
 import { EfaturaComponent } from 'src/app/content/financial/efatura/efatura.component';
 import { CheckTreasuryEfatComponent } from 'src/app/content/financial/treasury-log/treasury-details/check-treasury-efat/check-treasury-efat.component';
+import { MhqSnackBarComponent } from 'src/shared/components/mhq-snack-bar/mhq-snack-bar.component';
 
 @NgModule({
   declarations: [

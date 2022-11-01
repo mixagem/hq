@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
-import { ErrorHandlingService } from 'src/assets/services/misc.service';
+import { MHQSnackBarsService } from 'src/shared/services/mhq-snackbar.service';
+import { ErrorHandlingService } from 'src/shared/services/misc.service';
 import { TreasuryService } from '../../../treasury-log/treasury.service';
 import { CategoriesService } from '../../categories.service';
 
@@ -9,7 +9,7 @@ import { CategoriesService } from '../../categories.service';
   selector: 'mhq-delete-category-confirmation-modal',
   templateUrl: './delete-category-confirmation-modal.component.html',
   styles: ['.mhq-modal-header{background-color: var(--mhq-waikiki-danger)!important;}', '.mhq-category-modal-label{padding: 5px 10px;border-radius: 5px;}'],
-  styleUrls: ['../../../../../../assets/styles/mhq-modal.scss']
+  styleUrls: ['../../../../../../shared/styles/mhq-modal.scss']
 })
 
 export class DeleteCategoryConfirmationModalComponent {

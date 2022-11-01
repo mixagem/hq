@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavigationStart, Router } from '@angular/router';
-import { TimerService } from 'src/assets/services/misc.service';
+import { TimerService } from 'src/shared/services/misc.service';
 import { GridViewService } from './content/financial/grid-view/grid-view.service';
 
 @Component({

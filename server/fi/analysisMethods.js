@@ -7,8 +7,8 @@ export function savingsGraphSnapshot(req, res) {
 
   const YEAR = JSON.parse(req.body.year);
 
-  const DATA_INI = new Date('2022-01-01T00:00:00.000Z'); DATA_INI.setFullYear(YEAR); const DATA_INI_MS = DATA_INI.getTime();
-  const DATA_FINI = new Date('2022-01-01T00:00:00.000Z'); DATA_FINI.setFullYear(YEAR + 1); const DATA_FINI_MS = DATA_FINI.getTime() - 1;
+  const DATA_INI = new Date('2022-01-01T00:00:00.000Z'); DATA_INI.setFullYear(YEAR-1); const DATA_INI_MS = DATA_INI.getTime();
+  const DATA_FINI = new Date('2022-01-01T00:00:00.000Z'); DATA_FINI.setFullYear(YEAR); const DATA_FINI_MS = DATA_FINI.getTime() - 1;
 
   let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
     if (err) { console.error(err.message); }
@@ -25,16 +25,16 @@ export function savingsGraphSnapshot(req, res) {
     series: []
   };
 
-  let homeMonthlyValues = new Array(12).fill(0);
-  let carMonthlyValues = new Array(12).fill(0);
+  let homeMonthlyValues = new Array(24).fill(0);
+  let carMonthlyValues = new Array(24).fill(0);
 
 
   db.serialize(() => {
     db.all(`SELECT
-    (SELECT SUM(value)FROM treasurylog WHERE date < ${DATA_INI_MS} AND cat = '2' AND subcat = '5' AND type = 'income') as homebadsum,
-    (SELECT SUM(value)FROM treasurylog WHERE date < ${DATA_INI_MS} AND cat = '2' AND subcat = '5' AND type = 'expense') as homegoodsum,
-    (SELECT SUM(value)FROM treasurylog WHERE date < ${DATA_INI_MS} AND cat = '2' AND subcat = '4' AND type = 'income') as carbadsum,
-    (SELECT SUM(value)FROM treasurylog WHERE date < ${DATA_INI_MS} AND cat = '2' AND subcat = '4' AND type = 'expense') as cargoodsum`, (err, result) => {
+    (SELECT SUM(value)FROM treasurylog WHERE date < ${DATA_INI_MS} AND cat = '2' AND subcat = '4' AND type = 'income') as homebadsum,
+    (SELECT SUM(value)FROM treasurylog WHERE date < ${DATA_INI_MS} AND cat = '2' AND subcat = '4' AND type = 'expense') as homegoodsum,
+    (SELECT SUM(value)FROM treasurylog WHERE date < ${DATA_INI_MS} AND cat = '2' AND subcat = '5' AND type = 'income') as carbadsum,
+    (SELECT SUM(value)FROM treasurylog WHERE date < ${DATA_INI_MS} AND cat = '2' AND subcat = '5' AND type = 'expense') as cargoodsum`, (err, result) => {
 
       if (err) { console.error(err.message) }
       else {
@@ -52,7 +52,7 @@ export function savingsGraphSnapshot(req, res) {
 
 
 
-    db.each(`SELECT * FROM treasurylog WHERE date >= ${DATA_INI_MS} AND date < ${DATA_FINI_MS} AND cat = '2' and subcat = '5' ORDER BY date ASC `, (err, homeSavingLog) => {
+    db.each(`SELECT * FROM treasurylog WHERE date >= ${DATA_INI_MS} AND date < ${DATA_FINI_MS} AND cat = '2' and subcat = '4' ORDER BY date ASC `, (err, homeSavingLog) => {
       if (err) { console.error(err.message) } else {
         const MONTH = new Date(homeSavingLog.date).getMonth();
         homeMonthlyValues[MONTH] = sumToFixed(homeMonthlyValues[MONTH], homeSavingLog.value);
@@ -66,7 +66,7 @@ export function savingsGraphSnapshot(req, res) {
     })
 
 
-    db.each(`SELECT * FROM treasurylog WHERE date >= ${DATA_INI_MS} AND date < ${DATA_FINI_MS} AND cat = '2' and subcat = '4' ORDER BY date ASC `, (err, carSavingLog) => {
+    db.each(`SELECT * FROM treasurylog WHERE date >= ${DATA_INI_MS} AND date < ${DATA_FINI_MS} AND cat = '2' and subcat = '5' ORDER BY date ASC `, (err, carSavingLog) => {
       if (err) { console.error(err.message) } else {
         const MONTH = new Date(carSavingLog.date).getMonth();
         carMonthlyValues[MONTH] = sumToFixed(carMonthlyValues[MONTH], carSavingLog.value);
@@ -85,10 +85,10 @@ export function savingsGraphSnapshot(req, res) {
 
   db.close((err) => {
 
-    let homeAcomulatedValues = new Array(12).fill(0);
-    let carAcomulatedValues = new Array(12).fill(0);
+    let homeAcomulatedValues = new Array(24).fill(0);
+    let carAcomulatedValues = new Array(24).fill(0);
 
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 24; i++) {
 
       if (i === 0) {
         homeAcomulatedValues[i] = homeMonthlyValues[i]
@@ -145,7 +145,6 @@ export function generateCatGraphSnapshot(req, res) {
       name: CAT_TITLES[i],
       series: []
     });
-
 
     for (let y = 0; y < 12; y++) {
 

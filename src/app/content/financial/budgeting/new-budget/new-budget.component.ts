@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
+import { ITreasuryLog } from 'src/shared/interfaces/itreasury-log';
 import { CategoriesService } from '../../categories/categories.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { MatDatepicker } from '@angular/material/datepicker';
-import { ErrorHandlingService, LoadingService, TimerService } from 'src/assets/services/misc.service';
+import { ErrorHandlingService, LoadingService, TimerService } from 'src/shared/services/misc.service';
 import { MatSelectChange } from '@angular/material/select';
-import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
+import { MHQSnackBarsService } from 'src/shared/services/mhq-snackbar.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
+import { IFinancialCategory } from 'src/shared/interfaces/ifinancial-category';
 import { BudgetingService } from '../budgeting.service';
 
 export type RecurrencyOptions = { active: boolean, type: string, freq: number, date: number }
@@ -20,7 +20,7 @@ const DEFAULT_TLOG: ITreasuryLog = { id: 0, title: 'Novo movimento de tesouraria
 @Component({
   selector: 'mhq-new-budget',
   templateUrl: './new-budget.component.html',
-  styleUrls: ['../../../../../assets/styles/mhq-mainform-details.scss']
+  styleUrls: ['../../../../../shared/styles/mhq-mainform-details.scss']
 })
 export class NewBudgetComponent implements OnInit {
   tempBudgetLog: ITreasuryLog;

@@ -4,14 +4,14 @@ import { Component } from '@angular/core';
 import { TreasuryService } from '../../treasury.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { BudgetingService } from '../../../budgeting/budgeting.service';
-import { ErrorHandlingService } from 'src/assets/services/misc.service';
-import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
+import { ErrorHandlingService } from 'src/shared/services/misc.service';
+import { MHQSnackBarsService } from 'src/shared/services/mhq-snackbar.service';
 
 @Component({
   selector: 'mhq-delete-treasaury-log-modal',
   templateUrl: './delete-treasaury-log-modal.component.html',
   styles: ['.mhq-modal-header{background-color: var(--mhq-waikiki-danger)!important;}'],
-  styleUrls: ['../../../../../../assets/styles/mhq-modal.scss']
+  styleUrls: ['../../../../../../shared/styles/mhq-modal.scss']
 })
 
 export class DeleteTreasauryLogModalComponent {

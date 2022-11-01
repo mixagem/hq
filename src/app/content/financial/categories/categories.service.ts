@@ -2,10 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
-import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
-import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
-import { ErrorHandlingService, LoadingService, TimerService } from 'src/assets/services/misc.service';
+import { IFinancialCategory } from 'src/shared/interfaces/ifinancial-category';
+import { IFinancialSubCategory } from 'src/shared/interfaces/ifinancial-sub-category';
+import { MHQSnackBarsService } from 'src/shared/services/mhq-snackbar.service';
+import { ErrorHandlingService, LoadingService, TimerService } from 'src/shared/services/misc.service';
 
 type CatTable = { [key: string]: IFinancialCategory };
 type SubcatTable = { [key: string]: IFinancialSubCategory };

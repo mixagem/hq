@@ -2,14 +2,14 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
+import { ITreasuryLog } from 'src/shared/interfaces/itreasury-log';
 import { CategoriesService } from '../../../categories/categories.service';
 import { GridViewService } from '../../grid-view.service';
 
 @Component({
   selector: 'mhq-overview-daily-details-modal',
   templateUrl: './overview-daily-details-modal.component.html',
-  styleUrls: ['./overview-daily-details-modal.component.scss', '../../../../../../assets/styles/mhq-large-modal.scss']
+  styleUrls: ['./overview-daily-details-modal.component.scss', '../../../../../../shared/styles/mhq-large-modal.scss']
 })
 export class OverviewDailyDetailsModalComponent implements OnInit {
   dataSource: MatTableDataSource<ITreasuryLog>;

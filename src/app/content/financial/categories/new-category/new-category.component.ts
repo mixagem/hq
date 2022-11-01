@@ -1,11 +1,11 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
+import { IFinancialCategory } from 'src/shared/interfaces/ifinancial-category';
 import { CategoriesService } from '../categories.service';
 import { Router } from '@angular/router';
-import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
-import { ErrorHandlingService, LoadingService, TimerService } from 'src/assets/services/misc.service';
-import { MHQSnackBarsService } from '../../../../../assets/services/mhq-snackbar.service';
+import { IFinancialSubCategory } from 'src/shared/interfaces/ifinancial-sub-category';
+import { ErrorHandlingService, LoadingService, TimerService } from 'src/shared/services/misc.service';
+import { MHQSnackBarsService } from '../../../../../shared/services/mhq-snackbar.service';
 import { Subject } from 'rxjs';
 
 type RecordActions = 'save' | 'cancel'
@@ -17,7 +17,7 @@ const DEFAULT_FISUBCATEGORY: IFinancialSubCategory = { id: Date.now(), maincatid
 @Component({
   selector: 'mhq-new-category',
   templateUrl: './new-category.component.html',
-  styleUrls: ['../../../../../assets/styles/mhq-mainform-details.scss']
+  styleUrls: ['../../../../../shared/styles/mhq-mainform-details.scss']
 })
 
 export class NewCategoryComponent implements OnInit {

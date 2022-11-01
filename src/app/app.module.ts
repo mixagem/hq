@@ -5,12 +5,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NavModule } from 'src/assets/modules/nav.module';
-import { AppContentModule } from 'src/assets/modules/app-content.module';
+import { NavModule } from 'src/shared/modules/nav.module';
+import { AppContentModule } from 'src/shared/modules/app-content.module';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { registerLocaleData } from '@angular/common';
 import { MatPaginatorIntl } from '@angular/material/paginator';
-import { getPTPaginatorIntl } from 'src/assets/modules/matPTPaginator';
+import { getPTPaginatorIntl } from 'src/shared/modules/matPTPaginator';
 registerLocaleData(localePt);
 
 @NgModule({

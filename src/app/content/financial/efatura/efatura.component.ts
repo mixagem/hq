@@ -1,15 +1,15 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
-import { ErrorHandlingService } from 'src/assets/services/misc.service';
+import { MHQSnackBarsService } from 'src/shared/services/mhq-snackbar.service';
+import { ErrorHandlingService } from 'src/shared/services/misc.service';
 import { EfaturaService } from './efatura.service';
 
 
 @Component({
   selector: 'mhq-efatura',
   templateUrl: './efatura.component.html',
-  styleUrls: ['./efatura.component.scss', '../../../../assets/styles/mhq-mainform.scss']
+  styleUrls: ['./efatura.component.scss', '../../../../shared/styles/mhq-mainform.scss']
 })
 export class EfaturaComponent implements OnInit {
 

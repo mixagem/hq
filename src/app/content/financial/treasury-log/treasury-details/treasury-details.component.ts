@@ -3,20 +3,20 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
+import { ITreasuryLog } from 'src/shared/interfaces/itreasury-log';
 import { CategoriesService } from '../../categories/categories.service';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { TreasuryService } from '../treasury.service';
-import { ErrorHandlingService, LoadingService } from 'src/assets/services/misc.service';
+import { ErrorHandlingService, LoadingService } from 'src/shared/services/misc.service';
 import { MatSelectChange } from '@angular/material/select';
-import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
+import { MHQSnackBarsService } from 'src/shared/services/mhq-snackbar.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { DeleteTreasauryLogModalComponent } from './delete-treasaury-log-modal/delete-treasaury-log-modal.component';
 import { UpdateRecurrencyModalComponent } from './update-recurrency-modal/update-recurrency-modal.component';
 import { DettachRecurrencyModalComponent } from './dettach-recurrency-modal/dettach-recurrency-modal.component';
 import { EfaturaService } from '../../efatura/efatura.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { IFinancialSubCategory } from 'src/assets/interfaces/ifinancial-sub-category';
+import { IFinancialSubCategory } from 'src/shared/interfaces/ifinancial-sub-category';
 import { CheckTreasuryEfatComponent } from './check-treasury-efat/check-treasury-efat.component';
 
 type SelectEnum = { title: string, value: number }
@@ -25,7 +25,7 @@ type RecordActions = 'edit' | 'save' | 'cancel'
 @Component({
   selector: 'mhq-treasury-details',
   templateUrl: './treasury-details.component.html',
-  styleUrls: ['../../../../../assets/styles/mhq-mainform-details.scss']
+  styleUrls: ['../../../../../shared/styles/mhq-mainform-details.scss']
 })
 
 export class TreasuryDetailsComponent implements OnInit {

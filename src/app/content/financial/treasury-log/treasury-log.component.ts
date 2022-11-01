@@ -3,15 +3,15 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
-import { LoadingService } from 'src/assets/services/misc.service';
+import { ITreasuryLog } from 'src/shared/interfaces/itreasury-log';
+import { LoadingService } from 'src/shared/services/misc.service';
 import { CategoriesService } from '../categories/categories.service';
 import { TreasuryService } from './treasury.service';
 
 @Component({
   selector: 'mhq-treasury-log',
   templateUrl: './treasury-log.component.html',
-  styleUrls: ['./treasury-log.component.scss', '../../../../assets/styles/mhq-mainform.scss']
+  styleUrls: ['./treasury-log.component.scss', '../../../../shared/styles/mhq-mainform.scss']
 })
 
 export class TreasuryLogComponent implements OnInit {

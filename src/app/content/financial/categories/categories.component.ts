@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
+import { IFinancialCategory } from 'src/shared/interfaces/ifinancial-category';
 import { CategoriesService } from './categories.service';
 import { Router } from '@angular/router';
-import { LoadingService } from 'src/assets/services/misc.service';
+import { LoadingService } from 'src/shared/services/misc.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ReorderCategoriesModalComponent } from './reorder-categories-modal/reorder-categories-modal.component';
 import { Subject } from 'rxjs';
@@ -12,7 +12,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'mhq-categories',
   templateUrl: './categories.component.html',
-  styleUrls: ['./categories.component.scss', '../../../../assets/styles/mhq-mainform.scss']
+  styleUrls: ['./categories.component.scss', '../../../../shared/styles/mhq-mainform.scss']
 })
 
 export class CategoriesComponent implements OnInit {

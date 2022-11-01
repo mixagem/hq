@@ -3,14 +3,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
+import { ITreasuryLog } from 'src/shared/interfaces/itreasury-log';
 import { CategoriesService } from '../../categories/categories.service';
 import { MatDatepicker } from '@angular/material/datepicker';
-import { ErrorHandlingService, LoadingService } from 'src/assets/services/misc.service';
+import { ErrorHandlingService, LoadingService } from 'src/shared/services/misc.service';
 import { MatSelectChange } from '@angular/material/select';
-import { MHQSnackBarsService } from 'src/assets/services/mhq-snackbar.service';
+import { MHQSnackBarsService } from 'src/shared/services/mhq-snackbar.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { IFinancialCategory } from 'src/assets/interfaces/ifinancial-category';
+import { IFinancialCategory } from 'src/shared/interfaces/ifinancial-category';
 import { BudgetingService } from '../budgeting.service';
 import { DeleteTreasauryLogModalComponent } from '../../treasury-log/treasury-details/delete-treasaury-log-modal/delete-treasaury-log-modal.component';
 import { DettachRecurrencyModalComponent } from '../../treasury-log/treasury-details/dettach-recurrency-modal/dettach-recurrency-modal.component';
@@ -19,7 +19,7 @@ import { UpdateRecurrencyModalComponent } from '../../treasury-log/treasury-deta
 @Component({
   selector: 'mhq-budget-details',
   templateUrl: './budget-details.component.html',
-  styleUrls: ['./budget-details.component.scss', '../../../../../assets/styles/mhq-mainform-details.scss']
+  styleUrls: ['./budget-details.component.scss', '../../../../../shared/styles/mhq-mainform-details.scss']
 })
 
 export class BudgetDetailsComponent implements OnInit {

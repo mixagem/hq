@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ITreasuryLog } from 'src/assets/interfaces/itreasury-log';
+import { ITreasuryLog } from 'src/shared/interfaces/itreasury-log';
 
 @Injectable({ providedIn: 'root' })
 
