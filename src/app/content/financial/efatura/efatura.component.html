@@ -16,31 +16,41 @@
     </div>
   </div>
 
-  <mat-progress-bar *ngIf="!snapshotsReady" mode="indeterminate" color="accent"></mat-progress-bar>
+  <mat-progress-bar *ngIf="!snapshotsReady || !movementsReady" mode="indeterminate" color="accent"></mat-progress-bar>
 
 
-  <div class="mhq-row mhq-mainform-content" *ngIf="snapshotsReady"
-    style="flex-direction: row;justify-content: center;padding-top:25px;align-items: flex-start;">
+  <div class="mhq-row mhq-mainform-content"
+    style="flex-direction: column;justify-content: flex-start;padding-top:25px;align-items: center;">
+
+
+    <div *ngIf="snapshotsReady" style="display:flex;flex-direction:row;width: 75%;">
+
+      <div *ngFor="let efatvalue of eFaturaSnapshots; let i = index" style="width:calc(95% / 6);margin:0px 10px">
+        <mat-card style="padding:0 0 16px;border-radius: 15px;">
+
+          <div class="mhq-row"
+            [style]="'border-top-right-radius: 15px;border-top-left-radius: 15px;height:70px;background-color:'+eFaturaService.efaturaTable[i+1].color">
+            <mat-icon
+              style="color:#Fff;font-size:36px;height:100%;width:auto;margin:0px auto 10px;display: flex; justify-content: center; align-items: center;">
+              {{eFaturaService.efaturaTable[i+1].icon}}</mat-icon>
+          </div>
+
+          <div style="padding:5px 0;text-align: center;">{{eFaturaService.efaturaTable[i+1].title}}</div>
+          <div style="text-align: center;font-size:24px">{{efatvalue}}</div>
+        </mat-card>
+      </div>
+    </div>
 
 
 
-    <div *ngFor="let efatvalue of eFaturaSnapshots; let i = index" style="width:calc(95% / 6);margin:0px 10px">
-      <mat-card style="padding:0 0 16px;border-radius: 15px;">
-
-        <div class="mhq-row"
-          [style]="'border-top-right-radius: 15px;border-top-left-radius: 15px;height:70px;background-color:'+eFaturaService.efaturaTable[i+1].color">
-          <mat-icon
-            style="color:#Fff;font-size:36px;height:100%;width:auto;margin:0px auto 10px;display: flex; justify-content: center; align-items: center;">
-            {{eFaturaService.efaturaTable[i+1].icon}}</mat-icon>
-        </div>
-
-        <div style="padding:5px 0;text-align: center;">{{eFaturaService.efaturaTable[i+1].title}}</div>
-        <div style="text-align: center;font-size:24px">{{efatvalue}}</div>
-      </mat-card>
-
-
+    <div *ngIf="movementsReady"
+      style="flex-direction: row;justify-content: center;padding-top:25px;align-items: flex-start;height:calc(60% - 60px * .6 - 60px * .6);width: 100%;">
+      <h2>Movimentos por validar</h2>
+      <div *ngFor="let tlog of movimentsToValidate; let i = index;">
+        <div style="width: 300px;height:20px;background:pink;border:1px solid black;padding:20px"
+          (click)="efatCheckModal('300ms','150ms',i)">{{tlog.title}}</div>
+      </div>
     </div>
 
   </div>
-
 </div>

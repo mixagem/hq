@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { IEfaturaCategory } from 'src/shared/interfaces/iefatura-category';
 
 export type EFaturaCategoryList = {
@@ -63,7 +64,12 @@ export class EfaturaService {
 
   efaturaTable: EFaturaCategoryList;
 
+  onInitTrigger: Subject<any>;   //trigger para onInit
+
   constructor() {
     this.efaturaTable = { ...EFATURA_CATEGORIES };
   }
+
+
+  onInitTriggerCall(): void { this.onInitTrigger.next(''); this.onInitTrigger.complete; this.onInitTrigger = new Subject<any>(); }
 }

@@ -1,5 +1,5 @@
 import { savingsGraphSnapshot, generateCatGraphSnapshot } from './fi/analysisMethods.js'
-import { insertEFatura, fetchEFaturaSnapshots} from './fi/efaturaMethods.js'
+import { insertEFatura, fetchEFaturaSnapshots, movmentsNotValidated} from './fi/efaturaMethods.js'
 import { dailyTotalAcomulatedSnapshot, monthlySnapshots, dailyCatDetails, dailySubCatDetails, dailyTotalDetails } from './fi/grid-view/monthlyViewMethods.js';
 import { monthlyTotalAcomulatedSnapshot, yearlySnapshots, monthlyCatDetails, monthlySubCatDetails, monthlyTotalDetails } from './fi/grid-view/yearlyViewMethods.js';
 import { orderCategories, orderSubCategories, fetchCategories, createNewCategory, deleteCategory, updateCategory, getSubcategorySequence } from './fi/categoriesMethods.js'
@@ -58,6 +58,7 @@ APP.post('/dailysubcatdetails', function (req, res) { return dailySubCatDetails(
 // APP.post('/savingsgraphsnapshot', function (req, res) { return savingsGraphSnapshot(req, res); });
 APP.post('/insertefatura', function (req, res) { return insertEFatura(req, res); });
 APP.get('/efaturasnapshots', function (req, res) { return fetchEFaturaSnapshots(req, res); });
+APP.get('/tlogstovalidate', function (req, res) { return movmentsNotValidated(req, res); });
 
 // analysis
 APP.post('/savingsgraphsnapshot', function (req, res) { return savingsGraphSnapshot(req, res); });

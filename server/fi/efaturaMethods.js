@@ -56,3 +56,25 @@ export function insertEFatura(req, res) {
   }
 
 }
+
+export function movmentsNotValidated(req, res) {
+
+  let dbErrors = false;
+  const DB = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+    if (err) { dbErrors = true; console.error(err.message); console.log('[EFAT 4] Erro ao ligar à bd'); };
+    console.log('---------------------------')
+    console.log('[EFAT 4] A obter faturas não validadas');
+  });
+
+  let movmentsArray = []
+  DB.each(`SELECT * FROM treasurylog WHERE nif='true' AND efatcheck='false'`, (err, tlog) => {
+
+    if (err) { dbErrors = true; console.log('[EFAT 4] Erro ao obter faturas não validadas'); console.error(err.message); }
+    movmentsArray.push(tlog)
+  });
+
+  DB.close((err) => {
+    if (err || dbErrors) { console.error(err.message); console.log('[EFAT 4 Erro ao encerrar a ligação à bd'); res.send(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']); }
+    else { res.send(movmentsArray); console.log('[EFAT 4] Foram encontradaos => '+movmentsArray.length+' movimentos para validar.') }
+  });
+}

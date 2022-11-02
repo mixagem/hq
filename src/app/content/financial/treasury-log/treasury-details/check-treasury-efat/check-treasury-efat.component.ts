@@ -41,13 +41,13 @@ export class CheckTreasuryEfatComponent implements OnInit {
     CALL.subscribe({
       next: codeReceived => {
         const RESP = codeReceived as string[];
-        if (RESP[0] !== 'MHQERROR') {
-          const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-          this.treasuryService.fetchTreasuryLog('saveTLog', this.treasuryService.activeTLog.id)
-          this._mhqSnackbarService.triggerMHQSnackbar(true, 'save_as', '', [RESP[0], '']); // dispara a snackbar
+        if (RESP[0] === 'MHQERROR') {
+          this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', '', [RESP[1], '']);
         }
         else {
-          this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', '', [RESP[1], '']);
+          const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
+          this._router.url.startsWith('/fi/efat') ? this.efaturaService.onInitTriggerCall() : this.treasuryService.fetchTreasuryLog('saveTLog', this.treasuryService.activeTLog.id);
+          this._mhqSnackbarService.triggerMHQSnackbar(true, 'save_as', '', [RESP[0], '']);
         }
       },
       error: err => this._errorHandlingService.handleError(err)

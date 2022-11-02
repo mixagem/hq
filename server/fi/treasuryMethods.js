@@ -353,7 +353,7 @@ export function getRecurencyLogs(req, res) {
   if (req.body.type === 'tlog') {
     const TREASURY_LOG_ID = req.body.tlogID;
     const RECURRENCY_ID = req.body.recurID;
-    
+
     let dbErrors = false;
     const DB = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
       if (err) { dbErrors = true; console.error(err.message); console.log(`[TRE 5] Erro ao ligar à bd'`); }
@@ -429,7 +429,7 @@ export function updateRecurrency(req, res) {
       else { queryExtra += `, ${FIELD}='${TREASURY_LOG[FIELD]}'` }
     });
     queryExtra += ` WHERE recurrencyid='${TREASURY_LOG.recurrencyid}'`;
-
+    console.log(QUERY+queryExtra)
     DB.serialize(() => {
       DB.run(`${QUERY}${queryExtra}`, (err, resp) => {
         if (err) { dbErrors = true; console.error(err.message); console.log('[TRE 6] Erro ao ligar à bd'); }
