@@ -7,7 +7,7 @@ export function savingsGraphSnapshot(req, res) {
 
   const YEAR = JSON.parse(req.body.year);
 
-  const DATA_INI = new Date('2022-01-01T00:00:00.000Z'); DATA_INI.setFullYear(YEAR-1); const DATA_INI_MS = DATA_INI.getTime();
+  const DATA_INI = new Date('2022-01-01T00:00:00.000Z'); DATA_INI.setFullYear(YEAR - 1); const DATA_INI_MS = DATA_INI.getTime();
   const DATA_FINI = new Date('2022-01-01T00:00:00.000Z'); DATA_FINI.setFullYear(YEAR); const DATA_FINI_MS = DATA_FINI.getTime() - 1;
 
   let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
@@ -55,7 +55,11 @@ export function savingsGraphSnapshot(req, res) {
     db.each(`SELECT * FROM treasurylog WHERE date >= ${DATA_INI_MS} AND date < ${DATA_FINI_MS} AND cat = '2' and subcat = '4' ORDER BY date ASC `, (err, homeSavingLog) => {
       if (err) { console.error(err.message) } else {
         const MONTH = new Date(homeSavingLog.date).getMonth();
-        homeMonthlyValues[MONTH] = sumToFixed(homeMonthlyValues[MONTH], homeSavingLog.value);
+        if (homeSavingLog.type === 'income') {
+          homeMonthlyValues[MONTH] = sumToFixed(homeMonthlyValues[MONTH], -homeSavingLog.value);
+        } else {
+          homeMonthlyValues[MONTH] = sumToFixed(homeMonthlyValues[MONTH], homeSavingLog.value);
+        }
 
 
         // homeSnapshotArray.series.push({
@@ -69,8 +73,11 @@ export function savingsGraphSnapshot(req, res) {
     db.each(`SELECT * FROM treasurylog WHERE date >= ${DATA_INI_MS} AND date < ${DATA_FINI_MS} AND cat = '2' and subcat = '5' ORDER BY date ASC `, (err, carSavingLog) => {
       if (err) { console.error(err.message) } else {
         const MONTH = new Date(carSavingLog.date).getMonth();
-        carMonthlyValues[MONTH] = sumToFixed(carMonthlyValues[MONTH], carSavingLog.value);
-
+        if (carSavingLog.type === 'income') {
+          carMonthlyValues[MONTH] = sumToFixed(carMonthlyValues[MONTH], -carSavingLog.value);
+        } else {
+          carMonthlyValues[MONTH] = sumToFixed(carMonthlyValues[MONTH], carSavingLog.value);
+        }
 
         // homeSnapshotArray.series.push({
         //   date: new Date(savingLog.date).toLocaleString('default', { month: 'short' }).slice(0,-1),
@@ -104,12 +111,12 @@ export function savingsGraphSnapshot(req, res) {
       let MONTH = new Date(DATA_INI_MS); MONTH.setMonth(i);
 
       homeSnapshotArray.series.push({
-        name: MONTH.toLocaleString('default', { year:'numeric' , month: 'short' }),
+        name: MONTH.toLocaleString('default', { year: 'numeric', month: 'short' }),
         value: homeAcomulatedValues[i]
       })
 
       carSnapshotArray.series.push({
-        name: MONTH.toLocaleString('default', { year:'numeric', month: 'short' }),
+        name: MONTH.toLocaleString('default', { year: 'numeric', month: 'short' }),
         value: carAcomulatedValues[i]
       })
 
@@ -150,7 +157,7 @@ export function generateCatGraphSnapshot(req, res) {
 
       const DATA_MENSAL_LOCALE = new Date(DATA_INI_MS); DATA_MENSAL_LOCALE.setFullYear(YEAR, y);
       snapshotsArray[i].series.push({
-        name: DATA_MENSAL_LOCALE.toLocaleString('default', { month: 'short' }).slice(0,-1),
+        name: DATA_MENSAL_LOCALE.toLocaleString('default', { month: 'short' }).slice(0, -1),
         value: 0,
       })
     }

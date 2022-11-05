@@ -76,10 +76,20 @@ export class MonthlyViewComponent implements OnInit {
         this.gridViewService.monthlyCurrentDate = new Date();
         picker!.close();
     }
-
+    this.placeholder = new Array(this.gridViewService.getMonthDays(this.gridViewService.monthlyCurrentDate.getFullYear(), this.gridViewService.monthlyCurrentDate.getMonth())).fill(0);
     this.getDailySumAcomEvolution();
     this.getCategoriesMonthlySnapshots(this.gridViewService.monthlyCurrentDate.getFullYear(), this.gridViewService.monthlyCurrentDate.getMonth());
     this.monthlyGridSubtitleGenerator();
+  }
+
+
+  monthPicked(event: Date, picker: MatDatepicker<any>): void {
+    this.gridViewService.monthlyCurrentDate.setFullYear(event.getFullYear(), event.getMonth());
+    this.placeholder = new Array(this.gridViewService.getMonthDays(this.gridViewService.monthlyCurrentDate.getFullYear(), this.gridViewService.monthlyCurrentDate.getMonth())).fill(0);
+    this.getDailySumAcomEvolution();
+    this.getCategoriesMonthlySnapshots(this.gridViewService.monthlyCurrentDate.getFullYear(), this.gridViewService.monthlyCurrentDate.getMonth())
+    this.monthlyGridSubtitleGenerator()
+    picker.close();
   }
 
   getDailySumAcomEvolution(): void { // total acomulado
@@ -119,13 +129,6 @@ export class MonthlyViewComponent implements OnInit {
     this.gridSubtitle = this.gridViewService.monthlyCurrentDate.toLocaleString('default', { year: 'numeric', month: 'long' });
   }
 
-  monthPicked(event: Date, picker: MatDatepicker<any>): void {
-    this.gridViewService.monthlyCurrentDate.setFullYear(event.getFullYear(), event.getMonth());
-    this.getDailySumAcomEvolution();
-    this.getCategoriesMonthlySnapshots(this.gridViewService.monthlyCurrentDate.getFullYear(), this.gridViewService.monthlyCurrentDate.getMonth())
-    this.monthlyGridSubtitleGenerator()
-    picker.close();
-  }
 
   showDailySumDetails(day: number): void {
     const HTTP_PARAMS = new HttpParams().set('month', this.gridViewService.monthlyCurrentDate.getMonth()).set('year', this.gridViewService.monthlyCurrentDate.getFullYear()).set('day', day);
