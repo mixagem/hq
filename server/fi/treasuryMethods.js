@@ -429,7 +429,7 @@ export function updateRecurrency(req, res) {
       else { queryExtra += `, ${FIELD}='${TREASURY_LOG[FIELD]}'` }
     });
     queryExtra += ` WHERE recurrencyid='${TREASURY_LOG.recurrencyid}'`;
-    console.log(QUERY+queryExtra)
+    console.log(QUERY + queryExtra)
     DB.serialize(() => {
       DB.run(`${QUERY}${queryExtra}`, (err, resp) => {
         if (err) { dbErrors = true; console.error(err.message); console.log('[TRE 6] Erro ao ligar à bd'); }
@@ -574,4 +574,43 @@ export function deleteAllRecurrencies(req, res) {
 
   }
 
+}
+
+export function tlogSerach(req, res) {
+  console.log('---------------------------');
+  if (req.body.type === 'tlog') {
+
+    const SEARCH_STRING_ARRAY = req.body.search.split(' ');
+    let dbErrors = false;
+    const DB = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+      if (err) { dbErrors = true; console.error(err.message); console.log('[TRE 9] Erro ao ligar à bd'); }
+      console.log(`[TRE 9] A efetuar procura com base no título => ${req.body.search}`);
+    });
+
+    let filteredLogs = [];
+    const QUERY = 'SELECT * from treasurylog WHERE'
+    let queryExtra = '';
+
+    SEARCH_STRING_ARRAY.forEach((keyword, i) => {
+      if (i === 0) { queryExtra += ` title LIKE '%${keyword}%' OR value LIKE '%${keyword}%'` } else { { queryExtra += ` OR title LIKE '%${keyword}%' OR value LIKE '%${keyword}%'` } }
+      if (i === SEARCH_STRING_ARRAY.length - 1) {queryExtra += ' ORDER BY date DESC' }
+
+      DB.serialize(() => {
+        DB.each(`${QUERY}${queryExtra}`, (err, tlog) => {
+          if (err) { dbErrors = true; console.error(err.message); console.log('[TRE 9] Erro ao ligar à bd'); }
+          filteredLogs.push(tlog)
+        });
+      });
+
+    });
+
+    DB.close((err) => {
+      if (err || dbErrors) {
+        console.log('[TRE 9] Erro ao carregar terminar ligação com a BD'); console.error(err.message); res.send(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']);
+      } else {
+        res.send(filteredLogs); console.log('[TRE 9] Foram encontrados => ' + filteredLogs.length + ' movimentos através das strings ' + req.body.search)
+      }
+    });
+
+  }
 }

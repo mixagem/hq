@@ -28,8 +28,14 @@ export class TreasuryLogComponent implements OnInit {
   ngOnInit(): void {
     // loading check
     this.treasuryService.onInitTrigger.subscribe(x => { this.ngOnInit(); }); this.categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
-    if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.treasuryLoadingComplete || this.firstLoadingComplete) { return }
-    this.firstLoadingComplete = true;
+
+    if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.treasuryLoadingComplete) { return }
+
+    if (this.firstLoadingComplete && !this.treasuryService.textSearchRefresh) { return }
+    else {
+      this.firstLoadingComplete = true;
+      this.treasuryService.textSearchRefresh = false;
+    }
 
     // modo lista
     let dataSourceArray = [];

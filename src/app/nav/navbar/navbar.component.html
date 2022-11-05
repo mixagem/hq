@@ -1,5 +1,13 @@
 <div class="mhq-row mhq-navbar">
-  <div class="mhq-col-2"></div>
   <div class="mhq-col-3"></div>
-  <div class="mhq-col-7"></div>
+  <div class="mhq-col-6" style="background-color:rgb(255, 190, 190);display:flex;justify-content:center">
+
+
+    <mhq-treasury-searchbox *ngIf="router.url.startsWith('/fi/tlogs')"></mhq-treasury-searchbox>
+
+
+
+
+  </div>
+  <div class="mhq-col-3"></div>
   </div>

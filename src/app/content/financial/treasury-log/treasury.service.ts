@@ -17,6 +17,8 @@ const REC_FREQ: recurencyFrequency[] = [{ string: "Mensal", value: "m" }, { stri
 
 export class TreasuryService {
 
+  textSearchRefresh: boolean;
+
   recurrencyFreq: recurencyFrequency[] = [...REC_FREQ]; // opções frequencia recurrencia
 
   tLogTable: TLogTable; // movimentos vindos da bd
@@ -28,6 +30,7 @@ export class TreasuryService {
 
   constructor(private _errorHandlingService: ErrorHandlingService, private _http: HttpClient, private _router: Router, private _loadingService: LoadingService, private _timerService: TimerService, private _mhqSnackbarService: MHQSnackBarsService) {
     this.cloningTLog = false;
+    this.textSearchRefresh = false;
     this.onInitTrigger = new Subject<any>();
     this.recordBorderStyle = { "background-color": "rgb(0,0,0)" };
     this.fetchTreasuryLog();

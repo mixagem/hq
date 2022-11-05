@@ -1,0 +1,6 @@
+<mat-form-field appearance="fill">
+  <input matInput type="text" [(ngModel)]="navbarService.treasuryNavbarInput" (input)="logy(false,$event.target!)">
+  <button  matSuffix mat-icon-button (click)="logy(true)">
+    <mat-icon>clear</mat-icon>
+  </button>
+</mat-form-field>

@@ -4,13 +4,15 @@ import { RouterModule } from '@angular/router';
 import { NavbarComponent } from 'src/app/nav/navbar/navbar.component';
 import { NavmenuComponent } from 'src/app/nav/navmenu/navmenu.component';
 import { MaterialImportsModule } from './material-imports.module';
+import { TreasurySearchboxComponent } from 'src/app/nav/navbar/treasury-searchbox/treasury-searchbox.component';
 
 
 
 @NgModule({
   declarations: [
     NavbarComponent,
-    NavmenuComponent
+    NavmenuComponent,
+    TreasurySearchboxComponent
   ],
   imports: [
     CommonModule,
@@ -19,7 +21,8 @@ import { MaterialImportsModule } from './material-imports.module';
   ],
   exports: [
     NavbarComponent,
-    NavmenuComponent
+    NavmenuComponent,
+    TreasurySearchboxComponent
   ]
 })
 export class NavModule { }

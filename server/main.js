@@ -3,7 +3,7 @@ import { insertEFatura, fetchEFaturaSnapshots, movmentsNotValidated} from './fi/
 import { dailyTotalAcomulatedSnapshot, monthlySnapshots, dailyCatDetails, dailySubCatDetails, dailyTotalDetails } from './fi/grid-view/monthlyViewMethods.js';
 import { monthlyTotalAcomulatedSnapshot, yearlySnapshots, monthlyCatDetails, monthlySubCatDetails, monthlyTotalDetails } from './fi/grid-view/yearlyViewMethods.js';
 import { orderCategories, orderSubCategories, fetchCategories, createNewCategory, deleteCategory, updateCategory, getSubcategorySequence } from './fi/categoriesMethods.js'
-import { deleteAllRecurrencies, dettachRecurrency, updateRecurrency, getRecurencyLogs, createTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog, createBudgetlog, fetchBudgetLogs } from './fi/treasuryMethods.js';
+import { deleteAllRecurrencies, dettachRecurrency, updateRecurrency, getRecurencyLogs, createTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog, createBudgetlog, fetchBudgetLogs, tlogSerach } from './fi/treasuryMethods.js';
 
 
 import express from 'express';
@@ -40,6 +40,7 @@ APP.post('/getrecurencylogs', function (req, res) { return getRecurencyLogs(req,
 APP.post('/updaterecurrency', function (req, res) { return updateRecurrency(req, res); });
 APP.post('/dettachrecurrency', function (req, res) { return dettachRecurrency(req, res); });
 APP.post('/deleteallrecurrencies', function (req, res) { return deleteAllRecurrencies(req, res); });
+APP.post('/tlogserach', function (req, res) { return tlogSerach(req, res); });
 
 // grid :: yearly-view
 APP.post('/monthlysumevo', function (req, res) { return monthlyTotalAcomulatedSnapshot(req, res); }); //snapshot
