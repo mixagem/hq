@@ -3,8 +3,8 @@ import { insertEFatura, fetchEFaturaSnapshots, movmentsNotValidated} from './fi/
 import { dailyTotalAcomulatedSnapshot, monthlySnapshots, dailyCatDetails, dailySubCatDetails, dailyTotalDetails } from './fi/grid-view/monthlyViewMethods.js';
 import { monthlyTotalAcomulatedSnapshot, yearlySnapshots, monthlyCatDetails, monthlySubCatDetails, monthlyTotalDetails } from './fi/grid-view/yearlyViewMethods.js';
 import { orderCategories, orderSubCategories, fetchCategories, createNewCategory, deleteCategory, updateCategory, getSubcategorySequence } from './fi/categoriesMethods.js'
-import { deleteAllRecurrencies, dettachRecurrency, updateRecurrency, getRecurencyLogs, createTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog, createBudgetlog, fetchBudgetLogs, tlogSerach } from './fi/treasuryMethods.js';
-
+import { deleteAllRecurrencies, dettachRecurrency, updateRecurrency, getRecurencyLogs, createTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog, createBudgetlog, fetchBudgetLogs } from './fi/treasuryMethods.js';
+import { tlogSerach,saveSearch, fetchAdvancedSearches,getSearchParamsSequence,addNewSearch , deleteSearch} from './fi/searchMethods.js'
 
 import express from 'express';
 import cors from 'cors';
@@ -16,7 +16,6 @@ APP.use(express.json());
 APP.use(cors());
 APP.use(express.urlencoded({ extended: true }));
 APP.listen(PORT, () => console.log(".: MI HQ - Listening on port 16190 :."));
-
 
 // finance -V
 
@@ -40,7 +39,6 @@ APP.post('/getrecurencylogs', function (req, res) { return getRecurencyLogs(req,
 APP.post('/updaterecurrency', function (req, res) { return updateRecurrency(req, res); });
 APP.post('/dettachrecurrency', function (req, res) { return dettachRecurrency(req, res); });
 APP.post('/deleteallrecurrencies', function (req, res) { return deleteAllRecurrencies(req, res); });
-APP.post('/tlogserach', function (req, res) { return tlogSerach(req, res); });
 
 // grid :: yearly-view
 APP.post('/monthlysumevo', function (req, res) { return monthlyTotalAcomulatedSnapshot(req, res); }); //snapshot
@@ -56,7 +54,6 @@ APP.post('/dailycatdetails', function (req, res) { return dailyCatDetails(req, r
 APP.post('/dailysubcatdetails', function (req, res) { return dailySubCatDetails(req, res) })
 
 // efatura
-// APP.post('/savingsgraphsnapshot', function (req, res) { return savingsGraphSnapshot(req, res); });
 APP.post('/insertefatura', function (req, res) { return insertEFatura(req, res); });
 APP.get('/efaturasnapshots', function (req, res) { return fetchEFaturaSnapshots(req, res); });
 APP.get('/tlogstovalidate', function (req, res) { return movmentsNotValidated(req, res); });
@@ -64,3 +61,11 @@ APP.get('/tlogstovalidate', function (req, res) { return movmentsNotValidated(re
 // analysis
 APP.post('/savingsgraphsnapshot', function (req, res) { return savingsGraphSnapshot(req, res); });
 APP.post('/testesnapshot', function (req, res) { return generateCatGraphSnapshot(req, res); });
+
+// advanced search
+APP.get('/fetchsearches', function (req, res) { return fetchAdvancedSearches(req, res); });
+APP.get('/currentsearchparamssequence', function (req, res) { return getSearchParamsSequence(req, res); });
+APP.post('/savesearch', function (req, res) { return saveSearch(req, res); });
+APP.post('/addnewsearch', function (req, res) { return addNewSearch(req, res); });
+APP.post('/tlogserach', function (req, res) { return tlogSerach(req, res); });
+APP.post('/deletesearch', function (req, res) { return deleteSearch(req, res); });

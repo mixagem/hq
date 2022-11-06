@@ -1,0 +1,148 @@
+<h1 mat-dialog-title class="mhq-modal-header">
+  <mat-icon>search</mat-icon>Pesquisas avançadas
+</h1>
+
+<div mat-dialog-content class="mhq-modal-content-wrapper mhq-row">
+  <div style="height:5px">
+    <mat-progress-bar *ngIf="this.waitingForSQL" mode="indeterminate" color="accent">
+    </mat-progress-bar>
+  </div>
+
+  <div style="height:calc(25% - 5px);display: flex;
+  justify-content: space-between;align-items:center;">
+
+    <mat-form-field appearance="fill" style="width:50%">
+      <mat-label>Título</mat-label>
+      <mat-select *ngIf="!editingMode && !insertMode" (selectionChange)="changedSearch($event)"
+        [formControl]="selectedSearchForm">
+        <mat-option *ngFor="let search of advancedSearchArray" [value]="search.id">
+          {{search.title}}
+        </mat-option>
+      </mat-select>
+      <input matInput *ngIf="editingMode || insertMode" [(ngModel)]="tempAdvancedSearch.title">
+
+      <mat-icon *ngIf="editingMode" matSuffix>edit</mat-icon>
+
+    </mat-form-field>
+    <div>
+      <button (click)="saveSearch()" mat-mini-fab color="primary"
+        style="background-color:var(--mhq-waikiki-sucess);color:#000;margin:0 15px" *ngIf="editingMode || insertMode">
+        <mat-icon>save</mat-icon>
+      </button>
+      <button mat-mini-fab color="warn" *ngIf="editingMode || insertMode" (click)="discardChanges()">
+        <mat-icon>not_interested</mat-icon>
+      </button>
+      <button mat-mini-fab color="primary" *ngIf="!editingMode && !insertMode" (click)="addSearchMode()">
+        <mat-icon>add</mat-icon>
+      </button>
+      <button mat-mini-fab color="primary" style="margin:0 15px" *ngIf="!editingMode && !insertMode" [disabled]="selectedSearchIndex===0"
+        (click)="editSearchMode()">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button (click)="deleteSearch('300ms','150ms')" mat-mini-fab color="warn" *ngIf="!editingMode && !insertMode" [disabled]="selectedSearchIndex===0">
+        <mat-icon>delete</mat-icon>
+      </button>
+
+    </div>
+  </div>
+
+
+
+  <div style="height:75%">
+
+    <h3>Parâmetros da pesquisa</h3>
+
+    <table *ngIf="isTableReady && !editingMode && !insertMode && selectedSearchIndex !== 0" style="width: 100%;">
+
+      <tr>
+        <th style="color: var(--mhq-waikiki-acolor-1);width:100px;">Tipo</th>
+        <th style="color: var(--mhq-waikiki-acolor-1);width:100px;">Campo</th>
+        <th style="color: var(--mhq-waikiki-acolor-1);width:130px;">Condição</th>
+        <th style="color: var(--mhq-waikiki-acolor-1);width:auto;text-align: left;padding-left:20px;">Valor</th>
+        <th style="width:80px;"></th>
+      </tr>
+      <tr *ngFor="let search of advancedSearchTable[selectedSearchIndex].parameters">
+
+        <td style="text-align: center">{{search.type==='AND'? 'E' : 'Ou'}}</td>
+        <td style="text-align: center">{{search.field | field}}</td>
+        <td style="text-align: center">{{search.condition | condition }}</td>
+        <td style="padding-left:20px;">{{search.value}}</td>
+        <td></td>
+      </tr>
+    </table>
+
+
+    <table id="mhq-editing-search-params" *ngIf="isTableReady && editingMode || isTableReady && insertMode"
+       style="width: 100%;">
+
+      <tr>
+        <th style="color: var(--mhq-waikiki-acolor-1);width:70px;">Tipo</th>
+        <th style="color: var(--mhq-waikiki-acolor-1);width:100px;">Campo</th>
+        <th style="color: var(--mhq-waikiki-acolor-1);width:130px;">Condição</th>
+        <th style="color: var(--mhq-waikiki-acolor-1);width:auto;text-align: left;padding-left:20px;">Valor</th>
+        <th style="width:80px;"></th>
+      </tr>
+      <tr *ngFor="let param of tempAdvancedSearch.parameters; let i = index;">
+
+        <td>
+          <mat-form-field appearance="fill" style="width:70px;">
+            <mat-select [(ngModel)]="param.type">
+              <mat-option value="AND"> E </mat-option>
+              <mat-option value="OR"> Ou </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+        </td>
+
+        <td>
+
+          <mat-form-field appearance="fill" style="width:150px;">
+            <mat-select [(ngModel)]="param.field">
+              <mat-option value="title"> Título </mat-option>
+              <mat-option value="value"> Valor </mat-option>
+              <mat-option value="date"> Data </mat-option>
+              <mat-option value="cat"> Categoria </mat-option>
+              <mat-option value="subcat"> Subcategoria </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+
+
+
+        <td>
+          <mat-form-field appearance="fill" style="width:150px;">
+            <mat-select [(ngModel)]="param.condition">
+              <mat-option value="&&"> Contém </mat-option>
+              <mat-option value="="> Igual a </mat-option>
+              <mat-option value="<"> Menor </mat-option>
+              <mat-option value="<="> Menor ou igual </mat-option>
+              <mat-option value=">"> Maior </mat-option>
+              <mat-option value=">="> Maior ou igual </mat-option>
+              <mat-option value="!="> Diferente de </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </td>
+
+        <td>
+
+          <mat-form-field appearance="fill">
+            <input matInput type="text" [(ngModel)]="param.value">
+          </mat-form-field>
+
+        </td>
+        <td>
+          <mat-icon (click)="removeParameter(param.id)">delete</mat-icon>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="5" style="text-align: center;" (click)="addParameter()">adicionar parâmetro</td>
+      </tr>
+    </table>
+  </div>
+
+
+</div>
+
+<div mat-dialog-actions class="mhq-modal-close-actions">
+  <button mat-stroked-button mat-dialog-close color="warn">Fechar</button>
+</div>

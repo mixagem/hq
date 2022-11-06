@@ -5,6 +5,10 @@ import { NavbarComponent } from 'src/app/nav/navbar/navbar.component';
 import { NavmenuComponent } from 'src/app/nav/navmenu/navmenu.component';
 import { MaterialImportsModule } from './material-imports.module';
 import { TreasurySearchboxComponent } from 'src/app/nav/navbar/treasury-searchbox/treasury-searchbox.component';
+import { AdvancedTreasurySearchComponent } from 'src/app/nav/navbar/treasury-searchbox/advanced-treasury-search/advanced-treasury-search.component';
+import { ConditionPipe } from '../pipes/condition.pipe';
+import { FieldPipe } from '../pipes/field.pipe';
+import { DeleteSearchModalComponent } from 'src/app/nav/navbar/treasury-searchbox/advanced-treasury-search/delete-search-modal/delete-search-modal.component';
 
 
 
@@ -12,7 +16,11 @@ import { TreasurySearchboxComponent } from 'src/app/nav/navbar/treasury-searchbo
   declarations: [
     NavbarComponent,
     NavmenuComponent,
-    TreasurySearchboxComponent
+    TreasurySearchboxComponent,
+    AdvancedTreasurySearchComponent,
+    DeleteSearchModalComponent,
+    ConditionPipe,
+    FieldPipe
   ],
   imports: [
     CommonModule,
@@ -22,7 +30,9 @@ import { TreasurySearchboxComponent } from 'src/app/nav/navbar/treasury-searchbo
   exports: [
     NavbarComponent,
     NavmenuComponent,
-    TreasurySearchboxComponent
+    TreasurySearchboxComponent,
+    AdvancedTreasurySearchComponent,
+    DeleteSearchModalComponent
   ]
 })
 export class NavModule { }

@@ -1,11 +1,13 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TreasuryService } from 'src/app/content/financial/treasury-log/treasury.service';
 import { ITreasuryLog } from 'src/shared/interfaces/itreasury-log';
 import { MHQSnackBarsService } from 'src/shared/services/mhq-snackbar.service';
 import { ErrorHandlingService } from 'src/shared/services/misc.service';
 import { NavbarService } from '../navbar.service';
+import { AdvancedTreasurySearchComponent } from './advanced-treasury-search/advanced-treasury-search.component';
 
 @Component({
   selector: 'mhq-treasury-searchbox',
@@ -15,12 +17,15 @@ import { NavbarService } from '../navbar.service';
 export class TreasurySearchboxComponent implements OnInit {
 
 
-  constructor(public router: Router, public treasuryService: TreasuryService, private _errorHandlingService: ErrorHandlingService, private _http: HttpClient, private _mhqSnackbarService: MHQSnackBarsService, public navbarService: NavbarService) {
+  constructor(private _dialog: MatDialog, public router: Router, public treasuryService: TreasuryService, private _errorHandlingService: ErrorHandlingService, private _http: HttpClient, private _mhqSnackbarService: MHQSnackBarsService, public navbarService: NavbarService) {
 
   }
 
   ngOnInit(): void {
   }
+
+  
+
 
   logy(reset: boolean, event?: EventTarget): void {
 
@@ -46,5 +51,18 @@ export class TreasurySearchboxComponent implements OnInit {
       error: err => this._errorHandlingService.handleError(err)
     });
   }
+
+  openAdvancedTreasurySearchModal(enterAnimationDuration:string,exitAnimationDuration:string) {
+    this._dialog.open(AdvancedTreasurySearchComponent, {
+      width: '800px',
+      height: '500px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
+  }
+
+
+
+
 
 }

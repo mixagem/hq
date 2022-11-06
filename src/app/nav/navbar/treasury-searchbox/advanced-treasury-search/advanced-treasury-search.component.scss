@@ -1,0 +1,10 @@
+::ng-deep {
+  #mhq-editing-search-params {
+    .mat-form-field-appearance-fill .mat-select-arrow-wrapper {
+      transform: translateY(-10%);
+    }
+    .mat-form-field-appearance-fill .mat-form-field-flex {
+      padding: 0 10px;
+    }
+  }
+}

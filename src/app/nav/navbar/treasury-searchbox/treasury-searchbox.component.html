@@ -1,6 +1,12 @@
 <mat-form-field appearance="fill">
   <input matInput type="text" [(ngModel)]="navbarService.treasuryNavbarInput" (input)="logy(false,$event.target!)">
-  <button  matSuffix mat-icon-button (click)="logy(true)">
+  <button matSuffix mat-icon-button (click)="openAdvancedTreasurySearchModal('300ms','150ms')">
+    <mat-icon>search</mat-icon>
+  </button>
+  <button matSuffix mat-icon-button (click)="logy(true)">
     <mat-icon>clear</mat-icon>
   </button>
+
 </mat-form-field>
+
+<!--  -->

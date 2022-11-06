@@ -1,0 +1,21 @@
+<h1 mat-dialog-title class="mhq-modal-header">
+  <mat-icon>warning_amber</mat-icon>Remover procura
+</h1>
+
+<div mat-dialog-content class="mhq-modal-content-wrapper">
+
+  <!-- <p>Tens a certeza que queres remover a categoria <span class="mhq-category-modal-label"
+    [style]="'background-color:'+categoriesService.activeCat.bgcolor+';color:'+categoriesService.activeCat.textcolor">{{categoriesService.activeCat.title}}</span>
+  e respetivas sub-categorias?</p>
+  <ng-scrollbar>
+    <ul>
+      <li *ngFor="let subcat of categoriesService.activeCat.subcats">{{subcat.title}}</li>
+    </ul>
+  </ng-scrollbar> -->
+
+</div>
+
+<div mat-dialog-actions class="mhq-modal-close-actions">
+  <button id="mhq-lil-hammer" mat-flat-button color="warn" (click)="deleteSearch()">Remover procura</button>
+  <button mat-stroked-button mat-dialog-close color="primary">Cancelar</button>
+</div>
