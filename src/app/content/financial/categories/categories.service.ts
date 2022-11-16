@@ -53,6 +53,8 @@ export class CategoriesService {
           this.catTable[`'${cat.id}'`] = cat;
           cat.subcats.forEach(subcat => { this.subcatTable[`${subcat.id}`] = subcat; });
         });
+        console.log(this.catTable)
+
         this._loadingService.categoriesLoadingComplete = true; // loading das categorias pronto
 
         switch (source) {
@@ -96,8 +98,8 @@ export class CategoriesService {
   // método para obter o último id utilizado nas categorias em bd
   getCurrentSubcategoriesSequence(): void {
 
-    // const CALL = this._http.get('http://localhost/hq/php/cats/subcatseq.php', { responseType: 'json' });
-    const CALL = this._http.get('http://localhost:16190/currentsubcategorysequence', { responseType: 'json' });
+    const CALL = this._http.get('http://localhost/hq/php/cats/subcatseq.php', { responseType: 'json' });
+    // const CALL = this._http.get('http://localhost:16190/currentsubcategorysequence', { responseType: 'json' });
     CALL.subscribe({
       next: (codeReceived) => {
         const RESP = codeReceived as string[];

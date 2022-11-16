@@ -14,7 +14,11 @@ $query = "SELECT * FROM categories WHERE lower(title) = '" . strtolower($cat["ti
 $result = mysqli_query($con, $query);
 
 if (mysqli_num_rows($result) !== 0) {
-  array_push($db_errors, "O título <b>" . $cat["title"] . "</b> já se encontra em uso por uma outra categoria.");
+  while ($row = mysqli_fetch_assoc($result)) {
+    if (intval($row["id"]) !== intval($cat["id"])) {
+      array_push($db_errors, "O título <b>" . $cat["title"] . "</b> já se encontra em uso por uma outra categoria.");
+    }
+  }
 }
 
 // name-check subcategorias
@@ -44,6 +48,8 @@ if ($subcats_length > 0) {
     $query_extra .= ")";
     $full_query = $query . $query_extra;
   }
+
+
   $result = mysqli_query($con, $full_query);
 
   //  verificar existencia dos títulos em bd  - query runner
@@ -53,11 +59,12 @@ if ($subcats_length > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
       $existing_subcats[] = $row;
     }
-
     $result_length = count($existing_subcats);
+
+
     for ($i = 0; $i < $result_length; $i++) {
       // excepção para quando estamos a editar o registo a qual as subcategorias pertencem
-      if (in_array(strtolower($existing_subcats[$i]["title"]), $temp_subcat_titles) && $existing_subcats[$i]["maincatid"] !== $cat["id"]) {
+      if (intval($existing_subcats[$i]["maincatid"]) !== intval($cat["id"])) {
         array_push($db_errors, "O título da subcategoria <b>" . $existing_subcats[$i]["title"] . "</b> já se encontra em uso.");
         break;
       }
@@ -65,64 +72,44 @@ if ($subcats_length > 0) {
   }
 }
 
+
 // fim verificação nomes duplicados
 if ($db_errors) {
   echo json_encode(['MHQERROR', ...$db_errors]);
   return;
 }
 
-// obter sequencia ordem
-$order_sequence = 9999;
-$query = "SELECT MAX(catorder) as max from categories";
-$result = mysqli_query($con, $query);
-if (mysqli_num_rows($result) !== 0) {
-  while ($row = mysqli_fetch_assoc($result)) {
-    $order_sequence = intval($row["max"]) + 1;
-  }
-} else {
-  echo json_encode(["error while obtaining cat order sequence"]);
-}
-
-//introdução nova cat
-$query = "INSERT INTO categories (title, icon, type, bgcolor, textcolor, active, catorder) VALUES ('{$cat["title"]}','{$cat["icon"]}','{$cat["type"]}','{$cat["bgcolor"]}','{$cat["textcolor"]}','" . json_encode($cat["active"]) . "', '{$order_sequence}')";
+//atualização da cat
+$query = "UPDATE categories SET title='{$cat["title"]}', type='{$cat["type"]}', icon='{$cat["icon"]}', bgcolor='{$cat["bgcolor"]}', textcolor='{$cat["textcolor"]}', active='" . json_encode($cat["active"]) . "', catorder='{$cat["catorder"]}' WHERE id={$cat["id"]}'";
 
 mysqli_query($con, $query);
-
 if (mysqli_affected_rows($con) === 0) {
-  echo json_encode(["Error while inserting category"]);
+  echo json_encode(["Error while updating category"]);
   return;
 }
-
-
-// obter sequencia categoria
-$query = "SELECT MAX(id) as max from categories";
-$result = mysqli_query($con, $query);
-
-if (mysqli_num_rows($result) === 0) {
-  echo json_encode(["Error while obtaining cats sequence"]);
-  return;
-}
-
-while ($row = mysqli_fetch_assoc($result)) {
-  $cat_seq = intval($row["max"]);
-}
-
 
 // atualização das subcats
 if ($subcats_length !== 0) {
+
+  $query = "DELETE FROM subcategories WHERE maincatid='{$cat["id"]}'";
+  mysqli_query($con, $query);
+
+  if (mysqli_affected_rows($con) === 0) {
+    echo json_encode(["Error while deleting subcategories"]);
+    return;
+  }
+
   $i = 0;
   foreach ($cat["subcats"] as &$subcat) {
-    $query = "INSERT INTO subcategories (maincatid, title, budget, active, subcatorder) VALUES ('{$cat_seq}', '{$subcat["title"]}', '{$subcat["budget"]}', '{$subcat["active"]}', '{$i}' )";
+    $query = "INSERT INTO subcategories (maincatid, title, budget, active, subcatorder) VALUES ('{$cat["id"]}', '{$subcat["title"]}', '{$subcat["budget"]}', '{$subcat["active"]}', '{$i}' )";
 
     mysqli_query($con, $query);
     if (mysqli_affected_rows($con) === 0) {
-      echo json_encode(["Error while inserting subcategory"]);
+      echo json_encode(["Error while inserting subcategories"]);
       return;
     }
     $i++;
   }
 }
 
-echo json_encode([strval($cat_seq)]);
-
-?>
+echo json_encode(['A categoria <b>' . $cat["title"] . '</b> e respetivas subcategorias foram atualizadas com sucesso.']);

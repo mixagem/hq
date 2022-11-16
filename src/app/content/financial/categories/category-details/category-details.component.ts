@@ -62,7 +62,8 @@ export class CategoryDetailsComponent implements OnInit {
   // Ação para guardar as alterações ao registo
   saveCatChanges(): void {
     const HTTP_PARAMS = new HttpParams().set('category', JSON.stringify(this.tempCat))
-    const CALL = this._http.post('http://localhost:16190/updatecategory', HTTP_PARAMS, { responseType: 'json' })
+    // const CALL = this._http.post('http://localhost:16190/updatecategory', HTTP_PARAMS, { responseType: 'json' })
+    const CALL = this._http.post('http://localhost/hq/php/cats/updatecat.php', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
       next: codeReceived => {
