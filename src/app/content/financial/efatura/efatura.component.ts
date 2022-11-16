@@ -34,7 +34,8 @@ export class EfaturaComponent implements OnInit {
 
   fetchEFaturaSnapshots(): void {
 
-    const CALL = this._http.get('http://localhost:16190/efaturasnapshots', { responseType: 'json' })
+    // const CALL = this._http.get('http://localhost:16190/efaturasnapshots', { responseType: 'json' })
+    const CALL = this._http.get('http://localhost/hq/php/efat/efatsnaps.php', { responseType: 'json' })
 
     CALL.subscribe({
       next: codeReceived => {
@@ -53,7 +54,8 @@ export class EfaturaComponent implements OnInit {
 
   fetchMovemntsToValidate(): void {
 
-    const CALL = this._http.get('http://localhost:16190/tlogstovalidate', { responseType: 'json' })
+    // const CALL = this._http.get('http://localhost:16190/tlogstovalidate', { responseType: 'json' })
+    const CALL = this._http.get('http://localhost/hq/php/efat/movstovalidate.php', { responseType: 'json' })
 
     CALL.subscribe({
       next: codeReceived => {
@@ -72,6 +74,7 @@ export class EfaturaComponent implements OnInit {
 
   efatCheckModal(enterAnimationDuration: string, exitAnimationDuration: string, i:number): void {
     this._treasuryService.activeTLog = this.movimentsToValidate[i]
+    console.log(this._treasuryService.activeTLog )
     this._dialog.open(CheckTreasuryEfatComponent, { width: '600px', height: '300px', enterAnimationDuration, exitAnimationDuration, });
   }
 }

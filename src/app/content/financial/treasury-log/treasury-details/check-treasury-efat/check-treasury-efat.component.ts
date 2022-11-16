@@ -32,11 +32,14 @@ export class CheckTreasuryEfatComponent implements OnInit {
       tlogtitle: this.treasuryService.activeTLog.title,
       efat: this.treasuryService.activeTLog.efat,
       value: this.treasuryService.activeTLog.type === 'income' ? -Number(DEDUCTION_VALUE.toFixed(2)) : Number(DEDUCTION_VALUE.toFixed(2)),
-      year: new Date(this.treasuryService.activeTLog.date).getFullYear()
+      year: new Date(Number(this.treasuryService.activeTLog.date)).getFullYear()
     }
 
+
+
     const HTTP_PARAMS = new HttpParams().set('efatura', JSON.stringify(EFATURA))
-    const CALL = this._http.post('http://localhost:16190/insertefatura', HTTP_PARAMS, { responseType: 'json' })
+    // const CALL = this._http.post('http://localhost:16190/insertefatura', HTTP_PARAMS, { responseType: 'json' })
+    const CALL = this._http.post('http://localhost/hq/php/efat/newefat.php', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
       next: codeReceived => {
