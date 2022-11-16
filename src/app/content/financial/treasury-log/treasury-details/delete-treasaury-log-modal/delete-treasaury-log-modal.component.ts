@@ -28,7 +28,8 @@ export class DeleteTreasauryLogModalComponent {
     let CALL: Observable<Object>;
     if (this.router.url.startsWith('/fi/tlog')) {
       HTTP_PARAMS = new HttpParams().set('type', 'tlog').set('tlogID', this.treasuryService.activeTLog.id)
-      CALL = this._http.post('http://localhost:16190/deletetreasurylog', HTTP_PARAMS, { responseType: 'json' })
+      CALL = this._http.post('http://localhost/hq/php/tlogs/deletetlog.php', HTTP_PARAMS, { responseType: 'json' })
+      // CALL = this._http.post('http://localhost:16190/deletetreasurylog', HTTP_PARAMS, { responseType: 'json' })
 
       CALL.subscribe({
         next: codeReceived => {
@@ -44,7 +45,8 @@ export class DeleteTreasauryLogModalComponent {
 
     if (this.router.url.startsWith('/fi/budget')) {
       HTTP_PARAMS = new HttpParams().set('type', 'budget').set('budgetID', this.budgetService.activeBudgetLog.id)
-      CALL = this._http.post('http://localhost:16190/deletetreasurylog', HTTP_PARAMS, { responseType: 'text' })
+      CALL = this._http.post('http://localhost/hq/php/tlogs/deletetlog.php', HTTP_PARAMS, { responseType: 'text' })
+      // CALL = this._http.post('http://localhost:16190/deletetreasurylog', HTTP_PARAMS, { responseType: 'text' })
 
       CALL.subscribe({
         next: codeReceived => {
@@ -66,7 +68,8 @@ export class DeleteTreasauryLogModalComponent {
 
     if (this.router.url.startsWith('/fi/tlog')) {
       HTTP_PARAMS = new HttpParams().set('type', 'tlog').set('recurrencyID', this.treasuryService.activeTLog.recurrencyid)
-      CALL = this._http.post('http://localhost:16190/deleteallrecurrencies', HTTP_PARAMS, { responseType: 'json' })
+      CALL = this._http.post('http://localhost/hq/php/tlogs/deleterecurrency.php', HTTP_PARAMS, { responseType: 'json' })
+      // CALL = this._http.post('http://localhost:16190/deleteallrecurrencies', HTTP_PARAMS, { responseType: 'json' })
 
       CALL.subscribe({
         next: codeReceived => {
@@ -86,6 +89,7 @@ export class DeleteTreasauryLogModalComponent {
     if (this.router.url.startsWith('/fi/budget')) {
       HTTP_PARAMS = new HttpParams().set('type', 'budget').set('recurrencyID', this.budgetService.activeBudgetLog.recurrencyid)
       CALL = this._http.post('http://localhost:16190/deleteallrecurrencies', HTTP_PARAMS, { responseType: 'json' })
+      // CALL = this._http.post('http://localhost:16190/deleteallrecurrencies', HTTP_PARAMS, { responseType: 'json' })
 
       CALL.subscribe({
         next: codeReceived => {

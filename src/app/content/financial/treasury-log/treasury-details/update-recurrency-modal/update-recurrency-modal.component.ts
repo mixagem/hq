@@ -65,13 +65,16 @@ export class UpdateRecurrencyModalComponent {
       const HTTP_PARAMS = new HttpParams().set('type', 'tlog').set('tlog', JSON.stringify(this._treasuryService.activeTLog)).set('fields', JSON.stringify(selectedFieldsToMassUpdate))
 
       let call;
-      if (update) { call = this._http.post('http://localhost:16190/updaterecurrency', HTTP_PARAMS, { responseType: 'json' }) }
-      else { call = this._http.post('http://localhost:16190/updatetreasurylog', HTTP_PARAMS, { responseType: 'json' }) }
+      // if (update) { call = this._http.post('http://localhost:16190/updaterecurrency', HTTP_PARAMS, { responseType: 'json' }) }
+      // else { call = this._http.post('http://localhost:16190/updatetreasurylog', HTTP_PARAMS, { responseType: 'json' }) }
+      if (update) { call = this._http.post('http://localhost/hq/php/tlogs/updaterecurrency.php', HTTP_PARAMS, { responseType: 'json' }) }
+      else { call = this._http.post('http://localhost/hq/php/tlogs/updatetlog.php', HTTP_PARAMS, { responseType: 'json' }) }
 
       call.subscribe({
         next: codeReceived => {
           const RESP = codeReceived as string[];
           if (RESP[0] !== 'MHQERROR') {
+            // return;
             this._treasuryService.fetchTreasuryLog('saveTLog', this._treasuryService.activeTLog.id);
             const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
             this._categoriesSnackBarService.triggerMHQSnackbar(true, 'save_as', '', [RESP[0], '']);

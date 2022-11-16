@@ -91,7 +91,8 @@ export class TreasuryDetailsComponent implements OnInit {
   getRecurrencyFamily(): void {
     if (this.tempTLog.recurrencyid === 0) { return }
     const HTTP_PARAMS = new HttpParams().set('type', 'tlog').set('tlogID', this.tempTLog.id).set('recurID', this.tempTLog.recurrencyid)
-    const CALL = this._http.post('http://localhost:16190/getrecurencylogs', HTTP_PARAMS, { responseType: 'json' })
+    const CALL = this._http.post('http://localhost/hq/php/tlogs/fetchrecurrency.php', HTTP_PARAMS, { responseType: 'json' })
+    // const CALL = this._http.post('http://localhost:16190/getrecurencylogs', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
       next: codeReceived => {
@@ -111,7 +112,8 @@ export class TreasuryDetailsComponent implements OnInit {
 
   saveTLog(): void {
     const HTTP_PARAMS = new HttpParams().set('type', 'tlog').set('tlog', JSON.stringify(this.tempTLog))
-    const CALL = this._http.post('http://localhost:16190/updatetreasurylog', HTTP_PARAMS, { responseType: 'json' })
+    // const CALL = this._http.post('http://localhost:16190/updatetreasurylog', HTTP_PARAMS, { responseType: 'json' })
+    const CALL = this._http.post('http://localhost/hq/php/tlogs/updatetlog.php', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
       next: codeReceived => {

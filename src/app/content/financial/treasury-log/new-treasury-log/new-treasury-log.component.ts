@@ -53,6 +53,7 @@ export class NewTreasuryLogComponent implements OnInit {
 
   constructor(private _errorHandlingService: ErrorHandlingService, public categoriesService: CategoriesService, public treasuryService: TreasuryService, private _router: Router, private _http: HttpClient, private _timerService: TimerService, private _categoriesSnackBarService: MHQSnackBarsService, public loadingService: LoadingService, public efaturaService: EfaturaService) {
     this.saveComplete = true;
+    this.recurrency = false;
   }
 
   ngOnInit(): void {
@@ -123,14 +124,15 @@ export class NewTreasuryLogComponent implements OnInit {
       date: new Date(this.tempTLog.date).getDate()
     }
     const HTTP_PARAMS = new HttpParams().set('tlog', JSON.stringify(this.tempTLog)).set('recurrency', JSON.stringify(RECURRENCY_OPTIONS));
-    const CALL = this._http.post('http://localhost:16190/createtreasurylog', HTTP_PARAMS, { responseType: 'json' });
+    // const CALL = this._http.post('http://localhost:16190/createtreasurylog', HTTP_PARAMS, { responseType: 'json' });
+    const CALL = this._http.post('http://localhost/hq/php/tlogs/newtlog.php', HTTP_PARAMS, { responseType: 'json' });
 
     this.saveComplete = false;
 
     CALL.subscribe({
       next: codeReceived => {
         const RESP = codeReceived as string[];
-
+        // return;
         if (RESP[0] !== 'MHQERROR') {
           // this.treasuryService.recordBorderStyle['background-color'] = this.categoriesService.catTable[`'${this.tempTLog.cat}'`].bgcolor
           this.treasuryService.fetchTreasuryLog('saveTLog', Number(RESP[0]));

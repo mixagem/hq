@@ -53,7 +53,6 @@ export class CategoriesService {
           this.catTable[`'${cat.id}'`] = cat;
           cat.subcats.forEach(subcat => { this.subcatTable[`${subcat.id}`] = subcat; });
         });
-        console.log(this.catTable)
 
         this._loadingService.categoriesLoadingComplete = true; // loading das categorias pronto
 
@@ -106,7 +105,6 @@ export class CategoriesService {
         if (RESP[0] === 'MHQERROR') { this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', RESP[1], ['', '']); location } else {
           this.currentSubcategoryDBSequence = Number(RESP[0]);
         }
-        console.log(this.currentSubcategoryDBSequence)
       },
       error: err => { this._errorHandlingService.handleError(err); }
     });
