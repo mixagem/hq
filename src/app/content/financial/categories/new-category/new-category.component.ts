@@ -61,7 +61,8 @@ export class NewCategoryComponent implements OnInit {
   // concluí o modo de introdução (manda para bd, faz fresh à listagem e à gaveta)
   createCat(): void {
     const HTTP_PARAMS = new HttpParams().set('category', JSON.stringify(this.tempCat));
-    const CALL = this._http.post('http://localhost:16190/createnewcategory', HTTP_PARAMS, { responseType: 'json' });
+    const CALL = this._http.post('http://localhost/hq/php/cats/newcat.php', HTTP_PARAMS, { responseType: 'json' });
+    // const CALL = this._http.post('http://localhost:16190/createnewcategory', HTTP_PARAMS, { responseType: 'json' });
     CALL.subscribe({
       next: codeReceived => {
         const RESP = codeReceived as string[];

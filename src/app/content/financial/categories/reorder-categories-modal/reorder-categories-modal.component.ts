@@ -58,7 +58,8 @@ export class ReorderCategoriesModalComponent implements OnInit {
     this.catsToOrder.forEach(cat => { categoryOrderArray.push(cat.id) });
 
     const HTTP_PARAMS = new HttpParams().set('newcatorder', JSON.stringify(categoryOrderArray))
-    const CALL = this._http.post('http://localhost:16190/ordercategories', HTTP_PARAMS, { responseType: 'json' });
+    // const CALL = this._http.post('http://localhost:16190/ordercategories', HTTP_PARAMS, { responseType: 'json' });
+    const CALL = this._http.post('http://localhost/hq/php/cats/ordercats.php', HTTP_PARAMS, { responseType: 'json' });
     CALL.subscribe({
       next: (codeReceived) => {
         const RESP = codeReceived as string[];
@@ -76,7 +77,8 @@ export class ReorderCategoriesModalComponent implements OnInit {
     this.subCatsToOrder.forEach(subcat => { subCategoryOrderArray.push(subcat.id) });
 
     const HTTP_PARAMS = new HttpParams().set('newsubcatorder', JSON.stringify(subCategoryOrderArray))
-    const CALL = this._http.post('http://localhost:16190/ordersubcategories', HTTP_PARAMS, { responseType: 'json' });
+    // const CALL = this._http.post('http://localhost:16190/ordersubcategories', HTTP_PARAMS, { responseType: 'json' });
+    const CALL = this._http.post('http://localhost/hq/php/cats/ordersubcats.php', HTTP_PARAMS, { responseType: 'json' });
     CALL.subscribe({
       next: (codeReceived) => {
         const RESP = codeReceived as string[];

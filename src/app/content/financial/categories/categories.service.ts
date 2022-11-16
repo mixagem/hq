@@ -38,7 +38,9 @@ export class CategoriesService {
 
   // vai á bd buscar as categorias + atualiza o modo de listagem e o registo em consulta
   fetchCategories(source: FetchOptions = 'loadCat', catID?: number): void {
-    const CALL = this._http.get('http://localhost:16190/fetchcats', { responseType: 'json' });
+
+    const CALL = this._http.get('http://localhost/hq/php/cats/fetchcats.php', { responseType: 'json' });
+    // const CALL = this._http.get('http://localhost:16190/fetchcats', { responseType: 'json' });
 
     CALL.subscribe({
       next: (codeReceived) => {
@@ -93,6 +95,8 @@ export class CategoriesService {
 
   // método para obter o último id utilizado nas categorias em bd
   getCurrentSubcategoriesSequence(): void {
+
+    // const CALL = this._http.get('http://localhost/hq/php/cats/subcatseq.php', { responseType: 'json' });
     const CALL = this._http.get('http://localhost:16190/currentsubcategorysequence', { responseType: 'json' });
     CALL.subscribe({
       next: (codeReceived) => {
@@ -100,6 +104,7 @@ export class CategoriesService {
         if (RESP[0] === 'MHQERROR') { this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', RESP[1], ['', '']); location } else {
           this.currentSubcategoryDBSequence = Number(RESP[0]);
         }
+        console.log(this.currentSubcategoryDBSequence)
       },
       error: err => { this._errorHandlingService.handleError(err); }
     });

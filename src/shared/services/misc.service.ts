@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 
+type Contype = 'php' | 'node'
 ///////////////////////////////////////////////////////////////
 
 @Injectable({ providedIn: 'root' })
@@ -21,6 +22,7 @@ export class ErrorHandlingService {
 @Injectable({ providedIn: 'root' })
 
 export class TimerService { timer: any; }
+
 
 ///////////////////////////////////////////////////////////////
 

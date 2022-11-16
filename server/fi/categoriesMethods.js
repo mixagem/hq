@@ -347,6 +347,8 @@ export function updateCategory(req, res) {
 
       if (CATEGORY.subcats.length > 0) {
         CATEGORY.subcats.forEach((subcat, i) => {
+
+        console.log(`INSERT INTO subcategories (id, maincatid, title, budget, active, subcatorder) VALUES ('${subcat.id}', '${subcat.maincatid}', '${subcat.title}', '${subcat.budget}', '${subcat.active}', '${Number(i)}' )`)
           DB.run(`INSERT INTO subcategories (id, maincatid, title, budget, active, subcatorder) VALUES ('${subcat.id}', '${subcat.maincatid}', '${subcat.title}', '${subcat.budget}', '${subcat.active}', '${Number(i)}' )`, (err) => {
             if (err) { dbErrors = true; console.log('[CAT 7] Erro ao substituir subcategorias (2)'); console.error(err.message); };
           });
@@ -356,7 +358,8 @@ export function updateCategory(req, res) {
 
     DB.close((err) => {
       if (err || dbErrors) {
-        console.log('[CAT 7] Erro ao carregar terminar ligação com a BD'); console.error(err.message); res.send(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']);
+        console.log('[CAT 7] Erro ao carregar terminar ligação com a BD');}
+        if(err){ console.error(err.message); res.send(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']);
       } else { res.send(['A categoria <b>' + CATEGORY.title + '</b> e respetivas subcategorias foram atualizadas com sucesso.']); console.log('[CAT 7] Categoria "' + CATEGORY.title + '" e respetivas subcategorias atualizadas com sucesso') }
     });
 

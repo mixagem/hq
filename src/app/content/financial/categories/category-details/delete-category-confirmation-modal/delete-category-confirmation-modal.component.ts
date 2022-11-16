@@ -23,7 +23,8 @@ export class DeleteCategoryConfirmationModalComponent {
     }
 
     const HTTP_PARAMS = new HttpParams().set('cat', JSON.stringify(this.categoriesService.activeCat))
-    const CALL = this._http.post('http://localhost:16190/deletecategory', HTTP_PARAMS, { responseType: 'json' })
+    const CALL = this._http.post('http://localhost/hq/php/cats/deletecat.php', HTTP_PARAMS, { responseType: 'json' })
+    // const CALL = this._http.post('http://localhost:16190/deletecategory', HTTP_PARAMS, { responseType: 'json' })
     CALL.subscribe({
       next: codeReceived => {
         const RESP = codeReceived as string[];
