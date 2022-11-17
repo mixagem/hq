@@ -32,10 +32,12 @@ export class EfaturaComponent implements OnInit {
     this.fetchMovemntsToValidate();
   }
 
+  
+
   fetchEFaturaSnapshots(): void {
 
-    // const CALL = this._http.get('http://localhost:16190/efaturasnapshots', { responseType: 'json' })
-    const CALL = this._http.get('http://localhost/hq/php/efat/efatsnaps.php', { responseType: 'json' })
+    const CALL = this._http.get('http://localhost:16190/efaturasnapshots', { responseType: 'json' })
+    // const CALL = this._http.get('http://localhost/hq/php/efat/efatsnaps.php', { responseType: 'json' })
 
     CALL.subscribe({
       next: codeReceived => {
@@ -54,8 +56,8 @@ export class EfaturaComponent implements OnInit {
 
   fetchMovemntsToValidate(): void {
 
-    // const CALL = this._http.get('http://localhost:16190/tlogstovalidate', { responseType: 'json' })
-    const CALL = this._http.get('http://localhost/hq/php/efat/movstovalidate.php', { responseType: 'json' })
+    const CALL = this._http.get('http://localhost:16190/tlogstovalidate', { responseType: 'json' })
+    // const CALL = this._http.get('http://localhost/hq/php/efat/movstovalidate.php', { responseType: 'json' })
 
     CALL.subscribe({
       next: codeReceived => {

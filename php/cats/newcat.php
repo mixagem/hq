@@ -76,33 +76,21 @@ if ($db_errors) {
 $order_sequence = 9999;
 $query = "SELECT MAX(catorder) as max from categories";
 $result = mysqli_query($con, $query);
-if (mysqli_num_rows($result) !== 0) {
+
   while ($row = mysqli_fetch_assoc($result)) {
     $order_sequence = intval($row["max"]) + 1;
   }
-} else {
-  echo json_encode(["error while obtaining cat order sequence"]);
-}
+
 
 //introdução nova cat
 $query = "INSERT INTO categories (title, icon, type, bgcolor, textcolor, active, catorder) VALUES ('{$cat["title"]}','{$cat["icon"]}','{$cat["type"]}','{$cat["bgcolor"]}','{$cat["textcolor"]}','" . json_encode($cat["active"]) . "', '{$order_sequence}')";
 
 mysqli_query($con, $query);
 
-if (mysqli_affected_rows($con) === 0) {
-  echo json_encode(["Error while inserting category"]);
-  return;
-}
-
 
 // obter sequencia categoria
 $query = "SELECT MAX(id) as max from categories";
 $result = mysqli_query($con, $query);
-
-if (mysqli_num_rows($result) === 0) {
-  echo json_encode(["Error while obtaining cats sequence"]);
-  return;
-}
 
 while ($row = mysqli_fetch_assoc($result)) {
   $cat_seq = intval($row["max"]);
@@ -114,12 +102,7 @@ if ($subcats_length !== 0) {
   $i = 0;
   foreach ($cat["subcats"] as &$subcat) {
     $query = "INSERT INTO subcategories (maincatid, title, budget, active, subcatorder) VALUES ('{$cat_seq}', '{$subcat["title"]}', '{$subcat["budget"]}', '{$subcat["active"]}', '{$i}' )";
-
     mysqli_query($con, $query);
-    if (mysqli_affected_rows($con) === 0) {
-      echo json_encode(["Error while inserting subcategory"]);
-      return;
-    }
     $i++;
   }
 }

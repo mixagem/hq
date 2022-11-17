@@ -11,7 +11,7 @@ export function fetchEFaturaSnapshots(req, res) {
 
   let eFaturas = [];
   DB.serialize(() => {
-    for (let i = 1; i <= 6; i++) {
+    for (let i = 1; i <= 12; i++) {
       DB.all(`SELECT SUM(value) AS sum FROM efatura WHERE efatcat='${i}'`, (err, resp) => {
         if (err) { dbErrors = true; console.log('[EFAT 1] Erro ao gerar snapshots efatura'); console.error(err.message); } else {
           if (resp[0].sum === null) { eFaturas.push(0) } else { eFaturas.push(resp[0].sum) }
@@ -76,5 +76,28 @@ export function movmentsNotValidated(req, res) {
   DB.close((err) => {
     if (err || dbErrors) { console.error(err.message); console.log('[EFAT 4 Erro ao encerrar a ligação à bd'); res.send(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']); }
     else { res.send(movmentsArray); console.log('[EFAT 4] Foram encontradaos => '+movmentsArray.length+' movimentos para validar.') }
+  });
+}
+
+
+export function visibleEfatCats(req, res) {
+
+  let dbErrors = false;
+  const DB = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+    if (err) { dbErrors = true; console.error(err.message); console.log('[EFAT 5] Erro ao ligar à bd'); };
+    console.log('---------------------------')
+    console.log('[EFAT 5] ');
+  });
+
+  let efatcats;
+  DB.each(`SELECT value FROM settings WHERE desc='efatcats'`, (err, efatcatsarray) => {
+
+    if (err) { dbErrors = true; console.log('[EFAT 5] '); console.error(err.message); }
+    efatcats = JSON.parse(efatcatsarray["value"]);
+  });
+
+  DB.close((err) => {
+    if (err || dbErrors) { console.error(err.message); console.log('[EFAT 5 Erro ao encerrar a ligação à bd'); res.send(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']); }
+    else { res.send(efatcats); console.log('[EFAT 5] ') }
   });
 }

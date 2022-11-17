@@ -30,13 +30,11 @@ if ($recurr["active"] === true) {
   $recurr_seq = 9999;
   $query = "SELECT MAX(recurrencyid) as max from treasurylog";
   $result = mysqli_query($con, $query);
-  if (mysqli_num_rows($result) !== 0) {
-    while ($row = mysqli_fetch_assoc($result)) {
-      $recurr_seq = intval($row["max"]) + 1;
-    }
-  } else {
-    echo json_encode(["'MHQERROR',Error while loading max from tlogs"]);
+
+  while ($row = mysqli_fetch_assoc($result)) {
+    $recurr_seq = intval($row["max"]) + 1;
   }
+
 
   $date = new DateTime();
 
@@ -59,22 +57,15 @@ if ($recurr["active"] === true) {
         $query = "INSERT INTO treasurylog (title, date, value, cat, subcat, type, obs, recurrencyid, nif, efat) VALUES ('{$tlog["title"]}', '" . $date_ms . "', '{$tlog["value"]}', '{$tlog["cat"]}', '{$tlog["subcat"]}', '{$tlog["type"]}', '{$tlog["obs"]}', '{$recurr_seq}', '{$tlog["nif"]}', '{$tlog["efat"]}')";
 
         mysqli_query($con, $query);
-
-        if (mysqli_affected_rows($con) === 0) {
-          echo json_encode(["'MHQERROR',Error while inserting tlog"]);
-          return;
-        }
       }
       $query = "SELECT MAX(id) as max from treasurylog";
       $result = mysqli_query($con, $query);
-      if (mysqli_num_rows($result) !== 0) {
-        while ($row = mysqli_fetch_assoc($result)) {
-          $tlog_seq = intval($row["max"]);
-        }
-        echo json_encode([$tlog_seq, "O movimento <b>" . $tlog["title"] . "</b> foi criado com sucesso."]);
-      } else {
-        echo json_encode(["'MHQERROR',Erro ao estabelecer comunicação com a base de dados."]);
+
+      while ($row = mysqli_fetch_assoc($result)) {
+        $tlog_seq = intval($row["max"]);
       }
+      echo json_encode([$tlog_seq, "O movimento <b>" . $tlog["title"] . "</b> foi criado com sucesso."]);
+
 
 
       break;
@@ -89,22 +80,15 @@ if ($recurr["active"] === true) {
         $query = "INSERT INTO treasurylog (title, date, value, cat, subcat, type, obs, recurrencyid, nif, efat) VALUES ('{$tlog["title"]}', '" . $date_ms . "', '{$tlog["value"]}', '{$tlog["cat"]}', '{$tlog["subcat"]}', '{$tlog["type"]}', '{$tlog["obs"]}', '{$recurr_seq}', '{$tlog["nif"]}', '{$tlog["efat"]}')";
 
         mysqli_query($con, $query);
-
-        if (mysqli_affected_rows($con) === 0) {
-          echo json_encode(["'MHQERROR',Error while inserting tlog"]);
-          return;
-        }
       }
       $query = "SELECT MAX(id) as max from treasurylog";
       $result = mysqli_query($con, $query);
-      if (mysqli_num_rows($result) !== 0) {
-        while ($row = mysqli_fetch_assoc($result)) {
-          $tlog_seq = intval($row["max"]);
-        }
-        echo json_encode([$tlog_seq, "O movimento <b>" . $tlog["title"] . "</b> foi criado com sucesso."]);
-      } else {
-        echo json_encode(["'MHQERROR',Erro ao estabelecer comunicação com a base de dados."]);
+
+      while ($row = mysqli_fetch_assoc($result)) {
+        $tlog_seq = intval($row["max"]);
       }
+      echo json_encode([$tlog_seq, "O movimento <b>" . $tlog["title"] . "</b> foi criado com sucesso."]);
+
 
 
       break;
@@ -117,19 +101,13 @@ if ($recurr["active"] === false) {
 
   mysqli_query($con, $query);
 
-  if (mysqli_affected_rows($con) === 0) {
-    echo json_encode(["'MHQERROR',Error while inserting tlog"]);
-    return;
-  }
+
 
   $query = "SELECT MAX(id) as max from treasurylog";
   $result = mysqli_query($con, $query);
-  if (mysqli_num_rows($result) !== 0) {
-    while ($row = mysqli_fetch_assoc($result)) {
-      $tlog_seq = $row["max"];
-    }
-    echo json_encode([$tlog_seq, "O movimento <b>" . $tlog["title"] . "</b> foi criado com sucesso."]);
-  } else {
-    echo json_encode(["'MHQERROR',Erro ao estabelecer comunicação com a base de dados."]);
+
+  while ($row = mysqli_fetch_assoc($result)) {
+    $tlog_seq = $row["max"];
   }
+  echo json_encode([$tlog_seq, "O movimento <b>" . $tlog["title"] . "</b> foi criado com sucesso."]);
 }

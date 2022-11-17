@@ -38,8 +38,8 @@ export class CheckTreasuryEfatComponent implements OnInit {
 
 
     const HTTP_PARAMS = new HttpParams().set('efatura', JSON.stringify(EFATURA))
-    // const CALL = this._http.post('http://localhost:16190/insertefatura', HTTP_PARAMS, { responseType: 'json' })
-    const CALL = this._http.post('http://localhost/hq/php/efat/newefat.php', HTTP_PARAMS, { responseType: 'json' })
+    const CALL = this._http.post('http://localhost:16190/insertefatura', HTTP_PARAMS, { responseType: 'json' })
+    // const CALL = this._http.post('http://localhost/hq/php/efat/newefat.php', HTTP_PARAMS, { responseType: 'json' })
 
     CALL.subscribe({
       next: codeReceived => {
@@ -49,7 +49,8 @@ export class CheckTreasuryEfatComponent implements OnInit {
         }
         else {
           const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
-          this._router.url.startsWith('/fi/efat') ? this.efaturaService.onInitTriggerCall() : this.treasuryService.fetchTreasuryLog('saveTLog', this.treasuryService.activeTLog.id);
+          if (this._router.url.startsWith('/fi/efat')) { this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigateByUrl('/fi/efat', { skipLocationChange: true }) }); }
+          else { this.treasuryService.fetchTreasuryLog('saveTLog', this.treasuryService.activeTLog.id); }
           this._mhqSnackbarService.triggerMHQSnackbar(true, 'save_as', '', [RESP[0], '']);
         }
       },

@@ -5,7 +5,7 @@ $con = mysqli_connect('localhost', 'root', '', 'hq');
 mysqli_set_charset($con, 'utf8');
 
 $efaturas = [];
-for ($i = 1; $i <= 6; $i++) {
+for ($i = 1; $i <= 12; $i++) {
     $query = "SELECT SUM(value) AS sum FROM efatura WHERE efatcat='{$i}'";
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) !== 0) {

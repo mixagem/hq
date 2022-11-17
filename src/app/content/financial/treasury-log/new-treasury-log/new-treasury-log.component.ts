@@ -124,8 +124,8 @@ export class NewTreasuryLogComponent implements OnInit {
       date: new Date(this.tempTLog.date).getDate()
     }
     const HTTP_PARAMS = new HttpParams().set('tlog', JSON.stringify(this.tempTLog)).set('recurrency', JSON.stringify(RECURRENCY_OPTIONS));
-    // const CALL = this._http.post('http://localhost:16190/createtreasurylog', HTTP_PARAMS, { responseType: 'json' });
-    const CALL = this._http.post('http://localhost/hq/php/tlogs/newtlog.php', HTTP_PARAMS, { responseType: 'json' });
+    const CALL = this._http.post('http://localhost:16190/createtreasurylog', HTTP_PARAMS, { responseType: 'json' });
+    // const CALL = this._http.post('http://localhost/hq/php/tlogs/newtlog.php', HTTP_PARAMS, { responseType: 'json' });
 
     this.saveComplete = false;
 

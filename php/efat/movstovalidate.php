@@ -17,7 +17,7 @@ if (mysqli_num_rows($result) !== 0) {
     }
 
 } else {
-    echo json_encode(['MHQERROR', 'Não foram encontrados movimentos para validar.']);
+    echo json_encode([]);
     return;
 }
 

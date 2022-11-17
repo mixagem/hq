@@ -71,7 +71,7 @@ if (mysqli_num_rows($result) !== 0) {
   }
   echo json_encode($cats);
 } else {
-  echo json_encode(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']);
+  echo json_encode([]);
 }
 
 mysqli_close($con);

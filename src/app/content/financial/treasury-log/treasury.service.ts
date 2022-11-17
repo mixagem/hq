@@ -41,8 +41,8 @@ export class TreasuryService {
 
   // vai á bd buscar os movimentos
   fetchTreasuryLog(source: FetchOptions = 'loadTLog', LogID?: number): void {
-    // const CALL = this._http.get('http://localhost:16190/fetchtreasurylogs');
-    const CALL = this._http.get('http://localhost/hq/php/tlogs/fetchtlogs.php');
+    const CALL = this._http.get('http://localhost:16190/fetchtreasurylogs');
+    // const CALL = this._http.get('http://localhost/hq/php/tlogs/fetchtlogs.php');
 
     CALL.subscribe({
       next: (codeReceived) => {

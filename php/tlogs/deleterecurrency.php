@@ -17,11 +17,6 @@ switch ($type) {
     $query = "DELETE from treasurylog WHERE recurrencyid='{$recurr_id}'";
     $result = mysqli_query($con, $query);
 
-    if (mysqli_affected_rows($con) === 0) {
-      echo json_encode(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']);
-      return;
-    }
-
     echo json_encode(["Foram eliminados com sucesso <b>todos os movimentos</b> da mesma recorrência."]);
     break;
 

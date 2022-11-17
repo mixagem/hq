@@ -35,10 +35,7 @@ switch ($type) {
 
 
     mysqli_query($con, $full_query);
-    if (mysqli_affected_rows($con) === 0) {
-      echo json_encode(["MHQERROR", "Error while updating recurrencies"]);
-      return;
-    }
+
 
     echo json_encode(['Foram atualizados <b>todos</b> os movimentos da recorrência.']);
 

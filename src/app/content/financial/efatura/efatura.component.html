@@ -20,12 +20,12 @@
 
 
   <div class="mhq-row mhq-mainform-content"
-    style="flex-direction: column;justify-content: flex-start;padding-top:25px;align-items: center;">
+    style="flex-direction: column;justify-content: space-between;padding-top:25px;align-items: center;">
 
 
-    <div *ngIf="snapshotsReady" style="display:flex;flex-direction:row;width: 75%;">
+    <div id="temp-row-dos-cartoes" *ngIf="snapshotsReady" style="display:flex;flex-direction:row;width: 75%;flex-wrap: wrap;height: 400px;">
 
-      <div *ngFor="let efatvalue of eFaturaSnapshots; let i = index" style="width:calc(95% / 6);margin:0px 10px">
+      <div *ngFor="let efatvalue of eFaturaSnapshots; let i = index" style="width:calc(100% / 6 - 20px);margin:10px 10px">
         <mat-card style="padding:0 0 16px;border-radius: 15px;">
 
           <div class="mhq-row"
@@ -35,16 +35,16 @@
               {{eFaturaService.efaturaTable[i+1].icon}}</mat-icon>
           </div>
 
-          <div style="padding:5px 0;text-align: center;">{{eFaturaService.efaturaTable[i+1].title}}</div>
-          <div style="text-align: center;font-size:24px">{{efatvalue}}</div>
+          <div style="padding:5px 0;text-align: center;height:60px;display: flex;align-items: center;justify-content: center;"><span style="width: 80%">{{eFaturaService.efaturaTable[i+1].title}}</span></div>
+          <div style="text-align: center;font-size:24px;">{{efatvalue | number:'1.2-2':'pt'}}</div>
         </mat-card>
       </div>
     </div>
 
 
 
-    <div *ngIf="movementsReady"
-      style="flex-direction: row;justify-content: center;padding-top:25px;align-items: flex-start;height:calc(60% - 60px * .6 - 60px * .6);width: 100%;">
+    <div id="temp-row-dos-movs" *ngIf="movementsReady"
+      style="flex-direction: row;justify-content: center;padding-top:25px;align-items: flex-start;height:calc(100% - 400px);width: 100%;">
       <h2>Movimentos por validar</h2>
       <div *ngFor="let tlog of movimentsToValidate; let i = index;">
         <div style="width: 300px;height:20px;background:pink;border:1px solid black;padding:20px"

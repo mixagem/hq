@@ -25,8 +25,8 @@ export class DettachRecurrencyModalComponent {
 
     if (this.router.url.startsWith('/fi/tlog')) {
       HTTP_PARAMS = new HttpParams().set('type', 'tlog').set('tlog', JSON.stringify(this.treasuryService.activeTLog));
-      CALL = this._http.post('http://localhost/hq/php/tlogs/dettachrecurrency.php', HTTP_PARAMS, { responseType: 'json' });
-      // CALL = this._http.post('http://localhost:16190/dettachrecurrency', HTTP_PARAMS, { responseType: 'json' });
+      // CALL = this._http.post('http://localhost/hq/php/tlogs/dettachrecurrency.php', HTTP_PARAMS, { responseType: 'json' });
+      CALL = this._http.post('http://localhost:16190/dettachrecurrency', HTTP_PARAMS, { responseType: 'json' });
 
       CALL.subscribe({
         next: codeReceived => {
