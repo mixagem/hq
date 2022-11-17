@@ -1,0 +1,54 @@
+<h1 mat-dialog-title class="mhq-modal-header">
+  <mat-icon>grid_view</mat-icon>Selecionar categorias
+</h1>
+
+<div mat-dialog-content class="mhq-modal-content-wrapper">
+
+  <div  style="display:flex;flex-wrap: wrap;justify-content: center;height:100%">
+    <div *ngFor="let efatcat of categories; let i = index;"
+      style="position:relative; width: calc(25% - 20px);height: calc(100% / 3 - 10px);margin: 5px 5px;display: flex;">
+
+
+      <!-- <div>
+        bg + icon
+      </div>
+      <div>
+        white overlay
+      </div>
+      <div>
+        text
+      </div> -->
+
+
+
+      <div
+        [style]="'position:absolute;border-radius:10px;display:flex;align-items:center;text-align: center;justify-content:center;height:100%;width:100%;background-color:'+eFaturaService.efaturaTable[i+1].color">
+        <div style="padding-bottom:20px">
+          <mat-icon style="border-radius:10px;color:#fff;font-size:36px;width:36px;height: 36px;">{{efatcat.icon}}
+          </mat-icon>
+        </div>
+      </div>
+      <div *ngIf="!tempActiveEFatCats.includes(i+1)" class="mhq-efatcat-not-selected-bg" style="position:absolute;width:100%;height:100%;"></div>
+
+      <div style="position:absolute;width:100%;height:100%;display: flex;justify-content: flex-end;">
+        <div style="padding:5px 10px 0px 0px">
+          <mat-icon [ngStyle]="tempActiveEFatCats.includes(i+1) ? {color:'#fff'} : {color:'#000'}">{{tempActiveEFatCats.includes(i+1) ? 'visibility' : 'visibility_off'}}</mat-icon>
+        </div>
+      </div>
+
+      <div class="mhq-temp-hover" (click)="toggleEfatCat(i+1)"
+        style="display:flex;align-items: flex-end;width: 100%;justify-content: center; text-align: center; position:absolute;padding:0% 20px 5px;height:100%;font-size:16px;line-height: 1;" [ngStyle]="tempActiveEFatCats.includes(i+1) ? {color:'#fff'} : {color:'#000'}">
+        {{efatcat.title}}</div>
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+<div mat-dialog-actions class="mhq-modal-close-actions">
+  <button mat-flat-button color="primary" (click)="saveEFatCatsSelection()">Guardar seleção</button>
+  <button mat-stroked-button mat-dialog-close color="warn">Cancelar</button>
+</div>

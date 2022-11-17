@@ -107,8 +107,8 @@ const EFATURA_CATEGORIES: EFaturaCategoryList = {
 
 export class EfaturaService {
 
+  activeEfatCats: number[];
   efaturaTable: EFaturaCategoryList;
-  catList: number[]
 
   onInitTrigger: Subject<any>;   //trigger para onInit
 
@@ -137,6 +137,7 @@ export class EfaturaService {
 
   //   return tempOjb
   // }
+
 
 
   onInitTriggerCall(): void { this.onInitTrigger.next(''); this.onInitTrigger.complete; this.onInitTrigger = new Subject<any>(); }

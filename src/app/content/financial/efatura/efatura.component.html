@@ -10,11 +10,18 @@
     </h1>
 
     <div class="mhq-mainform-actions">
-      <button mat-stroked-button color="primary" disabled>
+      <button mat-stroked-button color="primary" [matMenuTriggerFor]="gridViewActions">
         <mat-icon>menu_open</mat-icon>Ações
       </button>
     </div>
   </div>
+
+  <mat-menu #gridViewActions="matMenu">
+    <button mat-menu-item (click)="efatSelectModal('300ms','150ms')">
+      <mat-icon>grid_view</mat-icon>
+      <span>Selecionar categorias</span>
+    </button>
+  </mat-menu>
 
   <mat-progress-bar *ngIf="!snapshotsReady || !movementsReady" mode="indeterminate" color="accent"></mat-progress-bar>
 
@@ -25,18 +32,18 @@
 
     <div id="temp-row-dos-cartoes" *ngIf="snapshotsReady" style="display:flex;flex-direction:row;width: 75%;flex-wrap: wrap;height: 400px;">
 
-      <div *ngFor="let efatvalue of eFaturaSnapshots; let i = index" style="width:calc(100% / 6 - 20px);margin:10px 10px">
+      <div *ngFor="let efatsnap of eFaturaSnapshots; let i = index" style="width:calc(100% / 6 - 20px);margin:10px 10px">
         <mat-card style="padding:0 0 16px;border-radius: 15px;">
 
           <div class="mhq-row"
-            [style]="'border-top-right-radius: 15px;border-top-left-radius: 15px;height:70px;background-color:'+eFaturaService.efaturaTable[i+1].color">
+            [style]="'border-top-right-radius: 15px;border-top-left-radius: 15px;height:70px;background-color:'+eFaturaService.efaturaTable[efatsnap[0]].color">
             <mat-icon
               style="color:#Fff;font-size:36px;height:100%;width:auto;margin:0px auto 10px;display: flex; justify-content: center; align-items: center;">
-              {{eFaturaService.efaturaTable[i+1].icon}}</mat-icon>
+              {{eFaturaService.efaturaTable[efatsnap[0]].icon}}</mat-icon>
           </div>
 
-          <div style="padding:5px 0;text-align: center;height:60px;display: flex;align-items: center;justify-content: center;"><span style="width: 80%">{{eFaturaService.efaturaTable[i+1].title}}</span></div>
-          <div style="text-align: center;font-size:24px;">{{efatvalue | number:'1.2-2':'pt'}}</div>
+          <div style="padding:5px 0;text-align: center;height:60px;display: flex;align-items: center;justify-content: center;"><span style="width: 80%">{{eFaturaService.efaturaTable[efatsnap[0]].title}}</span></div>
+          <div style="text-align: center;font-size:24px;">{{efatsnap[1] | number:'1.2-2':'pt'}}</div>
         </mat-card>
       </div>
     </div>
@@ -54,3 +61,6 @@
 
   </div>
 </div>
+
+
+

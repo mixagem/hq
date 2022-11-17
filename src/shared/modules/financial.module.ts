@@ -31,6 +31,7 @@ import { UpdateRecurrencyModalComponent } from 'src/app/content/financial/treasu
 import { EfaturaComponent } from 'src/app/content/financial/efatura/efatura.component';
 import { CheckTreasuryEfatComponent } from 'src/app/content/financial/treasury-log/treasury-details/check-treasury-efat/check-treasury-efat.component';
 import { MhqSnackBarComponent } from 'src/shared/components/mhq-snack-bar/mhq-snack-bar.component';
+import { EFatSelectorModalComponent } from 'src/app/content/financial/efatura/e-fat-selector-modal/e-fat-selector-modal.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { MhqSnackBarComponent } from 'src/shared/components/mhq-snack-bar/mhq-sn
     DettachRecurrencyModalComponent,
     UpdateRecurrencyModalComponent,
     EfaturaComponent,
-    CheckTreasuryEfatComponent
+    CheckTreasuryEfatComponent,
+    EFatSelectorModalComponent
 
   ],
   imports: [
@@ -91,7 +93,8 @@ import { MhqSnackBarComponent } from 'src/shared/components/mhq-snack-bar/mhq-sn
     DettachRecurrencyModalComponent,
     UpdateRecurrencyModalComponent,
     EfaturaComponent,
-    CheckTreasuryEfatComponent
+    CheckTreasuryEfatComponent,
+    EFatSelectorModalComponent
 
   ]
 })

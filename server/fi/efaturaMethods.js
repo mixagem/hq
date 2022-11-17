@@ -9,22 +9,31 @@ export function fetchEFaturaSnapshots(req, res) {
     console.log('[EFAT 1] A gerar snapshots efatura');
   });
 
-  let eFaturas = [];
-  DB.serialize(() => {
-    for (let i = 1; i <= 12; i++) {
-      DB.all(`SELECT SUM(value) AS sum FROM efatura WHERE efatcat='${i}'`, (err, resp) => {
-        if (err) { dbErrors = true; console.log('[EFAT 1] Erro ao gerar snapshots efatura'); console.error(err.message); } else {
-          if (resp[0].sum === null) { eFaturas.push(0) } else { eFaturas.push(resp[0].sum) }
-        }
-      })
-    }
-  })
+  let efatcats;
+  DB.each(`SELECT value FROM settings WHERE desc='efatcats'`, (err, efatcatsarray) => {
 
-  DB.close((err) => {
-    if (err || dbErrors) { console.error(err.message); console.log('[EFAT 1 Erro ao encerrar a ligação à bd'); res.send(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']); }
-    else { res.send(eFaturas); console.log('[EFAT 1] Snapshots efatura gerados com sucesso') }
+    if (err) { dbErrors = true; console.log('[EFAT 5] '); console.error(err.message); }
+    efatcats = JSON.parse(efatcatsarray["value"]);
+    part2();
   });
 
+  function part2() {
+    let eFaturas = [];
+    DB.serialize(() => {
+      for (let i = 0; i < efatcats.length; i++) {
+        DB.all(`SELECT SUM(value) AS sum FROM efatura WHERE efatcat='${efatcats[i]}'`, (err, resp) => {
+          if (err) { dbErrors = true; console.log('[EFAT 1] Erro ao gerar snapshots efatura'); console.error(err.message); } else {
+            if (resp[0].sum === null) { eFaturas.push([efatcats[i],0]) } else { eFaturas.push([efatcats[i],resp[0].sum]) }
+          }
+        })
+      }
+    })
+
+    DB.close((err) => {
+      if (err || dbErrors) { console.error(err.message); console.log('[EFAT 1 Erro ao encerrar a ligação à bd'); res.send(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']); }
+      else { res.send(eFaturas); console.log('[EFAT 1] Snapshots efatura gerados com sucesso') }
+    });
+  }
 }
 
 export function insertEFatura(req, res) {
@@ -75,29 +84,32 @@ export function movmentsNotValidated(req, res) {
 
   DB.close((err) => {
     if (err || dbErrors) { console.error(err.message); console.log('[EFAT 4 Erro ao encerrar a ligação à bd'); res.send(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']); }
-    else { res.send(movmentsArray); console.log('[EFAT 4] Foram encontradaos => '+movmentsArray.length+' movimentos para validar.') }
+    else { res.send(movmentsArray); console.log('[EFAT 4] Foram encontradaos => ' + movmentsArray.length + ' movimentos para validar.') }
   });
 }
 
 
-export function visibleEfatCats(req, res) {
+
+
+
+
+
+
+export function saveEfatCatsSelection(req, res) {
 
   let dbErrors = false;
   const DB = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
-    if (err) { dbErrors = true; console.error(err.message); console.log('[EFAT 5] Erro ao ligar à bd'); };
+    if (err) { dbErrors = true; console.error(err.message); console.log('[EFAT 5] '); };
     console.log('---------------------------')
     console.log('[EFAT 5] ');
   });
 
-  let efatcats;
-  DB.each(`SELECT value FROM settings WHERE desc='efatcats'`, (err, efatcatsarray) => {
-
-    if (err) { dbErrors = true; console.log('[EFAT 5] '); console.error(err.message); }
-    efatcats = JSON.parse(efatcatsarray["value"]);
+  DB.all(`UPDATE settings SET value='${req.body.efatselection}' WHERE desc='efatcats'`, (err) => {
+    if (err) { dbErrors = true; console.log('[EFAT 5]'); console.error(err.message); }
   });
 
   DB.close((err) => {
-    if (err || dbErrors) { console.error(err.message); console.log('[EFAT 5 Erro ao encerrar a ligação à bd'); res.send(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']); }
-    else { res.send(efatcats); console.log('[EFAT 5] ') }
+    if (err || dbErrors) { console.error(err.message); console.log('[EFAT 5 '); res.send(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']); }
+    else { res.send(['Selecção atualizada com sucesso.']); console.log('[EFAT 5] ') }
   });
 }

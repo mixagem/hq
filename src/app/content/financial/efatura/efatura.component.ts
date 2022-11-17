@@ -7,6 +7,7 @@ import { MHQSnackBarsService } from 'src/shared/services/mhq-snackbar.service';
 import { ErrorHandlingService } from 'src/shared/services/misc.service';
 import { CheckTreasuryEfatComponent } from '../treasury-log/treasury-details/check-treasury-efat/check-treasury-efat.component';
 import { TreasuryService } from '../treasury-log/treasury.service';
+import { EFatSelectorModalComponent } from './e-fat-selector-modal/e-fat-selector-modal.component';
 import { EfaturaService } from './efatura.service';
 
 
@@ -17,12 +18,12 @@ import { EfaturaService } from './efatura.service';
 })
 export class EfaturaComponent implements OnInit {
 
-  eFaturaSnapshots: number[];
+  eFaturaSnapshots: number[][];
   movimentsToValidate: ITreasuryLog[];
   snapshotsReady: boolean;
   movementsReady: boolean;
 
-  constructor(private _treasuryService:TreasuryService, private _dialog:MatDialog, public eFaturaService:EfaturaService, private _http: HttpClient, private _mhqSnackbarService: MHQSnackBarsService, private _errorHandlingService: ErrorHandlingService) {
+  constructor(private _treasuryService: TreasuryService, private _dialog: MatDialog, public eFaturaService: EfaturaService, private _http: HttpClient, private _mhqSnackbarService: MHQSnackBarsService, private _errorHandlingService: ErrorHandlingService) {
     this.eFaturaSnapshots = [];
     this.snapshotsReady = false;
     this.movementsReady = false;
@@ -32,7 +33,7 @@ export class EfaturaComponent implements OnInit {
     this.fetchMovemntsToValidate();
   }
 
-  
+
 
   fetchEFaturaSnapshots(): void {
 
@@ -45,7 +46,7 @@ export class EfaturaComponent implements OnInit {
         if (ERROR_CODE[0] === 'MHQERROR') {
           return this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', '', [ERROR_CODE[1], '']);
         }
-        const RESP = codeReceived as number[];
+        const RESP = codeReceived as number[][];
         this.eFaturaSnapshots = RESP;
         this.snapshotsReady = true;
       },
@@ -74,10 +75,23 @@ export class EfaturaComponent implements OnInit {
   }
 
 
-  efatCheckModal(enterAnimationDuration: string, exitAnimationDuration: string, i:number): void {
+  efatCheckModal(enterAnimationDuration: string, exitAnimationDuration: string, i: number): void {
     this._treasuryService.activeTLog = this.movimentsToValidate[i]
-    console.log(this._treasuryService.activeTLog )
+    console.log(this._treasuryService.activeTLog)
     this._dialog.open(CheckTreasuryEfatComponent, { width: '600px', height: '300px', enterAnimationDuration, exitAnimationDuration, });
+  }
+
+
+  efatSelectModal(enterAnimationDuration: string, exitAnimationDuration: string) {
+
+    let temparray: number[] = [];
+
+    this.eFaturaSnapshots.forEach(snapshot => {
+      temparray.push(snapshot[0])
+    });
+
+    this.eFaturaService.activeEfatCats = temparray;
+    this._dialog.open(EFatSelectorModalComponent, { width: '800px', height: '450px', enterAnimationDuration, exitAnimationDuration, });
   }
 }
 
