@@ -1,12 +1,32 @@
-<mat-form-field appearance="fill">
+<div style="display: flex;height: 100%;">
+
+  <div (click)="openAdvancedTreasurySearchModal('300ms','150ms')" style="width:60px;background-color:red;height:100%;color:#fff;display: flex;justify-content: center;align-items: center;"><mat-icon style="cursor:pointer;width:36px;height:36px;font-size: 36px;">manage_search</mat-icon></div>
+  <div (click)="swapSearchMode()" style="width:60px;background-color:blue;height:100%;color:#fff;display: flex;justify-content: center;align-items: center;"><mat-icon style="cursor:pointer;width:36px;height:36px;font-size: 36px;">sync</mat-icon></div>
+
+<mat-form-field appearance="fill"  *ngIf="searchMode === 'simple'">
+
   <input matInput type="text" [(ngModel)]="navbarService.treasuryNavbarInput" (input)="logy(false,$event.target!)">
-  <button matSuffix mat-icon-button (click)="openAdvancedTreasurySearchModal('300ms','150ms')">
-    <mat-icon>search</mat-icon>
-  </button>
+
   <button matSuffix mat-icon-button (click)="logy(true)">
     <mat-icon>clear</mat-icon>
   </button>
 
 </mat-form-field>
+
+<!-- <mat-form-field appearance="fill"  *ngIf="searchMode === 'advanced'">
+
+  <mat-form-field appearance="fill" style="width:50%">
+    <mat-label>Título</mat-label>
+    <mat-select (selectionChange)="changedSearch($event)"
+      [formControl]="selectedSearchForm">
+      <mat-option *ngFor="let search of advancedSearchArray" [value]="search.id">
+        {{search.title}}
+      </mat-option>
+    </mat-select>
+
+  </mat-form-field>
+
+</mat-form-field> -->
+</div>
 
 <!--  -->

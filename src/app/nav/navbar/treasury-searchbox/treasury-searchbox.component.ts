@@ -9,6 +9,10 @@ import { ErrorHandlingService } from 'src/shared/services/misc.service';
 import { NavbarService } from '../navbar.service';
 import { AdvancedTreasurySearchComponent } from './advanced-treasury-search/advanced-treasury-search.component';
 
+
+type SearchMode = 'simple' | 'advanced'
+
+
 @Component({
   selector: 'mhq-treasury-searchbox',
   templateUrl: './treasury-searchbox.component.html',
@@ -16,16 +20,19 @@ import { AdvancedTreasurySearchComponent } from './advanced-treasury-search/adva
 })
 export class TreasurySearchboxComponent implements OnInit {
 
+  searchMode: SearchMode;
 
   constructor(private _dialog: MatDialog, public router: Router, public treasuryService: TreasuryService, private _errorHandlingService: ErrorHandlingService, private _http: HttpClient, private _mhqSnackbarService: MHQSnackBarsService, public navbarService: NavbarService) {
-
+  this.searchMode = 'simple'
   }
 
   ngOnInit(): void {
   }
 
-  
 
+  swapSearchMode():void {
+    this.searchMode === 'advanced' ? this.searchMode = 'simple' : this.searchMode = 'advanced'
+  }
 
   logy(reset: boolean, event?: EventTarget): void {
 

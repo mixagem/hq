@@ -12,6 +12,7 @@ import { AdvancedTreasurySearchService } from './advanced-treasury-search.servic
 import { DeleteSearchModalComponent } from './delete-search-modal/delete-search-modal.component';
 
 type AdvancedSearchTable = { [key: number]: IAdvancedSearch }
+type SearchMode = 'simple' | 'advanced'
 
 @Component({
   selector: 'mhq-advanced-treasury-search',
@@ -30,10 +31,15 @@ export class AdvancedTreasurySearchComponent implements OnInit {
   currentSubcategoryDBSequence: number;
   waitingForSQL: boolean;
   insertMode: boolean;
+  searchMode: SearchMode;
 
   constructor(private _http: HttpClient, private _mhqSnackbarService: MHQSnackBarsService, private _errorHandlingService: ErrorHandlingService, private _dialog: MatDialog, private _treasurySearchService: AdvancedTreasurySearchService) {
     this.waitingForSQL = false;
     this.selectedSearchIndex = 0;
+  }
+
+  swapSearchMode():void {
+    this.searchMode === 'advanced' ? this.searchMode = 'simple' : this.searchMode = 'advanced'
   }
 
   ngOnInit(): void {
@@ -62,6 +68,8 @@ export class AdvancedTreasurySearchComponent implements OnInit {
           const I = Number(Object.keys(this.advancedSearchTable)[i])
           this.advancedSearchArray.push(this.advancedSearchTable[I])
         }
+        this.selectedSearchIndex = this.advancedSearchArray[0].id
+        this.selectedSearchForm = new FormControl(this.advancedSearchArray[0].id);
 
         this.isTableReady = true;
       },
