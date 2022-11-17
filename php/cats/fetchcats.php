@@ -2,6 +2,8 @@
 
 //bd
 $con = mysqli_connect('localhost', 'root', '', 'hq');
+// $con = mysqli_connect('localhost', 'mambosin_hqroot', 'ViSZs[FcJNGF', 'mambosin_hq');
+mysqli_set_charset($con, 'utf8');
 
 //categorias
 $query = "SELECT * FROM categories ORDER BY catorder";
@@ -13,7 +15,7 @@ if (mysqli_num_rows($result) !== 0) {
   while ($row = mysqli_fetch_assoc($result)) {
 
     // conversões
-    if (str_replace('"', '', json_encode($row["active"])) === "true") {
+    if ($row["active"]) {
       $row["active"] = true;
     } else {
       $row["active"] = false;
@@ -67,7 +69,6 @@ if (mysqli_num_rows($result) !== 0) {
       }
     }
   }
-
   echo json_encode($cats);
 } else {
   echo json_encode(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']);

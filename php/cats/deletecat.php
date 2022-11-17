@@ -4,7 +4,10 @@
 $cat = json_decode($_POST["cat"], true);
 
 //bd
+
 $con = mysqli_connect('localhost', 'root', '', 'hq');
+// $con = mysqli_connect('localhost', 'mambosin_hqroot', 'ViSZs[FcJNGF', 'mambosin_hq');
+mysqli_set_charset($con, 'utf8');
 
 $db_errors = [];
 

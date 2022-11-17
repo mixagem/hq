@@ -1,7 +1,8 @@
 <?php
 
-// post
-$tlog = json_decode($_POST["tlog"], true);
+$con = mysqli_connect('localhost', 'root', '', 'hq');
+// $con = mysqli_connect('localhost', 'mambosin_hqroot', 'ViSZs[FcJNGF', 'mambosin_hq');
+mysqli_set_charset($con, 'utf8');
 
 if ($tlog["nif"]) {
   $tlog["nif"] = "true";

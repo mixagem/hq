@@ -4,9 +4,9 @@
 // post
 $cats = json_decode($_POST["newcatorder"], true);
 
-//bd
 $con = mysqli_connect('localhost', 'root', '', 'hq');
-
+// $con = mysqli_connect('localhost', 'mambosin_hqroot', 'ViSZs[FcJNGF', 'mambosin_hq');
+mysqli_set_charset($con, 'utf8');
 
 
 $cats_length = count($cats);
