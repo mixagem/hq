@@ -243,14 +243,26 @@ export function deleteSearch(req, res) {
     console.log('[ADS 6] A apagar a pesquisa => "' + SEARCH.title + '"');
   });
 
-  db.parallelize(() => {
-    db.run(`DELETE FROM advancedsearch WHERE id=${SEARCH.id}`, (err) => { if (err) { dbErrors = true; console.error(err.message); console.log('[ADS 6] Erro ao apagar pesquisa'); } })
-    db.run(`DELETE FROM searchparams WHERE searchid=${SEARCH.id}`, (err) => { if (err) { dbErrors = true; console.error(err.message); console.log('[ADS 6] Erro ao apagar pesquisas'); } })
-  });
+  let temp = 'none';
 
+  db.serialize(() => {
+    db.parallelize(() => {
+      db.run(`DELETE FROM advancedsearch WHERE id=${SEARCH.id}`, (err) => { if (err) { dbErrors = true; console.error(err.message); console.log('[ADS 6] Erro ao apagar pesquisa'); } })
+      db.run(`DELETE FROM searchparams WHERE searchid=${SEARCH.id}`, (err) => { if (err) { dbErrors = true; console.error(err.message); console.log('[ADS 6] Erro ao apagar pesquisas'); } })
+    });
+
+    db.serialize(() => {
+
+      db.each(`SELECT MIN(id) as min from advancedsearch`, (err, row) => { if (err) { dbErrors = true; console.error(err.message); console.log('[ADS 6] Erro ao apagar pesquisa'); } if (row['min'] !== null) { temp = row['min']; } })
+
+
+
+    })
+
+  })
   db.close((err) => {
     if (err || dbErrors) { console.log('[ADS 6] Erro ao carregar terminar ligação com a BD'); console.error(err.message); res.send(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']); } else {
-      console.log('[ADS 6] Pesquisa => "' + SEARCH.title + '" eliminada com sucesso'); res.send(['A pesquisa <b>' + SEARCH.title + '</b> foi eliminada com sucesso.'])
+      console.log('[ADS 6] Pesquisa => "' + SEARCH.title + '" eliminada com sucesso'); res.send(['A pesquisa <b>' + SEARCH.title + '</b> foi eliminada com sucesso.', temp])
     }
   });
 }

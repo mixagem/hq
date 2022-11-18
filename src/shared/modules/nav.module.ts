@@ -9,6 +9,7 @@ import { AdvancedTreasurySearchComponent } from 'src/app/nav/navbar/treasury-sea
 import { ConditionPipe } from '../pipes/condition.pipe';
 import { FieldPipe } from '../pipes/field.pipe';
 import { DeleteSearchModalComponent } from 'src/app/nav/navbar/treasury-searchbox/advanced-treasury-search/delete-search-modal/delete-search-modal.component';
+import { TlogsearchvaluePipe } from '../pipes/tlogsearchvalue.pipe';
 
 
 
@@ -20,7 +21,8 @@ import { DeleteSearchModalComponent } from 'src/app/nav/navbar/treasury-searchbo
     AdvancedTreasurySearchComponent,
     DeleteSearchModalComponent,
     ConditionPipe,
-    FieldPipe
+    FieldPipe,
+    TlogsearchvaluePipe,
   ],
   imports: [
     CommonModule,

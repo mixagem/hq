@@ -78,7 +78,8 @@
       </ng-container>
       <ng-container matColumnDef="active">
         <td mat-cell *matCellDef="let element">
-          <mat-checkbox [checked]="element.active" color="primary" disabled></mat-checkbox>
+          <mat-icon color='primary' style="margin-top: 8px;">{{element.active ? 'check_box':'check_box_outline_blank'}}</mat-icon>
+
         </td>
       </ng-container>
     </table>

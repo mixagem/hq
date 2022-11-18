@@ -33,6 +33,7 @@ import { CheckTreasuryEfatComponent } from 'src/app/content/financial/treasury-l
 import { MhqSnackBarComponent } from 'src/shared/components/mhq-snack-bar/mhq-snack-bar.component';
 import { EFatSelectorModalComponent } from 'src/app/content/financial/efatura/e-fat-selector-modal/e-fat-selector-modal.component';
 
+
 @NgModule({
   declarations: [
     FinancialComponent,

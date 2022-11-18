@@ -18,7 +18,7 @@
 
     <mat-label>Pesquisa avançada</mat-label>
     <mat-select (selectionChange)="advancedTlogSearchService.changedSearch($event, true)"
-      [formControl]="advancedTlogSearchService.selectedSearchForm">
+      [formControl]="advancedTlogSearchService.selectedSearchForm" [disabled]="advancedTlogSearchService.advancedSearchArray.length===0">
       <mat-option *ngFor="let search of advancedTlogSearchService.advancedSearchArray" [value]="search.id">
         {{search.title}}
       </mat-option>

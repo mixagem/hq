@@ -37,10 +37,6 @@ export class AdvancedTreasurySearchComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.treasurySearchService.selectedSearchForm = new FormControl(this.treasurySearchService.selectedSearchIndex);
-    this.treasurySearchService.fetchAdavancedSearches();
-    this.editingMode = false;
-    this.insertMode = false;
     for (let i = 0; i < Object.keys(this.categoriesService.catTable).length; i++) { this.catTable.push(this.categoriesService.catTable[Object.keys(this.categoriesService.catTable)[i]]) }
     for (let i = 0; i < Object.keys(this.categoriesService.subcatTable).length; i++) { this.subcatTable.push(this.categoriesService.subcatTable[Object.keys(this.categoriesService.subcatTable)[i]]) }
     for (let i = 0; i < Object.keys(this._efaturaservice.efaturaTable).length; i++) { this.efatTable.push(this._efaturaservice.efaturaTable[Number(Object.keys(this._efaturaservice.efaturaTable)[i])]) }
@@ -52,6 +48,9 @@ export class AdvancedTreasurySearchComponent implements OnInit {
   editSearchMode(): void {
     this.getCurrentSearchParamsSequence();
     this.tempAdvancedSearch = JSON.parse(JSON.stringify(this.treasurySearchService.advancedSearchTable[this.treasurySearchService.selectedSearchIndex]));
+    this.tempAdvancedSearch.parameters.forEach(parameter => {
+      if (parameter.field === 'date') { console.log(parameter.value ); parameter.value = new Date(Number(parameter.value));}
+    });
     this.editingMode = true;
   }
 
@@ -85,8 +84,11 @@ export class AdvancedTreasurySearchComponent implements OnInit {
 
   saveSearch(): void {
     this.treasurySearchService.isTableReady = false;
-    this.treasurySearchService.waitingForSQL = true;
+    this.tempAdvancedSearch.parameters.forEach(parameter => {
+      if (parameter.field === 'date') { parameter.value = new Date(parameter.value).getTime(); console.log(parameter.value) }
 
+    });
+    // return
     if (this.editingMode) {
       const HTTP_PARAMS = new HttpParams().set('search', JSON.stringify(this.tempAdvancedSearch))
       const CALL = this._http.post('http://localhost:16190/savesearch', HTTP_PARAMS, { responseType: 'json' });
@@ -95,9 +97,13 @@ export class AdvancedTreasurySearchComponent implements OnInit {
           const ERROR_CODE = codeReceived as string[];
           if (ERROR_CODE[0] === 'MHQERROR') { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', ERROR_CODE[1], ['', '']); }
           this._mhqSnackbarService.triggerMHQSnackbar(true, 'save', '', [ERROR_CODE[0], '']);
-          this.ngOnInit();
+
+          this.treasurySearchService.fetchAdavancedSearches(true);
+
+          this.treasurySearchService.selectedSearchForm = new FormControl(this.treasurySearchService.selectedSearchIndex);
           this.treasurySearchService.activeSearch = this.tempAdvancedSearch;
-          this.treasurySearchService.triggerAdavancedSearch()
+
+          this.editingMode = false;
         },
         error: err => this._errorHandlingService.handleError(err)
       });
@@ -113,11 +119,14 @@ export class AdvancedTreasurySearchComponent implements OnInit {
           const ERROR_CODE = codeReceived as string[];
           if (ERROR_CODE[0] === 'MHQERROR') { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', '', [ERROR_CODE[1], '']); }
           this._mhqSnackbarService.triggerMHQSnackbar(true, 'save', '', [ERROR_CODE[0], '']);
+
           this.treasurySearchService.selectedSearchIndex = Number(ERROR_CODE[1]);
 
-          this.ngOnInit();
+          this.treasurySearchService.fetchAdavancedSearches(true);
+          this.treasurySearchService.selectedSearchForm = new FormControl(this.treasurySearchService.selectedSearchIndex);
           this.treasurySearchService.activeSearch = this.tempAdvancedSearch;
-          this.treasurySearchService.triggerAdavancedSearch()
+
+          this.insertMode = false;
         },
         error: err => this._errorHandlingService.handleError(err)
       });

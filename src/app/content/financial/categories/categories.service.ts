@@ -53,7 +53,6 @@ export class CategoriesService {
           this.catTable[`'${cat.id}'`] = cat;
           cat.subcats.forEach(subcat => { this.subcatTable[`${subcat.id}`] = subcat; });
         });
-
         this._loadingService.categoriesLoadingComplete = true; // loading das categorias pronto
 
         switch (source) {
