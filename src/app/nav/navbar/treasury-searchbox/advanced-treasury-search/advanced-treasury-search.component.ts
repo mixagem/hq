@@ -1,18 +1,18 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { MatDialog, MatDialogTitle } from '@angular/material/dialog';
-import { MatSelectChange } from '@angular/material/select';
-import { DeleteCategoryConfirmationModalComponent } from 'src/app/content/financial/categories/category-details/delete-category-confirmation-modal/delete-category-confirmation-modal.component';
+import { FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { CategoriesService } from 'src/app/content/financial/categories/categories.service';
+import { EfaturaService } from 'src/app/content/financial/efatura/efatura.service';
 import { IAdvancedSearch } from 'src/shared/interfaces/iadanved-search';
 import { IAdvancedSearchParameters } from 'src/shared/interfaces/iadanved-search-parameters';
+import { IFinancialCategory } from 'src/shared/interfaces/ifinancial-category';
 import { MHQSnackBarsService } from 'src/shared/services/mhq-snackbar.service';
 import { ErrorHandlingService } from 'src/shared/services/misc.service';
 import { AdvancedTreasurySearchService } from './advanced-treasury-search.service';
 import { DeleteSearchModalComponent } from './delete-search-modal/delete-search-modal.component';
 
-type AdvancedSearchTable = { [key: number]: IAdvancedSearch }
-type SearchMode = 'simple' | 'advanced'
+type CatTable = { [key: string]: IFinancialCategory };
 
 @Component({
   selector: 'mhq-advanced-treasury-search',
@@ -21,65 +21,37 @@ type SearchMode = 'simple' | 'advanced'
 })
 export class AdvancedTreasurySearchComponent implements OnInit {
 
-  advancedSearchArray: IAdvancedSearch[];
-  advancedSearchTable: AdvancedSearchTable;
-  isTableReady: boolean;
-  selectedSearchIndex: number;
-  selectedSearchForm: FormControl;
   editingMode: boolean;
   tempAdvancedSearch: IAdvancedSearch;
   currentSubcategoryDBSequence: number;
-  waitingForSQL: boolean;
   insertMode: boolean;
-  searchMode: SearchMode;
+  catTable: any[];
+  subcatTable: any[];
+  efatTable: any[];
 
-  constructor(private _http: HttpClient, private _mhqSnackbarService: MHQSnackBarsService, private _errorHandlingService: ErrorHandlingService, private _dialog: MatDialog, private _treasurySearchService: AdvancedTreasurySearchService) {
-    this.waitingForSQL = false;
-    this.selectedSearchIndex = 0;
+  constructor(private _http: HttpClient, private _mhqSnackbarService: MHQSnackBarsService, private _errorHandlingService: ErrorHandlingService, private _dialog: MatDialog, public treasurySearchService: AdvancedTreasurySearchService, public categoriesService: CategoriesService, private _efaturaservice: EfaturaService) {
+    this.catTable = [];
+    this.subcatTable = [];
+    this.efatTable = [];
   }
 
-  swapSearchMode():void {
-    this.searchMode === 'advanced' ? this.searchMode = 'simple' : this.searchMode = 'advanced'
-  }
 
   ngOnInit(): void {
+    this.treasurySearchService.selectedSearchForm = new FormControl(this.treasurySearchService.selectedSearchIndex);
+    this.treasurySearchService.fetchAdavancedSearches();
     this.editingMode = false;
     this.insertMode = false;
-    this.isTableReady = false;
-    this.selectedSearchForm = new FormControl(this.selectedSearchIndex);
-    this.advancedSearchArray = [];
-    this.advancedSearchTable = {};
-    this.getCurrentSearchParamsSequence();
-    this.fetchAdavancedSearches();
+    for (let i = 0; i < Object.keys(this.categoriesService.catTable).length; i++) { this.catTable.push(this.categoriesService.catTable[Object.keys(this.categoriesService.catTable)[i]]) }
+    for (let i = 0; i < Object.keys(this.categoriesService.subcatTable).length; i++) { this.subcatTable.push(this.categoriesService.subcatTable[Object.keys(this.categoriesService.subcatTable)[i]]) }
+    for (let i = 0; i < Object.keys(this._efaturaservice.efaturaTable).length; i++) { this.efatTable.push(this._efaturaservice.efaturaTable[Number(Object.keys(this._efaturaservice.efaturaTable)[i])]) }
+
+    this.treasurySearchService.waitingForSQL = false;
   }
 
-  fetchAdavancedSearches(): void {
-
-    const CALL = this._http.get('http://localhost:16190/fetchsearches', { responseType: 'json' });
-    CALL.subscribe({
-      next: (codeReceived) => {
-        const ERROR_CODE = codeReceived as string[];
-        if (ERROR_CODE[0] === 'MHQERROR') { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', ERROR_CODE[1], ['', '']); }
-        const RESP = codeReceived as IAdvancedSearch[];
-        this.advancedSearchTable = RESP;
-        this.advancedSearchArray = [];
-
-        for (let i = 0; i < Object.keys(this.advancedSearchTable).length; i++) {
-          const I = Number(Object.keys(this.advancedSearchTable)[i])
-          this.advancedSearchArray.push(this.advancedSearchTable[I])
-        }
-        this.selectedSearchIndex = this.advancedSearchArray[0].id
-        this.selectedSearchForm = new FormControl(this.advancedSearchArray[0].id);
-
-        this.isTableReady = true;
-      },
-      error: err => this._errorHandlingService.handleError(err)
-    });
-  }
 
   editSearchMode(): void {
     this.getCurrentSearchParamsSequence();
-    this.tempAdvancedSearch = JSON.parse(JSON.stringify(this.advancedSearchTable[this.selectedSearchIndex]));
+    this.tempAdvancedSearch = JSON.parse(JSON.stringify(this.treasurySearchService.advancedSearchTable[this.treasurySearchService.selectedSearchIndex]));
     this.editingMode = true;
   }
 
@@ -90,14 +62,12 @@ export class AdvancedTreasurySearchComponent implements OnInit {
 
 
   addSearchMode(): void {
+    this.getCurrentSearchParamsSequence();
     this.insertMode = true;
     this.tempAdvancedSearch = { id: 0, title: 'Nova pesquisa avançada', active: true, entity: 'treasurylog', parameters: [] }
     this.addParameter();
   }
 
-  changedSearch(event: MatSelectChange): void {
-    this.selectedSearchIndex = event.value;
-  }
 
   addParameter(): void {
     const DEFAULT_PARAMETER: IAdvancedSearchParameters = { id: this.currentSubcategoryDBSequence + 1, type: 'AND', field: 'title', condition: '=', value: '' }
@@ -114,26 +84,27 @@ export class AdvancedTreasurySearchComponent implements OnInit {
   }
 
   saveSearch(): void {
-
-    this.waitingForSQL = true;
+    this.treasurySearchService.isTableReady = false;
+    this.treasurySearchService.waitingForSQL = true;
 
     if (this.editingMode) {
       const HTTP_PARAMS = new HttpParams().set('search', JSON.stringify(this.tempAdvancedSearch))
       const CALL = this._http.post('http://localhost:16190/savesearch', HTTP_PARAMS, { responseType: 'json' });
-
       CALL.subscribe({
         next: (codeReceived) => {
           const ERROR_CODE = codeReceived as string[];
           if (ERROR_CODE[0] === 'MHQERROR') { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', ERROR_CODE[1], ['', '']); }
           this._mhqSnackbarService.triggerMHQSnackbar(true, 'save', '', [ERROR_CODE[0], '']);
-          this.waitingForSQL = false;
           this.ngOnInit();
+          this.treasurySearchService.activeSearch = this.tempAdvancedSearch;
+          this.treasurySearchService.triggerAdavancedSearch()
         },
         error: err => this._errorHandlingService.handleError(err)
       });
     }
 
     if (this.insertMode) {
+
       const HTTP_PARAMS = new HttpParams().set('search', JSON.stringify(this.tempAdvancedSearch))
       const CALL = this._http.post('http://localhost:16190/addnewsearch', HTTP_PARAMS, { responseType: 'json' });
 
@@ -142,9 +113,11 @@ export class AdvancedTreasurySearchComponent implements OnInit {
           const ERROR_CODE = codeReceived as string[];
           if (ERROR_CODE[0] === 'MHQERROR') { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', '', [ERROR_CODE[1], '']); }
           this._mhqSnackbarService.triggerMHQSnackbar(true, 'save', '', [ERROR_CODE[0], '']);
-          this.waitingForSQL = false;
-          this.selectedSearchIndex = Number(ERROR_CODE[1]);
+          this.treasurySearchService.selectedSearchIndex = Number(ERROR_CODE[1]);
+
           this.ngOnInit();
+          this.treasurySearchService.activeSearch = this.tempAdvancedSearch;
+          this.treasurySearchService.triggerAdavancedSearch()
         },
         error: err => this._errorHandlingService.handleError(err)
       });
@@ -166,8 +139,7 @@ export class AdvancedTreasurySearchComponent implements OnInit {
   }
 
   deleteSearch(enterAnimationDuration: string, exitAnimationDuration: string): void {
-    this._treasurySearchService.activeSearch = JSON.parse(JSON.stringify(this.advancedSearchTable[this.selectedSearchIndex]));
+    this.treasurySearchService.activeSearch = JSON.parse(JSON.stringify(this.treasurySearchService.advancedSearchTable[this.treasurySearchService.selectedSearchIndex]));
     this._dialog.open(DeleteSearchModalComponent, { width: '50vw', height: '50vh', enterAnimationDuration, exitAnimationDuration });
   }
-  // searchID: number
 }

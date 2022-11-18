@@ -77,7 +77,6 @@ export class EfaturaComponent implements OnInit {
 
   efatCheckModal(enterAnimationDuration: string, exitAnimationDuration: string, i: number): void {
     this._treasuryService.activeTLog = this.movimentsToValidate[i]
-    console.log(this._treasuryService.activeTLog)
     this._dialog.open(CheckTreasuryEfatComponent, { width: '600px', height: '300px', enterAnimationDuration, exitAnimationDuration, });
   }
 

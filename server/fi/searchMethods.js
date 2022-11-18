@@ -2,9 +2,40 @@ import sqlite3 from 'sqlite3';
 
 
 
+export function advancedTlogSearch(req, res) {
+  console.log('---------------------------');
+  if (req.body.type === 'tlog') {
+
+    let dbErrors = false;
+    const DB = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+      if (err) { dbErrors = true; console.error(err.message); console.log('[ADS 7] Erro ao ligar à bd'); }
+      console.log(`[ADS 2] ${req.body.query}`);
+    });
+
+    let filteredLogs = [];
+    const QUERY = req.body.query;
+
+    DB.serialize(() => {
+      DB.each(`${QUERY}`, (err, tlog) => {
+        if (err) { dbErrors = true; console.error(err.message); console.log('[ADS 7] Erro ao ligar à bd'); }
+        filteredLogs.push(tlog)
+      });
+    });
 
 
-export function tlogSerach(req, res) {
+
+    DB.close((err) => {
+      if (err || dbErrors) {
+        console.log('[ADS 7] Erro ao carregar terminar ligação com a BD'); console.error(err.message); res.send(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']);
+      } else {
+        res.send(filteredLogs); console.log('[ADS 7] Foram encontrados => ' + filteredLogs.length + ' movimentos através das pesquisa avançada')
+      }
+    });
+
+  }
+}
+
+export function tlogSearch(req, res) {
   console.log('---------------------------');
   if (req.body.type === 'tlog') {
 
@@ -20,17 +51,21 @@ export function tlogSerach(req, res) {
     let queryExtra = '';
 
     SEARCH_STRING_ARRAY.forEach((keyword, i) => {
-      if (i === 0) { queryExtra += ` title LIKE '%${keyword}%' OR value LIKE '%${keyword}%'` } else { { queryExtra += ` OR title LIKE '%${keyword}%' OR value LIKE '%${keyword}%'` } }
+      if (i === 0) { queryExtra += ` (title LIKE '%${keyword}%' OR value LIKE '%${keyword}%')` } else { { queryExtra += ` AND (title LIKE '%${keyword}%' OR value LIKE '%${keyword}%')` } }
       if (i === SEARCH_STRING_ARRAY.length - 1) { queryExtra += ' ORDER BY date DESC' }
-
-      DB.serialize(() => {
-        DB.each(`${QUERY}${queryExtra}`, (err, tlog) => {
-          if (err) { dbErrors = true; console.error(err.message); console.log('[ADS 2] Erro ao ligar à bd'); }
-          filteredLogs.push(tlog)
-        });
-      });
-
     });
+    console.log(QUERY + queryExtra)
+
+    DB.serialize(() => {
+      DB.each(`${QUERY}${queryExtra}`, (err, tlog) => {
+        if (err) { dbErrors = true; console.error(err.message); console.log('[ADS 2] Erro ao ligar à bd'); }
+
+        console.log(tlog)
+        filteredLogs.push(tlog)
+      });
+    });
+
+
 
     DB.close((err) => {
       if (err || dbErrors) {
@@ -179,10 +214,10 @@ export function addNewSearch(req, res) {
 
     console.log(assignedSearchID)
     if (SEARCH.parameters.length !== 0) {
-      SEARCH.parameters.forEach((param,i) => {
+      SEARCH.parameters.forEach((param, i) => {
         DB.run(`INSERT INTO searchparams (searchid, type, field, condition, value) VALUES ('${assignedSearchID}', '${param.type}', '${param.field}', '${param.condition}','${param.value}')`, (err) => {
           if (err) { dbErrors = true; console.log('[ADS 5] Erro na criação de subcategorias'); console.error(err.message); } else {
-            console.log('[ADS 5] Parâmetro "' + (i+1) + '" criado com sucesso');
+            console.log('[ADS 5] Parâmetro "' + (i + 1) + '" criado com sucesso');
           }
         });
       });
@@ -191,13 +226,13 @@ export function addNewSearch(req, res) {
     DB.close((err) => {
       if (err || dbErrors) {
         console.log('[ADS 5] Erro ao carregar terminar ligação com a BD'); console.error(err.message); res.send(['MHQERROR', 'Erro ao estabelecer comunicação com a base de dados.']);
-      } else { res.send(['A pesquisa <b>'+SEARCH.title+'</b> foi introduzida com sucesso.',assignedSearchID.toString()]); console.log('[ADS 5] Pesquisa "' + SEARCH.title + '" e respetivos parametros criados com sucesso') }
+      } else { res.send(['A pesquisa <b>' + SEARCH.title + '</b> foi introduzida com sucesso.', assignedSearchID.toString()]); console.log('[ADS 5] Pesquisa "' + SEARCH.title + '" e respetivos parametros criados com sucesso') }
     });
   }
 
 }
 
-export function deleteSearch (req, res) {
+export function deleteSearch(req, res) {
   console.log('---------------------------')
   let dbErrors = false;
 

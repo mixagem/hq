@@ -1,6 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AdvancedTreasurySearchService } from './treasury-searchbox/advanced-treasury-search/advanced-treasury-search.service';
 
 @Component({
   selector: 'mhq-navbar',

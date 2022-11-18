@@ -1,32 +1,31 @@
 <div style="display: flex;height: 100%;">
 
-  <div (click)="openAdvancedTreasurySearchModal('300ms','150ms')" style="width:60px;background-color:red;height:100%;color:#fff;display: flex;justify-content: center;align-items: center;"><mat-icon style="cursor:pointer;width:36px;height:36px;font-size: 36px;">manage_search</mat-icon></div>
+  <div *ngIf="advancedTlogSearchService.searchMode === 'advanced'" (click)="openAdvancedTreasurySearchModal('300ms','150ms')" style="width:60px;background-color:red;height:100%;color:#fff;display: flex;justify-content: center;align-items: center;"><mat-icon style="cursor:pointer;width:36px;height:36px;font-size: 36px;">manage_search</mat-icon></div>
   <div (click)="swapSearchMode()" style="width:60px;background-color:blue;height:100%;color:#fff;display: flex;justify-content: center;align-items: center;"><mat-icon style="cursor:pointer;width:36px;height:36px;font-size: 36px;">sync</mat-icon></div>
 
-<mat-form-field appearance="fill"  *ngIf="searchMode === 'simple'">
+<mat-form-field appearance="fill"  *ngIf="advancedTlogSearchService.searchMode === 'simple'">
 
-  <input matInput type="text" [(ngModel)]="navbarService.treasuryNavbarInput" (input)="logy(false,$event.target!)">
+  <mat-label>Procurar...</mat-label>
+  <input matInput type="text" [(ngModel)]="advancedTlogSearchService.treasuryNavbarInput" (input)="tlogSearch(false)">
 
-  <button matSuffix mat-icon-button (click)="logy(true)">
+  <button matSuffix mat-icon-button (click)="tlogSearch(true)">
     <mat-icon>clear</mat-icon>
   </button>
 
 </mat-form-field>
 
-<!-- <mat-form-field appearance="fill"  *ngIf="searchMode === 'advanced'">
+<mat-form-field appearance="fill"  *ngIf="advancedTlogSearchService.searchMode === 'advanced'">
 
-  <mat-form-field appearance="fill" style="width:50%">
-    <mat-label>Título</mat-label>
-    <mat-select (selectionChange)="changedSearch($event)"
-      [formControl]="selectedSearchForm">
-      <mat-option *ngFor="let search of advancedSearchArray" [value]="search.id">
+    <mat-label>Pesquisa avançada</mat-label>
+    <mat-select (selectionChange)="advancedTlogSearchService.changedSearch($event, true)"
+      [formControl]="advancedTlogSearchService.selectedSearchForm">
+      <mat-option *ngFor="let search of advancedTlogSearchService.advancedSearchArray" [value]="search.id">
         {{search.title}}
       </mat-option>
     </mat-select>
 
-  </mat-form-field>
 
-</mat-form-field> -->
+</mat-form-field>
 </div>
 
 <!--  -->

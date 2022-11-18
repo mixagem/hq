@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { AdvancedTreasurySearchService } from 'src/app/nav/navbar/treasury-searchbox/advanced-treasury-search/advanced-treasury-search.service';
 import { ITreasuryLog } from 'src/shared/interfaces/itreasury-log';
 import { LoadingService } from 'src/shared/services/misc.service';
 import { CategoriesService } from '../categories/categories.service';
@@ -32,10 +33,10 @@ export class TreasuryLogComponent implements OnInit {
     if (!this._loadingService.categoriesLoadingComplete || !this._loadingService.treasuryLoadingComplete) { return }
 
     if (this.firstLoadingComplete && !this.treasuryService.textSearchRefresh) { return }
-    else {
-      this.firstLoadingComplete = true;
-      this.treasuryService.textSearchRefresh = false;
-    }
+
+    this.firstLoadingComplete = true;
+    this.treasuryService.textSearchRefresh = false;
+
 
     // modo lista
     let dataSourceArray = [];
@@ -44,6 +45,7 @@ export class TreasuryLogComponent implements OnInit {
     dataSourceArray = [];
     this.displayedColumns = ['cat', 'title', 'date', 'value'];
     this.isMatTableReady = true;
+    // this._advancedTLOGSearch.tlogSearch(true);
   }
 
   @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
@@ -57,6 +59,7 @@ export class TreasuryLogComponent implements OnInit {
     if (document.querySelector('#mhq-category-details')?.classList.contains('animate__slideOutRight')) { document.querySelector('#mhq-category-details')?.classList.replace('animate__slideOutRight', 'animate__slideInRight') }
     this.router.navigateByUrl('/fi/tlogs', { skipLocationChange: true }).then(() => { this.router.navigate(['/fi/tlogs', logID]); });
   }
+
 
   tLogsExist() {
     return Object.keys(this.treasuryService.tLogTable).length > 0 ? true : false

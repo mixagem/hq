@@ -4,7 +4,7 @@ import { dailyTotalAcomulatedSnapshot, monthlySnapshots, dailyCatDetails, dailyS
 import { monthlyTotalAcomulatedSnapshot, yearlySnapshots, monthlyCatDetails, monthlySubCatDetails, monthlyTotalDetails } from './fi/grid-view/yearlyViewMethods.js';
 import { orderCategories, orderSubCategories, fetchCategories, createNewCategory, deleteCategory, updateCategory, getSubcategorySequence } from './fi/categoriesMethods.js'
 import { deleteAllRecurrencies, dettachRecurrency, updateRecurrency, getRecurencyLogs, createTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog, createBudgetlog, fetchBudgetLogs } from './fi/treasuryMethods.js';
-import { tlogSerach,saveSearch, fetchAdvancedSearches,getSearchParamsSequence,addNewSearch , deleteSearch} from './fi/searchMethods.js'
+import { tlogSearch,saveSearch, fetchAdvancedSearches,getSearchParamsSequence,addNewSearch , deleteSearch, advancedTlogSearch} from './fi/searchMethods.js'
 
 import express from 'express';
 import cors from 'cors';
@@ -67,5 +67,6 @@ APP.get('/fetchsearches', function (req, res) { return fetchAdvancedSearches(req
 APP.get('/currentsearchparamssequence', function (req, res) { return getSearchParamsSequence(req, res); });
 APP.post('/savesearch', function (req, res) { return saveSearch(req, res); });
 APP.post('/addnewsearch', function (req, res) { return addNewSearch(req, res); });
-APP.post('/tlogserach', function (req, res) { return tlogSerach(req, res); });
+APP.post('/tlogsearch', function (req, res) { return tlogSearch(req, res); });
+APP.post('/advancedtlogserach', function (req, res) { return advancedTlogSearch(req, res); });
 APP.post('/deletesearch', function (req, res) { return deleteSearch(req, res); });

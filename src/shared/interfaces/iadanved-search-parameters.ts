@@ -3,5 +3,5 @@ export interface IAdvancedSearchParameters {
   type: string,
   field: string,
   condition: string,
-  value: string
+  value: string | boolean
 }

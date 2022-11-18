@@ -1,9 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
 import { IEfaturaCategory } from 'src/shared/interfaces/iefatura-category';
-import { MHQSnackBarsService } from 'src/shared/services/mhq-snackbar.service';
-import { ErrorHandlingService } from 'src/shared/services/misc.service';
 
 export type EFaturaCategoryList = {
   [key: number]: IEfaturaCategory
@@ -109,36 +105,8 @@ export class EfaturaService {
 
   activeEfatCats: number[];
   efaturaTable: EFaturaCategoryList;
+  constructor() {
 
-  onInitTrigger: Subject<any>;   //trigger para onInit
-
-  constructor(private _http: HttpClient, private _mhqSnackbarService: MHQSnackBarsService, private _errorHandlingService: ErrorHandlingService) {
-    // this.efaturaTable = this.fetchEfatCatsToShow();
     this.efaturaTable = { ...EFATURA_CATEGORIES };
   }
-
-  // fetchEfatCatsToShow(): EFaturaCategoryList {
-
-  //   const CALL = this._http.get('http://localhost:16190/fetchtreasurylogs');
-  //   // const CALL = this._http.get('http://localhost/hq/php/tlogs/fetchtlogs.php');
-
-  //   let tempOjb : EFaturaCategoryList = {};
-  //   CALL.subscribe({
-  //     next: (codeReceived) => {
-  //       const ERROR_CODE = codeReceived as string[];
-  //       if (ERROR_CODE[0] === 'MHQERROR') { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', ERROR_CODE[1], ['', '']); }
-  //       this.catList = codeReceived as number[];
-  //       this.catList.forEach(efatID => {
-  //         tempOjb[efatID] = EFATURA_CATEGORIES[efatID]
-  //       });
-  //     },
-  //     error: err => this._errorHandlingService.handleError(err)
-  //   })
-
-  //   return tempOjb
-  // }
-
-
-
-  onInitTriggerCall(): void { this.onInitTrigger.next(''); this.onInitTrigger.complete; this.onInitTrigger = new Subject<any>(); }
 }

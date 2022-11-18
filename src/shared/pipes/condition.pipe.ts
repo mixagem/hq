@@ -7,7 +7,8 @@ export class ConditionPipe implements PipeTransform {
 
   transform(value: string): string {
     switch (value) {
-      case '&&': return 'Contém'
+      case '~': return 'Contém'
+      case '!~': return 'Não contém'
       case '=': return 'Igual a'
       case '<': return 'Menor'
       case '<=': return 'Menor ou igual'

@@ -4,7 +4,7 @@
 
 <div mat-dialog-content class="mhq-modal-content-wrapper mhq-row">
   <div style="height:5px">
-    <mat-progress-bar *ngIf="this.waitingForSQL" mode="indeterminate" color="accent">
+    <mat-progress-bar *ngIf="this.treasurySearchService.waitingForSQL" mode="indeterminate" color="accent">
     </mat-progress-bar>
   </div>
 
@@ -13,9 +13,9 @@
 
     <mat-form-field appearance="fill" style="width:50%">
       <mat-label>Título</mat-label>
-      <mat-select *ngIf="!editingMode && !insertMode" (selectionChange)="changedSearch($event)"
-        [formControl]="selectedSearchForm">
-        <mat-option *ngFor="let search of advancedSearchArray" [value]="search.id">
+      <mat-select *ngIf="!editingMode && !insertMode" (selectionChange)="treasurySearchService.changedSearch($event,true)"
+        [formControl]="treasurySearchService.selectedSearchForm">
+        <mat-option *ngFor="let search of treasurySearchService.advancedSearchArray" [value]="search.id">
           {{search.title}}
         </mat-option>
       </mat-select>
@@ -35,11 +35,11 @@
       <button mat-mini-fab color="primary" *ngIf="!editingMode && !insertMode" (click)="addSearchMode()">
         <mat-icon>add</mat-icon>
       </button>
-      <button mat-mini-fab color="primary" style="margin:0 15px" *ngIf="!editingMode && !insertMode" [disabled]="selectedSearchIndex===0"
+      <button mat-mini-fab color="primary" style="margin:0 15px" *ngIf="!editingMode && !insertMode" [disabled]="treasurySearchService.selectedSearchIndex===0"
         (click)="editSearchMode()">
         <mat-icon>edit</mat-icon>
       </button>
-      <button (click)="deleteSearch('300ms','150ms')" mat-mini-fab color="warn" *ngIf="!editingMode && !insertMode" [disabled]="selectedSearchIndex===0">
+      <button (click)="deleteSearch('300ms','150ms')" mat-mini-fab color="warn" *ngIf="!editingMode && !insertMode" [disabled]="treasurySearchService.selectedSearchIndex===0">
         <mat-icon>delete</mat-icon>
       </button>
 
@@ -52,7 +52,7 @@
 
     <h3>Parâmetros da pesquisa</h3>
 
-    <table *ngIf="isTableReady && !editingMode && !insertMode && selectedSearchIndex !== 0" style="width: 100%;">
+    <table *ngIf="treasurySearchService.isTableReady && !editingMode && !insertMode && treasurySearchService.selectedSearchIndex !== 0" style="width: 100%;">
 
       <tr>
         <th style="color: var(--mhq-waikiki-acolor-1);width:100px;">Tipo</th>
@@ -61,7 +61,7 @@
         <th style="color: var(--mhq-waikiki-acolor-1);width:auto;text-align: left;padding-left:20px;">Valor</th>
         <th style="width:80px;"></th>
       </tr>
-      <tr *ngFor="let search of advancedSearchTable[selectedSearchIndex].parameters">
+      <tr *ngFor="let search of treasurySearchService.advancedSearchTable[treasurySearchService.selectedSearchIndex].parameters">
 
         <td style="text-align: center">{{search.type==='AND'? 'E' : 'Ou'}}</td>
         <td style="text-align: center">{{search.field | field}}</td>
@@ -72,7 +72,7 @@
     </table>
 
 
-    <table id="mhq-editing-search-params" *ngIf="isTableReady && editingMode || isTableReady && insertMode"
+    <table id="mhq-editing-search-params" *ngIf="treasurySearchService.isTableReady && editingMode || treasurySearchService.isTableReady && insertMode"
        style="width: 100%;">
 
       <tr>
@@ -99,35 +99,60 @@
           <mat-form-field appearance="fill" style="width:150px;">
             <mat-select [(ngModel)]="param.field">
               <mat-option value="title"> Título </mat-option>
+              <!-- <mat-option value="date"> Data </mat-option> -->
               <mat-option value="value"> Valor </mat-option>
-              <mat-option value="date"> Data </mat-option>
+              <!-- <mat-option value="type"> Tipo </mat-option> -->
               <mat-option value="cat"> Categoria </mat-option>
               <mat-option value="subcat"> Subcategoria </mat-option>
+              <mat-option value="nif"> Tem contribuinte </mat-option>
+              <mat-option value="efat"> Categoria E-fatura </mat-option>
+              <mat-option value="efatcheck"> Fatura verificada </mat-option>
+              <mat-option value="recurrencyid"> Movimento recorrente </mat-option>
             </mat-select>
           </mat-form-field>
         </td>
 
-
+        <!-- *ngIf="param.field !== 'cat' && param.field !== 'subcat'" -->
 
         <td>
           <mat-form-field appearance="fill" style="width:150px;">
             <mat-select [(ngModel)]="param.condition">
-              <mat-option value="~"> Contém </mat-option>
               <mat-option value="="> Igual a </mat-option>
-              <mat-option value="<"> Menor </mat-option>
-              <mat-option value="<="> Menor ou igual </mat-option>
-              <mat-option value=">"> Maior </mat-option>
-              <mat-option value=">="> Maior ou igual </mat-option>
               <mat-option value="!="> Diferente de </mat-option>
+              <mat-option *ngIf="['value','title'].includes(param.field)" value="~"> Contém </mat-option>
+              <mat-option *ngIf="['value','title'].includes(param.field)" value="!~"> Não contém </mat-option>
+              <mat-option *ngIf="['value','date'].includes(param.field)" value="<"> Menor </mat-option>
+              <mat-option *ngIf="['value','date'].includes(param.field)" value="<="> Menor ou igual </mat-option>
+              <mat-option *ngIf="['value','date'].includes(param.field)" value=">"> Maior </mat-option>
+              <mat-option *ngIf="['value','date'].includes(param.field)" value=">="> Maior ou igual </mat-option>
             </mat-select>
           </mat-form-field>
         </td>
 
         <td>
-
-          <mat-form-field appearance="fill">
+          <mat-form-field *ngIf="['value','title'].includes(param.field)" appearance="fill">
             <input matInput type="text" [(ngModel)]="param.value">
           </mat-form-field>
+
+          <mat-form-field *ngIf="param.field === 'cat'" appearance="fill" style="width:150px;">
+            <mat-select [(ngModel)]="param.value">
+              <mat-option *ngFor="let cat of catTable" [value]="cat.id">{{cat.title}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field *ngIf="param.field === 'subcat'" appearance="fill" style="width:150px;">
+            <mat-select [(ngModel)]="param.value">
+              <mat-option *ngFor="let subcat of subcatTable" [value]="subcat.id">{{subcat.title}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field *ngIf="param.field === 'efat'" appearance="fill" style="width:150px;">
+            <mat-select [(ngModel)]="param.value">
+              <mat-option *ngFor="let efat of efatTable; let i = index;" [value]="i">{{efat.title}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-checkbox *ngIf="['nif','efatcheck','recurrencyid'].includes(param.field)" [(ngModel)]="param.value"></mat-checkbox>
 
         </td>
         <td>
