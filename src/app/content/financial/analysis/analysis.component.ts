@@ -1,10 +1,13 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ScaleType } from '@swimlane/ngx-charts';
 import { LoadingService } from 'src/shared/services/misc.service';
 import { CategoriesService } from '../categories/categories.service';
+import { AnalysisEvolutionConfigModalComponent } from './analysis-evolution-config-modal/analysis-evolution-config-modal.component';
+import { AnalysisHeadtoHeadConfigModalComponent } from './analysis-headto-head-config-modal/analysis-headto-head-config-modal.component';
 
-
+type GraphType = 'evo' | 'h2h'
 export type SavingsSnapshot = {
   name: string,
   series: {
@@ -36,7 +39,7 @@ export class AnalysisComponent implements OnInit {
     ]
   }
 
-  constructor(private _http: HttpClient, private _categoriesService: CategoriesService, public loadingService: LoadingService) {
+  constructor(private _http: HttpClient, private _categoriesService: CategoriesService, public loadingService: LoadingService, private _matDialog: MatDialog) {
     // Object.assign(this, this.graphs[0]);
     //loading check
 
@@ -76,6 +79,9 @@ export class AnalysisComponent implements OnInit {
 
 
   getYearlySavingSnapshotsForGraphs(): void {
+    // preciso enviar tambem a categoria principal, e as subcategorias
+    // enviar a duração do gráfico (em meses)
+    // alterar o nome da análise para evolução {categoria}
     const HTTP_PARAMS = new HttpParams().set('year', 2023)
     const CALL = this._http.post('http://localhost:16190/savingsgraphsnapshot', HTTP_PARAMS, { responseType: 'json' });
     CALL.subscribe({
@@ -86,6 +92,25 @@ export class AnalysisComponent implements OnInit {
         this.graphs[0][1] = RESP[1];
       },
       error: err => { }
+    });
+  }
+
+  openAnalysisConfigModal(enterAnimationDuration: string, exitAnimationDuration:string, graphType: GraphType ):void{
+
+    let modalToOpen : any;
+    switch (graphType) {
+      case 'evo':
+        modalToOpen = AnalysisEvolutionConfigModalComponent
+        break;
+        case 'h2h':
+          modalToOpen = AnalysisHeadtoHeadConfigModalComponent
+        break;
+    }
+    this._matDialog.open(modalToOpen, {
+      width: '800px',
+      height: '600px',
+      enterAnimationDuration,
+      exitAnimationDuration,
     });
   }
 

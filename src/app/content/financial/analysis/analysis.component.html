@@ -45,8 +45,10 @@
     <mat-grid-list cols="3" rowHeight="50%">
       <mat-grid-tile colspan=2 rowspan=2>
         <mat-card style="height: 90%;width: 95%;">
-          <div style="height:45px;font-size:20px;font-weight:600;text-align: center;color:var(--mhq-waikiki-pcolor-1)">
-            Evolução poupanças</div>
+          <div style="position:relative;height:45px;font-size:20px;font-weight:600;text-align: center;color:var(--mhq-waikiki-pcolor-1)">
+            <div style="width:100%;position:absolute">Evolução poupanças</div>
+            <div (click)="openAnalysisConfigModal('300ms','150ms', 'evo')" style="cursor:pointer;width:100%;position:absolute;text-align: right;"><mat-icon>settings</mat-icon></div>
+          </div>
           <div style="height:calc(100% - 45px);width:100%">
             <ngx-charts-line-chart [scheme]="waikiki" [legend]=false [showXAxisLabel]=false [showYAxisLabel]=false
               [xAxis]=true [yAxis]=true [results]="graphs[0]" [tooltipDisabled]=false (select)="onSelect($event)"
@@ -57,8 +59,12 @@
       </mat-grid-tile>
       <mat-grid-tile colspan=1 rowspan=1>
         <mat-card>
-          <div style="height:35px;text-align: center;font-weight:600;color:var(--mhq-waikiki-pcolor-1)">Salários vs
-            Poupanças - 2023</div>
+          <div style="position:relative;height:35px;text-align: center;font-weight:600;color:var(--mhq-waikiki-pcolor-1)">
+            <div style="width:100%;position:absolute">Head to Head - poupanças x salários</div>
+            <div (click)="openAnalysisConfigModal('300ms','150ms','h2h')" style="cursor:pointer;width:100%;position:absolute;text-align: right;"><mat-icon>settings</mat-icon></div>
+          </div>
+          <!-- <div style="height:35px;text-align: center;font-weight:600;color:var(--mhq-waikiki-pcolor-1)">Salários vs
+            Poupanças - 2023</div> -->
           <div style="height:calc(100% - 35px);width:100%">
             <ngx-charts-line-chart [scheme]="waikiki" [legend]=false [showXAxisLabel]=false [showYAxisLabel]=false
               [xAxis]=true [yAxis]=true [results]="graphs[1]" (select)="onSelect($event)"

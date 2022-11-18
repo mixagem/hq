@@ -177,10 +177,39 @@ export function generateCatGraphSnapshot(req, res) {
 
   });
 
-
   db.close((err) => {
     err ? console.error(err.message) : res.send(snapshotsArray);
     console.log('[S2] complete');
   });
 
+
+}
+
+
+export function fetchGraphConfig(req, res) {
+
+  let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => {
+    if (err) { console.error(err.message); }
+    console.log('[S2] ');
+  });
+
+  let graphConfig = {};
+  db.each(`SELECT * FROM graphs WHERE type = '${req.body.type}'`, (err, row) => {
+    if (err) { console.error(err.message)} else {
+
+      graphConfig = JSON.parse(row['params'])
+      graphConfig.title = row['title']
+
+    }
+  })
+
+  db.close((err) => {
+    err ? console.error(err.message) : res.send(graphConfig);
+    console.log('[S2] ');
+  });
+  // recebo o tipo de objeto ('evo' / 'h2h')
+  // fazer query à graphs
+  // a coluna params tem o objeto
+  // a coluna title tem o titulo
+  // juntar o titulo ao objeto, e enviar para o frontend
 }
