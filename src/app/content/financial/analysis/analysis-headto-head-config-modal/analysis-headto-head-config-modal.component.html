@@ -44,26 +44,26 @@
   </div>
 
   <div *ngIf="editingMode && !analysisService.waitingForSQL">
-
-    <div style="width:100%;display: flex;flex-wrap: wrap;">
+    <div style="width:100%;display: flex;">
       <div style="width:calc(100% / 12 * 8)">
         <mat-form-field appearance="fill">
           <mat-label>Título do gráfico</mat-label>
-          <input matInput type="text" [(ngModel)]="headtohead.title">
+          <input matInput type="text" [formControl]="header.title">
         </mat-form-field>
       </div>
       <div style="width:calc(100% / 12 * 2)">
         <mat-form-field appearance="fill">
           <mat-label>Ano inicial</mat-label>
-          <input matInput type="number" [(ngModel)]="headtohead.year">
+          <input matInput type="number" [formControl]="header.year">
         </mat-form-field>
       </div>
       <div style="width:calc(100% / 12 * 2)">
         <mat-form-field appearance="fill">
           <mat-label>Duração</mat-label>
-          <input matInput type="number" [(ngModel)]="headtohead.duration">
+          <input matInput type="number" [formControl]="header.duration">
         </mat-form-field>
       </div>
+    
 
 
 

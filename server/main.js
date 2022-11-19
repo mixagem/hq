@@ -1,10 +1,10 @@
-import { fetchGraphConfig, savingsGraphSnapshot, generateCatGraphSnapshot } from './fi/analysisMethods.js'
-import { insertEFatura, fetchEFaturaSnapshots, movmentsNotValidated, saveEfatCatsSelection} from './fi/efaturaMethods.js'
+import { evoGraph, saveGraphConfig, fetchGraphConfig, savingsGraphSnapshot, generateCatGraphSnapshot } from './fi/analysisMethods.js'
+import { insertEFatura, fetchEFaturaSnapshots, movmentsNotValidated, saveEfatCatsSelection } from './fi/efaturaMethods.js'
 import { dailyTotalAcomulatedSnapshot, monthlySnapshots, dailyCatDetails, dailySubCatDetails, dailyTotalDetails } from './fi/grid-view/monthlyViewMethods.js';
 import { monthlyTotalAcomulatedSnapshot, yearlySnapshots, monthlyCatDetails, monthlySubCatDetails, monthlyTotalDetails } from './fi/grid-view/yearlyViewMethods.js';
 import { orderCategories, orderSubCategories, fetchCategories, createNewCategory, deleteCategory, updateCategory, getSubcategorySequence } from './fi/categoriesMethods.js'
 import { deleteAllRecurrencies, dettachRecurrency, updateRecurrency, getRecurencyLogs, createTreasurylog, updateTreasuryLog, fetchTreasuryLogs, deleteTreasuryLog, createBudgetlog, fetchBudgetLogs } from './fi/treasuryMethods.js';
-import { tlogSearch,saveSearch, fetchAdvancedSearches,getSearchParamsSequence,addNewSearch , deleteSearch, advancedTlogSearch} from './fi/searchMethods.js'
+import { tlogSearch, saveSearch, fetchAdvancedSearches, getSearchParamsSequence, addNewSearch, deleteSearch, advancedTlogSearch } from './fi/searchMethods.js'
 
 import express from 'express';
 import cors from 'cors';
@@ -63,6 +63,8 @@ APP.post('/efatcatselectionsave', function (req, res) { return saveEfatCatsSelec
 APP.post('/savingsgraphsnapshot', function (req, res) { return savingsGraphSnapshot(req, res); });
 APP.post('/testesnapshot', function (req, res) { return generateCatGraphSnapshot(req, res); });
 APP.post('/fetchgraphconfig', function (req, res) { return fetchGraphConfig(req, res); });
+APP.post('/savegraphconfig', function (req, res) { return saveGraphConfig(req, res); });
+APP.get('/evograph', function (req, res) { return evoGraph(req, res); });
 
 // advanced search
 APP.get('/fetchsearches', function (req, res) { return fetchAdvancedSearches(req, res); });
@@ -72,3 +74,5 @@ APP.post('/addnewsearch', function (req, res) { return addNewSearch(req, res); }
 APP.post('/tlogsearch', function (req, res) { return tlogSearch(req, res); });
 APP.post('/advancedtlogserach', function (req, res) { return advancedTlogSearch(req, res); });
 APP.post('/deletesearch', function (req, res) { return deleteSearch(req, res); });
+
+

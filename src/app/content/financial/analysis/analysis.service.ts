@@ -53,6 +53,21 @@ export class AnalysisService {
     });
   }
 
+  saveGraphConfig(type: string, config:any): any {
+    const HTTP_PARAMS = new HttpParams().set('type', type).set('config', config);
+
+    const CALL = this._http.post('http://localhost:16190/savegraphconfig', HTTP_PARAMS, { responseType: 'json' });
+    CALL.subscribe({
+      next: (codeReceived) => {
+        // return
+        // const RESP = codeReceived as any;
+        // this.graphConfig = RESP;
+        this.onInitTriggerCall();
+      },
+      error: err => { }
+    });
+  }
+
   refreshSubcategoryList(catID: number): void {
 
     this.subcategoriesList = [];

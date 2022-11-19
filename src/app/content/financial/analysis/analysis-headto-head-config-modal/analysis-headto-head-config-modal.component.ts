@@ -4,7 +4,7 @@ import { CategoriesService } from '../../categories/categories.service';
 import { AnalysisService } from '../analysis.service';
 
 type HeadToHeadGraph = { title: string, cats: number[], year: number, duration: number }
-
+type HeaderForm = {title:FormControl, year: FormControl, duration: FormControl }
 @Component({
   selector: 'mhq-analysis-headto-head-config-modal',
   templateUrl: './analysis-headto-head-config-modal.component.html',
@@ -13,6 +13,7 @@ type HeadToHeadGraph = { title: string, cats: number[], year: number, duration: 
 
 export class AnalysisHeadtoHeadConfigModalComponent implements OnInit {
 
+  header: HeaderForm;
   headtohead:HeadToHeadGraph
   editingMode: boolean;
   catControls : FormControl[];
@@ -23,16 +24,9 @@ export class AnalysisHeadtoHeadConfigModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('aki')
     this.analysisService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (this.analysisService.waitingForSQL) { return }
-    console.log('aki')
-    // this.headtohead = {
-    //   title: "Evolução poupanças",
-    //   cats: [1, 2],
-    //   year: 2013,
-    //   duration: 1
-    // }
+
     this.headtohead = JSON.parse(JSON.stringify(this.analysisService.graphConfig))
     this.analysisService.waitingForSQL = false;
   }
@@ -40,7 +34,11 @@ export class AnalysisHeadtoHeadConfigModalComponent implements OnInit {
 
   enteringEditingMode():void {
     this.editingMode = true;
-
+    this.header = {
+      title: new FormControl(this.headtohead.title, [Validators.required]),
+      year:  new FormControl(this.headtohead.year, [Validators.required]),
+      duration:  new FormControl(this.headtohead.duration, [Validators.required])
+    }
     this.catControls = [];
 
     this.headtohead.cats.forEach(cat => {
@@ -53,10 +51,13 @@ export class AnalysisHeadtoHeadConfigModalComponent implements OnInit {
   }
 
   saveGraphSettings():void {
+    this.headtohead.title = this.header.title.value
+    this.headtohead.duration = this.header.duration.value
+    this.headtohead.year = this.header.year.value
     this.headtohead.cats.forEach((cats,i) => {
       this.headtohead.cats[i] = this.catControls[i].value
     });
-    console.table(this.headtohead)
+    this.analysisService.saveGraphConfig('h2h',JSON.stringify(this.headtohead))
   }
 
 }
