@@ -4,7 +4,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { CategoriesService } from '../../categories/categories.service';
 import { AnalysisService } from '../analysis.service';
 
-type EvolutionGraph = { title: string, cat: number, subcats: number[], year: number, duration: number }
+type EvolutionGraph = { title: string, cat: number, subcat: number[], year: number, duration: number }
 type HeaderForm = {title:FormControl, year: FormControl, duration: FormControl }
 
 @Component({
@@ -46,7 +46,7 @@ export class AnalysisEvolutionConfigModalComponent implements OnInit {
     }
     this.catControl = new FormControl(this.evolution.cat, [Validators.required])
     this.subcatControls = [];
-    this.evolution.subcats.forEach(subcat => {
+    this.evolution.subcat.forEach(subcat => {
       console.log(subcat)
       this.subcatControls.push(new FormControl(subcat, [Validators.required]))
     });
@@ -61,8 +61,8 @@ export class AnalysisEvolutionConfigModalComponent implements OnInit {
     this.evolution.duration = this.header.duration.value
     this.evolution.year = this.header.year.value
     this.evolution.cat = this.catControl.value
-    this.evolution.subcats.forEach((subcat, i) => {
-      this.evolution.subcats[i] = this.subcatControls[i].value
+    this.evolution.subcat.forEach((subcat, i) => {
+      this.evolution.subcat[i] = this.subcatControls[i].value
     });
     this.analysisService.saveGraphConfig('evo',JSON.stringify(this.evolution))
     this.editingMode = false;
@@ -70,7 +70,7 @@ export class AnalysisEvolutionConfigModalComponent implements OnInit {
 
   catChanged(event: MatSelectChange): void {
     this.analysisService.refreshSubcategoryList(event.value);
-    this.evolution.subcats.forEach((subcat, i) => {
+    this.evolution.subcat.forEach((subcat, i) => {
       this.subcatControls[i] = new FormControl(-1, [Validators.required])
       Object.keys(this.analysisService.subcategoriesList).length > 0 ? this.subcatControls[i].enable() : this.subcatControls[i].disable();
     });

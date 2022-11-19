@@ -37,7 +37,7 @@
 
     <br>
 
-    <div *ngFor="let subcat of headtohead.cats; let i = index">
+    <div *ngFor="let subcat of headtohead.cat; let i = index">
       {{categoriesService.catTable['\''+subcat+'\''].title}}
     </div>
 
@@ -63,11 +63,11 @@
           <input matInput type="number" [formControl]="header.duration">
         </mat-form-field>
       </div>
-    
 
 
 
-      <div *ngFor="let cat of headtohead.cats; let i = index" style="width: 100%">
+
+      <div *ngFor="let cat of headtohead.cat; let i = index" style="width: 100%">
 
         <form class="mhq-cats-form" style="width: 100%;">
           <mat-form-field>

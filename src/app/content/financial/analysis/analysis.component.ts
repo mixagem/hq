@@ -40,8 +40,6 @@ export class AnalysisComponent implements OnInit {
   }
 
   constructor(private _http: HttpClient, private _categoriesService: CategoriesService, public loadingService: LoadingService, private _matDialog: MatDialog) {
-    // Object.assign(this, this.graphs[0]);
-    //loading check
 
   }
 
@@ -49,14 +47,12 @@ export class AnalysisComponent implements OnInit {
     this._categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this.loadingService.categoriesLoadingComplete) { return }
 
-    this.getYearlySavingSnapshotsForGraphs();
-    this.getSnapshotForGraphs('cat', 2023, [1, 2], 2);
-    this.getSnapshotForGraphs('cat', 2023, [3, 4], 3);
-    // this.getSnapshotForGraphs('subcat', 2023, [7, 8, 9, 10], 4);
+    this.getGraph('evo', 0, true);
+    this.getGraph('h2h', 1);
+    this.getGraph('stack', 2, true);
   }
 
   getSnapshotForGraphs(type: string, year: number, catids: number[], graph: number): void {
-    // ano, categorias, subcategorias
     const CAT_TITLES: string[] = [];
     if (type === 'cat') { catids.forEach(catID => { CAT_TITLES.push(this._categoriesService.catTable[`'${catID}'`].title) }); }
     if (type === 'subcat') { catids.forEach(subcatID => { CAT_TITLES.push(this._categoriesService.subcatTable[subcatID].title) }); }
@@ -77,33 +73,36 @@ export class AnalysisComponent implements OnInit {
     });
   }
 
+  getGraph(type: string, graphSlot: number, inverted: boolean = false): void {
 
-  getYearlySavingSnapshotsForGraphs(): void {
-    // preciso enviar tambem a categoria principal, e as subcategorias
-    // enviar a duração do gráfico (em meses)
-    // alterar o nome da análise para evolução {categoria}
-    const HTTP_PARAMS = new HttpParams().set('year', 2023)
-    const CALL = this._http.post('http://localhost:16190/savingsgraphsnapshot', HTTP_PARAMS, { responseType: 'json' });
+    let HTTP_PARAMS;
+
+    if (!inverted) { HTTP_PARAMS = new HttpParams().set('type', type) }
+    if (inverted) { HTTP_PARAMS = new HttpParams().set('type', type).set('inverted', true) }
+
+    const CALL = this._http.post('http://localhost:16190/getgraph', HTTP_PARAMS, { responseType: 'json' });
     CALL.subscribe({
       next: (codeReceived) => {
         const RESP = codeReceived as SavingsSnapshot[];
-        this.graphs[0] = new Array(2);
-        this.graphs[0][0] = RESP[0]
-        this.graphs[0][1] = RESP[1];
+        const GRAPH_LENGTH = RESP.length;
+        this.graphs[graphSlot] = new Array(GRAPH_LENGTH);
+        RESP.forEach((graph, i) => {
+          this.graphs[graphSlot][i] = graph
+        });
       },
       error: err => { }
     });
   }
 
-  openAnalysisConfigModal(enterAnimationDuration: string, exitAnimationDuration:string, graphType: GraphType ):void{
+  openAnalysisConfigModal(enterAnimationDuration: string, exitAnimationDuration: string, graphType: GraphType): void {
 
-    let modalToOpen : any;
+    let modalToOpen: any;
     switch (graphType) {
       case 'evo':
         modalToOpen = AnalysisEvolutionConfigModalComponent
         break;
-        case 'h2h':
-          modalToOpen = AnalysisHeadtoHeadConfigModalComponent
+      case 'h2h':
+        modalToOpen = AnalysisHeadtoHeadConfigModalComponent
         break;
     }
     this._matDialog.open(modalToOpen, {

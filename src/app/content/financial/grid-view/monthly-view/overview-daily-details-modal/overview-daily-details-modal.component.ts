@@ -2,8 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { AdvancedTreasurySearchService } from 'src/app/nav/navbar/treasury-searchbox/advanced-treasury-search/advanced-treasury-search.service';
 import { ITreasuryLog } from 'src/shared/interfaces/itreasury-log';
+import { LoadingService } from 'src/shared/services/misc.service';
 import { CategoriesService } from '../../../categories/categories.service';
+import { TreasuryService } from '../../../treasury-log/treasury.service';
 import { GridViewService } from '../../grid-view.service';
 
 @Component({
@@ -16,7 +19,7 @@ export class OverviewDailyDetailsModalComponent implements OnInit {
   isDataSourceEmpty: Boolean;
   displayedColumns: string[];
 
-  constructor(public categoriesService: CategoriesService, public gridViewService:GridViewService,  private _router: Router) { }
+  constructor(public categoriesService: CategoriesService, public gridViewService:GridViewService,  private _router: Router, private _treasuryService:TreasuryService,  private _loadingService: LoadingService, private _advancedTLogSearch:AdvancedTreasurySearchService) { }
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource<ITreasuryLog>(this.gridViewService.treasuryLogsForDetails);
@@ -43,6 +46,10 @@ export class OverviewDailyDetailsModalComponent implements OnInit {
   }
 
   goToTreasuryLog(treasuryLogID: number) {
+    this._loadingService.treasuryLoadingComplete = false;
+    this._advancedTLogSearch.searchMode = 'simple'
+    this._advancedTLogSearch.treasuryNavbarInput = '';
+    this._treasuryService.fetchTreasuryLog();
     const ELE = document.querySelector('.cdk-overlay-backdrop') as HTMLElement; ELE.click();
     this._router.navigate(['/fi/tlogs', treasuryLogID]);
   }

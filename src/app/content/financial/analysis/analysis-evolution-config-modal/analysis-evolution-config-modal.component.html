@@ -39,7 +39,7 @@
 
     {{categoriesService.catTable["'"+evolution.cat+"'"].title}}<br><br>
 
-    <span *ngFor="let subcat of evolution.subcats">
+    <span *ngFor="let subcat of evolution.subcat">
       {{categoriesService.subcatTable[subcat].title}}<br></span>
   </div>
 
@@ -88,7 +88,7 @@
 
 
 
-    <div *ngFor="let subcat of evolution.subcats; let i = index">
+    <div *ngFor="let subcat of evolution.subcat; let i = index">
 
       <form class="mhq-subcats-form" style="width: 100%;">
         <mat-form-field>

@@ -1,4 +1,4 @@
-import { evoGraph, saveGraphConfig, fetchGraphConfig, savingsGraphSnapshot, generateCatGraphSnapshot } from './fi/analysisMethods.js'
+import { getGraph, saveGraphConfig, fetchGraphConfig } from './fi/analysisMethods.js'
 import { insertEFatura, fetchEFaturaSnapshots, movmentsNotValidated, saveEfatCatsSelection } from './fi/efaturaMethods.js'
 import { dailyTotalAcomulatedSnapshot, monthlySnapshots, dailyCatDetails, dailySubCatDetails, dailyTotalDetails } from './fi/grid-view/monthlyViewMethods.js';
 import { monthlyTotalAcomulatedSnapshot, yearlySnapshots, monthlyCatDetails, monthlySubCatDetails, monthlyTotalDetails } from './fi/grid-view/yearlyViewMethods.js';
@@ -60,11 +60,11 @@ APP.get('/tlogstovalidate', function (req, res) { return movmentsNotValidated(re
 APP.post('/efatcatselectionsave', function (req, res) { return saveEfatCatsSelection(req, res); });
 
 // analysis
-APP.post('/savingsgraphsnapshot', function (req, res) { return savingsGraphSnapshot(req, res); });
-APP.post('/testesnapshot', function (req, res) { return generateCatGraphSnapshot(req, res); });
+// APP.post('/savingsgraphsnapshot', function (req, res) { return savingsGraphSnapshot(req, res); });
+// APP.post('/testesnapshot', function (req, res) { return generateCatGraphSnapshot(req, res); });
 APP.post('/fetchgraphconfig', function (req, res) { return fetchGraphConfig(req, res); });
 APP.post('/savegraphconfig', function (req, res) { return saveGraphConfig(req, res); });
-APP.get('/evograph', function (req, res) { return evoGraph(req, res); });
+APP.post('/getgraph', function (req, res) { return getGraph(req, res); });
 
 // advanced search
 APP.get('/fetchsearches', function (req, res) { return fetchAdvancedSearches(req, res); });

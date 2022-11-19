@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Route, Router } from '@angular/router';
 import { GridViewService } from 'src/app/content/financial/grid-view/grid-view.service';
 import { NavmenuService } from './navmenu.service';
 
@@ -12,7 +13,7 @@ import { NavmenuService } from './navmenu.service';
 export class NavmenuComponent implements OnInit {
   isMenuOpen: boolean;
 
-  constructor(public navmenuService: NavmenuService, public gridViewService:GridViewService) { }
+  constructor(public navmenuService: NavmenuService, public gridViewService:GridViewService,  private _router: Router) { }
 
   ngOnInit(): void { this.isMenuOpen = false; }
 
@@ -47,6 +48,10 @@ export class NavmenuComponent implements OnInit {
     let allChevrons = document.querySelectorAll('[class*="expand-more-"]');
     this.isMenuOpen ? allChevrons.forEach(function (chevron) { chevron.classList.add('hidden'); }) : allChevrons.forEach(function (chevron) { chevron.classList.remove('hidden'); });
     this.isMenuOpen = !this.isMenuOpen;
+    if (this._router.url.startsWith('/fi/graphs')) {
+      this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigateByUrl('/fi/graphs', { skipLocationChange: true }) });
+    }
+    //
   }
 
 }

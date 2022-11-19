@@ -3,7 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { CategoriesService } from '../../categories/categories.service';
 import { AnalysisService } from '../analysis.service';
 
-type HeadToHeadGraph = { title: string, cats: number[], year: number, duration: number }
+type HeadToHeadGraph = { title: string, cat: number[], year: number, duration: number }
 type HeaderForm = {title:FormControl, year: FormControl, duration: FormControl }
 @Component({
   selector: 'mhq-analysis-headto-head-config-modal',
@@ -41,7 +41,7 @@ export class AnalysisHeadtoHeadConfigModalComponent implements OnInit {
     }
     this.catControls = [];
 
-    this.headtohead.cats.forEach(cat => {
+    this.headtohead.cat.forEach(cat => {
       this.catControls.push(new FormControl(cat, [Validators.required]))
     });
   }
@@ -54,8 +54,8 @@ export class AnalysisHeadtoHeadConfigModalComponent implements OnInit {
     this.headtohead.title = this.header.title.value
     this.headtohead.duration = this.header.duration.value
     this.headtohead.year = this.header.year.value
-    this.headtohead.cats.forEach((cats,i) => {
-      this.headtohead.cats[i] = this.catControls[i].value
+    this.headtohead.cat.forEach((cat,i) => {
+      this.headtohead.cat[i] = this.catControls[i].value
     });
     this.analysisService.saveGraphConfig('h2h',JSON.stringify(this.headtohead))
   }

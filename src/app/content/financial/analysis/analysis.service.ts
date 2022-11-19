@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Route, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { IFinancialSubCategory } from 'src/shared/interfaces/ifinancial-sub-category';
 import { CategoriesService } from '../categories/categories.service';
@@ -21,7 +22,7 @@ export class AnalysisService {
   subcategoriesList: any[];
 
 
-  constructor(public categoriesService: CategoriesService, private _http: HttpClient) {
+  constructor(public categoriesService: CategoriesService, private _http: HttpClient, private _router: Router) {
 
     this.onInitTrigger = new Subject<any>(); // trigger para onInit do componente
 
@@ -63,6 +64,8 @@ export class AnalysisService {
         // const RESP = codeReceived as any;
         // this.graphConfig = RESP;
         this.onInitTriggerCall();
+        this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => { this._router.navigateByUrl('/fi/graphs', { skipLocationChange: true }) });
+
       },
       error: err => { }
     });
