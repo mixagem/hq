@@ -106,7 +106,7 @@
         <div class="mhq-input-wrapper mhq-col-4">
           <mat-form-field appearance="fill">
             <mat-label>Sub-categoria</mat-label>
-            <input matInput disabled [value]="categoriesService.subcatTable[budgetLog.subcat].title">
+            <input matInput disabled [value]="categoriesService.subcatTable['\''+budgetLog.subcat+'\''].title">
           </mat-form-field>
         </div>
 

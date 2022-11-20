@@ -21,7 +21,7 @@ export function fetchCategories(req, res) {
       }
     });
 
-    DB.each(`SELECT * FROM subcategories ORDER BY subcatorder`, (err, subcat) => {
+    DB.each(`SELECT * FROM subcategories ORDER BY maincatid`, (err, subcat) => {
       if (err) { dbErrors = true; console.error(err.message); console.log('[CAT 1] Erro ao carregar subcategorias'); }
       pushSubcatToCategory(subcat)
     });

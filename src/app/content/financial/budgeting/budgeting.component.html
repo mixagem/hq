@@ -45,7 +45,7 @@
             [ngStyle]="{'background-color':categoriesService.catTable['\''+element.cat+'\''].bgcolor,'color':categoriesService.catTable['\''+element.cat+'\''].textcolor}">
             <div>
               <mat-icon>{{categoriesService.catTable['\''+element.cat+'\''].icon}}</mat-icon>
-              <span>{{categoriesService.subcatTable[element.subcat].title}}</span>
+              <span>{{categoriesService.subcatTable['\''+element.subcat+'\''].title}}</span>
             </div>
           </td>
         </ng-container>

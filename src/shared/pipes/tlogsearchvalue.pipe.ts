@@ -17,7 +17,7 @@ export class TlogsearchvaluePipe implements PipeTransform {
       case 'date': return new Date(Number(value))
       case 'type': return value === 'expense' ? 'Despesa' : 'Rendimento'
       case 'cat': return this.catService.catTable[`'${Number(value)}'`].title;
-      case 'subcat': return this.catService.subcatTable[Number(value)].title;
+      case 'subcat': return this.catService.subcatTable[`'${Number(value)}'`].title;
       case 'nif': case 'efatcheck': case 'recurrencyid': return value === true ? 'check_box' : 'check_box_outline_blank'
       case 'efat': return this.efatService.efaturaTable[Number(value)].title;
       default: return ''

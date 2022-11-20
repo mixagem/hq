@@ -109,7 +109,7 @@
             <mat-form-field>
               <mat-label>Sub categoria</mat-label>
               <mat-select [formControl]="subcatForm">
-                <mat-select-trigger>{{subcatForm.value!== '' ? categoriesService.subcatTable[subcatForm.value].title :
+                <mat-select-trigger>{{subcatForm.value!== '' ? categoriesService.subcatTable['\''+subcatForm.value+'\''].title :
                   ''}}</mat-select-trigger>
                 <mat-option *ngFor="let option of subcategoriesList" [value]="option.value" class="mhq-subcat-select">
                   {{option.title}}

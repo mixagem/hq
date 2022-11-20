@@ -58,7 +58,7 @@ export class NewBudgetComponent implements OnInit {
     if (this.budgetService.cloningBudgetLog) {
       this.refreshSubcategoryList(this.tempBudgetLog.cat);
       this.catForm = new FormControl(this.categoriesService.catTable[`'${this.tempBudgetLog.cat}'`].title, [Validators.required]);
-      this.subcatForm = new FormControl(this.categoriesService.subcatTable[this.tempBudgetLog.subcat].title, [Validators.required]);
+      this.subcatForm = new FormControl(this.categoriesService.subcatTable[`'${this.tempBudgetLog.subcat}'`].title, [Validators.required]);
     } else {
       this.catForm = new FormControl('', [Validators.required]);
       this.subcatForm = new FormControl({ value: '', disabled: true }, [Validators.required]);

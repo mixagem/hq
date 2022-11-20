@@ -4,17 +4,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { ScaleType } from '@swimlane/ngx-charts';
 import { LoadingService } from 'src/shared/services/misc.service';
 import { CategoriesService } from '../categories/categories.service';
-import { AnalysisEvolutionConfigModalComponent } from './analysis-evolution-config-modal/analysis-evolution-config-modal.component';
-import { AnalysisHeadtoHeadConfigModalComponent } from './analysis-headto-head-config-modal/analysis-headto-head-config-modal.component';
+import { AnalysisService } from './analysis.service';
+import { GraphConfigModalComponent } from './graph-config-modal/graph-config-modal.component';
 
-type GraphType = 'evo' | 'h2h'
-export type SavingsSnapshot = {
-  name: string,
-  series: {
-    name: string,
-    value: number
-  }[]
-}
+export type GraphRender = { name: string, series: { name: string, value: number }[] }
 
 
 @Component({
@@ -25,7 +18,7 @@ export type SavingsSnapshot = {
 
 
 export class AnalysisComponent implements OnInit {
-  graphs: SavingsSnapshot[][] = [[]];
+  graphs: GraphRender[][] = [];
 
   waikiki = {
     name: 'waikiki',
@@ -39,7 +32,7 @@ export class AnalysisComponent implements OnInit {
     ]
   }
 
-  constructor(private _http: HttpClient, private _categoriesService: CategoriesService, public loadingService: LoadingService, private _matDialog: MatDialog) {
+  constructor(private _http: HttpClient, private _categoriesService: CategoriesService, public loadingService: LoadingService, private _matDialog: MatDialog, private _analysisService: AnalysisService) {
 
   }
 
@@ -47,65 +40,34 @@ export class AnalysisComponent implements OnInit {
     this._categoriesService.onInitTrigger.subscribe(x => { this.ngOnInit(); });
     if (!this.loadingService.categoriesLoadingComplete) { return }
 
-    this.getGraph('evo', 0, true);
-    this.getGraph('h2h', 1);
-    this.getGraph('stack', 2, true);
+    for (let i = 1; i <= 3; i++) { this.getGraph(i) }
+
   }
 
-  getSnapshotForGraphs(type: string, year: number, catids: number[], graph: number): void {
-    const CAT_TITLES: string[] = [];
-    if (type === 'cat') { catids.forEach(catID => { CAT_TITLES.push(this._categoriesService.catTable[`'${catID}'`].title) }); }
-    if (type === 'subcat') { catids.forEach(subcatID => { CAT_TITLES.push(this._categoriesService.subcatTable[subcatID].title) }); }
 
-    const HTTP_PARAMS = new HttpParams().set('year', year).set('type', type).set('cats', JSON.stringify(catids)).set('titles', JSON.stringify(CAT_TITLES));
-    const CALL = this._http.post('http://localhost:16190/testesnapshot', HTTP_PARAMS, { responseType: 'json' });
-    CALL.subscribe({
-      next: (codeReceived) => {
-        const RESP = codeReceived as SavingsSnapshot[];
-        this.graphs[graph - 1] = new Array(RESP.length);
+  getGraph(graphID: number): void {
 
-        RESP.forEach((resp, i) => {
-          this.graphs[graph - 1][i] = resp
-        });
-
-      },
-      error: err => { }
-    });
-  }
-
-  getGraph(type: string, graphSlot: number, inverted: boolean = false): void {
-
-    let HTTP_PARAMS;
-
-    if (!inverted) { HTTP_PARAMS = new HttpParams().set('type', type) }
-    if (inverted) { HTTP_PARAMS = new HttpParams().set('type', type).set('inverted', true) }
-
+    const HTTP_PARAMS = new HttpParams().set('graphid', graphID)
     const CALL = this._http.post('http://localhost:16190/getgraph', HTTP_PARAMS, { responseType: 'json' });
     CALL.subscribe({
       next: (codeReceived) => {
-        const RESP = codeReceived as SavingsSnapshot[];
+        const RESP = codeReceived as GraphRender[];
         const GRAPH_LENGTH = RESP.length;
-        this.graphs[graphSlot] = new Array(GRAPH_LENGTH);
+        this.graphs[graphID - 1] = new Array(GRAPH_LENGTH);
         RESP.forEach((graph, i) => {
-          this.graphs[graphSlot][i] = graph
+          this.graphs[graphID - 1][i] = graph
         });
       },
       error: err => { }
     });
   }
 
-  openAnalysisConfigModal(enterAnimationDuration: string, exitAnimationDuration: string, graphType: GraphType): void {
-
-    let modalToOpen: any;
-    switch (graphType) {
-      case 'evo':
-        modalToOpen = AnalysisEvolutionConfigModalComponent
-        break;
-      case 'h2h':
-        modalToOpen = AnalysisHeadtoHeadConfigModalComponent
-        break;
-    }
-    this._matDialog.open(modalToOpen, {
+  openGraphConfig(enterAnimationDuration: string, exitAnimationDuration: string, graphID: number): void {
+    this._analysisService.catArray = []; this._analysisService.subcatArray = [];
+    for (let i = 0; i < Object.keys(this._categoriesService.catTable).length; i++) { this._analysisService.catArray.push(this._categoriesService.catTable[Object.keys(this._categoriesService.catTable)[i]]) }
+    for (let i = 0; i < Object.keys(this._categoriesService.subcatTable).length; i++) { this._analysisService.subcatArray.push(this._categoriesService.subcatTable[Object.keys(this._categoriesService.subcatTable)[i]]) }
+    this._analysisService.selectedGraph = graphID;
+    this._matDialog.open(GraphConfigModalComponent, {
       width: '800px',
       height: '600px',
       enterAnimationDuration,

@@ -18,6 +18,7 @@ import { EfaturaService } from '../../efatura/efatura.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { IFinancialSubCategory } from 'src/shared/interfaces/ifinancial-sub-category';
 import { CheckTreasuryEfatComponent } from './check-treasury-efat/check-treasury-efat.component';
+import { sub } from 'date-fns';
 
 type SelectEnum = { title: string, value: number }
 type RecordActions = 'edit' | 'save' | 'cancel'
@@ -74,7 +75,7 @@ export class TreasuryDetailsComponent implements OnInit {
     this.tLogDatepickerForm = new FormControl(new Date(this.tLog.date), [Validators.required]);
 
     this.catList = [];
-    for (let i = 0; i < Object.keys(this.categoriesService.catTable).length; i++) { this.catList.push({ title: this.categoriesService.catTable[Object.keys(this.categoriesService.catTable)[i]].title, value: this.categoriesService.catTable[Object.keys(this.categoriesService.catTable)[i]].id }) }
+    for (let i = 0; i < Object.keys(this.categoriesService.catTable).length; i++) { if(this.categoriesService.catTable[Object.keys(this.categoriesService.catTable)[i]].active){this.catList.push({ title: this.categoriesService.catTable[Object.keys(this.categoriesService.catTable)[i]].title, value: this.categoriesService.catTable[Object.keys(this.categoriesService.catTable)[i]].id })} }
     this.catForm = new FormControl(this.tempTLog.cat, [Validators.required]);
 
     this.subcategoriesList = [];
@@ -171,7 +172,7 @@ export class TreasuryDetailsComponent implements OnInit {
 
   refreshSubcategoryList(catID: number): void {
     this.subcategoriesList = [];
-    this.categoriesService.catTable[`'${catID}'`].subcats.forEach((subcat: IFinancialSubCategory) => { this.subcategoriesList.push({ title: subcat.title, value: subcat.id }) });
+    this.categoriesService.catTable[`'${catID}'`].subcats.forEach((subcat: IFinancialSubCategory) => {if(subcat.active){this.subcategoriesList.push({ title: subcat.title, value: subcat.id })} });
   }
 
   catChanged(event: MatSelectChange): void {

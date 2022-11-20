@@ -49,7 +49,7 @@
 
       <ng-container matColumnDef="subcat" *ngIf="gridViewService.source !== 'subcategory'">
         <td mat-cell *matCellDef="let element">
-          {{categoriesService.subcatTable[element.subcat].title}}
+          {{categoriesService.subcatTable['\''+element.subcat+'\''].title}}
         </td>
       </ng-container>
 

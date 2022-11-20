@@ -57,7 +57,7 @@ export class BudgetDetailsComponent implements OnInit {
     this.budgetService.activeBudgetLog = JSON.parse(JSON.stringify(this.budgetLog));
     this.budgetLogDatepickerForm = new FormControl(new Date(this.budgetLog.date), [Validators.required]);
     this.catForm = new FormControl(this.categoriesService.catTable[`'${this.tempBudgetLog.cat}'`].title, [Validators.required]);
-    this.subcatForm = new FormControl({ value: this.categoriesService.subcatTable[this.tempBudgetLog.subcat].title, disabled: true }, [Validators.required]);
+    this.subcatForm = new FormControl({ value: this.categoriesService.subcatTable[`'${this.tempBudgetLog.subcat}'`].title, disabled: true }, [Validators.required]);
     this.categoriesService.catTable[`'${this.tempBudgetLog.cat}'`].subcats.forEach((subcat: { title: string; }) => { this.subcategoriesList.push(subcat.title) });
     this.subcatForm.enable();
     for (let i = 0; i < Object.keys(this.categoriesService.catTable).length; i++) {
@@ -120,7 +120,7 @@ export class BudgetDetailsComponent implements OnInit {
         this.tempBudgetLog = JSON.parse(JSON.stringify(this.budgetLog));
         this.refreshSubcategoryList(this.tempBudgetLog.cat);
         this.catForm = new FormControl(this.categoriesService.catTable[`'${this.tempBudgetLog.cat}'`].title, [Validators.required]);
-        this.subcatForm = new FormControl(this.categoriesService.subcatTable[this.tempBudgetLog.subcat].title, [Validators.required]);
+        this.subcatForm = new FormControl(this.categoriesService.subcatTable[`'${this.tempBudgetLog.subcat}'`].title, [Validators.required]);
         this.subcategoriesList.length > 0 ? this.subcatForm.enable() : this.subcatForm.disable();
         this.editingMode = true;
         break;

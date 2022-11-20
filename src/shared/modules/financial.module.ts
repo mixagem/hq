@@ -32,8 +32,7 @@ import { EfaturaComponent } from 'src/app/content/financial/efatura/efatura.comp
 import { CheckTreasuryEfatComponent } from 'src/app/content/financial/treasury-log/treasury-details/check-treasury-efat/check-treasury-efat.component';
 import { MhqSnackBarComponent } from 'src/shared/components/mhq-snack-bar/mhq-snack-bar.component';
 import { EFatSelectorModalComponent } from 'src/app/content/financial/efatura/e-fat-selector-modal/e-fat-selector-modal.component';
-import { AnalysisEvolutionConfigModalComponent } from 'src/app/content/financial/analysis/analysis-evolution-config-modal/analysis-evolution-config-modal.component';
-import { AnalysisHeadtoHeadConfigModalComponent } from 'src/app/content/financial/analysis/analysis-headto-head-config-modal/analysis-headto-head-config-modal.component';
+import { GraphConfigModalComponent } from 'src/app/content/financial/analysis/graph-config-modal/graph-config-modal.component';
 
 
 @NgModule({
@@ -61,8 +60,7 @@ import { AnalysisHeadtoHeadConfigModalComponent } from 'src/app/content/financia
     EfaturaComponent,
     CheckTreasuryEfatComponent,
     EFatSelectorModalComponent,
-    AnalysisEvolutionConfigModalComponent,
-    AnalysisHeadtoHeadConfigModalComponent
+    GraphConfigModalComponent
 
   ],
   imports: [
@@ -100,8 +98,7 @@ import { AnalysisHeadtoHeadConfigModalComponent } from 'src/app/content/financia
     EfaturaComponent,
     CheckTreasuryEfatComponent,
     EFatSelectorModalComponent,
-    AnalysisEvolutionConfigModalComponent,
-    AnalysisHeadtoHeadConfigModalComponent
+    GraphConfigModalComponent
 
   ]
 })

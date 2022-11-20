@@ -20,14 +20,16 @@ export class NavmenuService {
       route: '/dashboard',
       parentEntry: 'dashboard',
       icon: 'space_dashboard'
-    },{
-      isMainTitle: true,
-      haveChild: false,
-      name: 'Agenda',
-      route: '/agenda',
-      parentEntry: 'agenda',
-      icon: 'calendar_month'
-    },{
+    },
+    // {
+    //   isMainTitle: true,
+    //   haveChild: false,
+    //   name: 'Agenda',
+    //   route: '/agenda',
+    //   parentEntry: 'agenda',
+    //   icon: 'calendar_month'
+    // },
+    {
       isMainTitle: true,
       haveChild: true,
       name: 'Tesouraria',
@@ -52,13 +54,15 @@ export class NavmenuService {
       name: 'Movimentos tesouraria',
       route: '/fi/tlogs',
       parentEntry: 'fi'
-    },{
-      isMainTitle: false,
-      haveChild: false,
-      name: 'Orçamentos',
-      route: '/fi/budget',
-      parentEntry: 'fi'
-    },{
+    },
+    // {
+    //   isMainTitle: false,
+    //   haveChild: false,
+    //   name: 'Orçamentos',
+    //   route: '/fi/budget',
+    //   parentEntry: 'fi'
+    // },
+    {
       isMainTitle: false,
       haveChild: false,
       name: 'E-fatura',

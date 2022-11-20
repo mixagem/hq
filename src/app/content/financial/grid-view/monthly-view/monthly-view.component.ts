@@ -182,7 +182,7 @@ export class MonthlyViewComponent implements OnInit {
 
       case 'subcategory':
         this.gridViewService.source = source;
-        this.gridViewService.titleForDetails = `${this.categoriesService.subcatTable[catOrSubcat!].title} @ ${day}/${this.gridViewService.monthlyCurrentDate.toLocaleString('default', { month: 'long' })}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
+        this.gridViewService.titleForDetails = `${this.categoriesService.subcatTable[`'${catOrSubcat!}'`].title} @ ${day}/${this.gridViewService.monthlyCurrentDate.toLocaleString('default', { month: 'long' })}/${this.gridViewService.monthlyCurrentDate.getFullYear()}`
         break;
 
       case 'daily':

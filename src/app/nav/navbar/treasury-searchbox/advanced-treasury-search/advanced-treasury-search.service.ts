@@ -46,7 +46,6 @@ export class AdvancedTreasurySearchService {
     CALL.subscribe({
       next: (codeReceived) => {
 
-        console.log('chegou as pesquisas')
         const ERROR_CODE = codeReceived as string[];
         if (ERROR_CODE[0] === 'MHQERROR') { return this._mhqSnackbarService.triggerMHQSnackbar(false, 'warning_amber', ERROR_CODE[1], ['', '']); }
         const RESP = codeReceived as IAdvancedSearch[];
@@ -60,10 +59,8 @@ export class AdvancedTreasurySearchService {
             if (['nif', 'efatcheck', 'recurrencyid'].includes(parameter.field)) {
               parameter.value === 'true' ? parameter.value = true : parameter.value = false
             }
-            if (parameter.field === 'date') [console.log(parameter.value)]
           });
         }
-        console.log(this.advancedSearchArray)
         if (this.firstLoop && this.advancedSearchArray.length > 0) {
           this.selectedSearchIndex = this.advancedSearchArray[0].id
           this.selectedSearchForm = new FormControl(this.selectedSearchIndex);
@@ -86,7 +83,6 @@ export class AdvancedTreasurySearchService {
 
   triggerAdavancedSearch(): void {
 
-    console.log('gatilhou as pesquisas')
     if (this.advancedSearchArray.length === 0 || this.advancedSearchTable[this.selectedSearchIndex].parameters.length === 0) { return }
     const QUERY = "SELECT * FROM treasurylog WHERE ";
     let queryExtra = '';

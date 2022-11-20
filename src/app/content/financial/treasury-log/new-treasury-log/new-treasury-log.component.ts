@@ -86,10 +86,10 @@ export class NewTreasuryLogComponent implements OnInit {
 
     this.catList = [];
     for (let i = 0; i < Object.keys(this.categoriesService.catTable).length; i++) {
-      this.catList.push({
+     if(this.categoriesService.catTable[Object.keys(this.categoriesService.catTable)[i]].active) {this.catList.push({
         title: this.categoriesService.catTable[Object.keys(this.categoriesService.catTable)[i]].title,
         value: this.categoriesService.catTable[Object.keys(this.categoriesService.catTable)[i]].id
-      })
+      })}
     }
 
     this.recurrencyFrequency = new FormControl({ value: '', disabled: true }, [Validators.required, Validators.min(2)]);
@@ -151,7 +151,7 @@ export class NewTreasuryLogComponent implements OnInit {
 
   refreshSubcategoryList(catID: number): void {
     this.subcategoriesList = [];
-    this.categoriesService.catTable[`'${catID}'`].subcats.forEach((subcat: IFinancialSubCategory) => { this.subcategoriesList.push({ title: subcat.title, value: subcat.id }) });
+    this.categoriesService.catTable[`'${catID}'`].subcats.forEach((subcat: IFinancialSubCategory) => {if(subcat.active){this.subcategoriesList.push({ title: subcat.title, value: subcat.id })} });
   }
 
   catChanged(event: MatSelectChange): void {

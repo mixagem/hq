@@ -1,9 +1,16 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Route, Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { IFinancialCategory } from 'src/shared/interfaces/ifinancial-category';
 import { IFinancialSubCategory } from 'src/shared/interfaces/ifinancial-sub-category';
 import { CategoriesService } from '../categories/categories.service';
+
+type GraphTarget = 'cat' | 'subcat'
+type GraphType = 'evo' | 'normal'
+
+
+type MVDGraph = { id: number, title: string, year: number, duration: number, acomul: boolean, target: GraphTarget, cat?: number[], subcat?: number[], inverted?: boolean[] }
 
 @Injectable({
   providedIn: 'root'
@@ -12,40 +19,32 @@ import { CategoriesService } from '../categories/categories.service';
 
 export class AnalysisService {
 
+  selectedGraph: number;
   waitingForSQL = false;
-
   onInitTrigger: Subject<any>; // trigger para onInit
-
-  graphConfig: any;
-
-  catArray: any[];
-  subcategoriesList: any[];
+  graphConfig: MVDGraph;
+  catArray: IFinancialCategory[];
+  subcatArray: IFinancialSubCategory[];
 
 
   constructor(public categoriesService: CategoriesService, private _http: HttpClient, private _router: Router) {
-
     this.onInitTrigger = new Subject<any>(); // trigger para onInit do componente
 
     this.catArray = []
-
-    this.subcategoriesList = []
-
-
-    for (let i = 0; i < Object.keys(this.categoriesService.catTable).length; i++) { this.catArray.push(this.categoriesService.catTable[Object.keys(this.categoriesService.catTable)[i]]) }
-
-
-
+    this.subcatArray = []
   }
+
+
   onInitTriggerCall(): void { this.onInitTrigger.next(''); this.onInitTrigger.complete; this.onInitTrigger = new Subject<any>(); }
 
 
-  fetchGraphConfig(type: string): any {
-    const HTTP_PARAMS = new HttpParams().set('type', type);
+  fetchGraphConfig(graphID: number): any {
+    const HTTP_PARAMS = new HttpParams().set('graphid', graphID);
 
     const CALL = this._http.post('http://localhost:16190/fetchgraphconfig', HTTP_PARAMS, { responseType: 'json' });
     CALL.subscribe({
       next: (codeReceived) => {
-        const RESP = codeReceived as any;
+        const RESP = codeReceived as MVDGraph;
         this.graphConfig = RESP;
         this.waitingForSQL = false;
         this.onInitTriggerCall();
@@ -54,8 +53,9 @@ export class AnalysisService {
     });
   }
 
-  saveGraphConfig(type: string, config:any): any {
-    const HTTP_PARAMS = new HttpParams().set('type', type).set('config', config);
+  saveGraphConfig(graphID: number, graph: MVDGraph): any {
+    const CONFIG = JSON.stringify(graph)
+    const HTTP_PARAMS = new HttpParams().set('graphid', graphID).set('config', CONFIG);
 
     const CALL = this._http.post('http://localhost:16190/savegraphconfig', HTTP_PARAMS, { responseType: 'json' });
     CALL.subscribe({
@@ -69,12 +69,6 @@ export class AnalysisService {
       },
       error: err => { }
     });
-  }
-
-  refreshSubcategoryList(catID: number): void {
-
-    this.subcategoriesList = [];
-    this.categoriesService.catTable[`'${catID}'`].subcats.forEach((subcat: IFinancialSubCategory) => { this.subcategoriesList.push({ title: subcat.title, value: subcat.id }) });
   }
 
 

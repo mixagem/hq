@@ -49,7 +49,7 @@ export class AdvancedTreasurySearchComponent implements OnInit {
     this.getCurrentSearchParamsSequence();
     this.tempAdvancedSearch = JSON.parse(JSON.stringify(this.treasurySearchService.advancedSearchTable[this.treasurySearchService.selectedSearchIndex]));
     this.tempAdvancedSearch.parameters.forEach(parameter => {
-      if (parameter.field === 'date') { console.log(parameter.value ); parameter.value = new Date(Number(parameter.value));}
+      if (parameter.field === 'date') { parameter.value = new Date(Number(parameter.value));}
     });
     this.editingMode = true;
   }
@@ -85,7 +85,7 @@ export class AdvancedTreasurySearchComponent implements OnInit {
   saveSearch(): void {
     this.treasurySearchService.isTableReady = false;
     this.tempAdvancedSearch.parameters.forEach(parameter => {
-      if (parameter.field === 'date') { parameter.value = new Date(parameter.value).getTime(); console.log(parameter.value) }
+      if (parameter.field === 'date') { parameter.value = new Date(parameter.value).getTime(); }
 
     });
     // return
