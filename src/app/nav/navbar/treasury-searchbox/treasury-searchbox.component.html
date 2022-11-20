@@ -1,31 +1,57 @@
-<div style="display: flex;height: 100%;">
+<div class="mhq-row full-height" style="align-items: center;flex-direction: row;justify-content: center;">
 
-  <div *ngIf="advancedTlogSearchService.searchMode === 'advanced'" (click)="openAdvancedTreasurySearchModal('300ms','150ms')" style="width:60px;background-color:red;height:100%;color:#fff;display: flex;justify-content: center;align-items: center;"><mat-icon style="cursor:pointer;width:36px;height:36px;font-size: 36px;">manage_search</mat-icon></div>
-  <div (click)="swapSearchMode()" style="width:60px;background-color:blue;height:100%;color:#fff;display: flex;justify-content: center;align-items: center;"><mat-icon style="cursor:pointer;width:36px;height:36px;font-size: 36px;">sync</mat-icon></div>
+  <div class="mhq-col-5" style="height: 100%;display:flex;align-items: center;justify-content: flex-end;padding-right:20px">
+    <mat-button-toggle-group [ngModel]="advancedTlogSearchService.searchMode" aria-label="Font Style"
+      style="width:auto;height:50%;display: flex;align-items: center;font-size:12px;">
+      <mat-button-toggle (click)="swapSearchMode()" value="simple"><mat-icon style="margin-right:5px">search</mat-icon>Simples</mat-button-toggle>
+      <mat-button-toggle (click)="swapSearchMode()" value="advanced"><mat-icon style="margin-right:5px;position:relative;top:-2px">manage_search</mat-icon>Avançada</mat-button-toggle>
+    </mat-button-toggle-group>
 
-<mat-form-field appearance="fill"  *ngIf="advancedTlogSearchService.searchMode === 'simple'">
 
-  <mat-label>Procurar...</mat-label>
-  <input matInput type="text" [(ngModel)]="advancedTlogSearchService.treasuryNavbarInput" (input)="tlogSearch(false)">
 
-  <button matSuffix mat-icon-button (click)="tlogSearch(true)">
-    <mat-icon>clear</mat-icon>
+    <button color="accent" mat-icon-button [disabled]="advancedTlogSearchService.searchMode !== 'advanced'"
+      (click)="openAdvancedTreasurySearchModal('300ms','150ms')">
+      <mat-icon style="padding-left:10px;cursor:pointer;width:24px;height:24px;font-size: 24px;">settings</mat-icon>
   </button>
-
-</mat-form-field>
-
-<mat-form-field appearance="fill"  *ngIf="advancedTlogSearchService.searchMode === 'advanced'">
-
-    <mat-label>Pesquisa avançada</mat-label>
-    <mat-select (selectionChange)="advancedTlogSearchService.changedSearch($event, true)"
-      [formControl]="advancedTlogSearchService.selectedSearchForm" [disabled]="advancedTlogSearchService.advancedSearchArray.length===0">
-      <mat-option *ngFor="let search of advancedTlogSearchService.advancedSearchArray" [value]="search.id">
-        {{search.title}}
-      </mat-option>
-    </mat-select>
+  </div>
 
 
-</mat-form-field>
+
+
+  <div class="mhq-col-7" style="display: flex;align-content: items;color:var(--mhq-waikiki-acolor-3)">
+
+    <mat-form-field appearance="fill" *ngIf="advancedTlogSearchService.searchMode === 'simple'" style="width:100%">
+
+      <mat-label style="color:var(--mhq-waikiki-acolor-3)">Pesquisa simples</mat-label>
+      <input matInput type="text" [(ngModel)]="advancedTlogSearchService.treasuryNavbarInput"
+        (input)="tlogSearch(false)">
+
+      <button matSuffix mat-icon-button (click)="tlogSearch(true)" style="color:var(--mhq-waikiki-acolor-3)">
+        <mat-icon>clear</mat-icon>
+      </button>
+
+    </mat-form-field>
+
+
+    <mat-form-field appearance="fill" *ngIf="advancedTlogSearchService.searchMode === 'advanced'">
+
+      <mat-label style="color:var(--mhq-waikiki-acolor-3)">Pesquisa avançada</mat-label>
+      <mat-select (selectionChange)="advancedTlogSearchService.changedSearch($event, true)"
+        [formControl]="advancedTlogSearchService.selectedSearchForm"
+        [disabled]="advancedTlogSearchService.advancedSearchArray.length===0">
+        <mat-option *ngFor="let search of advancedTlogSearchService.advancedSearchArray" [value]="search.id">
+          {{search.title}}
+        </mat-option>
+      </mat-select>
+
+    </mat-form-field>
+  </div>
+
+
+
+
+
+
 </div>
 
 <!--  -->
