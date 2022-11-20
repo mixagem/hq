@@ -1,12 +1,137 @@
+::ng-deep {
 
-  mat-option.mhq-cat-select {
-    padding-left: 0px;
 
-    mat-icon {
-      width: 45px;
-      height: 42px;
-      align-items: center;
-      display: flex;
-      justify-content: center;
+    .mat-form-field-wrapper {
+      padding-bottom: 0
+    }
+
+    .mat-form-field-underline {
+      bottom: 0
+    }
+
+
+  // #mhq-view-graph-config {
+  //   .mat-form-field-wrapper {
+  //     padding-bottom: 0;
+  //   }
+  // }
+
+  #mhq-edit-graph-config {}
+
+}
+
+// form {
+//   width: 100%;
+//   height: 100%
+// }
+
+mat-option.mhq-cat-select {
+  padding-left: 0px;
+
+  mat-icon {
+    width: 45px;
+    height: 42px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.mhq-modal-content-wrapper {
+  padding: 0vh 2.5vw 0.5vh;
+}
+
+#mhq-graph-modal-title-and-controls {
+  height: calc(25% - 5px);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  div {
+    width: 100%;
+
+    mat-form-field {
+      width: 70%;
     }
   }
+
+  h2 {
+    width: 100%;
+    color: var(--mhq-waikiki-acolor-1);
+
+
+  }
+
+
+  .mhq-save-button {
+    background-color: var(--mhq-waikiki-sucess);
+    color: #000;
+    margin: 0 15px
+  }
+}
+
+#mhq-view-graph-config {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+
+  form {
+    display: flex;
+  }
+
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .mhq-cats-wrapper {
+    width: 100%;
+    padding: 20px 1vw 0;
+    display: block;
+
+    h3 {
+      margin-bottom: 10px;
+
+      span {
+        display: inline-block;
+
+        &:last-child {
+          text-align: right;
+          font-weight: 500;
+          font-size: 14px;
+          text-align: center;
+        }
+      }
+    }
+
+    .mhq-selected-cat-wrapper {
+      width: 100%;
+      height: 45px;
+      display: flex;
+      justify-content: space-between;
+
+      .mhq-selected-cat {
+        justify-content: flex-start;
+        margin-left: 5px;
+
+        mat-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 30px;
+          width: 30px;
+          margin-right: 10px;
+          font-size: 20px;
+        }
+      }
+
+      .mhq-selected-cat-options {
+
+        height: 100%;
+        display: flex;
+        align-items: flex-end;
+      }
+    }
+  }
+}

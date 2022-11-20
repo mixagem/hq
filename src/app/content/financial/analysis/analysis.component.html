@@ -6,31 +6,31 @@
   <div class="mhq-row mhq-mainform-header">
 
     <h1>
-      <mat-icon>account_balance</mat-icon>Análise financeira
+      <mat-icon>account_balance</mat-icon>Análises financeiras
     </h1>
-
 
     <div class="mhq-mainform-actions">
       <button mat-flat-button color="accent" disabled>
         <mat-icon>add</mat-icon>Ações
       </button>
-
     </div>
 
   </div>
 
 
-  <div style="height: calc(100% * 7 / 12 - (40px * 7 / 12));padding-top:15px">
-    <mat-grid-list cols="3" rowHeight="50%">
+  <div id="mhq-graphs-first-row">
 
+    <mat-grid-list cols="3" rowHeight="50%">
 
       <mat-grid-tile colspan=2 rowspan=2>
         <mat-card style="height: 90%;width: 95%;">
-          <div style="position:relative;height:45px;font-size:20px;font-weight:600;text-align: center;color:var(--mhq-waikiki-pcolor-1)">
-            <div style="width:100%;position:absolute">Evolução poupanças</div>
-            <div (click)="openGraphConfig('300ms','150ms', 1)" style="cursor:pointer;width:100%;position:absolute;text-align: right;"><mat-icon>settings</mat-icon></div>
+          <div class="mhq-graph-title">
+            <div>{{graphsTitles[0]}}</div>
+            <div class="mhq-graph-config" (click)="openGraphConfig('300ms','150ms', 1)">
+              <mat-icon>settings</mat-icon>
+            </div>
           </div>
-          <div style="height:calc(100% - 45px);width:100%">
+          <div class="mhq-graph-display" style="height:calc(100% - 45px);">
             <ngx-charts-line-chart [scheme]="waikiki" [legend]=false [showXAxisLabel]=false [showYAxisLabel]=false
               [xAxis]=true [yAxis]=true [results]="graphs[0]" [tooltipDisabled]=false (select)="onSelect($event)"
               (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
@@ -39,35 +39,35 @@
         </mat-card>
       </mat-grid-tile>
 
-
       <mat-grid-tile colspan=1 rowspan=1>
         <mat-card>
-          <div style="position:relative;height:35px;text-align: center;font-weight:600;color:var(--mhq-waikiki-pcolor-1)">
-            <div style="width:100%;position:absolute">Head to Head - poupanças x salários</div>
-            <div (click)="openGraphConfig('300ms','150ms',2)" style="cursor:pointer;width:100%;position:absolute;text-align: right;"><mat-icon>settings</mat-icon></div>
+          <div class="mhq-graph-title">
+            <div>{{graphsTitles[1]}}</div>
+            <div class="mhq-graph-config" (click)="openGraphConfig('300ms','150ms', 2)">
+              <mat-icon>settings</mat-icon>
+            </div>
           </div>
-
-          <div style="height:calc(100% - 35px);width:100%">
+          <div class="mhq-graph-display">
             <ngx-charts-line-chart [scheme]="waikiki" [legend]=false [showXAxisLabel]=false [showYAxisLabel]=false
               [xAxis]=true [yAxis]=true [results]="graphs[1]" (select)="onSelect($event)"
               (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
-
             </ngx-charts-line-chart>
           </div>
         </mat-card>
       </mat-grid-tile>
+
       <mat-grid-tile colspan=1 rowspan=1>
         <mat-card>
-          <div style="height:35px;text-align: center;font-weight:600;color:var(--mhq-waikiki-pcolor-1)">
-            <div style="width:100%;position:absolute">Gastos fixos & variáveis - 2023</div>
-            <div (click)="openGraphConfig('300ms','150ms',3)" style="cursor:pointer;width:100%;position:absolute;text-align: right;"><mat-icon>settings</mat-icon></div>
-
+          <div class="mhq-graph-title">
+            <div>{{graphsTitles[2]}}</div>
+            <div class="mhq-graph-config" (click)="openGraphConfig('300ms','150ms', 3)">
+              <mat-icon>settings</mat-icon>
             </div>
-          <div style="height:calc(100% - 35px);width:100%">
+          </div>
+          <div class="mhq-graph-display">
             <ngx-charts-area-chart-stacked [scheme]="waikiki" [legend]=false [showXAxisLabel]=false
               [showYAxisLabel]=false [xAxis]=true [yAxis]=true [results]="graphs[2]" (select)="onSelect($event)"
               (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
-
             </ngx-charts-area-chart-stacked>
           </div>
         </mat-card>
@@ -76,7 +76,7 @@
     </mat-grid-list>
   </div>
 
-  <div style="height: calc(100% * 5 / 12 - (40px * 5 / 12));" *ngIf="false">
+  <div id="mhq-graphs-second-row" *ngIf="false">
 
 
     <mat-grid-list cols="4" rowHeight="100%">
@@ -105,8 +105,5 @@
 
 
   </div>
-
-
-
 
 </div>

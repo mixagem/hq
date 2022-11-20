@@ -19,6 +19,7 @@ export type GraphSchema = { name: string, selectable: boolean, group: ScaleType,
 
 export class AnalysisComponent implements OnInit {
   graphs: GraphData[][]; // array com todos os gráficos
+  graphsTitles: string[];
   waikiki: GraphSchema; // configuração componente gráficos
 
   constructor(public loadingService: LoadingService, private _http: HttpClient, private _categoriesService: CategoriesService, private _matDialog: MatDialog, private _analysisService: AnalysisService, private _snackbarService: MHQSnackBarsService) { }
@@ -28,6 +29,7 @@ export class AnalysisComponent implements OnInit {
     if (!this.loadingService.categoriesLoadingComplete) { return }
 
     this.graphs = [];
+    this.graphsTitles = new Array(7).fill('');
     this.waikiki = {
       name: 'waikiki',
       selectable: true,
@@ -46,9 +48,12 @@ export class AnalysisComponent implements OnInit {
       next: (codeReceived) => {
         const ERR = codeReceived as string[];
         if (ERR[0] === 'MHQERROR') { return this._snackbarService.triggerMHQSnackbar(false, 'warning_amber', '', [ERR[1], '']) }
-        const RESP = codeReceived as GraphData[];
-        this.graphs[graphID - 1] = new Array(RESP.length);
-        RESP.forEach((graph, i) => { this.graphs[graphID - 1][i] = graph });
+        const RESP = codeReceived as any[];
+        this.graphs[graphID - 1] = new Array(RESP.length - 1);
+        RESP.forEach((graph, i) => {
+          if (i === 0) { this.graphsTitles[graphID - 1] = graph }
+          else { this.graphs[graphID - 1][i-1] = graph }
+        });
       },
       error: err => { return this._snackbarService.triggerMHQSnackbar(false, 'warning_amber', '', [err, '']) }
     });

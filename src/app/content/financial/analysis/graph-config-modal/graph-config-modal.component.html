@@ -2,105 +2,151 @@
   <mat-icon>search</mat-icon>Configurar gráfico
 </h1>
 
-<div mat-dialog-content class="mhq-modal-content-wrapper mhq-row" style="padding: 2vh 4.5vw 0.5vh;">
+<div mat-dialog-content class="mhq-modal-content-wrapper mhq-row">
 
-  <div style="height:5px">
-    <mat-progress-bar *ngIf="analysisService.waitingForSQL" mode="indeterminate" color="accent">
-    </mat-progress-bar>
-  </div>
+  <mat-progress-bar *ngIf="analysisService.waitingForSQL" mode="indeterminate" color="accent">
+  </mat-progress-bar>
 
-  <div style="height:calc(25% - 5px);display: flex;
-  justify-content: flex-end;align-items:center;">
-    <div>
-      <button (click)="saveGraphSettings()" *ngIf="editingMode" mat-mini-fab color="primary"
-        style="background-color:var(--mhq-waikiki-sucess);color:#000;margin:0 15px">
-        <mat-icon>save</mat-icon>
-      </button>
-      <button (click)="exitingEditingMode()" *ngIf="editingMode" mat-mini-fab color="warn">
-        <mat-icon>not_interested</mat-icon>
-      </button>
-      <button (click)="enteringEditingMode()" *ngIf="!editingMode" mat-mini-fab color="primary">
-        <mat-icon>edit</mat-icon>
-      </button>
+  <div id="mhq-graph-modal-title-and-controls">
+    <h2 *ngIf="!editingMode && !analysisService.waitingForSQL">{{analysisService.graphConfig.title}}</h2>
+    <div *ngIf="editingMode && !analysisService.waitingForSQL">
+      <form [formGroup]="header">
+        <mat-form-field appearance="fill">
+          <mat-label>Título do gráfico</mat-label>
+          <input matInput type="text" formControlName="title">
+        </mat-form-field>
+      </form>
     </div>
+    <button (click)="saveGraphSettings()" *ngIf="editingMode" mat-mini-fab color="primary" class="mhq-save-button">
+      <mat-icon>save</mat-icon>
+    </button>
+    <button (click)="exitingEditingMode()" *ngIf="editingMode" mat-mini-fab color="warn">
+      <mat-icon>not_interested</mat-icon>
+    </button>
+    <button (click)="enteringEditingMode()" *ngIf="!editingMode" mat-mini-fab color="primary">
+      <mat-icon>edit</mat-icon>
+    </button>
+
   </div>
 
-  <div *ngIf="!editingMode && !analysisService.waitingForSQL">
-    <div style="width:100%;display: flex;flex-wrap: wrap;">
+  <!-- v- modo consulta -v -->
 
-      <div style="width:calc(100% / 12 * 8)">{{analysisService.graphConfig.title}}</div>
-      <div style="width:calc(100% / 12 * 2)">{{analysisService.graphConfig.year}}</div>
-      <div style="width:calc(100% / 12 * 2)">{{analysisService.graphConfig.duration}}</div>
-      <div style="width:calc(100% / 12 * 6)">{{analysisService.graphConfig.acomul}}</div>
-      <div style="width:calc(100% / 12 * 6)">{{analysisService.graphConfig.target}}</div>
+  <div id="mhq-view-graph-config" *ngIf="!editingMode && !analysisService.waitingForSQL">
 
-
-      <br>
-
-      <div *ngIf="analysisService.graphConfig.target === 'cat'">
-        <div style="width:100%" *ngFor="let cat of analysisService.graphConfig.cat; let i = index">
-          {{categoriesService.catTable['\''+cat+'\''].title}}
-        </div>
-      </div>
-      <div *ngIf="analysisService.graphConfig.target === 'subcat'">
-        <div style="width:100%" *ngFor="let subcat of analysisService.graphConfig.subcat; let i = index">
-          {{categoriesService.subcatTable['\''+subcat+'\''].title}}
-        </div>
-      </div>
-
+    <div class="mhq-col-5">
+      <mat-form-field appearance="fill">
+        <mat-label>Target</mat-label>
+        <input matInput type="text"
+          [value]="analysisService.graphConfig.target === 'cat'? 'Categorias' : 'Sub-categorias'" disabled>
+      </mat-form-field>
     </div>
+    <div class="mhq-col-2">
+      <mat-form-field appearance="fill">
+        <mat-label>Ano inicial</mat-label>
+        <input matInput type="text" [value]="analysisService.graphConfig.year" disabled>
+      </mat-form-field>
+    </div>
+    <div class="mhq-col-2">
+      <mat-form-field appearance="fill">
+        <mat-label>Duração (anos)</mat-label>
+        <input matInput type="text" [value]="analysisService.graphConfig.duration" disabled>
+      </mat-form-field>
+    </div>
+    <div class="acomul-col" class="mhq-col-3">
+      <mat-checkbox color="primary" disabled [checked]="analysisService.graphConfig.acomul">Acomulado</mat-checkbox>
+    </div>
+
+
+    <div *ngIf="analysisService.graphConfig.target === 'cat'" class="mhq-cats-wrapper" style="height: 25vh;">
+      <h3><span class="mhq-col-10">Categorias</span><span class="mhq-col-2">Valor invertido</span></h3>
+      <ng-scrollbar style="width:100%;">
+
+
+        <div class="mhq-selected-cat-wrapper" *ngFor="let cat of analysisService.graphConfig.cat; let i = index">
+          <div class="mhq-col-9 mhq-selected-cat"
+            [style]="'border-bottom:1px solid '+categoriesService.catTable['\''+cat+'\''].bgcolor">
+            <mat-icon
+              [ngStyle]="{'background-color':categoriesService.catTable['\''+cat+'\''].bgcolor,'color':categoriesService.catTable['\''+cat+'\''].textcolor}">
+              {{categoriesService.catTable['\''+cat+'\''].icon}}</mat-icon>
+            {{categoriesService.catTable['\''+cat+'\''].title}}
+          </div>
+          <div class="mhq-col-2 mhq-selected-cat-options">
+            <mat-checkbox color="primary" disabled [checked]="analysisService.graphConfig.inverted![i]"></mat-checkbox>
+          </div>
+        </div>
+      </ng-scrollbar>
+    </div>
+
+    <div *ngIf="analysisService.graphConfig.target === 'subcat'" class="mhq-cats-wrapper" style="height: 25vh;">
+
+      <h3><span class="mhq-col-10">Sub-categorias</span><span class="mhq-col-2">Valor invertido</span></h3>
+      <ng-scrollbar style="width:100%;">
+
+        <div class="mhq-selected-cat-wrapper" *ngFor="let subcat of analysisService.graphConfig.subcat; let i = index">
+
+          <div class="mhq-col-9 mhq-selected-cat"
+            [style]="'border-bottom:1px solid '+categoriesService.catTable['\''+subcat+'\''].bgcolor">
+            <mat-icon
+              [ngStyle]="{'background-color':categoriesService.catTable['\''+subcat+'\''].bgcolor,'color':categoriesService.catTable['\''+subcat+'\''].textcolor}">
+              {{categoriesService.catTable['\''+subcat+'\''].icon}}</mat-icon>
+            {{categoriesService.subcatTable['\''+subcat+'\''].title}}
+          </div>
+
+          <div class="mhq-col-2 mhq-selected-cat-options">
+            <mat-checkbox color="primary" disabled [checked]="analysisService.graphConfig.inverted![i]"></mat-checkbox>
+          </div>
+
+        </div>
+      </ng-scrollbar>
+    </div>
+
   </div>
 
-  <div *ngIf="editingMode && !analysisService.waitingForSQL">
-    <form [formGroup]="header">
-      <div style="width:100%;display: flex;flex-wrap:wrap">
-        <div style="width:calc(100% / 12 * 8)">
-          <mat-form-field appearance="fill">
-            <mat-label>Título do gráfico</mat-label>
-            <input matInput type="text" formControlName="title">
-          </mat-form-field>
-        </div>
-        <div style="width:calc(100% / 12 * 2)">
-          <mat-form-field appearance="fill">
-            <mat-label>Ano inicial</mat-label>
-            <input matInput type="number" formControlName="year">
-          </mat-form-field>
-        </div>
-        <div style="width:calc(100% / 12 * 2)">
-          <mat-form-field appearance="fill">
-            <mat-label>Duração</mat-label>
-            <input matInput type="number" formControlName="duration">
-          </mat-form-field>
-        </div>
-        <div style="width:calc(100% / 12 * 6)">
 
-          <mat-checkbox formControlName="acomul">Acomulado</mat-checkbox>
+  <!-- ^- modo consulta -^ / v- modo edição -v -->
 
-
-
-
-        </div>
-        <div style="width:calc(100% / 12 * 6)">
-          <mat-form-field appearance="fill">
-            <mat-label>Target</mat-label>
-            <mat-select formControlName="target" (selectionChange)="targetSwap($event)">
-              <mat-option value="cat">Categorias</mat-option>
-              <mat-option value="subcat">Sub-Categorias</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
+  <div id="mhq-view-graph-config" *ngIf="editingMode && !analysisService.waitingForSQL">
+    <form [formGroup]="header" style="width: 100%">
+      <div class="mhq-col-5">
+        <mat-form-field appearance="fill">
+          <mat-label>Target</mat-label>
+          <mat-select formControlName="target" (selectionChange)="targetSwap($event)">
+            <mat-option value="cat">Categorias</mat-option>
+            <mat-option value="subcat">Sub-categorias</mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
+      <div class="mhq-col-2">
+        <mat-form-field appearance="fill">
+          <mat-label>Ano inicial</mat-label>
+          <input matInput type="text" [value]="analysisService.graphConfig.year">
+        </mat-form-field>
+      </div>
+      <div class="mhq-col-2">
+        <mat-form-field appearance="fill">
+          <mat-label>Duração (anos)</mat-label>
+          <input matInput type="text" [value]="analysisService.graphConfig.duration">
+        </mat-form-field>
+      </div>
+      <div class="acomul-col" class="mhq-col-3">
+        <mat-checkbox color="primary" [checked]="analysisService.graphConfig.acomul">Acomulado</mat-checkbox>
+      </div>
+
+
+
     </form>
 
 
-    <div *ngIf="header.controls['target'].value === 'cat'">
+    <div *ngIf="header.controls['target'].value === 'cat'" class="mhq-cats-wrapper" style="height: 25vh;">
+      <h3><span class="mhq-col-9">Categorias</span><span class="mhq-col-3" style="position:relative;left:-10px;">Valor
+          invertido</span></h3>
 
+      <ng-scrollbar [autoHeightDisabled]="false" style="width:100%;">
+      <div class="mhq-selected-cat-wrapper" *ngFor="let cat of controls; let i = index"
+        style="display:flex; justify-content: center;align-items: center;">
 
-      <div *ngFor="let cat of controls; let i = index" style="width: 100%">
-
-        <form class="mhq-cats-form" style="width: 100%;">
-          <mat-form-field>
-            <mat-label>Categoria</mat-label>
+        <form class="mhq-cats-form mhq-col-10">
+          <mat-form-field style="width: 90%;">
             <mat-select [formControl]="cat[0]">
               <mat-select-trigger>{{cat[0].value !== -1 ?
                 categoriesService.catTable['\''+cat[0].value+'\''].title : ''}}
@@ -113,54 +159,54 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-checkbox [formControl]="cat[1]"></mat-checkbox>
-
         </form>
-
-      </div>
-
-
-
-
-
-    </div>
-
-    <div *ngIf="header.controls['target'].value === 'subcat'">
-
-      <div *ngFor="let subcat of controls; let i = index" style="display:flex; justify-content: center;align-items: center;">
-
-        <form class="mhq-subcats-form" style="width: 80%;">
-          <mat-form-field>
-            <mat-label>Sub categoria</mat-label>
-            <mat-select [formControl]="subcat[0]">
-              <!-- <mat-option class="mhq-subcat-select" *ngFor="let option of analysisService.subcatArray"
-                [value]="option.id">{{option.title}}
-              </mat-option> -->
-              <mat-select-trigger>{{subcat[0].value !== -1 ?
-                categoriesService.subcatTable['\''+subcat[0].value+'\''].title : ''}}
-              </mat-select-trigger>
-              <mat-option class="mhq-cat-select" *ngFor="let option of analysisService.subcatArray" [value]="option.id">
-                <mat-icon
-                  [ngStyle]="{'background-color':categoriesService.catTable['\''+option.maincatid+'\''].bgcolor,'color':categoriesService.catTable['\''+option.maincatid+'\''].textcolor}">
-                  {{categoriesService.catTable['\''+option.maincatid+'\''].icon}}</mat-icon>
-                {{option.title}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </form>
-        <mat-checkbox [formControl]="subcat[1]"></mat-checkbox>
-        <button mat-icon-button (click)="removeParameterFromGraph(i)">
+        <mat-checkbox color="primary" [formControl]="cat[1]" class="mhq-col-1"></mat-checkbox>
+        <button mat-icon-button color="warn" (click)="removeParameterFromGraph(i)" class="mhq-col-1">
           <mat-icon>delete</mat-icon>
         </button>
 
-
-
       </div>
+      <div style="padding-top:5px" (click)="addParameterToGraph()" style="cursor:pointer"><mat-icon style="width:30px;height:30px;display:flex;justify-content:center;align-items:center;border-radius:50%;background-color: var(--mhq-waikiki-acolor-1);color:#fff;margin-right:10px">add</mat-icon><b>Adicionar categoria</b></div>
+      </ng-scrollbar>
+    </div>
 
+    <div *ngIf="header.controls['target'].value === 'subcat'" class="mhq-cats-wrapper" style="height: 25vh;">
+      <h3><span class="mhq-col-9">Sub-categorias</span><span class="mhq-col-3"
+          style="position:relative;left:-10px;">Valor invertido</span></h3>
+      <ng-scrollbar [autoHeightDisabled]="false" style="width:100%;">
+        <div class="mhq-selected-cat-wrapper" *ngFor="let subcat of controls; let i = index"
+          style="display:flex; justify-content: center;align-items: center;">
+
+          <form class="mhq-subcats-form mhq-col-10">
+            <mat-form-field style="width:90%">
+              <mat-select [formControl]="subcat[0]">
+                <mat-select-trigger>{{subcat[0].value !== -1 ?
+                  categoriesService.subcatTable['\''+subcat[0].value+'\''].title : ''}}
+                </mat-select-trigger>
+                <mat-option class="mhq-cat-select" *ngFor="let option of analysisService.subcatArray"
+                  [value]="option.id">
+                  <mat-icon
+                    [ngStyle]="{'background-color':categoriesService.catTable['\''+option.maincatid+'\''].bgcolor,'color':categoriesService.catTable['\''+option.maincatid+'\''].textcolor}">
+                    {{categoriesService.catTable['\''+option.maincatid+'\''].icon}}</mat-icon>
+                  {{option.title}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </form>
+          <mat-checkbox color="primary" [formControl]="subcat[1]" class="mhq-col-1"></mat-checkbox>
+          <button mat-icon-button color="warn" (click)="removeParameterFromGraph(i)" class="mhq-col-1">
+            <mat-icon>delete</mat-icon>
+          </button>
+
+
+
+        </div>
+        <div style="padding-top:5px" (click)="addParameterToGraph()" style="cursor:pointer"><mat-icon style="width:30px;height:30px;display:flex;justify-content:center;align-items:center;border-radius:50%;background-color: var(--mhq-waikiki-acolor-1);color:#fff;margin-right:10px">add</mat-icon><b>Adicionar sub-categoria</b></div>
+      </ng-scrollbar>
 
     </div>
 
-    <b (click)="addParameterToGraph()">adddd moooore</b>
+
 
 
 
@@ -170,9 +216,8 @@
   </div>
 
 
-
-
-
 </div>
 
-<div mat-dialog-actions class="mhq-modal-close-actions"></div>
+<div mat-dialog-actions class="mhq-modal-close-actions">
+  <button mat-stroked-button mat-dialog-close color="warn">Fechar</button>
+</div>

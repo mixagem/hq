@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Form, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CategoriesService } from '../../categories/categories.service';
 import { AnalysisService, MVDGraph } from '../analysis.service';
 
@@ -95,5 +95,5 @@ export class GraphConfigModalComponent implements OnInit {
     this.editingMode = false;
   }
 
-  
+
 }

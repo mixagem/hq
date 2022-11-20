@@ -56,7 +56,7 @@ export function getGraph(req, res) {
   }
 
   function initialValue() {
-    let db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => { if (err) { console.error(err.message); return res.send['MHQERROR', 'getGraph error: ' + err.message] } });
+    db = new sqlite3.Database('./mhq.db', sqlite3.OPEN_READWRITE, (err) => { if (err) { console.error(err.message); return res.send['MHQERROR', 'getGraph error: ' + err.message] } });
 
     // query generator
     let query = `SELECT`;
@@ -170,7 +170,7 @@ export function getGraph(req, res) {
       }
 
       if (err) { console.error(err.message); return res.send['MHQERROR', 'getGraph error: ' + err.message] }
-      res.send(graphsArray); console.log('[getGraph end]');
+      res.send([CONFIG.title,...graphsArray]); console.log('[getGraph end]');
     });
   }
 }
