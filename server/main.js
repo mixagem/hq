@@ -60,8 +60,6 @@ APP.get('/tlogstovalidate', function (req, res) { return movmentsNotValidated(re
 APP.post('/efatcatselectionsave', function (req, res) { return saveEfatCatsSelection(req, res); });
 
 // analysis
-// APP.post('/savingsgraphsnapshot', function (req, res) { return savingsGraphSnapshot(req, res); });
-// APP.post('/testesnapshot', function (req, res) { return generateCatGraphSnapshot(req, res); });
 APP.post('/fetchgraphconfig', function (req, res) { return fetchGraphConfig(req, res); });
 APP.post('/savegraphconfig', function (req, res) { return saveGraphConfig(req, res); });
 APP.post('/getgraph', function (req, res) { return getGraph(req, res); });
